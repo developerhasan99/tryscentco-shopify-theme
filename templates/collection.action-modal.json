@@ -131,6 +131,7 @@
       "name": "Collection Header",
       "settings": {
         "background_color": "#242833",
+        "text_color": "#000000",
         "bg_image": "shopify://shop_images/builder-hero-bg.png",
         "bg_mobile_image": "shopify://shop_images/builder-hero-bg.png",
         "social_proof_text": "Join 10,000+ happy customers",
@@ -156,6 +157,7 @@
     },
     "popular_products_F6w4h9": {
       "type": "popular-products",
+      "disabled": true,
       "name": "Popular Products",
       "settings": {
         "background_color": "#fcfbf9",

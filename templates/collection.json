@@ -239,6 +239,7 @@
     },
     "popular_products_F6w4h9": {
       "type": "popular-products",
+      "disabled": true,
       "name": "Popular Products",
       "settings": {
         "background_color": "#fcfbf9",

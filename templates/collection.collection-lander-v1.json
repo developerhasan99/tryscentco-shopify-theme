@@ -50,6 +50,7 @@
     },
     "popular_products_AmFHN4": {
       "type": "popular-products",
+      "disabled": true,
       "name": "Popular Products",
       "settings": {
         "background_color": "#fcfbf9",
@@ -71,6 +72,7 @@
             "position": 3,
             "device": "desktop",
             "video": "shopify://files/videos/brand_SofiaK_6df4295a_sdr.mp4",
+            "video_url": "",
             "product": "magic-perfume-no-437w"
           }
         },
@@ -80,6 +82,7 @@
             "position": 4,
             "device": "desktop",
             "video": "shopify://files/videos/brand_DannieN_4e6dc2b2.mp4",
+            "video_url": "",
             "product": "bergamot-pepper-ambroxan"
           }
         },
@@ -89,6 +92,7 @@
             "position": 8,
             "device": "desktop",
             "video": "shopify://files/videos/brand_EmelieS_e278788a.mov",
+            "video_url": "",
             "product": "magic-perfume-no-360m"
           }
         },
@@ -98,6 +102,7 @@
             "position": 9,
             "device": "desktop",
             "video": "shopify://files/videos/brand_NathalieE_d5888085.mov",
+            "video_url": "",
             "product": "magic-perfume-no-469w"
           }
         },
@@ -107,6 +112,7 @@
             "position": 11,
             "device": "desktop",
             "video": "shopify://files/videos/brand_SofiaK_c199046e_sdr.mp4",
+            "video_url": "",
             "product": "4x-100ml-perfume-bottles"
           }
         },
@@ -116,6 +122,7 @@
             "position": 12,
             "device": "desktop",
             "video": "shopify://files/videos/brand_EbbaW_94875ae2.mov",
+            "video_url": "",
             "product": "sweet-cherry-vanilla-50-ml-1-7-fl-oz"
           }
         },
@@ -125,6 +132,7 @@
             "position": 16,
             "device": "desktop",
             "video": "shopify://files/videos/brand_JoacimE_fac7f432.mp4",
+            "video_url": "",
             "product": "magic-perfume-no-360m"
           }
         },
@@ -134,6 +142,7 @@
             "position": 2,
             "device": "mobile",
             "video": "shopify://files/videos/brand_SofiaK_6df4295a_sdr.mp4",
+            "video_url": "",
             "product": "magic-perfume-no-437w"
           }
         },
@@ -143,6 +152,7 @@
             "position": 4,
             "device": "mobile",
             "video": "shopify://files/videos/brand_DannieN_4e6dc2b2.mp4",
+            "video_url": "",
             "product": "bergamot-pepper-ambroxan"
           }
         },
@@ -152,6 +162,7 @@
             "position": 6,
             "device": "mobile",
             "video": "shopify://files/videos/brand_EmelieS_e278788a.mov",
+            "video_url": "",
             "product": "magic-perfume-no-360m"
           }
         },
@@ -161,6 +172,7 @@
             "position": 8,
             "device": "mobile",
             "video": "shopify://files/videos/brand_NathalieE_d5888085.mov",
+            "video_url": "",
             "product": "magic-perfume-no-469w"
           }
         },
@@ -170,6 +182,7 @@
             "position": 10,
             "device": "mobile",
             "video": "shopify://files/videos/brand_SofiaK_c199046e_sdr.mp4",
+            "video_url": "",
             "product": "4x-100ml-perfume-bottles"
           }
         },
@@ -179,6 +192,7 @@
             "position": 14,
             "device": "mobile",
             "video": "shopify://files/videos/brand_EbbaW_94875ae2.mov",
+            "video_url": "",
             "product": "sweet-cherry-vanilla-50-ml-1-7-fl-oz"
           }
         },
@@ -188,6 +202,7 @@
             "position": 16,
             "device": "mobile",
             "video": "shopify://files/videos/brand_JoacimE_fac7f432.mp4",
+            "video_url": "",
             "product": "magic-perfume-no-360m"
           }
         }
