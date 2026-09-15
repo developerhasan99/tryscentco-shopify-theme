@@ -1,0 +1,1330 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "insta_story": {
+      "type": "insta-story",
+      "blocks": {
+        "story_Pk4yRN": {
+          "type": "story",
+          "settings": {
+            "title": "Tom Ford",
+            "image": "shopify://shop_images/Tom_ford.avif",
+            "link": "shopify://collections/tomford®"
+          }
+        },
+        "story_VtmG7H": {
+          "type": "story",
+          "settings": {
+            "title": "Baccarat",
+            "image": "shopify://shop_images/Baccarat_Rouge.png",
+            "link": "shopify://collections/baccarat-rouge®"
+          }
+        },
+        "story_wE66Dr": {
+          "type": "story",
+          "settings": {
+            "title": "LV",
+            "image": "shopify://shop_images/new-arribals.png",
+            "link": "shopify://collections/louis-vuitton®"
+          }
+        },
+        "story_nBtec6": {
+          "type": "story",
+          "settings": {
+            "title": "Creed",
+            "image": "shopify://shop_images/Creed.png",
+            "link": "shopify://collections/creed®"
+          }
+        },
+        "story_TRnKbC": {
+          "type": "story",
+          "settings": {
+            "title": "Dior",
+            "image": "shopify://shop_images/dior.avif",
+            "link": "shopify://collections/dior®"
+          }
+        },
+        "story_4qLwwC": {
+          "type": "story",
+          "disabled": true,
+          "settings": {
+            "title": "Xerjoff",
+            "image": "shopify://shop_images/xerjoff.avif",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "story_Pk4yRN",
+        "story_VtmG7H",
+        "story_wE66Dr",
+        "story_nBtec6",
+        "story_TRnKbC",
+        "story_4qLwwC"
+      ],
+      "disabled": true,
+      "settings": {}
+    },
+    "homepage_hero_GDeBtq": {
+      "type": "homepage-hero",
+      "name": "Homepage Hero",
+      "settings": {
+        "background_color": "#faf9f6",
+        "background_image": "shopify://shop_images/TryScent_Office_PC.webp",
+        "mobile_background_image": "shopify://shop_images/TryScent_Office_Mobile.webp",
+        "review_text": "Över 10 000 kunder har redan tagit reda på svaret.",
+        "title": "Tillbaka till kontoret – Köp 2, få 1 gratis",
+        "subtitle": "Handla dina favoritdofter till ännu bättre priser! Och spara ännu mer med paketdeals!",
+        "button_text": "Hitta din favoritparfym",
+        "button_link": "https://tryscent.co/#quiz",
+        "secondary_button_text": "Bästsäljare",
+        "secondary_button_link": "https://tryscent.co/sv-se/collections/4-2",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "mobile_padding_top": 36,
+        "mobile_padding_bottom": 400
+      }
+    },
+    "home_hero_banner_qmaB3G": {
+      "type": "home-hero-banner",
+      "disabled": true,
+      "name": "Home Hero Banner",
+      "settings": {
+        "image": "shopify://shop_images/tryscent_banner_v2_pc.webp",
+        "mobile_image": "shopify://shop_images/tryscent_banner_v2.webp",
+        "link": "shopify://products/4-x-100ml-perfume-bottles"
+      }
+    },
+    "marquee_labels_RLdqpN": {
+      "type": "marquee-labels",
+      "blocks": {
+        "label_idFnra": {
+          "type": "label",
+          "disabled": true,
+          "settings": {
+            "icon": "shopify://shop_images/fast-delivery-truck-van-svgrepo-com.svg",
+            "label": "FREE SHIPPING ON ORDERS ABOVE $50"
+          }
+        },
+        "label_MXGigr": {
+          "type": "label",
+          "settings": {
+            "icon": "shopify://shop_images/save-pound-svgrepo-com.svg",
+            "label": "SAVE UPTO 50% OFF WITH OUR BUNDLES & GIFT SETS"
+          }
+        },
+        "label_iFULPM": {
+          "type": "label",
+          "settings": {
+            "icon": "shopify://shop_images/verified-svgrepo-com.svg",
+            "label": "100% Authentic TryScent formulation"
+          }
+        },
+        "label_8KQqAa": {
+          "type": "label",
+          "settings": {
+            "icon": "shopify://shop_images/achievement-svgrepo-com.svg",
+            "label": "EXPERT-CURATED COLLECTIONS"
+          }
+        },
+        "label_LMktzF": {
+          "type": "label",
+          "settings": {
+            "icon": "shopify://shop_images/money-back-business-warranty-satisfaction-marketing-guaranted-svgrepo-com.svg",
+            "label": "RISK-FREE 60 DAYS MONEY BACK GUARANTEE"
+          }
+        }
+      },
+      "block_order": [
+        "label_idFnra",
+        "label_MXGigr",
+        "label_iFULPM",
+        "label_8KQqAa",
+        "label_LMktzF"
+      ],
+      "disabled": true,
+      "name": "Marquee Labels",
+      "settings": {}
+    },
+    "feature_highlights_wfUacV": {
+      "type": "feature-highlights",
+      "blocks": {
+        "perks_CBpKqp": {
+          "type": "perks",
+          "settings": {
+            "perk_image": "shopify://shop_images/icons_eu.webp",
+            "perk_title": "Ren formula",
+            "perk_content": "Utan hormonstörande ämnen och parabener."
+          }
+        },
+        "perks_Ynh4gw": {
+          "type": "perks",
+          "settings": {
+            "perk_image": "shopify://shop_images/icons_quality.webp",
+            "perk_title": "Över 100 dofter att välja mellan",
+            "perk_content": "En doft som märks och stannar kvar."
+          }
+        },
+        "perks_Cj3EAR": {
+          "type": "perks",
+          "settings": {
+            "perk_image": "shopify://shop_images/icons_guarantee.webp",
+            "perk_title": "60 dagars garanti",
+            "perk_content": "Testa parfymen hemma. Är den inte rätt för dig har du 60 dagar på dig att returnera den."
+          }
+        },
+        "perks_iX4iTY": {
+          "type": "perks",
+          "settings": {
+            "perk_image": "shopify://shop_images/icons_time.webp",
+            "perk_title": "Långvarig doft",
+            "perk_content": "Skapad för att hålla sig märkbar i upp till 12 timmar."
+          }
+        }
+      },
+      "block_order": [
+        "perks_CBpKqp",
+        "perks_Ynh4gw",
+        "perks_Cj3EAR",
+        "perks_iX4iTY"
+      ],
+      "name": "Feature Highlights",
+      "settings": {
+        "background_color": "#ffffff",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "custom_liquid_4rbfWw": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "<!-- TryScent &#8212; Social proof (Dino missed-bottle design, Swedish) &#8212; Custom Liquid paste block.\n     Pure HTML+CSS, scoped to .ts-proof-sv. No Liquid tags (Custom Liquid editor rejects them). -->\n\n<style>\n  .ts-proof-sv{\n    --green:#14843d;\n    --green-dark:#0f6b31;\n    --green-soft:#eaf6ee;\n    --ink:#111315;\n    --muted:#626b74;\n    --line:#e6e8e8;\n    --star:#ffb000;\n    font-family:Inter,Arial,Helvetica,sans-serif;\n    color:var(--ink);\n    background:linear-gradient(180deg,#fff,#f7f8f6);\n    padding:76px 0 53px;\n    overflow:hidden;\n  }\n  .ts-proof-sv *{box-sizing:border-box;margin:0}\n  .ts-proof-sv .container{width:min(1180px,calc(100% - 36px));margin-inline:auto}\n  .ts-proof-sv .proof-head{text-align:center;max-width:760px;margin:0 auto 15px}\n  .ts-proof-sv .kicker{\n    font-size:13px;\n    letter-spacing:.13em;\n    text-transform:uppercase;\n    font-weight:800;\n    color:var(--green);\n    margin-bottom:14px;\n  }\n  .ts-proof-sv .section-title{\n    font-size:clamp(26px,3.3vw,43px);\n    line-height:1.02;\n    letter-spacing:-.045em;\n    margin-bottom:12px;\n    font-weight:700;\n  }\n  .ts-proof-sv .carousel{\n    display:flex;\n    align-items:flex-start;\n    gap:22px;\n    overflow-x:auto;\n    scroll-snap-type:x mandatory;\n    scrollbar-width:none;\n    padding:8px 4px 22px;\n  }\n  .ts-proof-sv .carousel::-webkit-scrollbar{display:none}\n  .ts-proof-sv .review-card{\n    flex:0 0 calc(33.333% - 15px);\n    min-width:330px;\n    scroll-snap-align:start;\n    background:#fff;\n    border:1px solid var(--line);\n    border-radius:20px;\n    padding:26px 26px 13px;\n    box-shadow:0 10px 28px rgba(16,34,22,.06);\n  }\n  .ts-proof-sv .review-top{\n    display:flex;\n    align-items:center;\n    justify-content:space-between;\n    gap:14px;\n    margin-bottom:11px;\n  }\n  .ts-proof-sv .review-stars{color:var(--star);letter-spacing:2px;font-size:19px}\n  .ts-proof-sv .verified{color:var(--muted);font-size:12px;font-weight:700;text-decoration:none}\n  .ts-proof-sv .verified:hover{text-decoration:underline}\n  .ts-proof-sv .tp-dot{color:var(--green)}\n  .ts-proof-sv .review-card h3{\n    font-size:16px;\n    line-height:1.22;\n    letter-spacing:-.035em;\n    margin-bottom:14px;\n    font-weight:700;\n  }\n  .ts-proof-sv .review-card p{\n    color:var(--muted);\n    line-height:1.62;\n    font-size:15px;\n  }\n  .ts-proof-sv .review-card p.result-line{\n    margin:8px 0 12px;\n    padding:15px 16px;\n    border-radius:14px;\n    background:var(--green-soft);\n    color:var(--green-dark);\n    font-weight:800;\n    font-size:14px;\n  }\n  .ts-proof-sv .person{display:flex;align-items:center;gap:12px}\n  .ts-proof-sv .person strong{display:block;font-size:14px}\n  .ts-proof-sv .person span{font-size:11.5px;color:var(--muted);line-height:1.35;display:block}\n  @media (max-width:1024px){\n    .ts-proof-sv .review-card{flex-basis:48%}\n  }\n  @media (max-width:700px){\n    .ts-proof-sv{padding:30px 0 21px}\n    .ts-proof-sv .review-card{min-width:86%;flex-basis:86%}\n  }\n</style>\n\n<section class=\"ts-proof-sv\">\n  <div class=\"container\">\n    <div class=\"proof-head\">\n      <div class=\"kicker\">D&#228;rf&#246;r fastnade de f&#246;r TryScent</div>\n      <h2 class=\"section-title\">De s&#228;ger det b&#228;ttre &#228;n vi n&#229;gonsin skulle kunna.</h2>\n    </div>\n\n    <div class=\"carousel\">\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Jag har redan f&#229;tt flera komplimanger efter att ha anv&#228;nt dem.&#8221;</h3>\n        <p>Det folk m&#228;rker f&#246;rst &#228;r inte flaskan eller priset, utan hur doften f&#246;r&#228;ndrar din utstr&#229;lning.</p>\n        <p class=\"result-line\">Samma komplimanger. Ett b&#228;ttre pris.</p>\n        <div class=\"person\">\n          <div><strong>Elin Lundqvist</strong><span>Verifierad recensent p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Den doftar EXAKT som Dior Homme Intense &#8230; n&#228;stan skr&#228;mmande likt.&#8221;</h3>\n        <p>Den m&#246;rka, kr&#228;miga och lyxiga karakt&#228;ren man f&#246;rv&#228;ntar sig fanns d&#228;r redan fr&#229;n f&#246;rsta sprayen.</p>\n        <p class=\"result-line\">Den v&#228;lbekanta doftupplevelsen, utan designerpriset.</p>\n        <div class=\"person\">\n          <div><strong>Johan Bergstr&#246;m</strong><span>Verifierad recensent p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9734;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;B&#228;ttre &#228;n n&#229;gra av de dyraste parfymerna du kan k&#246;pa.&#8221;</h3>\n        <p>Doften &#246;vertr&#228;ffade f&#246;rv&#228;ntningarna och levererade den kvalitet man vanligtvis f&#246;rknippar med ett betydligt h&#246;gre pris.</p>\n        <p class=\"result-line\">Expensive presence. Unexpected price.</p>\n        <div class=\"person\">\n          <div><strong>Moa</strong><span>Verifierad recensent p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Till en b&#246;rjan var jag skeptisk &#8230;&#8221;</h3>\n        <p>Men n&#228;r jag gjorde min f&#246;rsta best&#228;llning uppt&#228;ckte jag att parfymerna &#228;r fantastiska och mycket lika originalparfymerna. Dessutom &#228;r priset verkligen riktigt bra. Jag kommer definitivt att forts&#228;tta handla fr&#229;n TryScent i framtiden.</p>\n        <div class=\"person\">\n          <div><strong>Ahmad Ismail</strong><span>Recension p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Dofter som verkligen luktar som originalet.&#8221;</h3>\n        <p>Sitter kvar s&#229; l&#228;nge som det utlovas. Snabba leveranser och l&#229;ga priser. Kan bara s&#228;ga k&#246;p k&#246;p!</p>\n        <div class=\"person\">\n          <div><strong>Ingela</strong><span>Recension p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Parfymerna h&#229;ller l&#228;nge och v&#228;ldigt identiska &#10084;&#65039;&#8221;</h3>\n        <p>Fick min f&#246;rsta best&#228;llning som var 6 olika parfymer, nu har jag best&#228;llt 8 stycken och ser fram emot n&#228;r dem kommer.</p>\n        <div class=\"person\">\n          <div><strong>Samer Najmadin</strong><span>Recension p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Deras parfymer &#228;r som &#228;kta.&#8221;</h3>\n        <p>Try Scent gillar jag faktiskt, dom &#228;r fantastiskt. Jag har minst 20 flaskor TryScent-parfymer och anv&#228;nder bara dem &#128536;</p>\n        <div class=\"person\">\n          <div><strong>Nermina</strong><span>Recension p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;St&#228;mmer bra in p&#229; originaldoften &#128077;&#8221;</h3>\n        <p>Dock h&#229;ller den inte i hela dagen men kommer inte ih&#229;g om originalet gjorde det heller. Har best&#228;llt 6 nya dofter och &#229;terkommer med betyg p&#229; dom &#128077;</p>\n        <div class=\"person\">\n          <div><strong>Dan Lindau</strong><span>Recension p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;V&#228;ldigt bra service.&#8221;</h3>\n        <p>Fick en flaska som l&#228;ckte lite i kragen, p&#229;talade detta, och utan tvekan skickades en ny flaska samt tv&#229; &#246;verraskningsdofter som kompensation! Mkt tacksam!</p>\n        <div class=\"person\">\n          <div><strong>Viktor Matsenius</strong><span>Recension p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Mer tillm&#246;tesg&#229;ende finns nog inte!&#8221;</h3>\n        <p>H&#246;rde av mig ang&#229;ende ett problem jag st&#246;tte p&#229;! Fick prata med n&#229;n som hette Eric! De hj&#228;lpte mig smidigt och var v&#228;ldigt serviceminded! Rekommenderar Tryscent.co! Stort tack!</p>\n        <div class=\"person\">\n          <div><strong>Tomas Ternemar</strong><span>Recension p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Fantastisk respons.&#8221;</h3>\n        <p>Det hade uppst&#229;tt en liten olycka med en av parfymerna jag best&#228;llt och jag mejlade f&#246;retaget. Jag fick ett snabbt svar fr&#229;n Ed och det l&#246;ste sig p&#229; b&#228;sta s&#228;tt. &#196;r s&#229; n&#246;jd med hur dom hanterade saken.</p>\n        <div class=\"person\">\n          <div><strong>Teresa</strong><span>Recension p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9734;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;439 kr inklusive frakt f&#246;r 330 ml parfym. Inte illa.&#8221;</h3>\n        <p>V&#228;ldigt bra pris, 380 kr f&#246;r 6 styck 50 ml parfymflaskor och fick &#228;ven med en gratis mysteryflaska i 30 ml.</p>\n        <div class=\"person\">\n          <div><strong>Sadek Abduljalil</strong><span>Recension p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Mycket n&#246;jd med hur de doftar.&#8221;</h3>\n        <p>Har nu f&#229;tt mina varor. Det var v&#228;l paketerat och fick bra information kring hur det gick med leveransen.</p>\n        <div class=\"person\">\n          <div><strong>Christian Edvardsson</strong><span>Recension p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n\n    </div>\n  </div>\n</section>",
+        "color_scheme": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "rich_text_4ya4cF": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_hrPEKc": {
+          "type": "heading",
+          "settings": {
+            "heading": "Varför betala3 800 kr när du kan betala 174 kr?",
+            "heading_size": "h2"
+          }
+        },
+        "text_HMARBK": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Stora lyxhus som Creed lägger enorma pengar på glamourösa butiker längs Champs-Élysées, påkostade reklamkampanjer och flaskor som kostar mer än själva innehållet.</p><p>Hos oss betalar du bara för doften.</p><p><strong>Med en doftkoncentration på över 21 % matchar vi de absolut tyngsta lyxmärkena när det kommer till både doftkvalitet och hållbarhet.</strong></p><p>Våra parfymer sitter kvar hela dagen.</p><p>Skillnaden? <strong>Du betalar inte för deras logga.</strong><br/></p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_hrPEKc",
+        "text_HMARBK"
+      ],
+      "disabled": true,
+      "name": "Creed Attak",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "popular_products_XDHbay": {
+      "type": "popular-products",
+      "name": "New Products",
+      "settings": {
+        "background_color": "#fcfbf9",
+        "title": "🔥Senaste dofterna",
+        "description": "",
+        "collection": "new",
+        "button_text": "Visa alla",
+        "button_link": "shopify://collections/new",
+        "padding_top": 72,
+        "padding_bottom": 40
+      }
+    },
+    "popular_products_pNDeh4": {
+      "type": "popular-products",
+      "name": "Popular Products",
+      "settings": {
+        "background_color": "#fcfbf9",
+        "title": "Populära produkter",
+        "description": "<p>”Utan tvekan de bästa kopiorna jag har provat. De håller i timmar när de väl är applicerade—och jag planerar redan min nästa beställning.” — <strong>Jim Rogers</strong></p>",
+        "collection": "best-sellers",
+        "button_text": "Visa alla",
+        "button_link": "shopify://collections/best-sellers",
+        "padding_top": 40,
+        "padding_bottom": 72
+      }
+    },
+    "review_grid_H3xfHP": {
+      "type": "review-grid",
+      "blocks": {
+        "review_MKcdVw": {
+          "type": "review",
+          "settings": {
+            "heading": "Rekommenderas varmt.",
+            "content": "<p>Från kundservice till själva produkten var upplevelsen utmärkt. Allt kom som förväntat, och jag skulle gärna köpa igen.</p>",
+            "author": "Benjamin M.",
+            "date": "2 days ago",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": ""
+          }
+        },
+        "review_kCUEm4": {
+          "type": "review",
+          "settings": {
+            "heading": "Kom fram perfekt.",
+            "content": "<p>Produkten var väl förpackad, kom fram i utmärkt skick och doftkvaliteten överträffade mina förväntningar. Väldigt nöjd med detta köp.</p>",
+            "author": "Sharley A.",
+            "date": "2 days ago",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": ""
+          }
+        },
+        "review_EbFNac": {
+          "type": "review",
+          "settings": {
+            "heading": "Mycket prisvärt.",
+            "content": "<p>Jag blev verkligen imponerad av kvaliteten. Doften håller bra och känns jämförbar med mycket dyrare märken.</p>",
+            "author": "Santosh K.",
+            "date": "2 days ago",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "review_MKcdVw",
+        "review_kCUEm4",
+        "review_EbFNac"
+      ],
+      "disabled": true,
+      "name": "Review Grid",
+      "settings": {
+        "background_color": "#ffffff",
+        "heading": "Vad våra kunder säger",
+        "review_text": "4,9/5 baserat på 10000+ recensioner",
+        "button_text": "Read all reviews",
+        "button_link": "shopify://collections/all",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "special_offer_bogo_nMzyNp": {
+      "type": "special-offer-bogo",
+      "blocks": {
+        "perk_wnTHMw": {
+          "type": "perk",
+          "settings": {
+            "icon": "shopify://shop_images/sandwatch.svg",
+            "text": "Lasts 12+ Hours"
+          }
+        },
+        "perk_VkFF3N": {
+          "type": "perk",
+          "settings": {
+            "icon": "shopify://shop_images/heart.svg",
+            "text": "loved by 10,000+"
+          }
+        },
+        "perk_cG7y8p": {
+          "type": "perk",
+          "settings": {
+            "icon": "shopify://shop_images/sheild-star.svg",
+            "text": "60 day satisfaction guarantee"
+          }
+        }
+      },
+      "block_order": [
+        "perk_wnTHMw",
+        "perk_VkFF3N",
+        "perk_cG7y8p"
+      ],
+      "disabled": true,
+      "name": "Special Offer",
+      "settings": {
+        "background_image": "shopify://shop_images/Frame_349.png",
+        "offer_image": "shopify://shop_images/Group_27.png",
+        "offer_text": "Special Offer",
+        "offer_title": "Buy More, Get More Free",
+        "offer_description": "Choose your perfect bundle and receive matching free bottles in the same size: 30ml, 50ml, or 100ml.",
+        "offer_sub_description": "Scents that last all day. Luxury-inspired, up to 90% cheaper than designer brands.",
+        "offer_button_text": "Buy 4 for $44.00 Only",
+        "offer_button_link": "https://tryscent.co/products/4-x-100ml-perfume-bottles",
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
+    },
+    "shop_by_fHtnnB": {
+      "type": "shop-by",
+      "blocks": {
+        "collection_t6NHM7": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify://shop_images/explore.png",
+            "heading": "Scents For Women",
+            "subheading": "100+ scents to choose from",
+            "button_text": "Explore",
+            "button_link": "shopify://collections/woman",
+            "collection": "woman"
+          }
+        },
+        "collection_zqtLKY": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify://shop_images/scent-for-men-explore-img.png",
+            "heading": "Scents For Men",
+            "subheading": "100+ scents to choose from",
+            "button_text": "Explore",
+            "button_link": "shopify://collections/man",
+            "collection": "man"
+          }
+        }
+      },
+      "block_order": [
+        "collection_t6NHM7",
+        "collection_zqtLKY"
+      ],
+      "disabled": true,
+      "name": "Shop By",
+      "settings": {
+        "background_color": "#fcfbf9",
+        "heading": "Shop By Bestsellers",
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
+    },
+    "here_from_them_wccxKG": {
+      "type": "here-from-them",
+      "blocks": {
+        "testimonial_3jMx8n": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/explore.png",
+            "name": "Marcus R.",
+            "quote": "I didn’t expect much, but this is my new signature. It smells expensive, lasts all day, and actually turns heads."
+          }
+        },
+        "testimonial_Bh4nVA": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/explore.png",
+            "name": "Marcus R.",
+            "quote": "I didn’t expect much, but this is my new signature. It smells expensive, lasts all day, and actually turns heads."
+          }
+        },
+        "testimonial_P4hxWQ": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/explore.png",
+            "name": "Marcus R.",
+            "quote": "I didn’t expect much, but this is my new signature. It smells expensive, lasts all day, and actually turns heads."
+          }
+        },
+        "testimonial_yja8kV": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/explore.png",
+            "name": "Marcus R.",
+            "quote": "I didn’t expect much, but this is my new signature. It smells expensive, lasts all day, and actually turns heads."
+          }
+        },
+        "testimonial_MGyB3e": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/explore.png",
+            "name": "Marcus R.",
+            "quote": "I didn’t expect much, but this is my new signature. It smells expensive, lasts all day, and actually turns heads."
+          }
+        },
+        "testimonial_EQziDc": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/explore.png",
+            "name": "Marcus R.",
+            "quote": "I didn’t expect much, but this is my new signature. It smells expensive, lasts all day, and actually turns heads."
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_3jMx8n",
+        "testimonial_Bh4nVA",
+        "testimonial_P4hxWQ",
+        "testimonial_yja8kV",
+        "testimonial_MGyB3e",
+        "testimonial_EQziDc"
+      ],
+      "disabled": true,
+      "name": "Here From Them Carousel",
+      "settings": {
+        "heading": "Hear From Them."
+      }
+    },
+    "image_and_text": {
+      "type": "image-and-text",
+      "blocks": {
+        "heading_ax7WWJ": {
+          "type": "heading",
+          "settings": {
+            "content": "Vad innebär det att en doft tillverkas i EU?",
+            "heading_type": "h2",
+            "font_size": 32,
+            "mobile_font_size": 24
+          }
+        },
+        "text_gzPVkb": {
+          "type": "text",
+          "settings": {
+            "content": "<p>Vi tillverkar alla våra parfymer enligt EU:s strikta kosmetikastandarder. Det betyder att du får en produkt som är lika säker för din hud som den är lyxig för dina sinnen.</p><ul><li><strong>Strikta säkerhetskrav:</strong> Vi använder uteslutande ingredienser godkända av IFRA, vilket garanterar att doften är skonsam och säker att bära.</li><li><strong>Inga billigagenvägar:</strong> Inga billiga utspädningar eller tveksamma kemikalier från gråzoner utanför Europa.</li><li><strong>Certifierade anläggningar:</strong> Varje flaska blandas och fylls i kontrollerade, europeiska laboratorier med full spårbarhet.</li></ul>",
+            "mobile_content": "",
+            "font_size": 18
+          }
+        }
+      },
+      "block_order": [
+        "heading_ax7WWJ",
+        "text_gzPVkb"
+      ],
+      "settings": {
+        "background_color": "#ffffff",
+        "image": "shopify://shop_images/WhatsApp_Image_2026-01-17_at_10.59.01.jpg",
+        "rounded_image": true,
+        "image_placement": "1",
+        "mobile_image_placement": "under_heading",
+        "button_text": "",
+        "button_url": "",
+        "columns_gap": 40,
+        "rows_gap": 20,
+        "content_alignment": "center",
+        "blocks_gap": 24,
+        "padding_top": 72,
+        "padding_bottom": 72,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40
+      }
+    },
+    "special_offer_bogo_NqVrAK": {
+      "type": "special-offer-bogo",
+      "blocks": {
+        "perk_HrfwXR": {
+          "type": "perk",
+          "settings": {
+            "icon": "shopify://shop_images/sandwatch.svg",
+            "text": "Lasts 12+ Hours"
+          }
+        },
+        "perk_d4dqHJ": {
+          "type": "perk",
+          "settings": {
+            "icon": "shopify://shop_images/heart.svg",
+            "text": "loved by 10,000+"
+          }
+        },
+        "perk_9CajQF": {
+          "type": "perk",
+          "settings": {
+            "icon": "shopify://shop_images/sheild-star.svg",
+            "text": "60 day satisfaction guarantee"
+          }
+        }
+      },
+      "block_order": [
+        "perk_HrfwXR",
+        "perk_d4dqHJ",
+        "perk_9CajQF"
+      ],
+      "disabled": true,
+      "name": "Special Offer",
+      "settings": {
+        "background_image": "shopify://shop_images/special-offer-two-bg.png",
+        "offer_image": "shopify://shop_images/special-offer-two-bottle.png",
+        "offer_text": "Special Offer",
+        "offer_title": "Your Next Signature Scent, Trial-Sized.",
+        "offer_description": "Not ready to commit? Our travel-size perfumes let you explore luxe fragrances one spritz at a time.Perfect for pockets, purses, and perfume commitment issues.",
+        "offer_sub_description": "",
+        "offer_button_text": "BUY 4 for $44.00 Only",
+        "offer_button_link": "https://tryscent.co/products/4-x-100ml-perfume-bottles",
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
+    },
+    "home_category_wNQCfP": {
+      "type": "home-category",
+      "blocks": {
+        "category_yXjfNN": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/website_bundle.webp",
+            "text": "Bunta & spara",
+            "link": "shopify://collections/bundle-save"
+          }
+        },
+        "category_JatE79": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/tryscent_male_02.png",
+            "text": "For Him",
+            "link": "shopify://collections/man"
+          }
+        },
+        "category_kcgbew": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/ugc12.png",
+            "text": "For Her",
+            "link": "shopify://collections/woman"
+          }
+        },
+        "category_PLwfRa": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/website_unisex.webp",
+            "text": "Unisex",
+            "link": "shopify://collections/unisex"
+          }
+        }
+      },
+      "block_order": [
+        "category_yXjfNN",
+        "category_JatE79",
+        "category_kcgbew",
+        "category_PLwfRa"
+      ],
+      "name": "Home Categories",
+      "settings": {
+        "background_color": "#fcfbf9",
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
+    },
+    "makes_different_list_YjiDH8": {
+      "type": "makes-different-list",
+      "blocks": {
+        "list_item_LLAAfL": {
+          "type": "list_item",
+          "settings": {
+            "title": "Inspirerad av lyxikoner",
+            "description": "utan de uppblåsta prislapparna"
+          }
+        },
+        "list_item_Y8PNCx": {
+          "type": "list_item",
+          "settings": {
+            "title": "Veganskaoch rena ingredienser",
+            "description": "för fullständig trygghet."
+          }
+        },
+        "list_item_yxDVcQ": {
+          "type": "list_item",
+          "settings": {
+            "title": "Dofter som varar heladagen",
+            "description": "Och hänger med under dina mest aktivatimmar."
+          }
+        },
+        "list_item_htAiEB": {
+          "type": "list_item",
+          "settings": {
+            "title": "Ministorlekar att testaförst",
+            "description": "Testa på din hud först. Så att du är 100%säker innan du satsar på en hel flaska."
+          }
+        },
+        "list_item_bhN48G": {
+          "type": "list_item",
+          "settings": {
+            "title": "60dagars nöjdhetsgaranti.",
+            "description": "ifall det inte är kärlek vid första doften."
+          }
+        }
+      },
+      "block_order": [
+        "list_item_LLAAfL",
+        "list_item_Y8PNCx",
+        "list_item_yxDVcQ",
+        "list_item_htAiEB",
+        "list_item_bhN48G"
+      ],
+      "name": "Makes Different",
+      "settings": {
+        "background_color": "#ffffff",
+        "makes_diferent_title": "Vad gör TryScent annorlunda?",
+        "makes-different-image": "shopify://shop_images/makes-different-img_6a2b529a-e439-40fc-9580-88d632f61ea6.png",
+        "makes-different-btn-text": "BUY 2 GET 1 FREE - ENDS SOON!",
+        "makes-different-btn-link": "",
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
+    },
+    "home_occasions_BUcQ8i": {
+      "type": "home-occasions",
+      "blocks": {
+        "occasion_En4TzG": {
+          "type": "occasion",
+          "settings": {
+            "image": "shopify://shop_images/288.webp",
+            "eyebrow": "01 · Presence",
+            "title": "Attraction",
+            "description": "Leave a lasting impression.",
+            "link_text": "Find Your Scent",
+            "link": ""
+          }
+        },
+        "occasion_QEiwYC": {
+          "type": "occasion",
+          "settings": {
+            "image": "shopify://shop_images/520w_try.png",
+            "eyebrow": "02 · Composure",
+            "title": "Confidence",
+            "description": "Feel your best wherever the day takes you.",
+            "link_text": "Wear Confidence",
+            "link": ""
+          }
+        },
+        "occasion_tGyXzt": {
+          "type": "occasion",
+          "settings": {
+            "image": "shopify://shop_images/Best-Cologne-For-Older-Men.jpg",
+            "eyebrow": "03 · Occasion",
+            "title": "Special Occasions",
+            "description": "For the moments that deserve something extra.",
+            "link_text": "Make It Memorable",
+            "link": ""
+          }
+        },
+        "occasion_aMPdA4": {
+          "type": "occasion",
+          "settings": {
+            "image": "shopify://shop_images/How_do_you_find_new_fragrances.webp",
+            "eyebrow": "04 · Signature",
+            "title": "Everyday",
+            "description": "Your signature scent people will remember you by.",
+            "link_text": "Find Your Everyday",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "occasion_En4TzG",
+        "occasion_QEiwYC",
+        "occasion_tGyXzt",
+        "occasion_aMPdA4"
+      ],
+      "disabled": true,
+      "name": "Home Occasions",
+      "settings": {
+        "background_color": "#f5f2ec",
+        "eyebrow": "Build Your Collection",
+        "heading": "A fragrance for every occasion.",
+        "description": "<p>We are here to help you build a personalized and elite fragrance collection designed specifically for the most important occasions in life.</p>",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "massive_review_section": {
+      "type": "massive-review",
+      "blocks": {
+        "review_DbGYKc": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/345.png",
+            "content": "<p>\"Omg jag älskade den, wow! Precis som originalet och den håller hela dagen!❤️‍🔥❤️‍🔥\"</p>",
+            "author": "Jamillah G.",
+            "date": "för 4 månader sedan",
+            "rating": 4,
+            "show_verified_badge": true,
+            "product": "desert-storm"
+          }
+        },
+        "review_GJGq9n": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.55_AM.jpg",
+            "content": "<p>\"Jag är nöjd med TryScent. Doften luktar väldigt likt originalet och håller bra. Förpackningen är snygg och flaskan ser fin ut. Överlag är det ett jättebra alternativ om du vill ha en kvalitetsdoft till ett rimligt pris.\"</p>",
+            "author": "Alina M",
+            "date": "för 5 månader sedan",
+            "rating": 5,
+            "show_verified_badge": false,
+            "product": ""
+          }
+        },
+        "review_yEyWP7": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/pinkm.png",
+            "content": "<p>\"Väldigt bra varumärke, jag älskar förpackningen och doften.\"</p>",
+            "author": "Rosa B",
+            "date": "för 7 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "bergamote-le-labo-bergamote-22"
+          }
+        },
+        "review_MBb63N": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.36_AM_1.jpg",
+            "content": "<p>\"Luktar precis som Luna Rossa Carbon, men är mycket billigare. Kan inte fatta hur lik den är.\"</p>",
+            "author": "Robinson D.",
+            "date": "för 4 månader sedan",
+            "rating": 4,
+            "show_verified_badge": false,
+            "product": ""
+          }
+        },
+        "review_ByDgLX": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/Camila_Sena_Oliveira.jpg",
+            "content": "<p>\"Det här är den bästa doften jag har känt på väldigt länge, tonerna gör mig helt lycklig. Jag kommer att ha den här som en ständig favorit för alltid.\"</p>",
+            "author": "Jenniffer W.",
+            "date": "för 2 dagar sedan",
+            "rating": 4,
+            "show_verified_badge": true,
+            "product": "3x-50ml-perfume-bottles"
+          }
+        },
+        "review_YpX9h9": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/ugc15.png",
+            "content": "<p>\"Den luktar väldigt gott, jag älskade den.\"</p>",
+            "author": "Castillo B.",
+            "date": "för 3 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "tryscent-collection"
+          }
+        },
+        "review_dKt8hn": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/Carolina_Maresca_1.png",
+            "content": "<p>\"Alla tre dofterna jag fick är väldigt bra. De håller länge och luktar som de ska. Det enda jag inte var nöjd med var tiden det tog att få dem. Men ärligt talat gjorde jag en andra beställning, så räkna bara med lite väntetid. Haha!<br/>\"</p>",
+            "author": "Clara P.",
+            "date": "för 2 dagar sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "apple-cinnamon-sandalwood"
+          }
+        },
+        "review_VrkHXh": {
+          "type": "review",
+          "disabled": true,
+          "settings": {
+            "review_image": "shopify://shop_images/dupestore_3221df98-e409-4141-82ec-bdbe62af3756.jpg",
+            "content": "<p>\"Jag har försökt hitta dofter som luktar exklusivt och dessutom håller länge, utan framgång. Den här är precis vad jag letade efter..\"</p>",
+            "author": "Tiana N.",
+            "author_image": "shopify://shop_images/ugc15.png",
+            "date": "för 2 dagar sedan",
+            "rating": 4,
+            "show_verified_badge": true,
+            "product": "fresh-escape-premium"
+          }
+        },
+        "review_RNkDTG": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/ugc1.png",
+            "content": "<p>\"Fantastiskt varumärke och fantastiska produkter!\"</p>",
+            "author": "Juliana B",
+            "date": "för 4 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "3x-50ml-perfume-bottles"
+          }
+        },
+        "review_wczQWw": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/Camila_Sena_Oliveira_2.jpg",
+            "content": "<p>\"Jag visste inte riktigt vad jag skulle förvänta mig, men det här imponerade verkligen på mig. Den luktar superfräscht och är ärligt talat ganska nära Aventus. Den håller bra och priset är mycket bättre.\"</p>",
+            "author": "Michael T.",
+            "date": "för 2 dagar sedan",
+            "rating": 4,
+            "show_verified_badge": true,
+            "product": "pineapple-smoke-vanilla-50-ml-1-7-fl-oz"
+          }
+        },
+        "review_gF6wKD": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.58_AM_1.jpg",
+            "content": "<p>\"Detta är mitt första köp och jag är fast. Jag kommer aldrig att köpa parfym någon annanstans igen. Jag har aldrig kunnat hitta en dupe-doft som verkligen luktade autentiskt och konsekvent.\"</p>",
+            "author": "Killian P.",
+            "date": "för 1 dag sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "bergamot-sage-cedar-50-ml"
+          }
+        },
+        "review_9fWXGn": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/beatricedcastle_2.jpg",
+            "content": "<p>\" Jag ääälskar de här parfymerna!!! Varenda en jag fick doftar gudomligt. Vissa skulle jag säga är bättre än originalet.\"</p>",
+            "author": "Christine N.",
+            "date": "för 5 dagar sedan",
+            "rating": 4,
+            "show_verified_badge": false,
+            "product": ""
+          }
+        },
+        "review_w7rGQg": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/Carolina_Maresca_3.png",
+            "content": "<p>\"Doften på den här parfymen är superrik och jag älskar hur vacker flaskan är och dess design. Jag skulle absolut använda den igen.\"</p>",
+            "author": "Eliannys Y",
+            "date": "för 7 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "aldehydes-rose-sandalwood-50-ml-1-7-fl-oz"
+          }
+        },
+        "review_iPjTCz": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/2026-07-02_16h41_42.png",
+            "content": "<p>\"Först var jag orolig eftersom leveransen blev lite försenad, men när jag väl fick dem blev jag helt imponerad av doften. När den har lagt sig, herregud, då är den bara fantastisk.\"</p>",
+            "author": "Lionel M.",
+            "date": "för 7 dagar sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "4x-100ml-perfume-bottles"
+          }
+        },
+        "review_myTAe8": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/2026-07-02_16h57_29.png",
+            "content": "<p>\"Den luktar väldigt gott men håller inte så länge som den borde.\"</p>",
+            "author": "Terence M.",
+            "date": "för 2 månader sedan",
+            "rating": 5,
+            "show_verified_badge": false,
+            "product": ""
+          }
+        },
+        "review_DzktgE": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/Chiara_Onorini_2.jpg",
+            "content": "<p>\"Den är perfekt och vacker 🥰🥰🥰\"</p>",
+            "author": "Lidis A.",
+            "date": "för 2 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "saffron-rose-amber-50-ml-1-7-fl-oz"
+          }
+        },
+        "review_NBGz7p": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.50_AM.jpg",
+            "content": "<p>\"Parfymerna doftar perfekt, dofterna sitter kvar väldigt länge, fantastisk kvalitet.\"</p>",
+            "author": "Kamila G.",
+            "date": "för 3 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "6x-30ml-perfume-bottles"
+          }
+        },
+        "review_hAJXhk": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/Ana_Gandarez.jpg",
+            "content": "<p>\"Det här är den typen av doft som får dig att känna dig välfixad. Inte för stark, bara helt rätt. 👌\"</p>",
+            "author": "Michael R.",
+            "date": "för 4 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "alpha-oil"
+          }
+        },
+        "review_KkRLfy": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/2026-07-02_16h34_24.png",
+            "content": "<p>\"Jag är väldigt intresserad av cologne så jag är ganska kräsen när det gäller kloner, men TryScent vann verkligen över mig helt. Jag beställde först Sauvage-klonen från startsidan och kände igen doften direkt när jag sprayade. Nu äger jag totalt fyra TryScent-dofter och jag älskar dem allihop. Jag har dessutom tre till på väg tack vare deras bundelerbjudanden. Om du vill ha något som fungerar med en budget och levererar prestanda i designerklass kan jag inte rekommendera dem nog.\"</p>",
+            "author": "Astrid",
+            "date": "för 4 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "fresh-escape-premium"
+          }
+        },
+        "review_UfaJJE": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/ugc3.png",
+            "content": "<p>\"Produkten kom fram fint. Parfymen var inte trasig, läckte inte och var i gott skick. Doften är perfekt och luktade inte illa. Jag älskar den, hög kvalitet.\"</p>",
+            "author": "Roxanne S",
+            "date": "för 5 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "jasmine-cocoa-tonka"
+          }
+        },
+        "review_rad8A6": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/2026-07-02_16h58_13.png",
+            "content": "<p>\"Jag har använt Creed Aventus i flera år, men det här är den närmaste dupe jag har hittat, och till en bråkdel av priset. Kombinationen av ananas och vanilj sitter helt rätt.\"</p>",
+            "author": "Alvarez P.",
+            "date": "för 4 månader sedan",
+            "rating": 4,
+            "show_verified_badge": true,
+            "product": "pineapple-smoke-vanilla-50-ml-1-7-fl-oz"
+          }
+        },
+        "review_BLYVmX": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/2026-07-02_16h55_49.png",
+            "content": "<p>\"Produkten kom fram fint. Parfymen var inte trasig, läckte inte och var i gott skick. Doften är perfekt och luktade inte illa. Jag älskar den, hög kvalitet.\"</p>",
+            "author": "Anne E.",
+            "date": "för 4 månader sedan",
+            "rating": 4,
+            "show_verified_badge": true,
+            "product": "azure-dreams-pure"
+          }
+        },
+        "review_eerxBx": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/2026-07-02_16h49_01.png",
+            "content": "<p>\"Underbar doft. Håller länge. <br/>Söt och varm. Bra och snabb leverans. <br/>Kommer att köpa igen.\"</p>",
+            "author": "Lucy R",
+            "date": "för 4 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "6x-30ml-perfume-bottles"
+          }
+        },
+        "review_UWgaKy": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/Anastasiia_Komisarova.jpg",
+            "content": "<p>\"Deras produkter håller bra kvalitet till ett väldigt överkomligt pris.\"</p>",
+            "author": "Amanda G",
+            "date": "för 5 månader sedan",
+            "rating": 4,
+            "show_verified_badge": true,
+            "product": "amber-glow"
+          }
+        },
+        "review_pqPKKr": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Fantastiska dofter, fantastiska produkter, inga problem.\"</p>",
+            "author": "Alex S.",
+            "date": "för 6 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": ""
+          }
+        },
+        "review_YGWg6W": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Från service till produkt var upplevelsen fenomenal. Köper gärna igen när som helst.\"</p>",
+            "author": "Benjamin M",
+            "date": "för 5 månader sedan",
+            "rating": 5,
+            "show_verified_badge": false,
+            "product": ""
+          }
+        },
+        "review_eGyDpR": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.55_AM_1.jpg",
+            "content": "<p>\"Fantastisk produkt! Ett superprisvärt alternativ till märkesparfymerna. Doften håller länge och du får verkligen mycket för pengarna.\"</p>",
+            "author": "EM",
+            "date": "för 4 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "bergamote-le-labo-bergamote-22"
+          }
+        },
+        "review_Xg6QrF": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag gillar den! Jag gillar den här doften. Bra parfym.\"</p>",
+            "author": "Aleksandra M",
+            "date": "för 7 månader sedan",
+            "rating": 5,
+            "show_verified_badge": false,
+            "product": "alpha-oil"
+          }
+        },
+        "review_Bhzenw": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/Carolina_Maresca_2.png",
+            "content": "<p>\"Fantastisk produkt, luktar otroligt gott. Jag får alltid folk som frågar om min doft och vad jag använder.\"</p>",
+            "author": "Damario R",
+            "date": "för 7 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "azure-dreams-pure"
+          }
+        },
+        "review_j8wKcd": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.36_AM.jpg",
+            "content": "<p>\"Efter en liten försening har jag äntligen fått mina TryScent-parfymer och de är helt träffsäkra! Jag kan knappt tro hur lika de är originalen. Som referens köpte jag \\\"Ylang Ylang Rose Jasmine\\\" och \\\"Aldehydes Rose Sandalwood\\\" och de är verkligen vackra dofter.\"</p>",
+            "author": "Gabriella K",
+            "date": "för 7 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "amalfi-coast-mandarino-di-amalfi-fragrance"
+          }
+        },
+        "review_GPPnxQ": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/Daria_Kononenko_3.jpg",
+            "content": "<p>\"Jag är väldigt nöjd med parfymen från det här märket. Den har en så vacker doft, luktar som originalet och är billigare. Jag kommer definitivt att köpa den igen.\"</p>",
+            "author": "Vera",
+            "date": "för 8 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "6x-30ml-perfume-bottles"
+          }
+        },
+        "review_nJELg9": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"I somras fick jag ett prov av Creed Aventus i present och jag gillade det verkligen, men jag hade inte råd med originalet så jag började leta efter dupes. Jag hittade TryScent och beställde \\\"Pineapple Smoke Vanilla\\\". Jag fick den på ungefär en vecka och den luktar riktigt gott, dessutom väldigt nära mitt originalprov. Jag är väldigt nöjd med produkten, särskilt för priset.\"</p>",
+            "author": "Hwan H",
+            "date": "för 8 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "3x-50ml-perfume-bottles"
+          }
+        },
+        "review_kqR3XT": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag testade deras 7,5 ml provdofter och till min förvåning gillade jag dem. Jag har beställt en andra omgång och den här gången tog jag de större flaskorna. Jag måste säga att jag fick mina beställningar i tid och att de levererade de dofter jag gillar!\"</p>",
+            "author": "Lauri E",
+            "date": "för 8 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true,
+            "product": "black-berry-vanilla-musk"
+          }
+        }
+      },
+      "block_order": [
+        "review_DbGYKc",
+        "review_GJGq9n",
+        "review_yEyWP7",
+        "review_MBb63N",
+        "review_ByDgLX",
+        "review_YpX9h9",
+        "review_dKt8hn",
+        "review_VrkHXh",
+        "review_RNkDTG",
+        "review_wczQWw",
+        "review_gF6wKD",
+        "review_9fWXGn",
+        "review_w7rGQg",
+        "review_iPjTCz",
+        "review_myTAe8",
+        "review_DzktgE",
+        "review_NBGz7p",
+        "review_hAJXhk",
+        "review_KkRLfy",
+        "review_UfaJJE",
+        "review_rad8A6",
+        "review_BLYVmX",
+        "review_eerxBx",
+        "review_UWgaKy",
+        "review_pqPKKr",
+        "review_YGWg6W",
+        "review_eGyDpR",
+        "review_Xg6QrF",
+        "review_Bhzenw",
+        "review_j8wKcd",
+        "review_GPPnxQ",
+        "review_nJELg9",
+        "review_kqR3XT"
+      ],
+      "settings": {
+        "background_color": "#fcfbf9",
+        "heading": "Gå med 10 000+ nöjda kunder",
+        "review_text": "4,9/5 baserat på 10 000+ recensioner",
+        "button_text": "Visa fler recensioner",
+        "button_link": "#",
+        "padding_top": 60,
+        "padding_bottom": 72
+      }
+    },
+    "our_bestsellers_niPBnL": {
+      "type": "our-bestsellers",
+      "name": "Our Bestsellers",
+      "settings": {
+        "background_color": "#226139",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "people_are_lovin_VGanra": {
+      "type": "people-are-lovin",
+      "blocks": {
+        "video_3Wzdbd": {
+          "type": "video",
+          "settings": {
+            "video": "shopify://files/videos/Perfume REV 2 UGC 15-6-25.mp4",
+            "video_poster": "shopify://shop_images/videoframe_715.png"
+          }
+        },
+        "video_NXWkmR": {
+          "type": "video",
+          "settings": {
+            "video": "shopify://files/videos/Perfume 2nd 21-06-25.mp4",
+            "video_poster": "shopify://shop_images/videoframe_5651.png"
+          }
+        },
+        "video_Fy6ytd": {
+          "type": "video",
+          "settings": {
+            "video": "shopify://files/videos/Perfume rev 2  2nd  UGC 15-6-25.mp4",
+            "video_poster": "shopify://shop_images/videoframe_5040.png"
+          }
+        }
+      },
+      "block_order": [
+        "video_3Wzdbd",
+        "video_NXWkmR",
+        "video_Fy6ytd"
+      ],
+      "disabled": true,
+      "name": "People Are Loving",
+      "settings": {
+        "background_color": "#f0f2ec",
+        "makes_diferent_title": "People Are Loving",
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
+    },
+    "175501299681a2aa62": {
+      "type": "apps",
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "17551175978bd893d1": {
+      "type": "apps",
+      "disabled": true,
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "marquee_labels_pxhCDL": {
+      "type": "marquee-labels",
+      "blocks": {
+        "label_q4pXPr": {
+          "type": "label",
+          "disabled": true,
+          "settings": {
+            "icon": "shopify://shop_images/fast-delivery-truck-van-svgrepo-com.svg",
+            "label": "FREE SHIPPING ON ORDERS ABOVE $50"
+          }
+        },
+        "label_3jXRHH": {
+          "type": "label",
+          "settings": {
+            "icon": "shopify://shop_images/save-pound-svgrepo-com.svg",
+            "label": "SAVE UPTO 50% OFF WITH OUR BUNDLES & GIFT SETS"
+          }
+        },
+        "label_eBrDcC": {
+          "type": "label",
+          "settings": {
+            "icon": "shopify://shop_images/verified-svgrepo-com.svg",
+            "label": "100% AUTHENTIC"
+          }
+        },
+        "label_pNxYCF": {
+          "type": "label",
+          "settings": {
+            "icon": "shopify://shop_images/achievement-svgrepo-com.svg",
+            "label": "EXPERT-CURATED COLLECTIONS"
+          }
+        },
+        "label_jRHLQB": {
+          "type": "label",
+          "settings": {
+            "icon": "shopify://shop_images/money-back-business-warranty-satisfaction-marketing-guaranted-svgrepo-com.svg",
+            "label": "RISK-FREE 60 DAYS MONEY BACK GUARANTEE"
+          }
+        }
+      },
+      "block_order": [
+        "label_q4pXPr",
+        "label_3jXRHH",
+        "label_eBrDcC",
+        "label_pNxYCF",
+        "label_jRHLQB"
+      ],
+      "disabled": true,
+      "name": "Marquee Labels",
+      "settings": {}
+    },
+    "175501299598bc050d": {
+      "type": "apps",
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "insta_story",
+    "homepage_hero_GDeBtq",
+    "home_hero_banner_qmaB3G",
+    "marquee_labels_RLdqpN",
+    "feature_highlights_wfUacV",
+    "custom_liquid_4rbfWw",
+    "rich_text_4ya4cF",
+    "popular_products_XDHbay",
+    "popular_products_pNDeh4",
+    "review_grid_H3xfHP",
+    "special_offer_bogo_nMzyNp",
+    "shop_by_fHtnnB",
+    "here_from_them_wccxKG",
+    "image_and_text",
+    "special_offer_bogo_NqVrAK",
+    "home_category_wNQCfP",
+    "makes_different_list_YjiDH8",
+    "home_occasions_BUcQ8i",
+    "massive_review_section",
+    "our_bestsellers_niPBnL",
+    "people_are_lovin_VGanra",
+    "175501299681a2aa62",
+    "17551175978bd893d1",
+    "marquee_labels_pxhCDL",
+    "175501299598bc050d"
+  ]
+}

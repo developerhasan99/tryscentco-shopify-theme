@@ -1,0 +1,27 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "context": {
+    "market": "sweden"
+  },
+  "parent": "header-group.json",
+  "sections": {
+    "offer_timebar_xLgmJd": {
+      "settings": {
+        "top_banner_text": "BARA UNDER EN KORT TID",
+        "prepend_text": "KÖP 2, FÅ 1 GRATIS:",
+        "countdown_date": "",
+        "append_text": "HANDLA NU",
+        "link": "shopify://collections/bundle-save"
+      },
+      "blocks": {}
+    }
+  }
+}
