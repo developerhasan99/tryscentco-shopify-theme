@@ -186,6 +186,7 @@
         },
         "menu_item_dLfQGR": {
           "type": "menu_item",
+          "disabled": true,
           "settings": {
             "label": "Om oss",
             "url": "shopify://pages/about-us"
