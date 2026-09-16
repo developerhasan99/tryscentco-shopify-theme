@@ -86,7 +86,7 @@
         "button_text": "Hitta din favoritparfym",
         "button_link": "https://tryscent.co/#quiz",
         "secondary_button_text": "Bästsäljare",
-        "secondary_button_link": "shopify://collections/best-sellers",
+        "secondary_button_link": "shopify://collections/bestseller-singles",
         "padding_top": 80,
         "padding_bottom": 80,
         "mobile_padding_top": 36,
