@@ -172,6 +172,7 @@
         },
         "menu_item_JjXgCN": {
           "type": "menu_item",
+          "disabled": true,
           "settings": {
             "label": "Doftpaket",
             "url": "shopify://collections/bundle-save"
