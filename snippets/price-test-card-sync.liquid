@@ -3,6 +3,11 @@
   The price test app rewrites only the spots on its own selector list, so card prices are synced
   here from the app's group prices. Visitors outside a test have no group data and nothing changes.
 {%- endcomment -%}
+<style>
+  .price-test-compare-under {
+    display: none !important;
+  }
+</style>
 <script>
   (() => {
     if (document.documentElement.dataset.priceTestCardSync) return;
@@ -25,7 +30,28 @@
       return `${whole.replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${cents}`;
     };
 
+    const amountOf = text => {
+      const match = text.replace(/\s/g, '').match(/\d[\d.]*,\d{2}|\d[\d.]*/);
+      return match ? Number(match[0].replace(/\./g, '').replace(',', '.')) : null;
+    };
+
+    // A crossed out price only makes sense above the price. A test price can climb past the
+    // shop's compare at price on a product that is on sale, and then the strike through would
+    // sit under the price; those spots hide it, and show it again as soon as it is above.
+    const guardCompare = () => {
+      for (const block of document.querySelectorAll('#product-price, .card-information')) {
+        const compare = block.querySelector('.compare-price, .line-through, s, del');
+        const current = block.querySelector('.current-price, .ab-current-price');
+        if (!compare || !current) continue;
+        const was = amountOf(compare.textContent);
+        const now = amountOf(current.textContent);
+        if (was === null || now === null) continue;
+        compare.classList.toggle('price-test-compare-under', was <= now);
+      }
+    };
+
     const sync = () => {
+      guardCompare();
       const prices = testPrices();
       if (!prices?.size) return;
       for (const card of document.querySelectorAll('.product-card-wrapper[data-variant-id]')) {
@@ -35,6 +61,7 @@
         const text = label.textContent.replace(/\d[\d.,]*/, asNumber(price));
         if (label.textContent !== text) label.textContent = text;
       }
+      guardCompare();
     };
 
     let timer;
