@@ -167,7 +167,7 @@
           "type": "menu_item",
           "settings": {
             "label": "Bestsellers",
-            "url": "shopify://collections/best-sellers"
+            "url": "shopify://collections/bestseller-singles"
           }
         },
         "menu_item_JjXgCN": {
