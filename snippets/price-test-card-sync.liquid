@@ -47,5 +47,17 @@
     new MutationObserver(schedule).observe(document.documentElement, { childList: true, subtree: true });
     sync();
     window.addEventListener('load', schedule);
+
+    // The price data usually lands a few hundred milliseconds in, before the page has finished
+    // loading and on a collection page often without touching the DOM, so neither hook above
+    // sees it and the cards keep the base price until the load event. Look for it directly
+    // until it is there, then stop.
+    let looks = 0;
+    const lookForPrices = setInterval(() => {
+      looks += 1;
+      const found = Boolean(testPrices()?.size);
+      if (found || looks >= 100) clearInterval(lookForPrices);
+      if (found) sync();
+    }, 200);
   })();
 </script>
