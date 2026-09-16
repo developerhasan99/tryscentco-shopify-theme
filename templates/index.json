@@ -86,7 +86,7 @@
         "button_text": "Hitta din favoritparfym",
         "button_link": "https://tryscent.co/#quiz",
         "secondary_button_text": "Bästsäljare",
-        "secondary_button_link": "https://tryscent.co/sv-se/collections/4-2",
+        "secondary_button_link": "shopify://collections/best-sellers",
         "padding_top": 80,
         "padding_bottom": 80,
         "mobile_padding_top": 36,
@@ -757,7 +757,6 @@
         "review_GJGq9n": {
           "type": "review",
           "settings": {
-            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.55_AM.jpg",
             "content": "<p>\"Jag är nöjd med TryScent. Doften luktar väldigt likt originalet och håller bra. Förpackningen är snygg och flaskan ser fin ut. Överlag är det ett jättebra alternativ om du vill ha en kvalitetsdoft till ett rimligt pris.\"</p>",
             "author": "Alina M",
             "date": "för 5 månader sedan",
@@ -939,7 +938,6 @@
         "review_NBGz7p": {
           "type": "review",
           "settings": {
-            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.50_AM.jpg",
             "content": "<p>\"Parfymerna doftar perfekt, dofterna sitter kvar väldigt länge, fantastisk kvalitet.\"</p>",
             "author": "Kamila G.",
             "date": "för 3 månader sedan",
@@ -1057,7 +1055,6 @@
         "review_eGyDpR": {
           "type": "review",
           "settings": {
-            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.55_AM_1.jpg",
             "content": "<p>\"Fantastisk produkt! Ett superprisvärt alternativ till märkesparfymerna. Doften håller länge och du får verkligen mycket för pengarna.\"</p>",
             "author": "EM",
             "date": "för 4 månader sedan",
