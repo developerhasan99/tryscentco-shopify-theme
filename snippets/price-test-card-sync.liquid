@@ -1,0 +1,51 @@
+{%- comment -%}
+  Product cards carry the variant behind their printed price (data-variant-id on the card wrapper).
+  The price test app rewrites only the spots on its own selector list, so card prices are synced
+  here from the app's group prices. Visitors outside a test have no group data and nothing changes.
+{%- endcomment -%}
+<script>
+  (() => {
+    if (document.documentElement.dataset.priceTestCardSync) return;
+    document.documentElement.dataset.priceTestCardSync = '1';
+
+    const testPrices = () => {
+      const groups = window.absolutely?.testGroups;
+      const tests = window.absolutelyConfig?.priceTests;
+      if (!groups || !tests) return null;
+      const prices = new Map();
+      for (const test of tests) {
+        const group = (test.groups || []).find(item => item.id === groups[test.id]);
+        for (const variant of group?.variants || []) prices.set(String(variant.variantId), Number(variant.price));
+      }
+      return prices;
+    };
+
+    const asNumber = amount => {
+      const [whole, cents] = amount.toFixed(2).split('.');
+      return `${whole.replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${cents}`;
+    };
+
+    const sync = () => {
+      const prices = testPrices();
+      if (!prices?.size) return;
+      for (const card of document.querySelectorAll('.product-card-wrapper[data-variant-id]')) {
+        const price = prices.get(card.dataset.variantId);
+        const label = card.querySelector('.ab-current-price');
+        if (!price || !label) continue;
+        const text = label.textContent.replace(/\d[\d.,]*/, asNumber(price));
+        if (label.textContent !== text) label.textContent = text;
+      }
+    };
+
+    let timer;
+    const schedule = () => {
+      clearTimeout(timer);
+      timer = setTimeout(sync, 150);
+    };
+
+    // The app fills its price data after load without an event, and grids add cards on scroll.
+    new MutationObserver(schedule).observe(document.documentElement, { childList: true, subtree: true });
+    sync();
+    window.addEventListener('load', schedule);
+  })();
+</script>
