@@ -1,4 +1,13 @@
-<a class="no-underline block" href="{{ product.url }}">
+{%- liquid
+  assign card_price_variant = product.selected_or_first_available_variant
+  for card_variant in product.variants
+    if card_variant.price == product.price
+      assign card_price_variant = card_variant
+      break
+    endif
+  endfor
+-%}
+<a class="no-underline block" href="{{ product.url }}" data-variant-id="{{ card_price_variant.id }}">
   <img
     class="w-full h-auto"
     src="{{ product.featured_image.src |  image_url: width: 300 }}"
@@ -25,7 +34,7 @@
     {% unless product.tags contains 'onsale' %}
       <span class="starts_at_text">Starts at</span>
     {% endunless %}
-    {{ product.price | money }}
+    <span class="ab-current-price">{{ product.price | money }}</span>
     {% if product.tags contains 'onsale' %}
       <span class="line-through text-[#c8202f] font-normal">
         {{ cart.currency.symbol }}{{ product.compare_at_price | money_without_currency }}</span>

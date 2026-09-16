@@ -86,7 +86,16 @@ TODO: Show bestseller tag if the product contains "bestseller" tag.
       assign ratio = 1
     endif
   -%}
-  <div class="card-wrapper product-card-wrapper underline-links-hover border border-solid border-gray-200 rounded-lg">
+  {%- liquid
+    assign card_price_variant = card_product.selected_or_first_available_variant
+    for card_variant in card_product.variants
+      if card_variant.price == card_product.price
+        assign card_price_variant = card_variant
+        break
+      endif
+    endfor
+  -%}
+  <div class="card-wrapper product-card-wrapper underline-links-hover border border-solid border-gray-200 rounded-lg" data-variant-id="{{ card_price_variant.id }}">
     <div
       class="
         card card--{{ settings.card_style }}
@@ -308,7 +317,7 @@ TODO: Show bestseller tag if the product contains "bestseller" tag.
                 {% unless card_product.tags contains 'onsale' %}
                   <span class="starts_at_text">Från</span>
                 {% endunless %}
-                {{ card_product.price | money }}
+                <span class="ab-current-price">{{ card_product.price | money }}</span>
                 {% if card_product.tags contains 'onsale' %}
                   <span class="line-through text-[#c8202f] font-normal">
                     {{ cart.currency.symbol }}{{ card_product.compare_at_price | money_without_currency }}
