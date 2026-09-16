@@ -40,6 +40,7 @@
         type="button"
         class="variant-button rounded-lg px-2 pt-4 pb-3 bg-white border-2 border-solid cursor-pointer font-['Figtree'] relative {% if variant.id == selected_variant.id %}border-green-700{% else %}border-gray-200{% endif %}"
         data-variant-id="{{ variant.id }}"
+        data-variant-ml="{{ variant_ml }}"
         data-variant-title="{{ variant.title }}"
         data-original-price="{{ variant.price | money }}"
         data-afterpay-price="{{ variant.price |  divided_by: 4 |  money }}"
@@ -52,7 +53,7 @@
           <span class="text-xs italic text-white rounded absolute -top-2.5 left-1/2 [transform:translateX(-50%)] bg-[#22613a] px-2 py-0.5 whitespace-nowrap">Bäst värde</span>
         {% endif %}
         {% if variant_ml > 0 %}
-          <div class="text-xs text-gray-500">{{ price_per_ml | money }} / ml</div>
+          <div class="text-xs text-gray-500 price-per-ml">{{ price_per_ml | money }} / ml</div>
         {% endif %}
       </button>
     {% endfor %}
@@ -236,5 +237,43 @@
         updateVariant(variantId);
       });
     });
+  })();
+</script>
+
+<script>
+  (() => {
+    if (document.documentElement.dataset.pricePerMlSync) return;
+    document.documentElement.dataset.pricePerMlSync = '1';
+
+    const testPrices = () => {
+      const groups = window.absolutely?.testGroups;
+      const tests = window.absolutelyConfig?.priceTests;
+      if (!groups || !tests) return null;
+      const prices = new Map();
+      for (const test of tests) {
+        const group = (test.groups || []).find(item => item.id === groups[test.id]);
+        for (const variant of group?.variants || []) prices.set(String(variant.variantId), Number(variant.price));
+      }
+      return prices;
+    };
+
+    const sync = () => {
+      const prices = testPrices();
+      if (!prices?.size) return;
+      for (const button of document.querySelectorAll('.variant-button[data-variant-ml]')) {
+        const price = prices.get(button.dataset.variantId);
+        const ml = Number(button.dataset.variantMl);
+        const label = button.querySelector('.price-per-ml');
+        if (!price || !ml || !label) continue;
+        label.textContent = label.textContent.replace(/[\d.,]+/, (price / ml).toFixed(2).replace('.', ','));
+      }
+    };
+
+    // The price test app rewrites the printed prices after load and on every size change
+    // without firing an event, so the per ml figures follow the main price element.
+    const mainPrice = document.getElementById('product-price');
+    if (mainPrice) new MutationObserver(sync).observe(mainPrice, { childList: true, characterData: true, subtree: true });
+    sync();
+    window.addEventListener('load', sync);
   })();
 </script>
