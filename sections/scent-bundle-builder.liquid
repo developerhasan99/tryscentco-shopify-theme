@@ -75,11 +75,14 @@
     </div>
   {%- endif -%}
 
-  <div class="sbb-builder">
+  <div class="sbb-builder" x-ref="preview">
     <div class="sbb-builder__main">
       <div class="sbb-slots">
         <template x-for="(s, i) in slotsArray" :key="i">
-          <div class="sbb-slot" :class="{ 'sbb-slot--free': isFree(i), 'sbb-slot--filled': slot(i) }">
+          <div
+            class="sbb-slot"
+            :class="{ 'sbb-slot--free': isFree(i), 'sbb-slot--filled': slot(i) }"
+            @click="scrollToPool()">
             <span
               class="sbb-slot__badge"
               x-show="!isFree(i)"
@@ -95,7 +98,7 @@
                 <button
                   type="button"
                   class="sbb-slot__x"
-                  @click="removeAt(i)"
+                  @click.stop="removeAt(i)"
                   aria-label="Ta bort">&times;</button>
               </span>
             </template>
@@ -160,21 +163,24 @@
         <span>{{ st.price_label | escape }}</span>
         <span x-text="money(yourPrice)">{{ 0 | money }}</span>
       </div>
-      <template x-if="full && discount > 0">
-        <p class="sbb-summary__pill">
-          <span>{{ st.savings_label | escape }}</span>
-          <span x-text="money(discount)"></span>
-        </p>
-      </template>
+      <button
+        type="button"
+        class="sbb-summary__cta"
+        x-show="full"
+        :disabled="adding"
+        @click="addToCart()">
+        <span x-text="adding ? 'Lägger till…' : {{ st.cta_button_label | json | escape }}"></span>
+      </button>
     </aside>
   </div>
 
-  <div class="sbb-controls">
+  <div class="sbb-controls" x-ref="pool">
     <form class="sbb-search" @submit.prevent>
       <input
         type="search"
         placeholder="{{ st.search_placeholder | escape }}"
-        x-model="q">
+        x-model="q"
+        x-ref="searchInput">
     </form>
     <div class="sbb-controls__row">
       <select x-model="brand" x-show="brandOptions.length">
@@ -244,7 +250,7 @@
     <button type="button" @click="limited = false">{{ st.reveal_label | escape }}</button>
   </div>
 
-  <div class="sbb-sticky">
+  <div class="sbb-sticky" :class="{ 'is-visible': showSticky }">
     <div class="sbb-sticky__container">
       <div class="sbb-sticky__inner">
         <div class="sbb-sticky__slots">
@@ -304,6 +310,7 @@
         moneyFormat: {{ shop.money_format | json }},
         tierIndex: 0,
         adding: false,
+        showSticky: false,
         q: '',
         brand: '',
         gender: '',
@@ -336,6 +343,29 @@
             },
           {%- endfor -%}
         ],
+        init() {
+          var self = this;
+          this.$nextTick(function () {
+            if (!self.$refs.preview || !('IntersectionObserver' in window)) {
+              self.showSticky = true;
+              return;
+            }
+            var observer = new IntersectionObserver(function (entries) {
+              entries.forEach(function (entry) {
+                self.showSticky = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+              });
+            }, { threshold: 0 });
+            observer.observe(self.$refs.preview);
+          });
+        },
+        scrollToPool() {
+          if (!this.$refs.pool) return;
+          this.$refs.pool.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          if (this.$refs.searchInput) {
+            var input = this.$refs.searchInput;
+            setTimeout(function () { input.focus({ preventScroll: true }); }, 400);
+          }
+        },
         get tier() { return this.tiers[this.tierIndex]; },
         get slotsArray() { return Array.from({ length: this.tier.total }); },
         isFree(i) { return i >= this.tier.total - this.tier.free; },
