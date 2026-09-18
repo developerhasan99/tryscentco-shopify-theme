@@ -21,22 +21,41 @@
 
 .sbb-tiers {
   display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 24px;
+  gap: 12px;
+  max-width: 520px;
+  margin: 0 auto 24px;
 }
-.sbb-tiers__btn {
-  padding: 8px 20px;
-  border: 1px solid #ddd;
-  border-radius: 999px;
+.sbb-tier-card {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 12px;
+  border: 1.5px solid #eee;
+  border-radius: 12px;
   background: #fff;
-  font-weight: 600;
   cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
-.sbb-tiers__btn.is-active {
-  background: #1f7a4d;
+.sbb-tier-card:hover {
+  border-color: #bebdba;
+}
+.sbb-tier-card.is-active {
   border-color: #1f7a4d;
-  color: #fff;
+  background: #f2f8f4;
+}
+.sbb-tier-card__title {
+  font-weight: 700;
+  font-size: 15px;
+  color: #111;
+}
+.sbb-tier-card.is-active .sbb-tier-card__title {
+  color: #1f7a4d;
+}
+.sbb-tier-card__desc {
+  font-size: 12px;
+  color: #777;
 }
 
 .sbb-builder {
@@ -54,16 +73,17 @@
 }
 
 .sbb-slots {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  display: flex;
+  gap: clamp(6px, 1.5vw, 12px);
   margin-bottom: 16px;
 }
 .sbb-slot {
   position: relative;
+  flex: 1 1 0;
+  min-width: 0;
   border: 1.5px dashed #ddd;
   border-radius: 10px;
-  padding: 12px 8px;
+  padding: clamp(6px, 1.5vw, 12px) 6px;
   text-align: center;
   min-height: 150px;
   display: flex;
@@ -97,14 +117,14 @@
 }
 .sbb-slot__pill {
   position: absolute;
-  top: -10px;
-  right: -6px;
+  top: 2px;
+  left: 2px;
   background: #1f7a4d;
   color: #fff;
   font-size: 10px;
   font-weight: 700;
   padding: 3px 8px;
-  border-radius: 999px;
+  border-radius: 8px;
 }
 .sbb-slot__pick {
   display: flex;
@@ -113,13 +133,13 @@
   gap: 4px;
 }
 .sbb-slot__pick img {
-  width: 64px;
-  height: 64px;
+  width: min(64px, 60%);
+  aspect-ratio: 1;
   object-fit: cover;
   border-radius: 6px;
 }
 .sbb-slot__bottle {
-  width: 32px;
+  width: min(32px, 40%);
   height: auto;
   fill: #f6f5f2;
   stroke: #bebdba;
@@ -143,8 +163,9 @@
   cursor: pointer;
 }
 .sbb-slot__label {
-  font-size: 12px;
+  font-size: clamp(10px, 2.6vw, 12px);
   color: #666;
+  overflow-wrap: break-word;
 }
 .sbb-slot__label--name {
   font-weight: 600;
@@ -190,7 +211,7 @@
 .sbb-summary__row--total {
   font-size: 20px;
   font-weight: 700;
-  margin-top: 12px;
+  margin-top: 0;
 }
 .sbb-summary__pill {
   display: flex;
@@ -407,13 +428,16 @@
   }
 }
 @media screen and (max-width: 640px) {
-  .sbb-slots {
-    grid-template-columns: repeat(2, 1fr);
-  }
   .sbb-builder {
     flex-direction: column;
   }
   .sbb-summary {
     flex-basis: auto;
   }
+}
+
+
+/* Disable scent quiz */
+#scent-quiz-fab {
+  display: none;
 }
