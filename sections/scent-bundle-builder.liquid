@@ -4,7 +4,13 @@
   assign grid_pool = st.grid_collection | default: collections['best-sellers']
 -%}
 
-{%- if bundle_product != blank -%}
+{%- if bundle_product == blank -%}
+  {%- if request.design_mode -%}
+    <div style="padding: 40px; text-align: center; color: #888; border: 1px dashed #ccc;">
+      Scent bundle builder: pick a Bundle product in section settings.
+    </div>
+  {%- endif -%}
+{%- else -%}
   {%- liquid
     assign dropdown_ml = bundle_product.metafields.custom.select_bundle_dropdown_ml | default: '100'
     assign bundle_ml = dropdown_ml | append: 'ml'
