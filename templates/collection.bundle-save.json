@@ -183,8 +183,8 @@
       "type": "scent-bundle-builder",
       "name": "Scent bundle builder",
       "settings": {
-        "bundle_product": "",
-        "grid_collection": "",
+        "bundle_product": "4x-100ml-perfume-bottles",
+        "grid_collection": "bestseller-singles",
         "heading": "Bygg ditt eget Välj & spara",
         "subheading": "3 × 100 ml parfymer – få den 4:e helt gratis",
         "slot_label": "Välj din doft",
