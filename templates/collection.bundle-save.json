@@ -184,6 +184,11 @@
       "name": "Scent bundle builder",
       "settings": {
         "bundle_product": "4x-100ml-perfume-bottles",
+        "tier_1_free_count": 1,
+        "tier_1_label": "3 flaskor",
+        "bundle_product_2": "",
+        "tier_2_free_count": 2,
+        "tier_2_label": "6 flaskor",
         "grid_collection": "bestseller-singles",
         "heading": "Bygg ditt eget Välj & spara",
         "subheading": "3 × 100 ml parfymer – få den 4:e helt gratis",
@@ -199,7 +204,6 @@
         "price_label": "Ditt pris",
         "savings_label": "Du sparar",
         "search_placeholder": "Hitta din parfym",
-        "ribbon_text": "",
         "cta_label": "Lägg",
         "empty_text": "Inga dofter matchar din sökning.",
         "reveal_label": "Kolla in mer!",
@@ -233,6 +237,7 @@
         "featured_product_WYiyqw",
         "quiz_promo_card_hA4E9G"
       ],
+      "disabled": true,
       "settings": {
         "products_per_page": 16,
         "columns_desktop": 4,
