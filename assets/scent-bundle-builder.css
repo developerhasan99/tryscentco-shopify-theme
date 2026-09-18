@@ -19,6 +19,26 @@
   margin: 0;
 }
 
+.sbb-tiers {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.sbb-tiers__btn {
+  padding: 8px 20px;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+.sbb-tiers__btn.is-active {
+  background: #1f7a4d;
+  border-color: #1f7a4d;
+  color: #fff;
+}
+
 .sbb-builder {
   display: flex;
   flex-wrap: wrap;
@@ -98,6 +118,18 @@
   object-fit: cover;
   border-radius: 6px;
 }
+.sbb-slot__bottle {
+  width: 32px;
+  height: auto;
+  fill: #f6f5f2;
+  stroke: #bebdba;
+  stroke-width: 1.6;
+  stroke-dasharray: 3.2 3.2;
+}
+.sbb-slot--free .sbb-slot__bottle {
+  fill: #daf1e1;
+  stroke: #729e87;
+}
 .sbb-slot__x {
   position: absolute;
   top: 4px;
@@ -127,10 +159,12 @@
   margin-bottom: 8px;
 }
 .sbb-progress__fill {
+  display: block !important;
   height: 100%;
   background: #1f7a4d;
   width: 0%;
   transition: width 0.2s ease;
+  border-radius: 999px;
 }
 .sbb-progress__copy {
   font-size: 13px;
@@ -315,10 +349,25 @@
   border-radius: 6px;
   border: 1px dashed #ddd;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .sbb-sticky__slot.is-filled {
   border-style: solid;
   border-color: #1f7a4d;
+}
+.sbb-sticky__bottle {
+  width: 14px;
+  height: auto;
+  fill: #f6f5f2;
+  stroke: #bebdba;
+  stroke-width: 0.6;
+  stroke-dasharray: 1 1;
+}
+.sbb-sticky__slot.is-filled .sbb-sticky__bottle {
+  fill: #daf1e1;
+  stroke: #729e87;
 }
 .sbb-sticky__slot img {
   width: 100%;
