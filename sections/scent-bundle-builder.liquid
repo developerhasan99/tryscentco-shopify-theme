@@ -40,17 +40,35 @@
 
 <div class="sbb" x-data="sbbBuilder()">
   <header class="sbb-head">
-    {%- if st.heading != blank -%}<h2 class="sbb-head__title">{{ st.heading | escape }}</h2>{%- endif -%}
-    {%- if st.subheading != blank -%}<p class="sbb-head__sub">{{ st.subheading | escape }}</p>{%- endif -%}
+    {%- if st.heading != blank -%}
+      <h2 class="sbb-head__title">{{ st.heading | escape }}</h2>
+    {%- endif -%}
+    {%- if st.subheading != blank -%}
+      <p class="sbb-head__sub">{{ st.subheading | escape }}</p>
+    {%- endif -%}
   </header>
 
   {%- if st.enable_tier_2 -%}
     <div class="sbb-tiers">
-      <button type="button" class="sbb-tier-card" :class="{ 'is-active': tierIndex === 0 }" @click="switchTier(0)">
+      <button
+        type="button"
+        class="sbb-tier-card"
+        :class="{ 'is-active': tierIndex === 0 }"
+        @click="switchTier(0)">
+        {%- if st.tier_1_badge != blank -%}
+          <span class="sbb-tier-card__badge sbb-tier-card__badge--red">{{ st.tier_1_badge | escape }}</span>
+        {%- endif -%}
         <span class="sbb-tier-card__title">{{ st.tier_1_label | escape }}</span>
         <span class="sbb-tier-card__desc">{{ t1_ribbon | escape }}</span>
       </button>
-      <button type="button" class="sbb-tier-card" :class="{ 'is-active': tierIndex === 1 }" @click="switchTier(1)">
+      <button
+        type="button"
+        class="sbb-tier-card"
+        :class="{ 'is-active': tierIndex === 1 }"
+        @click="switchTier(1)">
+        {%- if st.tier_2_badge != blank -%}
+          <span class="sbb-tier-card__badge">{{ st.tier_2_badge | escape }}</span>
+        {%- endif -%}
         <span class="sbb-tier-card__title">{{ st.tier_2_label | escape }}</span>
         <span class="sbb-tier-card__desc">{{ t2_ribbon | escape }}</span>
       </button>
@@ -62,27 +80,61 @@
       <div class="sbb-slots">
         <template x-for="(s, i) in slotsArray" :key="i">
           <div class="sbb-slot" :class="{ 'sbb-slot--free': isFree(i), 'sbb-slot--filled': slot(i) }">
-            <span class="sbb-slot__badge" x-show="!isFree(i)" x-text="i + 1"></span>
+            <span
+              class="sbb-slot__badge"
+              x-show="!isFree(i)"
+              x-text="i + 1"></span>
             <span class="sbb-slot__pill" x-show="isFree(i)">{{ st.free_pill_label | escape }}</span>
             <template x-if="slot(i)">
               <span class="sbb-slot__pick">
-                <img :src="slot(i).image" alt="" width="80" height="80">
-                <button type="button" class="sbb-slot__x" @click="removeAt(i)" aria-label="Ta bort">&times;</button>
+                <img
+                  :src="slot(i).image"
+                  alt=""
+                  width="80"
+                  height="80">
+                <button
+                  type="button"
+                  class="sbb-slot__x"
+                  @click="removeAt(i)"
+                  aria-label="Ta bort">&times;</button>
               </span>
             </template>
             <template x-if="!slot(i)">
-              <svg class="sbb-slot__bottle" width="62" height="120" viewBox="0 0 62 120" aria-hidden="true">
-                <rect x="21.8" y="0.8" width="18.4" height="26" rx="3"></rect>
-                <rect x="0.8" y="26.8" width="60.4" height="92.4" rx="8"></rect>
+              <svg
+                class="sbb-slot__bottle"
+                width="62"
+                height="120"
+                viewBox="0 0 62 120"
+                aria-hidden="true">
+                <rect
+                  x="21.8"
+                  y="0.8"
+                  width="18.4"
+                  height="26"
+                  rx="3"></rect>
+                <rect
+                  x="0.8"
+                  y="26.8"
+                  width="60.4"
+                  height="92.4"
+                  rx="8"></rect>
               </svg>
             </template>
-            <span class="sbb-slot__label" x-show="!slot(i)" x-text="isFree(i) ? {{ st.free_slot_label | json | escape }} : {{ st.slot_label | json | escape }}"></span>
-            <span class="sbb-slot__label sbb-slot__label--name" x-show="slot(i)" x-text="slot(i) && slot(i).name"></span>
+            <span
+              class="sbb-slot__label"
+              x-show="!slot(i)"
+              x-text="isFree(i) ? {{ st.free_slot_label | json | escape }} : {{ st.slot_label | json | escape }}"></span>
+            <span
+              class="sbb-slot__label sbb-slot__label--name"
+              x-show="slot(i)"
+              x-text="slot(i) && slot(i).name"></span>
           </div>
         </template>
       </div>
       <div class="sbb-progress">
-        <div class="sbb-progress__track"><div class="sbb-progress__fill" :style="'width: ' + percent + '%'"></div></div>
+        <div class="sbb-progress__track">
+          <div class="sbb-progress__fill" :style="'width: ' + percent + '%'"></div>
+        </div>
         <p class="sbb-progress__copy">
           <span x-text="counter">{{ start_counter | escape }}</span>
           <span>&bull;</span>
@@ -119,16 +171,23 @@
 
   <div class="sbb-controls">
     <form class="sbb-search" @submit.prevent>
-      <input type="search" placeholder="{{ st.search_placeholder | escape }}" x-model="q">
+      <input
+        type="search"
+        placeholder="{{ st.search_placeholder | escape }}"
+        x-model="q">
     </form>
     <div class="sbb-controls__row">
       <select x-model="brand" x-show="brandOptions.length">
         <option value="">Inspirerad av</option>
-        <template x-for="o in brandOptions" :key="o"><option :value="o" x-text="'Doftar som ' + o"></option></template>
+        <template x-for="o in brandOptions" :key="o">
+          <option :value="o" x-text="'Doftar som ' + o"></option>
+        </template>
       </select>
       <select x-model="gender" x-show="genderOptions.length">
         <option value="">Kön</option>
-        <template x-for="o in genderOptions" :key="o"><option :value="o" x-text="o"></option></template>
+        <template x-for="o in genderOptions" :key="o">
+          <option :value="o" x-text="o"></option>
+        </template>
       </select>
       <select x-model="sort">
         <option value="featured">Utvald</option>
@@ -142,16 +201,39 @@
     <template x-for="p in visible" :key="p.id">
       <div class="sbb-card">
         <div class="sbb-card__media">
-          <a :href="p.url" target="_blank" rel="noopener"><img :src="p.image" :alt="p.name" width="280" height="280" loading="lazy"></a>
-          <template x-if="tier.ribbon"><span class="sbb-card__ribbon" x-text="tier.ribbon"></span></template>
+          <a
+            :href="p.url"
+            target="_blank"
+            rel="noopener"><img
+              :src="p.image"
+              :alt="p.name"
+              width="280"
+              height="280"
+              loading="lazy"></a>
+          <template x-if="tier.ribbon">
+            <span class="sbb-card__ribbon" x-text="tier.ribbon"></span>
+          </template>
         </div>
-        <p class="sbb-card__title"><a :href="p.url" target="_blank" rel="noopener" x-text="p.name"></a></p>
+        <p class="sbb-card__title">
+          <a
+            :href="p.url"
+            target="_blank"
+            rel="noopener"
+            x-text="p.name"></a>
+        </p>
         <p class="sbb-card__price">
           <span x-text="money(p.price)"></span>
-          <template x-if="p.compareAt > p.price"><s x-text="money(p.compareAt)"></s></template>
+          <template x-if="p.compareAt > p.price">
+            <s x-text="money(p.compareAt)"></s>
+          </template>
           <span class="sbb-card__size">{{ st.variant_ml | default: '100' }} ml</span>
         </p>
-        <button type="button" class="sbb-card__cta" :class="{ 'is-active': isPicked(p.id) }" :disabled="!canToggle(p.id)" @click="toggle(p.id)">
+        <button
+          type="button"
+          class="sbb-card__cta"
+          :class="{ 'is-active': isPicked(p.id) }"
+          :disabled="!canToggle(p.id)"
+          @click="toggle(p.id)">
           <span x-text="isPicked(p.id) ? 'Tillagd' : {{ st.cta_label | json | escape }}"></span>
         </button>
       </div>
@@ -163,28 +245,54 @@
   </div>
 
   <div class="sbb-sticky">
-    <div class="sbb-sticky__slots">
-      <template x-for="(s, i) in slotsArray" :key="i">
-        <div class="sbb-sticky__slot" :class="{ 'is-filled': slot(i) }">
-          <template x-if="slot(i)"><img :src="slot(i).image" alt="" width="36" height="36"></template>
-          <template x-if="!slot(i)">
-            <svg class="sbb-sticky__bottle" width="24" height="44" viewBox="0 0 24 44" aria-hidden="true">
-              <rect x="8.5" y="0.5" width="7" height="9" rx="1"></rect>
-              <rect x="0.5" y="9.5" width="23" height="34" rx="3"></rect>
-            </svg>
+    <div class="sbb-sticky__container">
+      <div class="sbb-sticky__inner">
+        <div class="sbb-sticky__slots">
+          <template x-for="(s, i) in slotsArray" :key="i">
+            <div class="sbb-sticky__slot" :class="{ 'is-filled': slot(i) }">
+              <template x-if="slot(i)"><img
+                  :src="slot(i).image"
+                  alt=""
+                  width="60"
+                  height="60"></template>
+              <template x-if="!slot(i)">
+                <svg
+                  class="sbb-sticky__bottle"
+                  width="24"
+                  height="44"
+                  viewBox="0 0 24 44"
+                  aria-hidden="true">
+                  <rect
+                    x="8.5"
+                    y="0.5"
+                    width="7"
+                    height="9"
+                    rx="1"></rect>
+                  <rect
+                    x="0.5"
+                    y="9.5"
+                    width="23"
+                    height="34"
+                    rx="3"></rect>
+                </svg>
+              </template>
+            </div>
           </template>
         </div>
-      </template>
-    </div>
-    <div class="sbb-sticky__mid">
-      <p x-text="counter">{{ start_counter | escape }}</p>
-      <p x-text="message">{{ start_hint | escape }}</p>
-    </div>
-    <div class="sbb-sticky__buy">
-      <span x-text="money(yourPrice)">{{ 0 | money }}</span>
-      <button type="button" :disabled="!full || adding" @click="addToCart()">
-        <span x-text="adding ? 'Lägger till…' : {{ st.cta_button_label | json | escape }}"></span>
-      </button>
+        <div class="sbb-sticky__mid">
+          <p x-text="counter" class="sbb-counter">{{ start_counter | escape }}</p>
+          <p x-text="message" class="sbb-message">{{ start_hint | escape }}</p>
+        </div>
+        <div class="sbb-sticky__buy">
+          <span x-text="money(yourPrice)" class="sbb-sticky__price">{{ 0 | money }}</span>
+          <button
+            type="button"
+            :disabled="!full || adding"
+            @click="addToCart()">
+            <span x-text="adding ? 'Lägger till…' : {{ st.cta_button_label | json | escape }}"></span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -324,43 +432,217 @@
 </script>
 
 {% schema %}
-{
-  "name": "Scent bundle builder",
-  "settings": [
-    { "type": "collection", "id": "grid_collection", "label": "Scent grid collection", "info": "Defaults to best-sellers" },
-    { "type": "text", "id": "variant_ml", "label": "Bottle size (ml)", "default": "100", "info": "Matches against each product's variant title, e.g. 100ml" },
-    { "type": "header", "content": "Offer 1" },
-    { "type": "text", "id": "tier_1_label", "label": "Toggle label", "default": "2+1" },
-    { "type": "number", "id": "tier_1_total", "label": "Total bottles", "default": 3 },
-    { "type": "number", "id": "tier_1_free", "label": "Free bottles", "default": 1 },
-    { "type": "header", "content": "Offer 2" },
-    { "type": "checkbox", "id": "enable_tier_2", "label": "Enable offer 2 toggle", "default": true },
-    { "type": "text", "id": "tier_2_label", "label": "Toggle label", "default": "4+2" },
-    { "type": "number", "id": "tier_2_total", "label": "Total bottles", "default": 6 },
-    { "type": "number", "id": "tier_2_free", "label": "Free bottles", "default": 2 },
-    { "type": "header", "content": "Heading" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Bygg ditt eget Välj & spara" },
-    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Parfymer – få dina gratis flaskor" },
-    { "type": "header", "content": "Builder" },
-    { "type": "text", "id": "slot_label", "label": "Empty slot label", "default": "Välj din doft" },
-    { "type": "text", "id": "free_slot_label", "label": "Free slot label", "default": "Gratis doft" },
-    { "type": "text", "id": "free_pill_label", "label": "Free slot tag", "default": "FREE" },
-    { "type": "text", "id": "counter_text", "label": "Progress counter", "info": "[selected] / [total]", "default": "[selected] / [total] valda" },
-    { "type": "text", "id": "hint_text", "label": "Progress hint", "info": "[remaining]", "default": "Lägg till [remaining] doft till för att låsa upp dina gratis doft!" },
-    { "type": "text", "id": "hint_text_one", "label": "Progress hint, one left", "default": "Lägg till 1 doft till för att låsa upp din gratis doft!" },
-    { "type": "text", "id": "done_text", "label": "Progress done message", "default": "Ditt paket är klart!" },
-    { "type": "header", "content": "Price summary" },
-    { "type": "text", "id": "total_label", "label": "Ordinary total label", "default": "Ord. totalpris" },
-    { "type": "text", "id": "discount_label", "label": "Discount label", "default": "Rabatt" },
-    { "type": "text", "id": "price_label", "label": "Your price label", "default": "Ditt pris" },
-    { "type": "text", "id": "savings_label", "label": "Savings label", "default": "Du sparar" },
-    { "type": "header", "content": "Grid" },
-    { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Hitta din parfym" },
-    { "type": "text", "id": "cta_label", "label": "Card button", "default": "Lägg" },
-    { "type": "text", "id": "empty_text", "label": "No results message", "default": "Inga dofter matchar din sökning." },
-    { "type": "text", "id": "reveal_label", "label": "Show more label", "default": "Kolla in mer!" },
-    { "type": "text", "id": "cta_button_label", "label": "Sticky bar button", "default": "Lägg i varukorg" }
-  ],
-  "presets": [{ "name": "Scent bundle builder" }]
-}
+  {
+    "name": "Scent bundle builder",
+    "settings": [
+      {
+        "type": "collection",
+        "id": "grid_collection",
+        "label": "Scent grid collection",
+        "info": "Defaults to best-sellers"
+      },
+      {
+        "type": "text",
+        "id": "variant_ml",
+        "label": "Bottle size (ml)",
+        "default": "100",
+        "info": "Matches against each product's variant title, e.g. 100ml"
+      },
+      {
+        "type": "header",
+        "content": "Offer 1"
+      },
+      {
+        "type": "text",
+        "id": "tier_1_label",
+        "label": "Toggle label",
+        "default": "2+1"
+      },
+      {
+        "type": "text",
+        "id": "tier_1_badge",
+        "label": "Badge text",
+        "info": "Leave blank to hide",
+        "default": "Mest populär"
+      },
+      {
+        "type": "number",
+        "id": "tier_1_total",
+        "label": "Total bottles",
+        "default": 3
+      },
+      {
+        "type": "number",
+        "id": "tier_1_free",
+        "label": "Free bottles",
+        "default": 1
+      },
+      {
+        "type": "header",
+        "content": "Offer 2"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_tier_2",
+        "label": "Enable offer 2 toggle",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "tier_2_label",
+        "label": "Toggle label",
+        "default": "4+2"
+      },
+      {
+        "type": "text",
+        "id": "tier_2_badge",
+        "label": "Badge text",
+        "info": "Leave blank to hide",
+        "default": "Bästa pris"
+      },
+      {
+        "type": "number",
+        "id": "tier_2_total",
+        "label": "Total bottles",
+        "default": 6
+      },
+      {
+        "type": "number",
+        "id": "tier_2_free",
+        "label": "Free bottles",
+        "default": 2
+      },
+      {
+        "type": "header",
+        "content": "Heading"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "Bygg ditt eget Välj & spara"
+      },
+      {
+        "type": "text",
+        "id": "subheading",
+        "label": "Subheading",
+        "default": "Parfymer – få dina gratis flaskor"
+      },
+      {
+        "type": "header",
+        "content": "Builder"
+      },
+      {
+        "type": "text",
+        "id": "slot_label",
+        "label": "Empty slot label",
+        "default": "Välj din doft"
+      },
+      {
+        "type": "text",
+        "id": "free_slot_label",
+        "label": "Free slot label",
+        "default": "Gratis doft"
+      },
+      {
+        "type": "text",
+        "id": "free_pill_label",
+        "label": "Free slot tag",
+        "default": "FREE"
+      },
+      {
+        "type": "text",
+        "id": "counter_text",
+        "label": "Progress counter",
+        "info": "[selected] / [total]",
+        "default": "[selected] / [total] valda"
+      },
+      {
+        "type": "text",
+        "id": "hint_text",
+        "label": "Progress hint",
+        "info": "[remaining]",
+        "default": "Lägg till [remaining] doft till för att låsa upp dina gratis doft!"
+      },
+      {
+        "type": "text",
+        "id": "hint_text_one",
+        "label": "Progress hint, one left",
+        "default": "Lägg till 1 doft till för att låsa upp din gratis doft!"
+      },
+      {
+        "type": "text",
+        "id": "done_text",
+        "label": "Progress done message",
+        "default": "Ditt paket är klart!"
+      },
+      {
+        "type": "header",
+        "content": "Price summary"
+      },
+      {
+        "type": "text",
+        "id": "total_label",
+        "label": "Ordinary total label",
+        "default": "Ord. totalpris"
+      },
+      {
+        "type": "text",
+        "id": "discount_label",
+        "label": "Discount label",
+        "default": "Rabatt"
+      },
+      {
+        "type": "text",
+        "id": "price_label",
+        "label": "Your price label",
+        "default": "Ditt pris"
+      },
+      {
+        "type": "text",
+        "id": "savings_label",
+        "label": "Savings label",
+        "default": "Du sparar"
+      },
+      {
+        "type": "header",
+        "content": "Grid"
+      },
+      {
+        "type": "text",
+        "id": "search_placeholder",
+        "label": "Search placeholder",
+        "default": "Hitta din parfym"
+      },
+      {
+        "type": "text",
+        "id": "cta_label",
+        "label": "Card button",
+        "default": "Lägg"
+      },
+      {
+        "type": "text",
+        "id": "empty_text",
+        "label": "No results message",
+        "default": "Inga dofter matchar din sökning."
+      },
+      {
+        "type": "text",
+        "id": "reveal_label",
+        "label": "Show more label",
+        "default": "Kolla in mer!"
+      },
+      {
+        "type": "text",
+        "id": "cta_button_label",
+        "label": "Sticky bar button",
+        "default": "Lägg i varukorg"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Scent bundle builder"
+      }
+    ]
+  }
 {% endschema %}

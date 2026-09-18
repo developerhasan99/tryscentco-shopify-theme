@@ -23,9 +23,10 @@
   display: flex;
   gap: 12px;
   max-width: 520px;
-  margin: 0 auto 24px;
+  margin: 16px auto 24px;
 }
 .sbb-tier-card {
+  position: relative;
   flex: 1 1 0;
   display: flex;
   flex-direction: column;
@@ -37,6 +38,24 @@
   background: #fff;
   cursor: pointer;
   transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.sbb-tier-card__badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1f7a4d;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.sbb-tier-card__badge--red {
+  background: #e64a4a;
 }
 .sbb-tier-card:hover {
   border-color: #bebdba;
@@ -257,6 +276,8 @@
   gap: 20px;
 }
 .sbb-card {
+  display: flex;
+  flex-direction: column;
   border: 1px solid #eee;
   border-radius: 10px;
   overflow: hidden;
@@ -312,7 +333,7 @@
 }
 .sbb-card__cta {
   width: calc(100% - 24px);
-  margin: 0 12px 12px;
+  margin: auto 12px 12px;
   padding: 10px;
   border: none;
   border-radius: 999px;
@@ -320,6 +341,7 @@
   color: #fff;
   font-weight: 700;
   cursor: pointer;
+  line-height: 1.6;
 }
 .sbb-card__cta:disabled {
   opacity: 0.5;
@@ -350,23 +372,34 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 10px;
+  z-index: 40;
+}
+
+.sbb-sticky__container {
+  max-width: 1168px;
+  margin: auto;
+}
+
+.sbb-sticky__inner {
   background: #fff;
-  border-top: 1px solid #eee;
+  border: 1px solid #eee;
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 16px;
   padding: 12px 20px;
-  z-index: 40;
+  border-radius: 10px;
 }
+
 .sbb-sticky__slots {
   display: flex;
   gap: 6px;
 }
 .sbb-sticky__slot {
-  width: 36px;
-  height: 36px;
+  width: 60px;
+  height: 60px;
   border-radius: 6px;
   border: 1px dashed #ddd;
   overflow: hidden;
@@ -408,18 +441,29 @@
   gap: 12px;
   font-weight: 700;
 }
+.sbb-sticky__price {
+  font-size: 22px;
+  color: #111;
+}
 .sbb-sticky__buy button {
-  padding: 10px 20px;
+  padding: 15px 30px;
   border: none;
   border-radius: 999px;
   background: #1f7a4d;
   color: #fff;
   font-weight: 700;
   cursor: pointer;
+  font-size: 18px;
 }
 .sbb-sticky__buy button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.sbb-counter {
+  font-size: 18px !important;
+  color: #111;
+  font-weight: 600;
 }
 
 @media screen and (max-width: 900px) {
@@ -433,6 +477,13 @@
   }
   .sbb-summary {
     flex-basis: auto;
+  }
+  .sbb-sticky {
+    bottom: 0;
+    border-radius: 0;
+  }
+  .sbb-sticky__mid .sbb-message {
+    display: none;
   }
 }
 
