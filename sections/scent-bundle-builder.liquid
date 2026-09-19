@@ -205,28 +205,28 @@
 
   <div class="sbb-grid">
     <template x-for="p in visible" :key="p.id">
-      <div class="sbb-card">
-        <div class="sbb-card__media">
-          <a
-            :href="p.url"
-            target="_blank"
-            rel="noopener"><img
-              :src="p.image"
-              :alt="p.name"
-              width="280"
-              height="280"
-              loading="lazy"></a>
+      <div class="sbb-card" :class="{ 'is-selected': isPicked(p.id) }">
+        <button
+          type="button"
+          class="sbb-card__media"
+          :aria-pressed="isPicked(p.id)"
+          @click="toggle(p.id)">
+          <img
+            :src="p.image"
+            :alt="p.name"
+            width="280"
+            height="280"
+            loading="lazy">
           <template x-if="tier.ribbon">
             <span class="sbb-card__ribbon" x-text="tier.ribbon"></span>
           </template>
-        </div>
-        <p class="sbb-card__title">
-          <a
-            :href="p.url"
-            target="_blank"
-            rel="noopener"
-            x-text="p.name"></a>
-        </p>
+        </button>
+        <button
+          type="button"
+          class="sbb-card__title"
+          :aria-pressed="isPicked(p.id)"
+          @click="toggle(p.id)"
+          x-text="p.name"></button>
         <p class="sbb-card__price">
           <span x-text="money(p.price)"></span>
           <template x-if="p.compareAt > p.price">
