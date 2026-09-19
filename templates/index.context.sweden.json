@@ -20,6 +20,15 @@
         "title": "Tillbaka till kontoret – Köp 2, få 1 gratis"
       },
       "blocks": {}
+    },
+    "home_category_wNQCfP": {
+      "settings": {},
+      "blocks": {
+        "category_yXjfNN": {
+          "disabled": true,
+          "settings": {}
+        }
+      }
     }
   }
 }
