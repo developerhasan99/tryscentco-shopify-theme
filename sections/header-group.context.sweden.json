@@ -22,6 +22,18 @@
         "link": "shopify://collections/bundle-save"
       },
       "blocks": {}
+    },
+    "header": {
+      "settings": {},
+      "blocks": {
+        "menu_item_JjXgCN": {
+          "disabled": false,
+          "settings": {
+            "url": "shopify://collections/new",
+            "label": "Nya dofter"
+          }
+        }
+      }
     }
   }
 }
