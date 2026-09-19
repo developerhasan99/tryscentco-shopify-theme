@@ -44,6 +44,18 @@
           }
         }
       }
+    },
+    "header": {
+      "settings": {},
+      "blocks": {
+        "menu_item_JjXgCN": {
+          "disabled": false,
+          "settings": {
+            "url": "shopify://collections/new",
+            "label": "Nye dufte"
+          }
+        }
+      }
     }
   }
 }
