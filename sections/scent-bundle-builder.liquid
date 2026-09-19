@@ -253,7 +253,8 @@
       <div class="sbb-sticky__inner">
         <div class="sbb-sticky__slots">
           <template x-for="(s, i) in slotsArray" :key="i">
-            <div class="sbb-sticky__slot" :class="{ 'is-filled': slot(i) }">
+            <div class="sbb-sticky__slot" :class="{ 'is-filled': slot(i), 'sbb-sticky__slot--free': isFree(i) }">
+              <span class="sbb-sticky__pill" x-show="isFree(i)">{{ st.free_pill_label | escape }}</span>
               <template x-if="slot(i)"><img
                   :src="slot(i).image"
                   alt=""

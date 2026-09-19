@@ -431,6 +431,7 @@
   gap: 6px;
 }
 .sbb-sticky__slot {
+  position: relative;
   width: 60px;
   height: 60px;
   border-radius: 6px;
@@ -444,6 +445,24 @@
   border-style: solid;
   border-color: #1f7a4d;
 }
+.sbb-sticky__slot--free {
+  border-style: solid;
+  border-color: #1f7a4d;
+  background: #f2f8f4;
+}
+.sbb-sticky__pill {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  background: #1f7a4d;
+  color: #fff;
+  font-size: 7px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  z-index: 1;
+}
 .sbb-sticky__bottle {
   width: 14px;
   height: auto;
@@ -452,7 +471,8 @@
   stroke-width: 0.6;
   stroke-dasharray: 1 1;
 }
-.sbb-sticky__slot.is-filled .sbb-sticky__bottle {
+.sbb-sticky__slot.is-filled .sbb-sticky__bottle,
+.sbb-sticky__slot--free .sbb-sticky__bottle {
   fill: #daf1e1;
   stroke: #729e87;
 }
