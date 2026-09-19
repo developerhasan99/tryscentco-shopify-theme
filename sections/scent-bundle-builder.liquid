@@ -394,7 +394,9 @@
         switchTier(i) {
           if (i === this.tierIndex) return;
           this.tierIndex = i;
-          this.picks = [];
+          if (this.picks.length > this.tier.total) {
+            this.picks = this.picks.slice(0, this.tier.total);
+          }
         },
         get brandOptions() {
           var set = new Set();
