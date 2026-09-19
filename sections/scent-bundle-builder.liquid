@@ -246,9 +246,7 @@
     </template>
   </div>
   <p class="sbb-empty" x-show="visible.length === 0">{{ st.empty_text | escape }}</p>
-  <div class="sbb-reveal" x-show="limited && sorted.length > 8">
-    <button type="button" @click="limited = false">{{ st.reveal_label | escape }}</button>
-  </div>
+  <div class="sbb-load-sentinel" x-ref="loadMoreSentinel" x-show="visible.length < sorted.length"></div>
 
   <div class="sbb-sticky" :class="{ 'is-visible': showSticky }">
     <div class="sbb-sticky__container">
@@ -315,7 +313,8 @@
         brand: '',
         gender: '',
         sort: 'featured',
-        limited: true,
+        visibleCount: 8,
+        pageSize: 8,
         picks: [],
         tiers: [
           { total: {{ t1_total }}, free: {{ t1_free }}, ribbon: {{ t1_ribbon | json }}, label: {{ st.tier_1_label | json }} },
@@ -346,16 +345,39 @@
         init() {
           var self = this;
           this.$nextTick(function () {
-            if (!self.$refs.preview || !('IntersectionObserver' in window)) {
+            if (self.$refs.preview && 'IntersectionObserver' in window) {
+              var stickyObserver = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                  self.showSticky = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+                });
+              }, { threshold: 0 });
+              stickyObserver.observe(self.$refs.preview);
+            } else {
               self.showSticky = true;
-              return;
             }
-            var observer = new IntersectionObserver(function (entries) {
-              entries.forEach(function (entry) {
-                self.showSticky = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+            var checkLoadMore = function () {
+              if (!self.$refs.loadMoreSentinel || self.visibleCount >= self.sorted.length) return;
+              var rect = self.$refs.loadMoreSentinel.getBoundingClientRect();
+              if (rect.top < window.innerHeight + 400) {
+                self.visibleCount += self.pageSize;
+                self.$nextTick(checkLoadMore);
+              }
+            };
+            var ticking = false;
+            var onScroll = function () {
+              if (ticking) return;
+              ticking = true;
+              window.requestAnimationFrame(function () {
+                ticking = false;
+                checkLoadMore();
               });
-            }, { threshold: 0 });
-            observer.observe(self.$refs.preview);
+            };
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll);
+            checkLoadMore();
+          });
+          ['q', 'brand', 'gender', 'sort'].forEach(function (key) {
+            self.$watch(key, function () { self.visibleCount = self.pageSize; });
           });
         },
         scrollToPool() {
@@ -401,8 +423,7 @@
         },
         get visible() {
           var list = this.sorted;
-          if (!this.limited) return list;
-          return list.filter(function (p, i) { return this.isPicked(p.id) || i < 8; }, this);
+          return list.filter(function (p, i) { return this.isPicked(p.id) || i < this.visibleCount; }, this);
         },
         slot(i) { return this.picks[i] || null; },
         isPicked(id) { return this.picks.some(function (p) { return p.id === id; }); },
@@ -655,12 +676,6 @@
         "id": "empty_text",
         "label": "No results message",
         "default": "Inga dofter matchar din sökning."
-      },
-      {
-        "type": "text",
-        "id": "reveal_label",
-        "label": "Show more label",
-        "default": "Kolla in mer!"
       },
       {
         "type": "text",

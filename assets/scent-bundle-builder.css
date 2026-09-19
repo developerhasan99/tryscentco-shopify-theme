@@ -387,16 +387,9 @@
   color: #777;
   padding: 24px 0;
 }
-.sbb-reveal {
-  text-align: center;
+.sbb-load-sentinel {
+  height: 1px;
   margin-top: 20px;
-}
-.sbb-reveal button {
-  background: none;
-  border: none;
-  text-decoration: underline;
-  font-weight: 700;
-  cursor: pointer;
 }
 
 .sbb-sticky {
