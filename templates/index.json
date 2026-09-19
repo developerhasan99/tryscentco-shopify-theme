@@ -78,7 +78,7 @@
       "name": "Homepage Hero",
       "settings": {
         "background_color": "#faf9f6",
-        "background_image": "shopify://shop_images/TryScent_Office_PC.webp",
+        "background_image": "shopify://shop_images/MAGYX_Site_Header.webp",
         "mobile_background_image": "shopify://shop_images/TryScent_Office_Mobile.webp",
         "review_text": "Över 10 000 kunder har redan tagit reda på svaret.",
         "title": "Tillbaka till kontoret – Köp 2, få 1 gratis",
@@ -507,7 +507,7 @@
       ],
       "settings": {
         "background_color": "#ffffff",
-        "image": "shopify://shop_images/WhatsApp_Image_2026-01-17_at_10.59.01.jpg",
+        "image": "shopify://shop_images/MAGYX_Site_02.webp",
         "rounded_image": true,
         "image_placement": "1",
         "mobile_image_placement": "under_heading",
@@ -574,7 +574,7 @@
         "category_yXjfNN": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/website_bundle.webp",
+            "image": "shopify://shop_images/MAGYX_Site_Bundle_Save.webp",
             "text": "Bunta & spara",
             "link": "shopify://collections/bundle-save"
           }
@@ -582,7 +582,7 @@
         "category_JatE79": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/tryscent_male_02.png",
+            "image": "shopify://shop_images/MAGYX_Site_For_Him.webp",
             "text": "For Him",
             "link": "shopify://collections/man"
           }
@@ -590,7 +590,7 @@
         "category_kcgbew": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/ugc12.png",
+            "image": "shopify://shop_images/MAGYX_Site_For_Her.webp",
             "text": "For Her",
             "link": "shopify://collections/woman"
           }
@@ -598,7 +598,7 @@
         "category_PLwfRa": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/website_unisex.webp",
+            "image": "shopify://shop_images/MAGYX_Site_Unisex.webp",
             "text": "Unisex",
             "link": "shopify://collections/unisex"
           }
@@ -667,7 +667,7 @@
       "settings": {
         "background_color": "#ffffff",
         "makes_diferent_title": "Vad gör TryScent annorlunda?",
-        "makes-different-image": "shopify://shop_images/makes-different-img_6a2b529a-e439-40fc-9580-88d632f61ea6.png",
+        "makes-different-image": "shopify://shop_images/MAGYX_Site_Showcase.webp",
         "makes-different-btn-text": "BUY 2 GET 1 FREE - ENDS SOON!",
         "makes-different-btn-link": "",
         "padding_top": 72,
