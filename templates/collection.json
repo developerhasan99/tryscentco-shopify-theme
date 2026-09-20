@@ -11,10 +11,9 @@
   "sections": {
     "collection_hero_P7jePR": {
       "type": "collection-hero",
-      "disabled": true,
       "name": "Collection Hero",
       "settings": {
-        "show_rating_badge": true,
+        "show_rating_badge": false,
         "rating_text": "Verifierat av över 10 000 doftälskare"
       }
     },
@@ -157,6 +156,7 @@
     },
     "banner": {
       "type": "main-collection-banner",
+      "disabled": true,
       "settings": {
         "show_collection_description": false,
         "show_collection_image": false,
