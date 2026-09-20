@@ -181,6 +181,7 @@
     },
     "scent_bundle_builder_ergzTt": {
       "type": "scent-bundle-builder",
+      "disabled": true,
       "name": "Scent bundle builder",
       "settings": {
         "grid_collection": "bestseller-singles",
@@ -202,6 +203,34 @@
         "counter_text": "[selected] / [total] valda",
         "hint_text": "Lägg till [remaining] doft till för att låsa upp din gratis doft!",
         "hint_text_one": "Lägg till 1 doft till för att låsa upp din gratis doft!",
+        "done_text": "Ditt paket är klart!",
+        "total_label": "Ord. totalpris",
+        "discount_label": "Rabatt",
+        "price_label": "Ditt pris",
+        "savings_label": "Du sparar",
+        "search_placeholder": "Hitta din parfym",
+        "cta_label": "Lägg",
+        "empty_text": "Inga dofter matchar din sökning.",
+        "cta_button_label": "Lägg i varukorg"
+      }
+    },
+    "scent_bundle_builder_single_tBUTWp": {
+      "type": "scent-bundle-builder-single",
+      "name": "Bundle builder 60% off",
+      "settings": {
+        "grid_collection": "bestseller-singles",
+        "bundle_total": 5,
+        "bundle_discount_qty": 3,
+        "discount_percent": 60,
+        "offer_badge": "Köp 2, få 3 till med 60% rabatt",
+        "heading": "Bygg ditt eget paket",
+        "subheading": "5 parfymer – 60% rabatt på 3 av dem",
+        "slot_label": "Välj din doft",
+        "discount_slot_label": "Rabatterad doft",
+        "discount_pill_label": "-60%",
+        "counter_text": "[selected] / [total] valda",
+        "hint_text": "Lägg till [remaining] doft till för att låsa upp din rabatt!",
+        "hint_text_one": "Lägg till 1 doft till för att låsa upp din rabatt!",
         "done_text": "Ditt paket är klart!",
         "total_label": "Ord. totalpris",
         "discount_label": "Rabatt",
@@ -294,6 +323,7 @@
     "banner",
     "popular_products_F6w4h9",
     "scent_bundle_builder_ergzTt",
+    "scent_bundle_builder_single_tBUTWp",
     "product-grid",
     "rich_text_fnCgkL"
   ]
