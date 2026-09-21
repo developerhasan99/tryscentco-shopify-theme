@@ -32,22 +32,65 @@
 -%}
 
 {{ 'scent-bundle-builder.css' | asset_url | stylesheet_tag }}
+{{ 'scent-bundle-builder-single.css' | asset_url | stylesheet_tag }}
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 <div class="sbb sbb--single" x-data="sbbSingleBuilder()">
-  <header class="sbb-head">
-    {%- if st.heading != blank -%}
-      <h2 class="sbb-head__title">{{ st.heading | escape }}</h2>
+  <div class="sbb-top">
+    {%- if section.blocks.size > 0 -%}
+      <div class="sbb-gallery">
+        <div class="sbb-gallery__main">
+          {%- for block in section.blocks -%}
+            {%- assign img = block.settings.image -%}
+            {%- if img != blank -%}
+              <img
+                x-show="galleryIndex === {{ forloop.index0 }}"
+                src="{{ img | image_url: width: 900 }}"
+                srcset="{{ img | image_url: width: 600 }} 600w, {{ img | image_url: width: 900 }} 900w, {{ img | image_url: width: 1200 }} 1200w"
+                sizes="(min-width: 900px) 45vw, 100vw"
+                alt="{{ block.settings.alt | default: img.alt | escape }}"
+                width="{{ img.width }}"
+                height="{{ img.height }}"
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                {{ block.shopify_attributes }}>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        {%- if section.blocks.size > 1 -%}
+          <div class="sbb-gallery__thumbs">
+            {%- for block in section.blocks -%}
+              {%- assign img = block.settings.image -%}
+              {%- if img != blank -%}
+                <button
+                  type="button"
+                  class="sbb-gallery__thumb"
+                  :class="{ 'is-active': galleryIndex === {{ forloop.index0 }} }"
+                  @click="galleryIndex = {{ forloop.index0 }}"
+                  aria-label="Visa bild {{ forloop.index }}"
+                  {{ block.shopify_attributes }}>
+                  <img src="{{ img | image_url: width: 160 }}" alt="" width="72" height="72" loading="lazy">
+                </button>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
     {%- endif -%}
-    {%- if st.subheading != blank -%}
-      <p class="sbb-head__sub">{{ st.subheading | escape }}</p>
-    {%- endif -%}
-    {%- if st.offer_badge != blank -%}
-      <p class="sbb-head__sub">{{ st.offer_badge | escape }}</p>
-    {%- endif -%}
-  </header>
 
-  <div class="sbb-builder" x-ref="preview">
+    <div class="sbb-content">
+      <header class="sbb-head">
+        {%- if st.heading != blank -%}
+          <h2 class="sbb-head__title">{{ st.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if st.subheading != blank -%}
+          <p class="sbb-head__sub">{{ st.subheading | escape }}</p>
+        {%- endif -%}
+        {%- if st.offer_badge != blank -%}
+          <p class="sbb-head__sub">{{ st.offer_badge | escape }}</p>
+        {%- endif -%}
+      </header>
+
+      <div class="sbb-builder" x-ref="preview">
     <div class="sbb-builder__main">
       <div class="sbb-slots">
         <template x-for="(s, i) in slotsArray" :key="i">
@@ -119,16 +162,14 @@
     </div>
 
     <aside class="sbb-summary">
-      <template x-if="full && discount > 0">
-        <div>
-          <div class="sbb-summary__row">
-            <span>{{ st.total_label | escape }}</span>
-            <span x-text="money(ordTotal)"></span>
-          </div>
-          <div class="sbb-summary__row sbb-summary__row--discount">
-            <span>{{ st.discount_label | escape }}</span>
-            <span x-text="'-' + money(discount)"></span>
-          </div>
+      <div class="sbb-summary__row">
+        <span>{{ st.total_label | escape }}</span>
+        <span x-text="money(ordTotal)"></span>
+      </div>
+      <template x-if="discount > 0">
+        <div class="sbb-summary__row sbb-summary__row--discount">
+          <span>{{ st.discount_label | escape }}</span>
+          <span x-text="'-' + money(discount)"></span>
         </div>
       </template>
       <div class="sbb-summary__row sbb-summary__row--total">
@@ -138,12 +179,13 @@
       <button
         type="button"
         class="sbb-summary__cta"
-        x-show="full"
-        :disabled="adding"
+        :disabled="!full || adding"
         @click="addToCart()">
-        <span x-text="adding ? 'Lägger till…' : {{ st.cta_button_label | json | escape }}"></span>
+        <span x-text="ctaLabel"></span>
       </button>
     </aside>
+      </div>
+    </div>
   </div>
 
   <div class="sbb-controls" x-ref="pool">
@@ -166,11 +208,6 @@
         <template x-for="o in genderOptions" :key="o">
           <option :value="o" x-text="o"></option>
         </template>
-      </select>
-      <select x-model="sort">
-        <option value="featured">Utvald</option>
-        <option value="price-asc">Pris: lågt till högt</option>
-        <option value="price-desc">Pris: högt till lågt</option>
       </select>
     </div>
   </div>
@@ -221,7 +258,7 @@
   <div
     class="sbb-load-sentinel"
     x-ref="loadMoreSentinel"
-    x-show="visible.length < sorted.length"></div>
+    x-show="visible.length < filtered.length"></div>
 
   <div class="sbb-sticky" :class="{ 'is-visible': showSticky }">
     <div class="sbb-sticky__container">
@@ -269,7 +306,7 @@
             type="button"
             :disabled="!full || adding"
             @click="addToCart()">
-            <span x-text="adding ? 'Lägger till…' : {{ st.cta_button_label | json | escape }}"></span>
+            <span x-text="ctaLabel"></span>
           </button>
         </div>
       </div>
@@ -284,10 +321,10 @@
         moneyFormat: {{ shop.money_format | json }},
         adding: false,
         showSticky: false,
+        galleryIndex: 0,
         q: '',
         brand: '',
         gender: '',
-        sort: 'featured',
         visibleCount: 8,
         pageSize: 8,
         picks: [],
@@ -331,7 +368,7 @@
               self.showSticky = true;
             }
             var checkLoadMore = function () {
-              if (!self.$refs.loadMoreSentinel || self.visibleCount >= self.sorted.length) return;
+              if (!self.$refs.loadMoreSentinel || self.visibleCount >= self.filtered.length) return;
               var rect = self.$refs.loadMoreSentinel.getBoundingClientRect();
               if (rect.top < window.innerHeight + 400) {
                 self.visibleCount += self.pageSize;
@@ -351,7 +388,7 @@
             window.addEventListener('resize', onScroll);
             checkLoadMore();
           });
-          ['q', 'brand', 'gender', 'sort'].forEach(function (key) {
+          ['q', 'brand', 'gender'].forEach(function (key) {
             self.$watch(key, function () { self.visibleCount = self.pageSize; });
           });
         },
@@ -384,14 +421,8 @@
             return true;
           }, this);
         },
-        get sorted() {
-          var list = this.filtered.slice();
-          if (this.sort === 'price-asc') list.sort(function (a, b) { return a.price - b.price; });
-          if (this.sort === 'price-desc') list.sort(function (a, b) { return b.price - a.price; });
-          return list;
-        },
         get visible() {
-          var list = this.sorted;
+          var list = this.filtered;
           return list.filter(function (p, i) { return this.isPicked(p.id) || i < this.visibleCount; }, this);
         },
         slot(i) { return this.picks[i] || null; },
@@ -416,16 +447,21 @@
           if (remaining === 1) return {{ st.hint_text_one | json }};
           return {{ st.hint_text | json }}.replace('[remaining]', remaining);
         },
-        get ordTotal() { return this.picks.reduce(function (sum, p) { return sum + p.price; }, 0); },
-        // Estimate only: assumes the automatic discount in Shopify admin gives the
-        // cheapest `discountQty` picks `discountPercent`% off. The real total is
-        // whatever that discount computes at checkout.
+        get ctaLabel() {
+          if (this.adding) return 'Lägger till…';
+          if (this.full) return {{ st.cta_button_label | json }};
+          var remaining = Math.max(0, this.total - this.picks.length);
+          if (remaining === 1) return {{ st.cta_disabled_label_one | json }};
+          return {{ st.cta_disabled_label | json }}.replace('[remaining]', remaining);
+        },
+        // Every product in the pool shares the same 100ml price, so the final
+        // total/discount/price can be shown up front instead of only once the
+        // bundle is full. Estimate only: the real total is whatever the
+        // matching automatic discount computes at checkout.
+        get unitPrice() { return this.products.length ? this.products[0].price : 0; },
+        get ordTotal() { return this.unitPrice * this.total; },
         get discount() {
-          if (!this.full) return 0;
-          var prices = this.picks.map(function (p) { return p.price; }).sort(function (a, b) { return a - b; });
-          var discounted = prices.slice(0, this.discountQty);
-          var sum = discounted.reduce(function (s, price) { return s + price; }, 0);
-          return Math.round(sum * (this.discountPercent / 100));
+          return Math.round(this.unitPrice * this.discountQty * (this.discountPercent / 100));
         },
         get yourPrice() { return this.ordTotal - this.discount; },
         money(cents) {
@@ -612,6 +648,38 @@
         "id": "cta_button_label",
         "label": "Sticky bar button",
         "default": "Lägg i varukorg"
+      },
+      {
+        "type": "text",
+        "id": "cta_disabled_label",
+        "label": "Buy button, incomplete bundle",
+        "info": "[remaining]",
+        "default": "Lägg till [remaining] doft till"
+      },
+      {
+        "type": "text",
+        "id": "cta_disabled_label_one",
+        "label": "Buy button, one left",
+        "default": "Lägg till 1 doft till"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Gallery image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "alt",
+            "label": "Alt text",
+            "info": "Optional, defaults to the image's own alt text"
+          }
+        ]
       }
     ],
     "presets": [
