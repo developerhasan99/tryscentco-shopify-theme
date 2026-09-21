@@ -1,4 +1,4 @@
-{% assign bundle_collection = collections['best-sellers'] %}
+{% assign bundle_collection_handles = 'best-sellers,new' | split: ',' %}
 {% assign product_count = product.metafields.custom.choose_your_fragrances_options %}
 {% assign dropdown_ml = product.metafields.custom.select_bundle_dropdown_ml | default: "50" %}
 {% assign bundle_ml = dropdown_ml | append: "ml" %}
@@ -147,37 +147,42 @@
           {% endfor %}
         {% endif %}
       ],
-      availableProducts: [
-        {% for bundle_product in bundle_collection.products %}
-          {% liquid
-            assign collection_handles = ''
-            for collection in bundle_product.collections
-              assign collection_handles = collection_handles | append: collection.handle
-              if forloop.last == false
-                assign collection_handles = collection_handles | append: ','
-              endif
-            endfor
-          %}
-          {
-            id: {{ bundle_product.id }},
-            name: "{{ bundle_product.title }}",
-            image: "{{ bundle_product.featured_image | image_url: width: 120, height: 120 }}",
-            nuta: "{% if bundle_product.metafields.custom.inspiration.value %}{{ bundle_product.metafields.custom.inspiration.value.name }}{% endif %}",
-            inspiration_image: "{% if bundle_product.metafields.custom.inspiration.value %}{{ bundle_product.metafields.custom.inspiration.value.image | image_url: width: 90, height: 90 }}{% endif %}",
-            inspiration_name: "{% if bundle_product.metafields.custom.inspiration.value %}{{ bundle_product.metafields.custom.inspiration.value.name }}{% endif %}",
-            tags: {{ bundle_product.tags | json }},
-            collections: "{{ collection_handles }}",
-            variants: {
-              {% for variant in bundle_product.variants %}
-                "{{ variant.title | downcase |  replace: ' ml', 'ml' }}": {
-                  title: "{{ variant.title }}",
-                  id: "{{ variant.id }}"
-                },
-              {% endfor %}
-            }
-          },
+      availableProducts: Array.from(new Map([
+        {% for bundle_collection_handle in bundle_collection_handles %}
+          {% assign bundle_collection = collections[bundle_collection_handle] %}
+          {% paginate bundle_collection.products by 250 %}
+            {% for bundle_product in bundle_collection.products %}
+              {% liquid
+                assign collection_handles = ''
+                for collection in bundle_product.collections
+                  assign collection_handles = collection_handles | append: collection.handle
+                  if forloop.last == false
+                    assign collection_handles = collection_handles | append: ','
+                  endif
+                endfor
+              %}
+              {
+                id: {{ bundle_product.id }},
+                name: "{{ bundle_product.title }}",
+                image: "{{ bundle_product.featured_image | image_url: width: 120, height: 120 }}",
+                nuta: "{% if bundle_product.metafields.custom.inspiration.value %}{{ bundle_product.metafields.custom.inspiration.value.name }}{% endif %}",
+                inspiration_image: "{% if bundle_product.metafields.custom.inspiration.value %}{{ bundle_product.metafields.custom.inspiration.value.image | image_url: width: 90, height: 90 }}{% endif %}",
+                inspiration_name: "{% if bundle_product.metafields.custom.inspiration.value %}{{ bundle_product.metafields.custom.inspiration.value.name }}{% endif %}",
+                tags: {{ bundle_product.tags | json }},
+                collections: "{{ collection_handles }}",
+                variants: {
+                  {% for variant in bundle_product.variants %}
+                    "{{ variant.title | downcase |  replace: ' ml', 'ml' }}": {
+                      title: "{{ variant.title }}",
+                      id: "{{ variant.id }}"
+                    },
+                  {% endfor %}
+                }
+              },
+            {% endfor %}
+          {% endpaginate %}
         {% endfor %}
-      ],
+      ].map(product => [product.id, product])).values()),
       addRemoveProduct(product) {
         if (this.selectedProducts.length < {{ product_count }} && !this.isProductSelected(product.id)) {
           product.variant = product.variants[this.selectedVariant]

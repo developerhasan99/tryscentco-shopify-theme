@@ -564,6 +564,10 @@
     }
   },
   "bundle": {
+    "filter_all": "All",
+    "filter_men": "Men",
+    "filter_women": "Women",
+    "filter_new_arrivals": "New arrivals",
     "upgrade_cta": "Upgrade to {{ size }}ML for {{ price }} more.",
     "free_bottle": "Free Bottle",
     "choose_your_perfume": "Choose your perfume",

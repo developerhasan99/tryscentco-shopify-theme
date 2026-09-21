@@ -1,3 +1,21 @@
+{% liquid
+  assign filter_all = 'bundle.filter_all' | t
+  if filter_all contains 'ranslation missing' or filter_all == blank
+    assign filter_all = 'Alla'
+  endif
+  assign filter_men = 'bundle.filter_men' | t
+  if filter_men contains 'ranslation missing' or filter_men == blank
+    assign filter_men = 'Män'
+  endif
+  assign filter_women = 'bundle.filter_women' | t
+  if filter_women contains 'ranslation missing' or filter_women == blank
+    assign filter_women = 'Kvinnor'
+  endif
+  assign filter_new_arrivals = 'bundle.filter_new_arrivals' | t
+  if filter_new_arrivals contains 'ranslation missing' or filter_new_arrivals == blank
+    assign filter_new_arrivals = 'Nyheter'
+  endif
+%}
 <div
   x-data
   x-transition
@@ -31,19 +49,24 @@
           <span x-text="$store.bundleBuilder.bundleLength"></span>-flaskorspaket</p>
       </div>
       <div x-show="$store.bundleBuilder.selectedProducts.length < $store.bundleBuilder.bundleLength" class="px-3 py-2">
-        <div class="flex gap-1.5">
+        <div class="flex flex-wrap gap-1.5">
           <button
             @click="$store.bundleBuilder.activeCategory = 'All'"
             :class="$store.bundleBuilder.activeCategory === 'All' ? 'border-[#22613A] bg-[#22613A] text-white hover:!text-white' : 'bg-white border-gray-200'"
-            class="px-2 py-1.5 rounded-full font-semibold border-2 border-solid cursor-pointer hover:text-[#22613A] hover:border-[#22613A]">{{ 'bundle.top_sellers' | t }}</button>
+            class="px-2 py-1.5 rounded-full font-semibold border-2 border-solid cursor-pointer hover:text-[#22613A] hover:border-[#22613A]">{{ filter_all | escape }}</button>
           <button
             @click="$store.bundleBuilder.activeCategory = 'Man'"
             :class="$store.bundleBuilder.activeCategory === 'Man' ? 'border-[#22613A] bg-[#22613A] text-white hover:!text-white' : 'bg-white border-gray-200'"
-            class="px-2 py-1.5 rounded-full font-semibold border-2 border-solid cursor-pointer hover:text-[#22613A] hover:border-[#22613A]">{{ 'bundle.top_sellers_men' | t }}</button>
+            class="px-2 py-1.5 rounded-full font-semibold border-2 border-solid cursor-pointer hover:text-[#22613A] hover:border-[#22613A]">{{ filter_men | escape }}</button>
           <button
             @click="$store.bundleBuilder.activeCategory = 'Woman'"
             :class="$store.bundleBuilder.activeCategory === 'Woman' ? 'border-[#22613A] bg-[#22613A] text-white hover:!text-white' : 'bg-white border-gray-200'"
-            class="px-2 py-1.5 rounded-full font-semibold border-2 border-solid cursor-pointer hover:text-[#22613A] hover:border-[#22613A]">{{ 'bundle.top_sellers_women' | t }}</button>
+            class="px-2 py-1.5 rounded-full font-semibold border-2 border-solid cursor-pointer hover:text-[#22613A] hover:border-[#22613A]">{{ filter_women | escape }}</button>
+          <button
+            type="button"
+            @click="$store.bundleBuilder.activeCategory = 'New'"
+            :class="$store.bundleBuilder.activeCategory === 'New' ? 'border-[#22613A] bg-[#22613A] text-white hover:!text-white' : 'bg-white border-gray-200'"
+            class="px-2 py-1.5 rounded-full font-semibold border-2 border-solid cursor-pointer hover:text-[#22613A] hover:border-[#22613A]">{{ filter_new_arrivals | escape }}</button>
         </div>
       </div>
       <div class="px-3 pb-3">
@@ -82,7 +105,7 @@
       <template x-if="$store.bundleBuilder.selectedProducts.length < $store.bundleBuilder.bundleLength">
         <div class="flex flex-col gap-1.5">
           <template x-for="product in $store.bundleBuilder.availableProducts" :key="product.id">
-            <template x-if="(product.tags.some(tag => tag === $store.bundleBuilder.activeCategory) || $store.bundleBuilder.activeCategory === 'All') &&
+            <template x-if="($store.bundleBuilder.activeCategory === 'All' || ($store.bundleBuilder.activeCategory === 'New' ? product.collections.split(',').includes('new') : product.tags.includes($store.bundleBuilder.activeCategory))) &&
          ($store.bundleBuilder.searchText === '' || product.name.toLowerCase().includes($store.bundleBuilder.searchText.toLowerCase()) || (product.inspiration_name && product.inspiration_name.toLowerCase().includes($store.bundleBuilder.searchText.toLowerCase())))">
               <button
                 @click="$store.bundleBuilder.addRemoveProduct(product)"

@@ -4007,6 +4007,10 @@
     }
   },
   "bundle": {
+    "filter_all": "Alla",
+    "filter_men": "Män",
+    "filter_women": "Kvinnor",
+    "filter_new_arrivals": "Nyheter",
     "upgrade_cta": "Uppgradera till {{ size }}ML för {{ price }} mer.",
     "free_bottle": "Gratis flaska",
     "choose_your_perfume": "Välj din parfym",
