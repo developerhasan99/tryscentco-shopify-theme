@@ -9,6 +9,13 @@
   assign b_percent = st.discount_percent | plus: 0
   assign b_ribbon = 'Köp ' | append: b_paid | append: ', få ' | append: b_discount_qty | append: ' till med ' | append: b_percent | append: '% rabatt'
 
+  assign parent_variant = st.parent_product.selected_or_first_available_variant
+  assign parent_price = parent_variant.price | default: 0
+  assign parent_compare_at = parent_variant.compare_at_price | default: 0
+  if parent_compare_at <= parent_price
+    assign parent_compare_at = parent_price
+  endif
+
   assign eligible_handles = ''
   for p in grid_pool.products
     assign has_ml = false
@@ -171,21 +178,25 @@
           </div>
         </div>
 
-        <aside class="sbb-summary">
-          <div class="sbb-summary__row">
+        <div class="sbb-summary">
+          <p class="sbb-summary__original">
             <span>{{ st.total_label | escape }}</span>
-            <span x-text="money(ordTotal)"></span>
-          </div>
+            <s x-text="money(ordTotal)">{{ 0 | money }}</s>
+          </p>
+          <p class="sbb-summary__now">
+            <span class="sbb-summary__now-label">{{ st.price_label | escape }}</span>
+            <span class="sbb-summary__now-price" x-text="money(yourPrice)">{{ 0 | money }}</span>
+            <template x-if="discountPercent > 0">
+              <span class="sbb-summary__now-percent" x-text="'(-' + discountPercent + '%)'"></span>
+            </template>
+          </p>
+          <p class="sbb-summary__per-bottle" x-text="perBottleText"></p>
           <template x-if="discount > 0">
-            <div class="sbb-summary__row sbb-summary__row--discount">
-              <span>{{ st.discount_label | escape }}</span>
-              <span x-text="'-' + money(discount)"></span>
-            </div>
+            <p class="sbb-summary__savings">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 11-14h-7l1-6z"></path></svg>
+              <span x-text="savingsText"></span>
+            </p>
           </template>
-          <div class="sbb-summary__row sbb-summary__row--total">
-            <span>{{ st.price_label | escape }}</span>
-            <span x-text="money(yourPrice)">{{ 0 | money }}</span>
-          </div>
           <button
             type="button"
             class="sbb-summary__cta"
@@ -193,7 +204,7 @@
             @click="addToCart()">
             <span x-text="ctaLabel"></span>
           </button>
-        </aside>
+        </div>
       </div>
     </div>
   </div>
@@ -340,8 +351,10 @@
         picks: [],
         total: {{ b_total }},
         discountQty: {{ b_discount_qty }},
-        discountPercent: {{ b_percent }},
+        manualDiscountPercent: {{ b_percent }},
         ribbon: {{ b_ribbon | json }},
+        parentPrice: {{ parent_price }},
+        parentCompareAtPrice: {{ parent_compare_at }},
         products: [
           {%- for p in grid_pool.products -%}
             {%- assign handle_token = '|' | append: p.handle | append: '|' -%}
@@ -469,11 +482,36 @@
         // bundle is full. Estimate only: the real total is whatever the
         // matching automatic discount computes at checkout.
         get unitPrice() { return this.products.length ? this.products[0].price : 0; },
-        get ordTotal() { return this.unitPrice * this.total; },
-        get discount() {
-          return Math.round(this.unitPrice * this.discountQty * (this.discountPercent / 100));
+        // Price and savings shown in the summary come from the parent bundle
+        // product (its compare-at price is the "original" total, its price is
+        // what the customer actually pays for all {{ b_total }} bottles). If no
+        // parent product is set, fall back to estimating from the grid price
+        // and the manual discount settings.
+        get ordTotal() {
+          if (this.parentPrice) return this.parentCompareAtPrice;
+          return this.unitPrice * this.total;
         },
-        get yourPrice() { return this.ordTotal - this.discount; },
+        get yourPrice() {
+          if (this.parentPrice) return this.parentPrice;
+          var fallbackDiscount = Math.round(this.unitPrice * this.discountQty * (this.manualDiscountPercent / 100));
+          return this.ordTotal - fallbackDiscount;
+        },
+        get discount() { return Math.max(0, this.ordTotal - this.yourPrice); },
+        get discountPercent() {
+          if (!this.ordTotal) return 0;
+          return Math.round((this.discount / this.ordTotal) * 100);
+        },
+        get perBottleText() {
+          var perBottle = this.total ? this.yourPrice / this.total : 0;
+          var label = {{ st.per_bottle_label | json }};
+          var amount = this.money(perBottle);
+          return label.indexOf('[price]') > -1 ? label.replace('[price]', amount) : label + ' ' + amount;
+        },
+        get savingsText() {
+          var label = {{ st.savings_label | json }};
+          var amount = this.money(this.discount);
+          return label.indexOf('[amount]') > -1 ? label.replace('[amount]', amount) : label + ' ' + amount;
+        },
         money(cents) {
           var n = Math.round(Number(cents) || 0);
           var int = String(Math.floor(Math.abs(n) / 100)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -627,26 +665,28 @@
       {
         "type": "text",
         "id": "total_label",
-        "label": "Ordinary total label",
-        "default": "Ord. totalpris"
-      },
-      {
-        "type": "text",
-        "id": "discount_label",
-        "label": "Discount label",
-        "default": "Rabatt"
+        "label": "Original price label",
+        "default": "Ordinarie pris:"
       },
       {
         "type": "text",
         "id": "price_label",
         "label": "Your price label",
-        "default": "Ditt pris"
+        "default": "Nu:"
+      },
+      {
+        "type": "text",
+        "id": "per_bottle_label",
+        "label": "Per bottle label",
+        "info": "[price]",
+        "default": "Endast [price] per flaska"
       },
       {
         "type": "text",
         "id": "savings_label",
-        "label": "Savings label",
-        "default": "Du sparar"
+        "label": "Savings pill label",
+        "info": "[amount]",
+        "default": "Spara [amount] idag"
       },
       {
         "type": "header",

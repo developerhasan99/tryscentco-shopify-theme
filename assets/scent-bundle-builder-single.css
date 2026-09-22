@@ -56,6 +56,66 @@
 .sbb-content .sbb-summary {
   flex: 1 1 auto;
   width: 100%;
+  border-radius: 16px;
+  padding: 24px;
+}
+.sbb-content .sbb-summary__original {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: #767671;
+}
+.sbb-content .sbb-summary__original s {
+  color: #767671;
+}
+.sbb-content .sbb-summary__now {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 12px;
+}
+.sbb-content .sbb-summary__now-label {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+}
+.sbb-content .sbb-summary__now-price {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1;
+  color: #111;
+}
+.sbb-content .sbb-summary__now-percent {
+  font-size: 20px;
+  font-weight: 700;
+  color: #c0392b;
+}
+.sbb-content .sbb-summary__per-bottle {
+  margin: 0 0 16px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #111;
+}
+.sbb-content .sbb-summary__savings {
+  display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border: 1px solid #cfe6d7;
+    border-radius: 999px;
+    background: #eef7f1;
+    color: #1d5c3b;
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 0;
+}
+.sbb-content .sbb-summary__savings svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+.sbb-content .sbb-summary__cta {
+  background: #8fae8a;
 }
 
 .sbb-gallery {
