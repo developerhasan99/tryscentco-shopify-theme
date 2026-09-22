@@ -279,6 +279,7 @@
       "name": "Bundle builder 60% off",
       "settings": {
         "grid_collection": "bestseller-singles",
+        "parent_product": "bundle-60-parent-product",
         "bundle_total": 5,
         "bundle_discount_qty": 3,
         "discount_percent": 60,
