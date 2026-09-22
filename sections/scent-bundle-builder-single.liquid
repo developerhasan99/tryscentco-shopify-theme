@@ -124,11 +124,7 @@
                 class="sbb-slot"
                 :class="{ 'sbb-slot--free': isDiscounted(i), 'sbb-slot--filled': slot(i) }"
                 @click="scrollToPool()">
-                <span
-                  class="sbb-slot__badge"
-                  x-show="!isDiscounted(i)"
-                  x-text="i + 1"></span>
-                <span class="sbb-slot__pill" x-show="isDiscounted(i)">{{ st.discount_pill_label | escape }}</span>
+                <span class="sbb-slot__badge" x-text="i + 1"></span>
                 <template x-if="slot(i)">
                   <span class="sbb-slot__pick">
                     <img
