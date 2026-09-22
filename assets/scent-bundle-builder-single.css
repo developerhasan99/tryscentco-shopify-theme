@@ -18,6 +18,38 @@
 .sbb-content .sbb-head {
   text-align: left;
 }
+.sbb-content .sbb-head__badge {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background: #1d5c3b;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.sbb-content .sbb-head__title {
+  font-size: 40px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.sbb-content .sbb-head__title-accent {
+  color: #1f7a4d;
+}
+.sbb-content .sbb-head__sub {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.sbb-content .sbb-head__sub p {
+  margin: 0;
+}
+.sbb-content .sbb-head__sub strong {
+  color: #111;
+  font-weight: 700;
+}
 .sbb-content .sbb-builder {
   flex-direction: column;
 }
@@ -85,5 +117,8 @@
   }
   .sbb-content .sbb-head {
     text-align: center;
+  }
+  .sbb-content .sbb-head__title {
+    font-size: 28px;
   }
 }

@@ -68,7 +68,12 @@
                   @click="galleryIndex = {{ forloop.index0 }}"
                   aria-label="Visa bild {{ forloop.index }}"
                   {{ block.shopify_attributes }}>
-                  <img src="{{ img | image_url: width: 160 }}" alt="" width="72" height="72" loading="lazy">
+                  <img
+                    src="{{ img | image_url: width: 160 }}"
+                    alt=""
+                    width="72"
+                    height="72"
+                    loading="lazy">
                 </button>
               {%- endif -%}
             {%- endfor -%}
@@ -79,111 +84,116 @@
 
     <div class="sbb-content">
       <header class="sbb-head">
-        {%- if st.heading != blank -%}
-          <h2 class="sbb-head__title">{{ st.heading | escape }}</h2>
+        {%- if st.offer_badge != blank -%}
+          <span class="sbb-head__badge">{{ st.offer_badge | escape }}</span>
+        {%- endif -%}
+        {%- if st.heading != blank or st.heading_accent != blank -%}
+          <h2 class="sbb-head__title">
+            {{- st.heading | escape -}}
+            {%- if st.heading_accent != blank %}
+              <span class="sbb-head__title-accent">{{ st.heading_accent | escape }}</span>
+            {% endif -%}
+          </h2>
         {%- endif -%}
         {%- if st.subheading != blank -%}
-          <p class="sbb-head__sub">{{ st.subheading | escape }}</p>
-        {%- endif -%}
-        {%- if st.offer_badge != blank -%}
-          <p class="sbb-head__sub">{{ st.offer_badge | escape }}</p>
+          <div class="sbb-head__sub">{{ st.subheading }}</div>
         {%- endif -%}
       </header>
 
       <div class="sbb-builder" x-ref="preview">
-    <div class="sbb-builder__main">
-      <div class="sbb-slots">
-        <template x-for="(s, i) in slotsArray" :key="i">
-          <div
-            class="sbb-slot"
-            :class="{ 'sbb-slot--free': isDiscounted(i), 'sbb-slot--filled': slot(i) }"
-            @click="scrollToPool()">
-            <span
-              class="sbb-slot__badge"
-              x-show="!isDiscounted(i)"
-              x-text="i + 1"></span>
-            <span class="sbb-slot__pill" x-show="isDiscounted(i)">{{ st.discount_pill_label | escape }}</span>
-            <template x-if="slot(i)">
-              <span class="sbb-slot__pick">
-                <img
-                  :src="slot(i).image"
-                  alt=""
-                  width="80"
-                  height="80">
-                <button
-                  type="button"
-                  class="sbb-slot__x"
-                  @click.stop="removeAt(i)"
-                  aria-label="Ta bort">&times;</button>
-              </span>
+        <div class="sbb-builder__main">
+          <div class="sbb-slots">
+            <template x-for="(s, i) in slotsArray" :key="i">
+              <div
+                class="sbb-slot"
+                :class="{ 'sbb-slot--free': isDiscounted(i), 'sbb-slot--filled': slot(i) }"
+                @click="scrollToPool()">
+                <span
+                  class="sbb-slot__badge"
+                  x-show="!isDiscounted(i)"
+                  x-text="i + 1"></span>
+                <span class="sbb-slot__pill" x-show="isDiscounted(i)">{{ st.discount_pill_label | escape }}</span>
+                <template x-if="slot(i)">
+                  <span class="sbb-slot__pick">
+                    <img
+                      :src="slot(i).image"
+                      alt=""
+                      width="80"
+                      height="80">
+                    <button
+                      type="button"
+                      class="sbb-slot__x"
+                      @click.stop="removeAt(i)"
+                      aria-label="Ta bort">&times;</button>
+                  </span>
+                </template>
+                <template x-if="!slot(i)">
+                  <svg
+                    class="sbb-slot__bottle"
+                    width="62"
+                    height="120"
+                    viewBox="0 0 62 120"
+                    aria-hidden="true">
+                    <rect
+                      x="21.8"
+                      y="0.8"
+                      width="18.4"
+                      height="26"
+                      rx="3"></rect>
+                    <rect
+                      x="0.8"
+                      y="26.8"
+                      width="60.4"
+                      height="92.4"
+                      rx="8"></rect>
+                  </svg>
+                </template>
+                <span
+                  class="sbb-slot__label"
+                  x-show="!slot(i)"
+                  x-text="isDiscounted(i) ? {{ st.discount_slot_label | json | escape }} : {{ st.slot_label | json | escape }}"></span>
+                <span
+                  class="sbb-slot__label sbb-slot__label--name"
+                  x-show="slot(i)"
+                  x-text="slot(i) && slot(i).name"></span>
+              </div>
             </template>
-            <template x-if="!slot(i)">
-              <svg
-                class="sbb-slot__bottle"
-                width="62"
-                height="120"
-                viewBox="0 0 62 120"
-                aria-hidden="true">
-                <rect
-                  x="21.8"
-                  y="0.8"
-                  width="18.4"
-                  height="26"
-                  rx="3"></rect>
-                <rect
-                  x="0.8"
-                  y="26.8"
-                  width="60.4"
-                  height="92.4"
-                  rx="8"></rect>
-              </svg>
-            </template>
-            <span
-              class="sbb-slot__label"
-              x-show="!slot(i)"
-              x-text="isDiscounted(i) ? {{ st.discount_slot_label | json | escape }} : {{ st.slot_label | json | escape }}"></span>
-            <span
-              class="sbb-slot__label sbb-slot__label--name"
-              x-show="slot(i)"
-              x-text="slot(i) && slot(i).name"></span>
           </div>
-        </template>
-      </div>
-      <div class="sbb-progress">
-        <div class="sbb-progress__track">
-          <div class="sbb-progress__fill" :style="'width: ' + percent + '%'"></div>
+          <div class="sbb-progress">
+            <div class="sbb-progress__track">
+              <div class="sbb-progress__fill" :style="'width: ' + percent + '%'"></div>
+            </div>
+            <p class="sbb-progress__copy">
+              <span x-text="counter">{{ start_counter | escape }}</span>
+              <span>&bull;</span>
+              <span x-text="message">{{ start_hint | escape }}</span>
+            </p>
+          </div>
         </div>
-        <p class="sbb-progress__copy">
-          <span x-text="counter">{{ start_counter | escape }}</span>
-          <span>&bull;</span>
-          <span x-text="message">{{ start_hint | escape }}</span>
-        </p>
-      </div>
-    </div>
 
-    <aside class="sbb-summary">
-      <div class="sbb-summary__row">
-        <span>{{ st.total_label | escape }}</span>
-        <span x-text="money(ordTotal)"></span>
-      </div>
-      <template x-if="discount > 0">
-        <div class="sbb-summary__row sbb-summary__row--discount">
-          <span>{{ st.discount_label | escape }}</span>
-          <span x-text="'-' + money(discount)"></span>
-        </div>
-      </template>
-      <div class="sbb-summary__row sbb-summary__row--total">
-        <span>{{ st.price_label | escape }}</span>
-        <span x-text="money(yourPrice)">{{ 0 | money }}</span>
-      </div>
-      <button
-        type="button"
-        class="sbb-summary__cta"
-        :disabled="!full || adding"
-        @click="addToCart()">
-        <span x-text="ctaLabel"></span>
-      </button>
-    </aside>
+        <aside class="sbb-summary">
+          <div class="sbb-summary__row">
+            <span>{{ st.total_label | escape }}</span>
+            <span x-text="money(ordTotal)"></span>
+          </div>
+          <template x-if="discount > 0">
+            <div class="sbb-summary__row sbb-summary__row--discount">
+              <span>{{ st.discount_label | escape }}</span>
+              <span x-text="'-' + money(discount)"></span>
+            </div>
+          </template>
+          <div class="sbb-summary__row sbb-summary__row--total">
+            <span>{{ st.price_label | escape }}</span>
+            <span x-text="money(yourPrice)">{{ 0 | money }}</span>
+          </div>
+          <button
+            type="button"
+            class="sbb-summary__cta"
+            :disabled="!full || adding"
+            @click="addToCart()">
+            <span x-text="ctaLabel"></span>
+          </button>
+        </aside>
       </div>
     </div>
   </div>
@@ -526,8 +536,8 @@
         "type": "text",
         "id": "offer_badge",
         "label": "Offer badge",
-        "info": "Leave blank to hide",
-        "default": "Köp 2, få 3 till med 60% rabatt"
+        "info": "Short pill text, e.g. \"PAYDAY DEAL\". Leave blank to hide",
+        "default": "PayDay Deal"
       },
       {
         "type": "header",
@@ -537,13 +547,20 @@
         "type": "text",
         "id": "heading",
         "label": "Heading",
-        "default": "Bygg ditt eget paket"
+        "default": "Bygg din doftgarderob för"
       },
       {
         "type": "text",
+        "id": "heading_accent",
+        "label": "Heading, highlighted part",
+        "info": "Shown in accent color at the end of the heading, e.g. \"60% less\"",
+        "default": "60% mindre"
+      },
+      {
+        "type": "richtext",
         "id": "subheading",
         "label": "Subheading",
-        "default": "5 parfymer – 60% rabatt på 3 av dem"
+        "default": "<p>Köp 2x100ml av dina favoritparfymer och få <strong>3x100ml GRATIS</strong> i PayDay-paketet</p>"
       },
       {
         "type": "header",
