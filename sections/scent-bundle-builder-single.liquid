@@ -254,6 +254,12 @@
           <option :value="o" x-text="o"></option>
         </template>
       </select>
+      <select x-model="occasion" x-show="occasionOptions.length">
+        <option value="">Tillfälle</option>
+        <template x-for="o in occasionOptions" :key="o">
+          <option :value="o" x-text="o"></option>
+        </template>
+      </select>
     </div>
   </div>
 
@@ -374,6 +380,7 @@
         q: '',
         brand: '',
         gender: '',
+        occasion: '',
         visibleCount: 8,
         pageSize: 8,
         picks: [],
@@ -401,7 +408,8 @@
               compareAt: {{ match.compare_at_price | default: 0 }},
               variantId: {{ match.id | json }},
               brand: {{ p.metafields.custom.brand.value | join: '||' | json }},
-              gender: {{ p.metafields.custom.gender.value | join: '||' | json }}
+              gender: {{ p.metafields.custom.gender.value | join: '||' | json }},
+              occasion: {{ p.metafields.custom.occasion | json }}
             },
           {%- endfor -%}
         ],
@@ -447,7 +455,7 @@
             window.addEventListener('resize', onScroll);
             checkLoadMore();
           });
-          ['q', 'brand', 'gender'].forEach(function (key) {
+          ['q', 'brand', 'gender', 'occasion'].forEach(function (key) {
             self.$watch(key, function () { self.visibleCount = self.pageSize; });
           });
         },
@@ -481,11 +489,17 @@
           this.products.forEach(function (p) { p.gender.split('||').forEach(function (g) { if (g) set.add(g); }); });
           return Array.from(set).sort();
         },
+        get occasionOptions() {
+          var set = new Set();
+          this.products.forEach(function (p) { if (p.occasion) set.add(p.occasion); });
+          return Array.from(set).sort();
+        },
         get filtered() {
           var q = this.q.trim().toLowerCase();
           return this.products.filter(function (p) {
             if (this.brand && p.brand.split('||').indexOf(this.brand) === -1) return false;
             if (this.gender && p.gender.split('||').indexOf(this.gender) === -1) return false;
+            if (this.occasion && p.occasion !== this.occasion) return false;
             if (q && p.name.toLowerCase().indexOf(q) === -1) return false;
             return true;
           }, this);

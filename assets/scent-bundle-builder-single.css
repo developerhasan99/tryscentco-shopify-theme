@@ -78,6 +78,7 @@
   align-items: baseline;
   gap: 10px;
   margin: 0 0 12px;
+  letter-spacing: normal;
 }
 .sbb-content .sbb-summary__now-label {
   font-size: 22px;
@@ -85,7 +86,7 @@
   color: #111;
 }
 .sbb-content .sbb-summary__now-price {
-  font-size: 34px;
+  font-size: 28px;
   font-weight: 800;
   line-height: 1;
   color: #111;
