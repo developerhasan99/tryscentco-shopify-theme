@@ -53,6 +53,11 @@
 .sbb-content .sbb-builder {
   flex-direction: column;
 }
+.sbb--single .sbb-slots {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
 .sbb-content .sbb-summary {
   flex: 1 1 auto;
   width: 100%;
