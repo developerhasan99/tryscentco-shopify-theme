@@ -15,6 +15,7 @@
   if parent_compare_at <= parent_price
     assign parent_compare_at = parent_price
   endif
+  assign product_form_id = 'product-form-' | append: section.id
 
   assign eligible_handles = ''
   for p in grid_pool.products
@@ -40,50 +41,58 @@
 
 {{ 'scent-bundle-builder.css' | asset_url | stylesheet_tag }}
 {{ 'scent-bundle-builder-single.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 <div class="sbb sbb--single" x-data="sbbSingleBuilder()">
   <div class="sbb-top">
     {%- if section.blocks.size > 0 -%}
       <div class="sbb-gallery">
-        <div class="sbb-gallery__main">
-          {%- for block in section.blocks -%}
-            {%- assign img = block.settings.image -%}
-            {%- if img != blank -%}
-              <img
-                x-show="galleryIndex === {{ forloop.index0 }}"
-                src="{{ img | image_url: width: 900 }}"
-                srcset="{{ img | image_url: width: 600 }} 600w, {{ img | image_url: width: 900 }} 900w, {{ img | image_url: width: 1200 }} 1200w"
-                sizes="(min-width: 900px) 45vw, 100vw"
-                alt="{{ block.settings.alt | default: img.alt | escape }}"
-                width="{{ img.width }}"
-                height="{{ img.height }}"
-                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
-                {{ block.shopify_attributes }}>
-            {%- endif -%}
-          {%- endfor -%}
-        </div>
-        {%- if section.blocks.size > 1 -%}
-          <div class="sbb-gallery__thumbs">
+        <div class="sbb-gallery__main swiper" id="sbbGalleryMain-{{ section.id }}">
+          <div class="swiper-wrapper">
             {%- for block in section.blocks -%}
               {%- assign img = block.settings.image -%}
               {%- if img != blank -%}
-                <button
-                  type="button"
-                  class="sbb-gallery__thumb"
-                  :class="{ 'is-active': galleryIndex === {{ forloop.index0 }} }"
-                  @click="galleryIndex = {{ forloop.index0 }}"
-                  aria-label="Visa bild {{ forloop.index }}"
-                  {{ block.shopify_attributes }}>
+                <div class="swiper-slide" {{ block.shopify_attributes }}>
                   <img
-                    src="{{ img | image_url: width: 160 }}"
-                    alt=""
-                    width="72"
-                    height="72"
-                    loading="lazy">
-                </button>
+                    src="{{ img | image_url: width: 900 }}"
+                    srcset="{{ img | image_url: width: 600 }} 600w, {{ img | image_url: width: 900 }} 900w, {{ img | image_url: width: 1200 }} 1200w"
+                    sizes="(min-width: 900px) 45vw, 100vw"
+                    alt="{{ block.settings.alt | default: img.alt | escape }}"
+                    width="{{ img.width }}"
+                    height="{{ img.height }}"
+                    loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+                </div>
               {%- endif -%}
             {%- endfor -%}
+          </div>
+          {%- if section.blocks.size > 1 -%}
+            <div class="swiper-button-prev" id="sbbGalleryPrev-{{ section.id }}"></div>
+            <div class="swiper-button-next" id="sbbGalleryNext-{{ section.id }}"></div>
+          {%- endif -%}
+        </div>
+        {%- if section.blocks.size > 1 -%}
+          <div class="sbb-gallery__thumbs swiper" id="sbbGalleryThumbs-{{ section.id }}">
+            <div class="swiper-wrapper">
+              {%- for block in section.blocks -%}
+                {%- assign img = block.settings.image -%}
+                {%- if img != blank -%}
+                  <div
+                    class="swiper-slide sbb-gallery__thumb"
+                    role="button"
+                    tabindex="0"
+                    aria-label="Visa bild {{ forloop.index }}"
+                    {{ block.shopify_attributes }}>
+                    <img
+                      src="{{ img | image_url: width: 160 }}"
+                      alt=""
+                      width="72"
+                      height="72"
+                      loading="lazy">
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
           </div>
         {%- endif -%}
       </div>
@@ -190,20 +199,38 @@
               <span class="sbb-summary__now-percent" x-text="'(-' + discountPercent + '%)'"></span>
             </template>
           </p>
-          <p class="sbb-summary__per-bottle" x-text="perBottleText"></p>
+          <p class="sbb-summary__per-bottle" x-html="perBottleHtml"></p>
           <template x-if="discount > 0">
             <p class="sbb-summary__savings">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 11-14h-7l1-6z"></path></svg>
               <span x-text="savingsText"></span>
             </p>
           </template>
-          <button
-            type="button"
-            class="sbb-summary__cta"
-            :disabled="!full || adding"
-            @click="addToCart()">
-            <span x-text="ctaLabel"></span>
-          </button>
+          {%- if parent_variant -%}
+            <product-form x-ref="bundleForm" class="sbb-summary__form" data-hide-errors="true" data-section-id="{{ section.id }}">
+              {%- form 'product'
+                , st.parent_product
+                , id: product_form_id
+                , class: 'sbb-summary__form-inner'
+                , novalidate: 'novalidate'
+                , data-type: 'add-to-cart-form'
+              -%}
+                <input type="hidden" name="id" value="{{ parent_variant.id }}" class="product-variant-id">
+                <input type="hidden" name="properties[_bundle_items]" :value="picks.map(function (p) { return p.variantId; }).join(',')">
+                <template x-for="(p, i) in picks" :key="p.id">
+                  <input type="hidden" :name="'properties[Bottle ' + (i + 1) + ']'" :value="bottleProperty(p)">
+                </template>
+                <button
+                  type="submit"
+                  name="add"
+                  class="sbb-summary__cta"
+                  :disabled="!full || adding">
+                  <span x-text="ctaLabel"></span>
+                  {%- render 'loading-spinner' -%}
+                </button>
+              {%- endform -%}
+            </product-form>
+          {%- endif -%}
         </div>
       </div>
     </div>
@@ -325,9 +352,14 @@
           <span x-text="money(yourPrice)" class="sbb-sticky__price">{{ 0 | money }}</span>
           <button
             type="button"
+            class="sbb-sticky__cta"
+            :class="{ 'loading': adding }"
             :disabled="!full || adding"
-            @click="addToCart()">
+            @click="submitBundleForm()">
             <span x-text="ctaLabel"></span>
+            <div class="loading__spinner" :class="{ hidden: !adding }">
+              {{ 'loading-spinner.svg' | inline_asset_content }}
+            </div>
           </button>
         </div>
       </div>
@@ -340,9 +372,8 @@
     Alpine.data('sbbSingleBuilder', function () {
       return {
         moneyFormat: {{ shop.money_format | json }},
-        adding: false,
         showSticky: false,
-        galleryIndex: 0,
+        adding: false,
         q: '',
         brand: '',
         gender: '',
@@ -380,6 +411,14 @@
         init() {
           var self = this;
           this.$nextTick(function () {
+            // Mirror the real submit button's loading state (set by product-form.js
+            // during the actual add-to-cart request) onto `adding`, so the sticky
+            // bar's proxy button can reflect the same disabled/spinner state.
+            var submitBtn = self.$refs.bundleForm && self.$refs.bundleForm.querySelector('[type="submit"]');
+            if (submitBtn && 'MutationObserver' in window) {
+              var syncAdding = function () { self.adding = submitBtn.classList.contains('loading'); };
+              new MutationObserver(syncAdding).observe(submitBtn, { attributes: true, attributeFilter: ['class'] });
+            }
             if (self.$refs.preview && 'IntersectionObserver' in window) {
               var stickyObserver = new IntersectionObserver(function (entries) {
                 entries.forEach(function (entry) {
@@ -471,16 +510,14 @@
           return {{ st.hint_text | json }}.replace('[remaining]', remaining);
         },
         get ctaLabel() {
-          if (this.adding) return 'Lägger till…';
           if (this.full) return {{ st.cta_button_label | json }};
           var remaining = Math.max(0, this.total - this.picks.length);
           if (remaining === 1) return {{ st.cta_disabled_label_one | json }};
           return {{ st.cta_disabled_label | json }}.replace('[remaining]', remaining);
         },
-        // Every product in the pool shares the same 100ml price, so the final
-        // total/discount/price can be shown up front instead of only once the
-        // bundle is full. Estimate only: the real total is whatever the
-        // matching automatic discount computes at checkout.
+        // Rough single-product estimate used only as a fallback below when no
+        // parent product is configured — individual 100ml prices actually vary
+        // per product, so this is not a reliable stand-in once picks exist.
         get unitPrice() { return this.products.length ? this.products[0].price : 0; },
         // Price and savings shown in the summary come from the parent bundle
         // product (its compare-at price is the "original" total, its price is
@@ -501,11 +538,25 @@
           if (!this.ordTotal) return 0;
           return Math.round((this.discount / this.ordTotal) * 100);
         },
-        get perBottleText() {
-          var perBottle = this.total ? this.yourPrice / this.total : 0;
+        get perBottleOriginal() {
+          // Each 100ml bottle has its own regular price, so use the average
+          // regular price of the bottles actually picked (falling back to the
+          // first eligible product before anything is picked yet).
+          if (!this.picks.length) return this.unitPrice;
+          var sum = this.picks.reduce(function (acc, p) { return acc + p.price; }, 0);
+          return sum / this.picks.length;
+        },
+        get perBottleNow() { return this.total ? this.yourPrice / this.total : 0; },
+        get perBottleHtml() {
+          var hasDiscount = this.perBottleOriginal > this.perBottleNow;
+          var originalHtml = hasDiscount ? '<s>' + this.money(this.perBottleOriginal) + '</s>' : '';
+          var nowHtml = this.money(this.perBottleNow);
           var label = {{ st.per_bottle_label | json }};
-          var amount = this.money(perBottle);
-          return label.indexOf('[price]') > -1 ? label.replace('[price]', amount) : label + ' ' + amount;
+          return label
+            .replace('[original_price]', originalHtml)
+            .replace('[price]', nowHtml)
+            .replace(/\s+/g, ' ')
+            .trim();
         },
         get savingsText() {
           var label = {{ st.savings_label | json }};
@@ -519,23 +570,59 @@
           var out = String(this.moneyFormat || '{' + '{amount}' + '}').replace(/\{\{\s*amount\w*\s*\}\}/, int + '.' + dec).replace(/<[^>]+>/g, '');
           return (n < 0 ? '-' : '') + out;
         },
-        addToCart() {
-          if (!this.full || this.adding) return;
-          this.adding = true;
-          var items = this.picks.map(function (p) { return { id: p.variantId, quantity: 1 }; });
-          fetch('/cart/add.js', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ items: items })
-          })
-            .then(function (res) { if (!res.ok) throw new Error('cart add failed'); return res.json(); })
-            .then(function () { window.location.href = '/checkout'; })
-            .catch(function () { this.adding = false; }.bind(this));
+        bottleProperty(p) {
+          var brand = (p.brand || '').split('||').filter(Boolean)[0];
+          var label = p.name;
+          if (brand) label += ' Inspired by ' + brand;
+          return label + ' - 100ml';
+        },
+        submitBundleForm() {
+          if (!this.full) return;
+          var form = this.$refs.bundleForm && this.$refs.bundleForm.querySelector('form');
+          if (form) form.requestSubmit();
         }
       };
     });
   });
 </script>
+
+{%- if section.blocks.size > 1 -%}
+  <script>
+    (function () {
+      function initSbbGallerySwiper() {
+        if (typeof Swiper === 'undefined') return;
+        var thumbsEl = document.getElementById('sbbGalleryThumbs-{{ section.id }}');
+        var mainEl = document.getElementById('sbbGalleryMain-{{ section.id }}');
+        if (!mainEl) return;
+
+        var thumbs = new Swiper(thumbsEl, {
+          slidesPerView: 4,
+          spaceBetween: 10,
+          freeMode: true,
+          watchSlidesProgress: true,
+        });
+
+        new Swiper(mainEl, {
+          slidesPerView: 1,
+          spaceBetween: 10,
+          navigation: {
+            prevEl: document.getElementById('sbbGalleryPrev-{{ section.id }}'),
+            nextEl: document.getElementById('sbbGalleryNext-{{ section.id }}'),
+          },
+          thumbs: {
+            swiper: thumbs,
+          },
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initSbbGallerySwiper);
+      } else {
+        initSbbGallerySwiper();
+      }
+    })();
+  </script>
+{%- endif -%}
 
 {% schema %}
   {
@@ -678,8 +765,8 @@
         "type": "text",
         "id": "per_bottle_label",
         "label": "Per bottle label",
-        "info": "[price]",
-        "default": "Endast [price] per flaska"
+        "info": "[original_price] [price] — original_price is struck through and only shown when discounted",
+        "default": "Endast [original_price] [price] per flaska"
       },
       {
         "type": "text",

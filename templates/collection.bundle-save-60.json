@@ -296,7 +296,7 @@
         "done_text": "Ditt paket är klart!",
         "total_label": "Ordinarie pris:",
         "price_label": "Nu:",
-        "per_bottle_label": "Endast [price] per flaska",
+        "per_bottle_label": "Endast [original_price] [price] per flaska",
         "savings_label": "Spara [amount] idag",
         "search_placeholder": "Hitta din parfym",
         "cta_label": "Lägg",

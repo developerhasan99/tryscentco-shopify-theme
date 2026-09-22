@@ -349,18 +349,19 @@
   font-size: 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  column-gap: 8px;
   color: #1f7a4d;
   font-weight: 700;
+  flex-wrap: wrap;
 }
 .sbb-card__price s {
   color: #999;
   font-weight: 400;
+  margin-right: auto;
 }
 .sbb-card__size {
   color: #888;
   font-weight: 400;
-  margin-left: auto;
 }
 .sbb-card__cta {
   width: calc(100% - 24px);
@@ -525,11 +526,16 @@
   }
 }
 @media screen and (max-width: 640px) {
+  .sbb {
+    padding-top: 16px;
+  }
   .sbb-builder {
     flex-direction: column;
+    padding: 12px;
   }
   .sbb-summary {
     flex-basis: auto;
+    padding: 12px !important;
   }
 
   .sbb-slots {
