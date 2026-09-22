@@ -172,6 +172,7 @@
                   class="sbb-slot__label sbb-slot__label--name"
                   x-show="slot(i)"
                   x-text="slot(i) && slot(i).name"></span>
+                <span class="sbb-slot__price" x-html="slotPriceHtml(i)"></span>
               </div>
             </template>
           </div>
@@ -464,6 +465,16 @@
         },
         get slotsArray() { return Array.from({ length: this.total }); },
         isDiscounted(i) { return i >= this.total - this.discountQty; },
+        slotPrice(i) {
+          var picked = this.slot(i);
+          return picked ? picked.price : this.perBottleOriginal;
+        },
+        slotPriceHtml(i) {
+          var price = this.money(this.slotPrice(i));
+          if (!this.isDiscounted(i)) return price;
+          var freeLabel = {{ st.discount_pill_label | json }};
+          return '<s>' + price + '</s> <span class="sbb-slot__price-free">' + freeLabel + '</span>';
+        },
         get brandOptions() {
           var set = new Set();
           this.products.forEach(function (p) { p.brand.split('||').forEach(function (b) { if (b) set.add(b); }); });

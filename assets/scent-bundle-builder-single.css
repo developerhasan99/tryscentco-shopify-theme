@@ -125,6 +125,22 @@
   display: block;
 }
 
+.sbb--single .sbb-slot__price {
+  display: block;
+  margin-top: 2px;
+  font-size: clamp(10px, 2.4vw, 12px);
+  color: #666;
+}
+.sbb--single .sbb-slot__price s {
+  color: #c0392b;
+  font-weight: 600;
+  margin-right: 4px;
+}
+.sbb--single .sbb-slot__price-free {
+  color: #1f7a4d;
+  font-weight: 700;
+}
+
 .sbb--single .sbb-card__media img {
   aspect-ratio: 1;
   object-fit: contain;
