@@ -1815,7 +1815,9 @@
         "optional_subdistrict_label": "Delområde (valfritt)",
         "change_location_link_label": "Ändra plats",
         "subdistrict_label": "Delområde",
-        "suburb_label": "Förort"
+        "suburb_label": "Förort",
+        "phone_label": "Telefon – få support och uppdateringar via SMS",
+        "optional_phone_label": "Telefon – få support och uppdateringar via SMS"
       },
       "delivery_options": {
         "ship": "Skicka",
