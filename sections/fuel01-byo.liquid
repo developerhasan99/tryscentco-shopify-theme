@@ -29,8 +29,15 @@
   the locale files, so on the store's other markets it would land beside a
   translated theme. The output is gated on the Swedish locale for that reason:
   da, nb and fi keep the stock collection page in both arms.
+
+  The locale alone does not hold that line. The Danish, Finnish and Norwegian
+  sites are the Swedish page run through the translation app, so Liquid still
+  renders them in sv, only with the country set to DK, FI or NO. The builder
+  showed there half translated, and its cart calls went to /sv-dk/cart/...,
+  which the app answers with a redirect that drops the order. So the country
+  has to be Sweden as well.
 {%- endcomment -%}
-{%- if request.page_type == 'collection' and collection.handle == target_handle and request.locale.iso_code == 'sv' -%}
+{%- if request.page_type == 'collection' and collection.handle == target_handle and request.locale.iso_code == 'sv' and localization.country.iso_code == 'SE' -%}
   {%- liquid
     assign st = section.settings
 
