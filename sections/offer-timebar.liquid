@@ -158,8 +158,8 @@
           </div>
         </div>
       {% endif %}
-      {% render 'fuel01-announcement'
-        , section: section %}
+      {% comment %} {% render 'fuel01-announcement'
+              , section: section %} {% endcomment %}
       <div class="py-3 md:py-2" style="background-color: {{ section.settings.secondary_color }};">
         <div class="container mx-auto px-4">
           <div class="flex flex-wrap items-center gap-x-6 gap-y-1 justify-center">
