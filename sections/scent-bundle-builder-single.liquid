@@ -9,7 +9,7 @@
   assign b_percent = st.discount_percent | plus: 0
   assign b_ribbon = 'Köp ' | append: b_paid | append: ', få ' | append: b_discount_qty | append: ' till med ' | append: b_percent | append: '% rabatt'
 
-  assign parent_variant = st.parent_product.selected_or_first_available_variant
+  assign parent_variant = product.selected_or_first_available_variant
   assign parent_price = parent_variant.price | default: 0
   assign parent_compare_at = parent_variant.compare_at_price | default: 0
   if parent_compare_at <= parent_price
@@ -44,57 +44,12 @@
 <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+{% assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' %}
 <div class="sbb sbb--single" x-data="sbbSingleBuilder()">
   <div class="sbb-top">
-    {%- if section.blocks.size > 0 -%}
+    {%- if product.images.size > 0 -%}
       <div class="sbb-gallery">
-        <div class="sbb-gallery__main swiper" id="sbbGalleryMain-{{ section.id }}">
-          <div class="swiper-wrapper">
-            {%- for block in section.blocks -%}
-              {%- assign img = block.settings.image -%}
-              {%- if img != blank -%}
-                <div class="swiper-slide" {{ block.shopify_attributes }}>
-                  <img
-                    src="{{ img | image_url: width: 900 }}"
-                    srcset="{{ img | image_url: width: 600 }} 600w, {{ img | image_url: width: 900 }} 900w, {{ img | image_url: width: 1200 }} 1200w"
-                    sizes="(min-width: 900px) 45vw, 100vw"
-                    alt="{{ block.settings.alt | default: img.alt | escape }}"
-                    width="{{ img.width }}"
-                    height="{{ img.height }}"
-                    loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
-                </div>
-              {%- endif -%}
-            {%- endfor -%}
-          </div>
-          {%- if section.blocks.size > 1 -%}
-            <div class="swiper-button-prev" id="sbbGalleryPrev-{{ section.id }}"></div>
-            <div class="swiper-button-next" id="sbbGalleryNext-{{ section.id }}"></div>
-          {%- endif -%}
-        </div>
-        {%- if section.blocks.size > 1 -%}
-          <div class="sbb-gallery__thumbs swiper" id="sbbGalleryThumbs-{{ section.id }}">
-            <div class="swiper-wrapper">
-              {%- for block in section.blocks -%}
-                {%- assign img = block.settings.image -%}
-                {%- if img != blank -%}
-                  <div
-                    class="swiper-slide sbb-gallery__thumb"
-                    role="button"
-                    tabindex="0"
-                    aria-label="Visa bild {{ forloop.index }}"
-                    {{ block.shopify_attributes }}>
-                    <img
-                      src="{{ img | image_url: width: 160 }}"
-                      alt=""
-                      width="72"
-                      height="72"
-                      loading="lazy">
-                  </div>
-                {%- endif -%}
-              {%- endfor -%}
-            </div>
-          </div>
-        {%- endif -%}
+        {% render 'product-media-gallery', variant_images: variant_images %}
       </div>
     {%- endif -%}
 
@@ -206,7 +161,7 @@
           {%- if parent_variant -%}
             <product-form x-ref="bundleForm" class="sbb-summary__form" data-hide-errors="true" data-section-id="{{ section.id }}">
               {%- form 'product'
-                , st.parent_product
+                , product
                 , id: product_form_id
                 , class: 'sbb-summary__form-inner'
                 , novalidate: 'novalidate'
@@ -251,7 +206,7 @@
       <select x-model="gender" x-show="genderOptions.length">
         <option value="">Kön</option>
         <template x-for="o in genderOptions" :key="o">
-          <option :value="o" x-text="o"></option>
+          <option :value="o" x-text="genderLabel(o)"></option>
         </template>
       </select>
       <select x-model="occasion" x-show="occasionOptions.length">
@@ -399,6 +354,33 @@
               {%- assign vt = v.title | downcase | replace: ' ml', 'ml' -%}
               {%- if vt == variant_ml -%}{%- assign match = v -%}{%- break -%}{%- endif -%}
             {%- endfor -%}
+            {%- assign brand_slug = '' -%}
+            {%- for t in p.tags -%}
+              {%- if t contains 'brand:' -%}
+                {%- assign brand_slug = t | remove: 'brand:' -%}
+                {%- break -%}
+              {%- elsif t contains 'marke:' -%}
+                {%- assign brand_slug = t | remove: 'marke:' -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- assign brand_name = '' -%}
+            {%- if brand_slug != '' -%}
+              {%- case brand_slug -%}
+                {%- when 'ysl' -%}
+                  {%- assign brand_name = 'YSL' -%}
+                {%- when 'jpgaultier' -%}
+                  {%- assign brand_name = 'Jean Paul Gaultier' -%}
+                {%- when 'lancome' -%}
+                  {%- assign brand_name = 'Lancôme' -%}
+                {%- else -%}
+                  {%- assign brand_words = brand_slug | split: '-' -%}
+                  {%- for w in brand_words -%}
+                    {%- assign brand_name = brand_name | append: w | capitalize | append: ' ' -%}
+                  {%- endfor -%}
+                  {%- assign brand_name = brand_name | strip -%}
+              {%- endcase -%}
+            {%- endif -%}
             {
               id: {{ p.id }},
               name: {{ p.title | json }},
@@ -407,8 +389,8 @@
               price: {{ match.price }},
               compareAt: {{ match.compare_at_price | default: 0 }},
               variantId: {{ match.id | json }},
-              brand: {{ p.metafields.custom.brand.value | join: '||' | json }},
-              gender: {{ p.metafields.custom.gender.value | join: '||' | json }},
+              brand: {{ brand_name | json }},
+              gender: {{ p.type | json }},
               occasion: {{ p.metafields.custom.occasion | json }}
             },
           {%- endfor -%}
@@ -484,10 +466,23 @@
           this.products.forEach(function (p) { p.brand.split('||').forEach(function (b) { if (b) set.add(b); }); });
           return Array.from(set).sort();
         },
+        genderBucket(raw) {
+          var g = (raw || '').trim().toLowerCase();
+          if (!g) return '';
+          var men = ['voor mannen', 'pour homme', 'für männer', 'fur manner', 'herren', 'för män', 'herr', 'herrar', 'homme', 'men', 'for men'];
+          var women = ['voor vrouwen', 'pour femme', 'für frauen', 'fur frauen', 'damen', 'för kvinnor', 'dam', 'damer', 'femme', 'women', 'for women'];
+          if (men.indexOf(g) > -1) return 'men';
+          if (women.indexOf(g) > -1) return 'women';
+          return '';
+        },
+        genderLabel(key) {
+          return key === 'men' ? 'För män' : key === 'women' ? 'För kvinnor' : '';
+        },
         get genderOptions() {
+          var self = this;
           var set = new Set();
-          this.products.forEach(function (p) { p.gender.split('||').forEach(function (g) { if (g) set.add(g); }); });
-          return Array.from(set).sort();
+          this.products.forEach(function (p) { p.gender.split('||').forEach(function (g) { var b = self.genderBucket(g); if (b) set.add(b); }); });
+          return ['men', 'women'].filter(function (g) { return set.has(g); });
         },
         get occasionOptions() {
           var set = new Set();
@@ -498,7 +493,7 @@
           var q = this.q.trim().toLowerCase();
           return this.products.filter(function (p) {
             if (this.brand && p.brand.split('||').indexOf(this.brand) === -1) return false;
-            if (this.gender && p.gender.split('||').indexOf(this.gender) === -1) return false;
+            if (this.gender && !p.gender.split('||').some(function (g) { return this.genderBucket(g) === this.gender; }, this)) return false;
             if (this.occasion && p.occasion !== this.occasion) return false;
             if (q && p.name.toLowerCase().indexOf(q) === -1) return false;
             return true;
@@ -607,7 +602,7 @@
   });
 </script>
 
-{%- if section.blocks.size > 1 -%}
+{%- if product.images.size > 1 -%}
   <script>
     (function () {
       function initSbbGallerySwiper() {
@@ -657,16 +652,6 @@
       },
       {
         "type": "header",
-        "content": "Bundle product"
-      },
-      {
-        "type": "product",
-        "id": "parent_product",
-        "label": "Parent product",
-        "info": "The product added to cart for this bundle. Its first available variant is used; the chosen scents are attached to it as line item properties."
-      },
-      {
-        "type": "header",
         "content": "Offer"
       },
       {
@@ -693,7 +678,7 @@
         "id": "offer_badge",
         "label": "Offer badge",
         "info": "Short pill text, e.g. \"PAYDAY DEAL\". Leave blank to hide",
-        "default": "PayDay Deal"
+        "default": "Lönehelgserbjudande"
       },
       {
         "type": "header",
@@ -703,7 +688,7 @@
         "type": "text",
         "id": "heading",
         "label": "Heading",
-        "default": "Bygg din doftgarderob för"
+        "default": "Bygg ditt doftskåp för"
       },
       {
         "type": "text",
@@ -716,7 +701,7 @@
         "type": "richtext",
         "id": "subheading",
         "label": "Subheading",
-        "default": "<p>Köp 2x100ml av dina favoritparfymer och få <strong>3x100ml GRATIS</strong> i PayDay-paketet</p>"
+        "default": "<p>Köp 2x100ml av dina favoritparfymer och få <strong>3x100ml GRATIS</strong> i lönehelgspaketet</p>"
       },
       {
         "type": "header",
@@ -752,7 +737,7 @@
         "id": "hint_text",
         "label": "Progress hint",
         "info": "[remaining]",
-        "default": "Lägg till [remaining] doft till för att låsa upp din rabatt!"
+        "default": "Lägg till [remaining] dofter till för att låsa upp din rabatt!"
       },
       {
         "type": "text",
@@ -810,7 +795,7 @@
         "type": "text",
         "id": "cta_label",
         "label": "Card button",
-        "default": "Lägg"
+        "default": "Lägg till"
       },
       {
         "type": "text",
@@ -822,39 +807,20 @@
         "type": "text",
         "id": "cta_button_label",
         "label": "Sticky bar button",
-        "default": "Lägg i varukorg"
+        "default": "Lägg i varukorgen"
       },
       {
         "type": "text",
         "id": "cta_disabled_label",
         "label": "Buy button, incomplete bundle",
         "info": "[remaining]",
-        "default": "Lägg till [remaining] doft till"
+        "default": "Lägg till [remaining] dofter"
       },
       {
         "type": "text",
         "id": "cta_disabled_label_one",
         "label": "Buy button, one left",
-        "default": "Lägg till 1 doft till"
-      }
-    ],
-    "blocks": [
-      {
-        "type": "image",
-        "name": "Gallery image",
-        "settings": [
-          {
-            "type": "image_picker",
-            "id": "image",
-            "label": "Image"
-          },
-          {
-            "type": "text",
-            "id": "alt",
-            "label": "Alt text",
-            "info": "Optional, defaults to the image's own alt text"
-          }
-        ]
+        "default": "Lägg till 1 doft"
       }
     ],
     "presets": [
