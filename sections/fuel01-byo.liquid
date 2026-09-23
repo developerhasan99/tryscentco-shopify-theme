@@ -11,12 +11,14 @@
   sitewide) and is revealed by the testing tool's class, or in the theme editor
   so a strategist can configure the content next to the control sections.
 
-  The page cannot check out by itself. Picking scents fills an Alpine store
-  with the same shape as the one snippets/bundle-builder-2.liquid declares on
-  the bundle PDPs, and the sticky bar's button carries the picks to the bundle
-  product as a ?f01scents= list of product ids. The prefill reader in
-  snippets/fuel01-bundle.liquid applies them to the real builder there, and
-  checkout stays the builder's own path. Nothing here POSTs to the cart.
+  Picking scents fills an Alpine store with the same shape as the one
+  snippets/bundle-builder-2.liquid declares on the bundle PDPs. Since Sep 23
+  the sticky bar's button puts the pack in the cart as its own bottles, each
+  at its own price, and adds the pack's discount code (a Buy X get Y code in
+  Discounts), which takes one bottle off, the cheapest when they differ. So
+  the pack price always follows the bottle prices and there is no separate
+  pack price to keep up to date. The bundle product is still read for the
+  bottle size and the pack count; nothing is sold through it any more.
 {% endcomment %}
 
 {%- liquid
@@ -49,15 +51,6 @@
     assign paid_count = slot_count | minus: 1
 
     comment
-      What the customer pays is the bundle product's own price: the builder on
-      the bundle page adds that product and nothing here changes the charge.
-      The ordinary total and the discount are worked out further down, once
-      the pool has been read, from what the same scents cost one by one.
-    endcomment
-    assign price_variant = bundle_product.selected_or_first_available_variant
-    assign your_price = price_variant.price | default: 0
-
-    comment
       The two top summary labels carry a bracket the design keeps whole:
       "Ord. totalpris (4 × 100 ml):" may break before the bracket and never
       inside it. Everything from the first " (" onwards is split off here so
@@ -85,8 +78,10 @@
 
     comment
       One eligibility pass over the pool: which products carry the bundle_ml
-      variant, and which brand and gender values exist for the filter selects.
-      The card loop and the store loop below re-check membership against the
+      variant in stock, and which brand and gender values exist for the filter
+      selects. In stock, because the pack now goes into the cart as those
+      bottles and a sold-out one would stop the whole pack at the cart. The
+      card loop and the store loop below re-check membership against the
       handle list so all three can never disagree.
     endcomment
     assign eligible_handles = ''
@@ -97,7 +92,7 @@
       assign has_ml = false
       for v in p.variants
         assign vt = v.title | downcase | replace: ' ml', 'ml'
-        if vt == bundle_ml
+        if vt == bundle_ml and v.available
           assign has_ml = true
           if unit_default == 0
             assign unit_default = v.price
@@ -126,32 +121,23 @@
       The summary's three numbers. The ordinary total is the pack's scents
       bought one by one at the bundle size, the discount is one scent, and
       your price is the difference (review, Sep 2: "four times that minus one
-      times that", one perfume free). The bundle product in Shopify is meant to
-      be priced at that figure; since Sep 14 the page reads that product's own
-      price for "your price", see below. Neither reads a compare-at price: the
-      first cut showed the bundle product's own compare-at (1.449 kr against
-      790) and was called out in review as a number nobody could trace. The
-      page repaints the two from the actual picks (ordTotal in fuel01Byo).
+      times that", one perfume free). Since Sep 23 that is also what checkout
+      charges, because the bottles go into the cart at their own prices and the
+      pack's discount code takes one off. With picks at different prices the
+      free one is the cheapest, which is how Shopify's Buy X get Y discounts
+      pick it, so the page takes the cheapest pick off too (freeCents in
+      fuel01Byo). Neither reads a compare-at price: the first cut showed the
+      bundle product's own compare-at (1.449 kr against 790) and was called
+      out in review as a number nobody could trace. The page repaints the
+      numbers from the actual picks (ordTotal in fuel01Byo).
       Nothing is pre-filled: the box starts at 0 kr and climbs one scent at a
       time, and the ordinary total, the discount and the saving only appear
-      once the pack is full, because that is when the bundle price applies.
+      once the pack is full, because that is when the free bottle applies.
       The Liquid values below are the full-pack figures for the rows that
       start hidden.
     endcomment
-    comment
-      Sep 14: your price is the bundle product's own price, read above, because
-      that is what checkout charges. The ordinary total is still the singles,
-      so the saving is whatever the difference is today. If the singles rise
-      and the bundle product is not repriced, the page keeps showing the figure
-      checkout will charge and the saving simply grows; it can no longer show
-      one number and charge another.
-    endcomment
     assign ordinary_price = unit_default | times: slot_count
-    assign saving = ordinary_price | minus: your_price
-    if unit_default == 0 or saving < 0
-      assign ordinary_price = your_price
-      assign saving = 0
-    endif
+    assign saving = unit_default
 
     comment
       The sticky bar paints the two numbers green and the rest of the counter
@@ -233,14 +219,19 @@
           <div class="fuel01-builder__slots">
             {%- for i in (1..slot_count) -%}
               {%- assign slot_index = forloop.index0 -%}
+              {%- comment -%}
+                The free tag starts on the last slot and moves to the cheapest
+                pick once the pack is full (freeSlot in fuel01Byo): that is the
+                bottle the discount code takes off at checkout.
+              {%- endcomment -%}
               <div
                 class="fuel01-slot{% if forloop.last %} fuel01-slot--free{% endif %}"
-                :class="{ 'fuel01-slot--filled': slot({{ slot_index }}) }">
-                {%- if forloop.last -%}
-                  <span class="fuel01-slot__pill">{{ st.free_pill_label | escape }}</span>
-                {%- else -%}
-                  <span class="fuel01-slot__badge" :class="{ 'fuel01-slot__badge--filled': slot({{ slot_index }}) }">{{ forloop.index }}</span>
-                {%- endif -%}
+                :class="{ 'fuel01-slot--filled': slot({{ slot_index }}), 'fuel01-slot--free': freeSlot === {{ slot_index }} }">
+                <span class="fuel01-slot__pill" x-show="freeSlot === {{ slot_index }}"{% unless forloop.last %} style="display: none;"{% endunless %}>{{ st.free_pill_label | escape }}</span>
+                <span
+                  class="fuel01-slot__badge"
+                  :class="{ 'fuel01-slot__badge--filled': slot({{ slot_index }}) }"
+                  x-show="freeSlot !== {{ slot_index }}"{% if forloop.last %} style="display: none;"{% endif %}>{{ forloop.index }}</span>
                 {%- comment -%}
                   The remove control is the X in the corner, not the picture:
                   a tap on the picture took the scent out of the pack, which
@@ -270,26 +261,17 @@
                   way the builder on the bundle pages does. The settings stay as
                   the empty-state copy.
                 {%- endcomment -%}
-                {%- if forloop.last -%}
-                  <span class="fuel01-slot__labels">
-                    <span class="fuel01-slot__label" x-show="!slot({{ slot_index }})">{{ st.free_slot_label | escape }}</span>
-                    <span
-                      class="fuel01-slot__label fuel01-slot__label--name"
-                      x-show="slot({{ slot_index }})"
-                      x-cloak
-                      x-text="slot({{ slot_index }}) && slot({{ slot_index }}).name"></span>
-                    <span class="fuel01-slot__label fuel01-slot__label--free">{{ st.free_slot_sub | escape }}</span>
+                <span class="fuel01-slot__labels">
+                  <span class="fuel01-slot__label" x-show="!slot({{ slot_index }})">
+                    {%- if forloop.last -%}{{ st.free_slot_label | escape }}{%- else -%}{{ st.slot_label | escape }}{%- endif -%}
                   </span>
-                {%- else -%}
-                  <span class="fuel01-slot__labels">
-                    <span class="fuel01-slot__label" x-show="!slot({{ slot_index }})">{{ st.slot_label | escape }}</span>
-                    <span
-                      class="fuel01-slot__label fuel01-slot__label--name"
-                      x-show="slot({{ slot_index }})"
-                      x-cloak
-                      x-text="slot({{ slot_index }}) && slot({{ slot_index }}).name"></span>
-                  </span>
-                {%- endif -%}
+                  <span
+                    class="fuel01-slot__label fuel01-slot__label--name"
+                    x-show="slot({{ slot_index }})"
+                    x-cloak
+                    x-text="slot({{ slot_index }}) && slot({{ slot_index }}).name"></span>
+                  <span class="fuel01-slot__label fuel01-slot__label--free" x-show="freeSlot === {{ slot_index }}"{% unless forloop.last %} style="display: none;"{% endunless %}>{{ st.free_slot_sub | escape }}</span>
+                </span>
               </div>
             {%- endfor -%}
           </div>
@@ -618,7 +600,7 @@
           {%- for i in (1..slot_count) -%}
             <div
               class="fuel01-sticky__slot{% if forloop.last %} fuel01-sticky__slot--free{% endif %}"
-              :class="{ 'fuel01-sticky__slot--filled': slot({{ forloop.index0 }}) }">
+              :class="{ 'fuel01-sticky__slot--filled': slot({{ forloop.index0 }}), 'fuel01-sticky__slot--free': freeSlot === {{ forloop.index0 }} }">
               <template x-if="slot({{ forloop.index0 }})">
                 <span class="fuel01-sticky__pick">
                   <img class="fuel01-sticky__thumb" :src="slot({{ forloop.index0 }}).image" alt="" width="66" height="66">
@@ -638,9 +620,7 @@
                   <rect x="0.5" y="9.5" width="23" height="34" rx="3"/>
                 </svg>
               </template>
-              {%- if forloop.last -%}
-                <span class="fuel01-sticky__pill">{{ st.free_pill_label | escape }}</span>
-              {%- endif -%}
+              <span class="fuel01-sticky__pill" x-show="freeSlot === {{ forloop.index0 }}"{% unless forloop.last %} style="display: none;"{% endunless %}>{{ st.free_pill_label | escape }}</span>
             </div>
           {%- endfor -%}
         </div>
@@ -685,7 +665,7 @@
             Below a full pack the button scrolls back to the grid, so the second
             line only appears once it really does hand over.
           {%- endcomment -%}
-          <button type="button" class="fuel01-sticky__cta" @click="go()">
+          <button type="button" class="fuel01-sticky__cta" @click="go()" :disabled="busy" :aria-busy="busy ? 'true' : 'false'">
             <span class="fuel01-sticky__cta-main" x-text="ctaView">{{ start_cta | escape }}</span>
             <span class="fuel01-sticky__cta-sub" x-show="full" x-cloak>{{ st.sticky_cta_checkout | escape }}</span>
           </button>
@@ -813,8 +793,9 @@
           filtersOpen: false,
           limited: true,
           total: {{ slot_count }},
-          bundlePrice: {{ your_price }},
           unitDefault: {{ unit_default }},
+          discountCode: {{ st.discount_code | strip | json }},
+          busy: false,
           moneyFormat: {{ shop.money_format | json }},
           get store() {
             try {
@@ -860,13 +841,43 @@
             }
             return sum;
           },
+          get freeCents() {
+            // The bottle the discount code takes off once the pack is full:
+            // the cheapest pick, the one Shopify's Buy X get Y makes free.
+            // With no code set, nothing comes off at checkout, so none here.
+            if (!this.full || !this.discountCode) return 0;
+            let low = Infinity;
+            for (let i = 0; i < this.total; i++) {
+              const p = this.slot(i);
+              if (p && Number(p.price) > 0) low = Math.min(low, Number(p.price));
+            }
+            return Number.isFinite(low) ? low : 0;
+          },
           get yourPrice() {
-            // A running subtotal while the pack is being filled; the bundle
-            // product's own price, the one that is charged, once it is full.
-            return this.full ? this.bundlePrice : this.ordTotal;
+            // A running subtotal while the pack is being filled, then the
+            // bottles minus the free one, which is what checkout charges.
+            return this.ordTotal - this.freeCents;
+          },
+          get freeSlot() {
+            // Where the free tag sits: the last slot while the pack fills,
+            // then the cheapest pick, the one freeCents takes off. Equal
+            // prices keep it on the later slot, so an even pack looks as drawn.
+            const last = this.total - 1;
+            if (!this.full || !this.discountCode) return last;
+            let at = last;
+            let low = Infinity;
+            for (let i = 0; i < this.total; i++) {
+              const p = this.slot(i);
+              const price = p ? Number(p.price) : 0;
+              if (price > 0 && price <= low) {
+                low = price;
+                at = i;
+              }
+            }
+            return at;
           },
           get discount() {
-            return this.full ? Math.max(0, this.ordTotal - this.bundlePrice) : 0;
+            return this.freeCents;
           },
           money(cents) {
             // The shop's own money format, so the live numbers read the way
@@ -1019,20 +1030,102 @@
             });
           },
           go() {
-            const s = this.store;
-            if (this.full && s) {
-              // Hand the picks to the bundle product as product ids. The
-              // prefill reader in snippets/fuel01-bundle.liquid applies them
-              // to the builder there; checkout stays the builder's own path.
-              const url = new URL({{ bundle_product.url | json }}, window.location.origin);
-              url.searchParams.set('f01scents', s.selectedProducts.map((p) => p.id).join(','));
-              window.location.href = url.toString();
+            if (this.full && this.store) {
+              this.addPack();
               return;
             }
             const target = this.$refs.gridtop;
             if (target) {
               const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
               target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+            }
+          },
+          async addPack() {
+            // One cart line per bottle at the bottle's own price, all marked
+            // with the same _f01_box id so an order shows which bottles came
+            // in as one pack. The pack's code joins whatever codes the cart
+            // already carries, because the cart API replaces the whole list on
+            // every update.
+            //
+            // Other apps on this store write to the cart whenever lines are
+            // added (the shipping test tags each new line, the gift app adds
+            // its gifts, a tracker saves its id), and a write that lands at the
+            // same moment as ours can answer 409 or quietly drop the code. So
+            // the code goes in first, while the cart is quiet, and once the
+            // bottles are in it is read back until it has held for two reads in
+            // a row, put back whenever it went missing. The shopper only leaves
+            // for the cart page after that.
+            const s = this.store;
+            if (this.busy || !s || !Array.isArray(s.selectedProducts)) return;
+            this.busy = true;
+            const code = this.discountCode;
+            const box = String(Date.now());
+            const items = s.selectedProducts.slice(0, this.total).map((p) => ({
+              id: Number((p.variants?.[s.selectedVariant] ?? p.variant)?.id),
+              quantity: 1,
+              properties: { _f01_box: box }
+            }));
+            const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+            const post = (url, body) =>
+              fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                body: JSON.stringify(body)
+              });
+            const readCart = async () => {
+              const res = await fetch({{ routes.cart_url | append: '.js' | json }}, {
+                headers: { Accept: 'application/json' },
+                cache: 'no-store'
+              });
+              if (!res.ok) throw new Error();
+              return res.json();
+            };
+            const codesIn = (cart) => {
+              const codes = new Set((cart.discount_codes ?? []).map((d) => d.code));
+              for (const app of cart.cart_level_discount_applications ?? []) {
+                if (app.type === 'discount_code') codes.add(app.title);
+              }
+              for (const line of cart.items ?? []) {
+                for (const alloc of line.line_level_discount_allocations ?? []) {
+                  if (alloc.discount_application?.type === 'discount_code') codes.add(alloc.discount_application.title);
+                }
+              }
+              return codes;
+            };
+            const hasCode = (codes) => [...codes].some((c) => String(c).toLowerCase() === code.toLowerCase());
+            const addCode = async () => {
+              const codes = codesIn(await readCart());
+              if (hasCode(codes)) return;
+              codes.add(code);
+              await post({{ routes.cart_update_url | append: '.js' | json }}, { discount: [...codes].join(',') });
+            };
+            try {
+              if (code) await addCode();
+              const added = await post({{ routes.cart_add_url | append: '.js' | json }}, { items });
+              if (!added.ok) throw await added.json().catch(() => ({}));
+              if (code) {
+                // The bottles are in the cart now. A failed read here must not
+                // hand the button back, or a second tap adds a second pack.
+                let held = 0;
+                for (let tries = 0; tries < 10 && held < 2; tries++) {
+                  await wait(400);
+                  try {
+                    if (hasCode(codesIn(await readCart()))) {
+                      held += 1;
+                    } else {
+                      held = 0;
+                      await addCode();
+                    }
+                  } catch (err) {
+                    held = 0;
+                  }
+                }
+              }
+              window.location.href = {{ routes.cart_url | json }};
+            } catch (err) {
+              this.busy = false;
+              // The store's own error text (e.g. sold out) is Swedish; a network error's message is the browser's English.
+              window.alert(err?.description || 'Något gick fel. Försök igen.');
             }
           }
         };
@@ -1059,13 +1152,20 @@
       "type": "product",
       "id": "bundle_product",
       "label": "Bundle product",
-      "info": "The build-your-own product the button hands over to. Defaults to the 4x 100ml bundle."
+      "info": "Sets the bottle size and how many bottles make a pack. Defaults to the 4x 100ml bundle."
+    },
+    {
+      "type": "text",
+      "id": "discount_code",
+      "label": "Pack discount code",
+      "default": "DOFTPAKET",
+      "info": "Added to the cart with the pack's bottles. Must be a Buy X get Y code in Discounts that makes one of the pack's bottles free."
     },
     {
       "type": "collection",
       "id": "grid_collection",
       "label": "Scent grid collection",
-      "info": "Defaults to best-sellers, the pool the builder itself offers. Keep it on that pool: the bundle product's own builder offers a fixed list of scents, and a pick that is not in that list is dropped on the way over."
+      "info": "Defaults to best-sellers. The pack discount code has to cover every bottle this grid offers, or a pack with a bottle outside the code gets no free bottle."
     },
     { "type": "header", "content": "Heading" },
     {

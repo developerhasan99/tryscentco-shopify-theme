@@ -1377,6 +1377,12 @@ html.ab-f01-v1 body:not(.shopify-design-mode) .shopify-section-group-footer-grou
   background: #0e5427;
 }
 
+/* While the pack is going into the cart, so a second tap cannot add it twice. */
+.fuel01-sticky__cta[disabled] {
+  cursor: progress;
+  opacity: 0.6;
+}
+
 .fuel01-sticky__cta-main {
   max-width: 100%;
   font-family: var(--fuel01-card-font);
