@@ -3082,7 +3082,7 @@
       "marketing": {
         "accept_marketing_checkbox_label": "Maila mig med nyheter och erbjudanden",
         "post_accept_marketing_checkbox_label": "Du är prenumererad för att ta emot e-postnyheter och erbjudanden",
-        "accept_sms_checkbox_label": "Skicka mig nyheter och erbjudanden",
+        "accept_sms_checkbox_label": "Skicka exklusiva kampanjer, erbjudanden och rabatter till mig via SMS",
         "disclaimer": {
           "privacy_policy": "Integritetspolicy"
         },
