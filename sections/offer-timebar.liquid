@@ -146,58 +146,60 @@
   {% endif %}
 </style>
 
-<div id="{{ section.id }}">
-  <a href="{{ section.settings.link }}" class="no-underline block">
-    {% if section.settings.top_banner_text != blank %}
-      <div class="py-3" style="background-color: {{ section.settings.primary_color }};">
-        <div class="page-width">
-          <div class="text-center text-white flex items-center justify-center gap-4 leading-none">-
-            <span>{{ section.settings.top_banner_text }}</span>
-            -</div>
-        </div>
-      </div>
-    {% endif %}
-    {% render 'fuel01-announcement'
-      , section: section %}
-    <div class="py-3 md:py-2" style="background-color: {{ section.settings.secondary_color }};">
-      <div class="container mx-auto px-4">
-        <div class="flex flex-wrap items-center gap-x-6 gap-y-1 justify-center">
-          <div class="flex flex-wrap gap-x-4 gap-y-1 items-center justify-center">
-            <div style="color: {{ section.settings.primary_color }};" class="font-bold text-base md:text-xl">
-              {{ section.settings.prepend_text }}
-            </div>
-            <div style="color: {{ section.settings.primary_color }};" class="font-semibold text-sm md:text-lg tracking-wider md:order-1 underline">
-              {{ section.settings.append_text }}
-            </div>
-            <div class="flex items-center gap-2">
-              <div style="color: {{ section.settings.primary_color }};" class="text-sm md:text-base font-bold leading-none md:hidden">
-                Slutar om
-              </div>
-              <div id="flipdown" class="flipdown"></div>
-            </div>
+{% unless product.template_suffix == 'payday-60' %}
+  <div id="{{ section.id }}">
+    <a href="{{ section.settings.link }}" class="no-underline block">
+      {% if section.settings.top_banner_text != blank %}
+        <div class="py-3" style="background-color: {{ section.settings.primary_color }};">
+          <div class="page-width">
+            <div class="text-center text-white flex items-center justify-center gap-4 leading-none">-
+              <span>{{ section.settings.top_banner_text }}</span>
+              -</div>
           </div>
-          {% if section.blocks.size > 0 %}
-            <div class="[display:none] md:flex gap-4">
-              {% for block in section.blocks %}
-                <div class="flex flex-col items-center {% unless forloop.last %}pr-4 border-0 border-r border-solid border-gray-300{% endunless %}">
-                  <img
-                    class="rounded"
-                    src="{{ block.settings.icon |  image_url  }}"
-                    height="25"
-                    width=""
-                    alt="{{ block.settings.label }}">
-                  <div class="leading-none text-xs mt-1 font-semibold text-black">
-                    {{ block.settings.label }}
-                  </div>
+        </div>
+      {% endif %}
+      {% render 'fuel01-announcement'
+        , section: section %}
+      <div class="py-3 md:py-2" style="background-color: {{ section.settings.secondary_color }};">
+        <div class="container mx-auto px-4">
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-1 justify-center">
+            <div class="flex flex-wrap gap-x-4 gap-y-1 items-center justify-center">
+              <div style="color: {{ section.settings.primary_color }};" class="font-bold text-base md:text-xl">
+                {{ section.settings.prepend_text }}
+              </div>
+              <div style="color: {{ section.settings.primary_color }};" class="font-semibold text-sm md:text-lg tracking-wider md:order-1 underline">
+                {{ section.settings.append_text }}
+              </div>
+              <div class="flex items-center gap-2">
+                <div style="color: {{ section.settings.primary_color }};" class="text-sm md:text-base font-bold leading-none md:hidden">
+                  Slutar om
                 </div>
-              {% endfor %}
+                <div id="flipdown" class="flipdown"></div>
+              </div>
             </div>
-          {% endif %}
+            {% if section.blocks.size > 0 %}
+              <div class="[display:none] md:flex gap-4">
+                {% for block in section.blocks %}
+                  <div class="flex flex-col items-center {% unless forloop.last %}pr-4 border-0 border-r border-solid border-gray-300{% endunless %}">
+                    <img
+                      class="rounded"
+                      src="{{ block.settings.icon |  image_url  }}"
+                      height="25"
+                      width=""
+                      alt="{{ block.settings.label }}">
+                    <div class="leading-none text-xs mt-1 font-semibold text-black">
+                      {{ block.settings.label }}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
         </div>
       </div>
-    </div>
-  </a>
-</div>
+    </a>
+  </div>
+{% endunless %}
 {% if section.blocks.size > 0 %}
   <div class="md:hidden py-3 border-0 border-b border-solid border-gray-200">
     <div class="page-width">
