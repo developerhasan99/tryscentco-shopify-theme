@@ -1101,8 +1101,8 @@ html.ab-f01-v1 body:not(.shopify-design-mode) .shopify-section-group-footer-grou
 /* ------------------------------------------------------------------ *
  * Sticky summary bar. On this page it is the checkout path, so the --on
  * modifier ships in the markup and the bar is there with no script at
- * all; the section's own observer is what takes it off while the builder
- * card is on screen, so it can never cover the builder. z-index 1000
+ * all; the section's own observer takes it off only while the builder
+ * card is in its way, so it can never cover the builder. z-index 1000
  * keeps it under the theme's modal tiers. In the theme editor it sits
  * statically in the page so the strategist can see and edit it.
  * ------------------------------------------------------------------ */

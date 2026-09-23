@@ -675,16 +675,20 @@
   </div>
 
   <script>
-    // Neither BYO frame draws a sticky bar. Where the builder card shows,
-    // the bar is the checkout path for the rest of the page and has no
+    // Neither BYO frame draws a sticky bar. It is the checkout path for the
+    // page, as the builder card has no button of its own, and it has no
     // business sitting on top of the builder itself; a short landscape
     // tablet is where that bites, and at 1024x768 the panel covered the
     // whole progress bar, the whole counter line and most of the summary.
-    // So the bar steps aside while the builder is on screen, the way the
-    // theme's own bar in sections/floating-atc.liquid waits for the form to
-    // leave. The class ships on in the markup, so with no script at all the
-    // bar behaves exactly as it did before, and under 750 the builder is
-    // display:none - there the bar is the only builder there is.
+    // So the bar steps aside while the builder card is in its way: while
+    // any of the card is in the band at the foot of the window that the
+    // panel paints over. Review, Sep 23: it used to step aside whenever any
+    // of the card was on screen, which on a laptop left no way to the cart
+    // until the card had scrolled right off, about 760px down. A window
+    // tall enough to hold the card above the bar now never loses the bar.
+    // The class ships on in the markup, so with no script at all the bar is
+    // simply always there, and under 750 the builder is display:none -
+    // there the bar is the only builder there is.
     //
     // The same pass publishes what the bar covers as --fuel01-sticky-h, which
     // is the one rule in fuel01-byo.css that lifts the theme's scent-quiz
@@ -720,16 +724,37 @@
       const builder = document.querySelector('.fuel01-builder');
       if (builder && typeof IntersectionObserver !== 'undefined') {
         const builderShown = () => builder.offsetParent !== null;
+        // The band the panel paints over: its own height plus its gap from
+        // the bottom edge. offsetHeight ignores the slide transform, so the
+        // band reads the same with the bar in or out.
+        const band = () => Math.max(0, Math.round(panel.offsetHeight + (parseFloat(getComputedStyle(panel).bottom) || 0)));
         const covers = () => {
           // Read here rather than waited for, so the bar is never painted
           // over the builder for the frame before the observer first reports.
           const box = builder.getBoundingClientRect();
-          return builderShown() && box.bottom > 0 && box.top < window.innerHeight;
+          return builderShown() && box.bottom > window.innerHeight - band() && box.top < window.innerHeight;
+        };
+        // A negative top margin cuts the observer's root down to that band,
+        // so it reports exactly when the card moves into or out of the bar's
+        // way. The band follows the window height and the bar's own height,
+        // so the observer is rebuilt whenever either changes.
+        let watcher = null;
+        let watched = '';
+        const watch = () => {
+          const h = band();
+          const key = window.innerHeight + ':' + h;
+          if (key === watched) return;
+          watched = key;
+          if (watcher) watcher.disconnect();
+          watcher = new IntersectionObserver(function (entries) {
+            step(builderShown() && entries[entries.length - 1].isIntersecting);
+          }, { rootMargin: -Math.max(0, window.innerHeight - h) + 'px 0px 0px 0px' });
+          watcher.observe(builder);
         };
         step(covers());
-        new IntersectionObserver(function (entries) {
-          step(builderShown() && entries[entries.length - 1].isIntersecting);
-        }).observe(builder);
+        watch();
+        if (typeof ResizeObserver !== 'undefined') new ResizeObserver(watch).observe(panel);
+        window.addEventListener('resize', watch);
       } else {
         publish();
       }
@@ -1029,6 +1054,15 @@
               }, 60);
             });
           },
+          init() {
+            // Leaving for the cart parks this page in the browser's
+            // back-forward cache with the button still busy from that press,
+            // and the back button brings it back exactly like that, greyed
+            // out for good. It is handed back on the way in.
+            window.addEventListener('pageshow', (event) => {
+              if (event.persisted) this.busy = false;
+            });
+          },
           go() {
             if (this.full && this.store) {
               this.addPack();
@@ -1055,6 +1089,20 @@
             // bottles are in it is read back until it has held for two reads in
             // a row, put back whenever it went missing. The shopper only leaves
             // for the cart page after that.
+            //
+            // Review, Sep 23: a pack already in the cart from an earlier press
+            // (the back button, a second tab, a return visit) is this pack's
+            // older version, not a second order. Pressing again stacked a
+            // second four bottles on top and the cart asked 2 069,94 for what
+            // the builder showed as 1 034,97. So the button now updates: an
+            // identical pack is left as it is, and a different one is replaced.
+            // The old lines come out first and are read back gone before the
+            // new bottles go in: with both packs in the cart at once, while the
+            // shipping test was rewriting each new line (its _abs_shipping_group
+            // mark), one run lost a bottle of the new pack. The read-back at the
+            // end also puts back any bottle of the pack that went missing. Only
+            // lines carrying the _f01_box mark count as a pack; bottles added
+            // anywhere else are left alone.
             const s = this.store;
             if (this.busy || !s || !Array.isArray(s.selectedProducts)) return;
             this.busy = true;
@@ -1099,26 +1147,72 @@
               codes.add(code);
               await post({{ routes.cart_update_url | append: '.js' | json }}, { discount: [...codes].join(',') });
             };
+            const clear = (lines) =>
+              post({{ routes.cart_update_url | append: '.js' | json }}, {
+                updates: Object.fromEntries(lines.map((line) => [line.key, 0]))
+              });
             try {
+              const earlier = ((await readCart()).items ?? []).filter((line) => line.properties?._f01_box);
+              const unchanged =
+                earlier.length > 0 &&
+                earlier.flatMap((line) => Array(line.quantity).fill(line.variant_id)).sort().join() ===
+                  items.map((item) => item.id).sort().join();
+              const current = unchanged ? earlier[0].properties._f01_box : box;
+              const keep = new Set(unchanged ? earlier.map((line) => line.properties._f01_box) : [box]);
+              const stale = (cart) => (cart.items ?? []).filter((line) => line.properties?._f01_box && !keep.has(line.properties._f01_box));
+              const missing = (cart) => {
+                const left = (cart.items ?? [])
+                  .filter((line) => keep.has(line.properties?._f01_box))
+                  .flatMap((line) => Array(line.quantity).fill(line.variant_id));
+                return items.filter((item) => {
+                  const at = left.indexOf(item.id);
+                  if (at === -1) return true;
+                  left.splice(at, 1);
+                  return false;
+                });
+              };
+              if (!unchanged && earlier.length) {
+                await clear(earlier);
+                for (let tries = 0; tries < 3; tries++) {
+                  const left = stale(await readCart());
+                  if (!left.length) break;
+                  await wait(300);
+                  await clear(left);
+                }
+              }
               if (code) await addCode();
-              const added = await post({{ routes.cart_add_url | append: '.js' | json }}, { items });
-              if (!added.ok) throw await added.json().catch(() => ({}));
-              if (code) {
-                // The bottles are in the cart now. A failed read here must not
-                // hand the button back, or a second tap adds a second pack.
-                let held = 0;
-                for (let tries = 0; tries < 10 && held < 2; tries++) {
-                  await wait(400);
-                  try {
-                    if (hasCode(codesIn(await readCart()))) {
-                      held += 1;
-                    } else {
-                      held = 0;
-                      await addCode();
-                    }
-                  } catch (err) {
+              if (!unchanged) {
+                const added = await post({{ routes.cart_add_url | append: '.js' | json }}, { items });
+                if (!added.ok) throw await added.json().catch(() => ({}));
+              }
+              // The pack is in the cart now. A failed read here must not hand
+              // the button back, or a second tap adds a second pack. An old
+              // line that survived its removal (another app's write can answer
+              // 409) is taken out again, and a bottle of this pack that went
+              // missing is put back, like a code that went missing.
+              let held = 0;
+              for (let tries = 0; tries < 10 && held < 2; tries++) {
+                await wait(400);
+                try {
+                  const cart = await readCart();
+                  const left = stale(cart);
+                  const lost = missing(cart);
+                  if (left.length) {
                     held = 0;
+                    await clear(left);
+                  } else if (lost.length) {
+                    held = 0;
+                    await post({{ routes.cart_add_url | append: '.js' | json }}, {
+                      items: lost.map((item) => ({ ...item, properties: { _f01_box: current } }))
+                    });
+                  } else if (!code || hasCode(codesIn(cart))) {
+                    held += 1;
+                  } else {
+                    held = 0;
+                    await addCode();
                   }
+                } catch (err) {
+                  held = 0;
                 }
               }
               window.location.href = {{ routes.cart_url | json }};
