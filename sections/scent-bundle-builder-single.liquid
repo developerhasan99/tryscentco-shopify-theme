@@ -354,33 +354,6 @@
               {%- assign vt = v.title | downcase | replace: ' ml', 'ml' -%}
               {%- if vt == variant_ml -%}{%- assign match = v -%}{%- break -%}{%- endif -%}
             {%- endfor -%}
-            {%- assign brand_slug = '' -%}
-            {%- for t in p.tags -%}
-              {%- if t contains 'marke:' -%}
-                {%- assign brand_slug = t | remove: 'marke:' -%}
-                {%- break -%}
-              {%- elsif t contains 'marke:' -%}
-                {%- assign brand_slug = t | remove: 'marke:' -%}
-                {%- break -%}
-              {%- endif -%}
-            {%- endfor -%}
-            {%- assign brand_name = '' -%}
-            {%- if brand_slug != '' -%}
-              {%- case brand_slug -%}
-                {%- when 'ysl' -%}
-                  {%- assign brand_name = 'YSL' -%}
-                {%- when 'jpgaultier' -%}
-                  {%- assign brand_name = 'Jean Paul Gaultier' -%}
-                {%- when 'lancome' -%}
-                  {%- assign brand_name = 'Lancôme' -%}
-                {%- else -%}
-                  {%- assign brand_words = brand_slug | split: '-' -%}
-                  {%- for w in brand_words -%}
-                    {%- assign brand_name = brand_name | append: w | capitalize | append: ' ' -%}
-                  {%- endfor -%}
-                  {%- assign brand_name = brand_name | strip -%}
-              {%- endcase -%}
-            {%- endif -%}
             {
               id: {{ p.id }},
               name: {{ p.title | json }},
@@ -389,7 +362,7 @@
               price: {{ match.price }},
               compareAt: {{ match.compare_at_price | default: 0 }},
               variantId: {{ match.id | json }},
-              brand: {{ brand_name | json }},
+              brand: {{ p.metafields.custom.brand.value | join: '||' | json }},
               gender: {{ p.type | json }},
               occasion: {{ p.metafields.custom.occasion | json }}
             },
