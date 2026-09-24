@@ -16,10 +16,10 @@
     "offer_timebar_xLgmJd": {
       "settings": {
         "top_banner_text": "VAIN LYHYEN AJAN",
-        "prepend_text": "TAKAISIN TOIMISTOLLE",
+        "prepend_text": "PALKKAPÄIVÄALE",
         "countdown_date": "",
-        "append_text": "OSTA 2, SAAT 1 ILMAISEKSI",
-        "link": "shopify://collections/bundle-save"
+        "append_text": "30% ALENNUS",
+        "link": "https://tryscent.co/fi-fi/collections/bestseller-singles"
       },
       "blocks": {
         "payment_icon_6GxdtN": {
