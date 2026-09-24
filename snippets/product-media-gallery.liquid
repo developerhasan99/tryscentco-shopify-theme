@@ -3,10 +3,13 @@
 {% endif %}
 
 {% liquid
-  assign marketing_images = shop.metaobjects['marketing_images']['swedish'].images.value
-  assign fi_marketing_images = shop.metaobjects['marketing_images']['finnish'].images.value
-  assign da_marketing_images = shop.metaobjects['marketing_images']['danish'].images.value
-  assign no_marketing_images = shop.metaobjects['marketing_images']['norwegian'].images.value
+  # Products tagged 'own_gallery' show only their own images, no marketing images
+  unless product.tags contains 'own_gallery'
+    assign marketing_images = shop.metaobjects['marketing_images']['swedish'].images.value
+    assign fi_marketing_images = shop.metaobjects['marketing_images']['finnish'].images.value
+    assign da_marketing_images = shop.metaobjects['marketing_images']['danish'].images.value
+    assign no_marketing_images = shop.metaobjects['marketing_images']['norwegian'].images.value
+  endunless
 %}
 
 <div class="sticky top-6">
@@ -54,16 +57,14 @@
             {% endfor %}
           {% endif %}
           {% if marketing_images != blank %}
-            {% unless product.tags contains 'own_gallery' %}
-              {% for image in marketing_images %}
-                <img
-                  src="{{ image.src | image_url: width: 1080 }}"
-                  alt="{{ image.alt }}"
-                  height="{{ image.height }}"
-                  width="{{ image.width }}"
-                  class="productSwiperImage swiper-slide md:rounded-lg marketing_image">
-              {% endfor %}
-            {% endunless %}
+            {% for image in marketing_images %}
+              <img
+                src="{{ image.src | image_url: width: 1080 }}"
+                alt="{{ image.alt }}"
+                height="{{ image.height }}"
+                width="{{ image.width }}"
+                class="productSwiperImage swiper-slide md:rounded-lg marketing_image">
+            {% endfor %}
           {% endif %}
         {% else %}
           {% for image in product.images limit: 1 %}
@@ -321,6 +322,7 @@
         initProductGallerySwiper();
       }
 
+      {% if marketing_images != blank %}
       // Marketing images per Weglot language (falls back to "sv")
       var localImages = {
         sv: {
@@ -406,6 +408,7 @@
       } else {
         initLocalImages();
       }
+      {% endif %}
     })();
   </script>
 </div>
