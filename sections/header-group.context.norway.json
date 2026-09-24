@@ -16,10 +16,10 @@
     "offer_timebar_xLgmJd": {
       "settings": {
         "top_banner_text": "KUN I KORT TID",
-        "prepend_text": "TILBAKE PÅ KONTORET",
+        "prepend_text": "LØNNINGSDAGSALG",
         "countdown_date": "",
-        "append_text": "KJØP 2, FÅ 1 GRATIS",
-        "link": "shopify://collections/bundle-save"
+        "append_text": "30% RABATT",
+        "link": "https://tryscent.co/no-no/collections/best-sellers"
       },
       "blocks": {
         "payment_icon_6GxdtN": {
