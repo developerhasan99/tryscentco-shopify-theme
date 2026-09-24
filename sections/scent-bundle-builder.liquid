@@ -7,11 +7,19 @@
   assign t1_free = st.tier_1_free | plus: 0
   assign t1_paid = t1_total | minus: t1_free
   assign t1_ribbon = 'Köp ' | append: t1_paid | append: ', få ' | append: t1_free | append: ' gratis'
+  assign t1_image_text = t1_ribbon
+  if st.tier_1_image_text != blank
+    assign t1_image_text = st.tier_1_image_text | replace: '[paid]', t1_paid | replace: '[free]', t1_free | replace: '[total]', t1_total
+  endif
 
   assign t2_total = st.tier_2_total | plus: 0
   assign t2_free = st.tier_2_free | plus: 0
   assign t2_paid = t2_total | minus: t2_free
   assign t2_ribbon = 'Köp ' | append: t2_paid | append: ', få ' | append: t2_free | append: ' gratis'
+  assign t2_image_text = t2_ribbon
+  if st.tier_2_image_text != blank
+    assign t2_image_text = st.tier_2_image_text | replace: '[paid]', t2_paid | replace: '[free]', t2_free | replace: '[total]', t2_total
+  endif
 
   assign eligible_handles = ''
   for p in grid_pool.products
@@ -318,8 +326,8 @@
         pageSize: 8,
         picks: [],
         tiers: [
-          { total: {{ t1_total }}, free: {{ t1_free }}, ribbon: {{ t1_ribbon | json }}, label: {{ st.tier_1_label | json }} },
-          { total: {{ t2_total }}, free: {{ t2_free }}, ribbon: {{ t2_ribbon | json }}, label: {{ st.tier_2_label | json }} }
+          { total: {{ t1_total }}, free: {{ t1_free }}, ribbon: {{ t1_image_text | json }}, label: {{ st.tier_1_label | json }} },
+          { total: {{ t2_total }}, free: {{ t2_free }}, ribbon: {{ t2_image_text | json }}, label: {{ st.tier_2_label | json }} }
         ],
         products: [
           {%- for p in grid_pool.products -%}
@@ -520,6 +528,12 @@
         "default": "Mest populär"
       },
       {
+        "type": "text",
+        "id": "tier_1_image_text",
+        "label": "Offer text on product image",
+        "info": "Use [paid], [free] and [total] for the bottle counts. Leave blank for \"Köp [paid], få [free] gratis\"."
+      },
+      {
         "type": "number",
         "id": "tier_1_total",
         "label": "Total bottles",
@@ -553,6 +567,12 @@
         "label": "Badge text",
         "info": "Leave blank to hide",
         "default": "Bästa pris"
+      },
+      {
+        "type": "text",
+        "id": "tier_2_image_text",
+        "label": "Offer text on product image",
+        "info": "Use [paid], [free] and [total] for the bottle counts. Leave blank for \"Köp [paid], få [free] gratis\"."
       },
       {
         "type": "number",
