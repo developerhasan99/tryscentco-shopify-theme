@@ -116,9 +116,9 @@
       "settings": {
         "primary_color": "#173e34",
         "secondary_color": "#dce9de",
-        "top_banner_text": "LAGERAUSVERKAUF",
-        "prepend_text": "KÖP 2, FÅ 1 GRATIS",
-        "countdown_date": "",
+        "top_banner_text": "LÖNEDAGSREA",
+        "prepend_text": "30% RABATT",
+        "countdown_date": "2026/09/04",
         "append_text": "HANDLA NU",
         "link": "https://tryscent.co/collections/bundle"
       }
