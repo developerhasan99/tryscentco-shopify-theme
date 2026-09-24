@@ -16,10 +16,10 @@
     "offer_timebar_xLgmJd": {
       "settings": {
         "top_banner_text": "BARA UNDER EN KORT TID",
-        "prepend_text": "KÖP 2, FÅ 1 GRATIS:",
-        "countdown_date": "",
-        "append_text": "HANDLA NU",
-        "link": "shopify://collections/bundle-save"
+        "prepend_text": "30% RABATT",
+        "countdown_date": "2026/10/04",
+        "append_text": "LÖNEDAGSREA",
+        "link": "https://tryscent.co/sv-se/collections/best-sellers"
       },
       "blocks": {}
     },
@@ -29,8 +29,8 @@
         "menu_item_JjXgCN": {
           "disabled": false,
           "settings": {
-            "url": "shopify://collections/new",
-            "label": "Nya dofter"
+            "label": "Nya dofter",
+            "url": "shopify://collections/new"
           }
         }
       }
