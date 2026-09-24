@@ -16,10 +16,10 @@
     "offer_timebar_xLgmJd": {
       "settings": {
         "top_banner_text": "KUN I KORT TID",
-        "prepend_text": "TILBAGE PÅ KONTORET",
-        "countdown_date": "",
-        "append_text": "KØB 2, FÅ 1 GRATIS",
-        "link": "shopify://collections/bundle-save"
+        "prepend_text": "LØNINGSDAGSALG",
+        "countdown_date": "2026/10/04",
+        "append_text": "30% RABAT",
+        "link": "shopify://collections/best-sellers"
       },
       "blocks": {
         "payment_icon_6GxdtN": {
@@ -51,8 +51,8 @@
         "menu_item_JjXgCN": {
           "disabled": false,
           "settings": {
-            "url": "shopify://collections/new",
-            "label": "Nye dufte"
+            "label": "Nye dufte",
+            "url": "shopify://collections/new"
           }
         }
       }
