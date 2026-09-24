@@ -54,14 +54,16 @@
             {% endfor %}
           {% endif %}
           {% if marketing_images != blank %}
-            {% for image in marketing_images %}
-              <img
-                src="{{ image.src | image_url: width: 1080 }}"
-                alt="{{ image.alt }}"
-                height="{{ image.height }}"
-                width="{{ image.width }}"
-                class="productSwiperImage swiper-slide md:rounded-lg marketing_image">
-            {% endfor %}
+            {% unless product.tags contains 'own_gallery' %}
+              {% for image in marketing_images %}
+                <img
+                  src="{{ image.src | image_url: width: 1080 }}"
+                  alt="{{ image.alt }}"
+                  height="{{ image.height }}"
+                  width="{{ image.width }}"
+                  class="productSwiperImage swiper-slide md:rounded-lg marketing_image">
+              {% endfor %}
+            {% endunless %}
           {% endif %}
         {% else %}
           {% for image in product.images limit: 1 %}
@@ -123,7 +125,7 @@
               stroke="#226139"
               stroke-width="0.25" />
           </svg>
-          <p class="m-0 leading-snug font-semibold text-[#226139] text-xs lg:text-sm">Samma doft                                                                                                                                             
+          <p class="m-0 leading-snug font-semibold text-[#226139] text-xs lg:text-sm">Samma doft                                                                                                                                              
           bättre pris</p>
         </div>
         <div class="p-2 lg:px-4 bg-[#EBF4EF] rounded-lg text-center flex flex-col items-center justify-center gap-2">
