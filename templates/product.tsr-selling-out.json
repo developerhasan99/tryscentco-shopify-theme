@@ -124,7 +124,7 @@
             "percent_min": 12,
             "percent_max": 32,
             "show_countdown": true,
-            "countdown_label": "Ends in",
+            "countdown_label": "Slutar om",
             "end_time": "",
             "bar_color": "#F1652E",
             "track_color": "#F9BCA4",
