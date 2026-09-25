@@ -228,7 +228,7 @@
               {%- when 'atc_bundle_builder' -%}
                 <div class="atc-bundle-builder" {{ block.shopify_attributes }}>
                    {% if product.metafields.custom.choose_your_fragrances_options != blank %}
-                    {% render 'bundle-builder', product: product %}
+                    {% render 'bundle-builder', product: product, block: block %}
                   {% else %}
                     {% render 'reactive-variant-selector', product: product, section: section %}
                   {% endif %}
@@ -1380,7 +1380,16 @@
     {
       "type": "atc_bundle_builder",
       "name": "Atc Bundle Builder",
-      "limit": 1
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "collection_handles",
+          "label": "Collection Handles",
+          "info": "Collections for product pool, each collection represent a filter also. The collection name is the filter button text. (Comma separated)",
+          "default": "best-sellers,new"
+        }
+      ]
     },
     {
       "type": "magic_perfume_atc",

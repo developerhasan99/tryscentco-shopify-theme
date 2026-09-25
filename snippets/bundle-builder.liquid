@@ -1,4 +1,5 @@
-{% assign bundle_collection_handles = 'best-sellers,new' | split: ',' %}
+{% assign bundle_collection_handles = product.metafields.custom.bundle_collections | default: block.settings.collection_handles %}
+{% assign bundle_collection_handles = bundle_collection_handles | split: ',' %}
 {% assign product_count = product.metafields.custom.choose_your_fragrances_options %}
 {% assign dropdown_ml = product.metafields.custom.select_bundle_dropdown_ml | default: "50" %}
 {% assign bundle_ml = dropdown_ml | append: "ml" %}
