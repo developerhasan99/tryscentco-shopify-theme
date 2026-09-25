@@ -61,7 +61,9 @@
         },
         "atc_bundle_builder_aLJUaV": {
           "type": "atc_bundle_builder",
-          "settings": {}
+          "settings": {
+            "collection_handles": "best-sellers,new"
+          }
         },
         "fuel03_pair_1": {
           "type": "fuel03_pair_scent",
@@ -181,6 +183,22 @@
             "video_url": "",
             "product": "",
             "audience_tag": ""
+          }
+        },
+        "selling_fast_jHkKKn": {
+          "type": "selling_fast",
+          "settings": {
+            "heading": "Säljer slut snabbt",
+            "subheading": "På grund av hög efterfrågan finns endast ett begränsat antal tillgängligt.",
+            "sold_text": "[percent]% Såld",
+            "percent_min": 80,
+            "percent_max": 95,
+            "show_countdown": true,
+            "countdown_label": "Ends in",
+            "end_time": "",
+            "bar_color": "#137C44",
+            "track_color": "#B1E4C9",
+            "accent_color": "#137C44"
           }
         },
         "money_back_Wrmpn7": {
@@ -306,6 +324,7 @@
         "fuel05_vid_4",
         "fuel05_vid_5",
         "fuel05_vid_6",
+        "selling_fast_jHkKKn",
         "money_back_Wrmpn7",
         "videos_iXPFhh",
         "expanded_notes_3Qg4Mi",
@@ -1449,7 +1468,6 @@
         "review_Jq6J3q": {
           "type": "review",
           "settings": {
-            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.55_AM.jpg",
             "content": "<p>\"Jag är nöjd med TryScent. Doften luktar väldigt likt originalet och håller bra. Förpackningen är snygg och flaskan ser fin ut. Överlag är det ett jättebra alternativ om du vill ha en kvalitetsdoft till ett rimligt pris.\"</p>",
             "author": "Alina M",
             "date": "för 5 månader sedan",
@@ -1631,7 +1649,6 @@
         "review_d3BYaL": {
           "type": "review",
           "settings": {
-            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.50_AM.jpg",
             "content": "<p>\"Parfymerna doftar perfekt, dofterna sitter kvar väldigt länge, fantastisk kvalitet.\"</p>",
             "author": "Kamila G.",
             "date": "för 3 månader sedan",
@@ -1749,7 +1766,6 @@
         "review_h9MjD9": {
           "type": "review",
           "settings": {
-            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.55_AM_1.jpg",
             "content": "<p>\"Fantastisk produkt! Ett superprisvärt alternativ till märkesparfymerna. Doften håller länge och du får verkligen mycket för pengarna.\"</p>",
             "author": "EM",
             "date": "för 4 månader sedan",
