@@ -228,7 +228,7 @@
               {%- when 'atc_bundle_builder' -%}
                 <div class="atc-bundle-builder" {{ block.shopify_attributes }}>
                    {% if product.metafields.custom.choose_your_fragrances_options != blank %}
-                    {% render 'bundle-builder-2', product: product %}
+                    {% render 'bundle-builder', product: product %}
                   {% else %}
                     {% render 'reactive-variant-selector', product: product, section: section %}
                   {% endif %}
@@ -250,7 +250,7 @@
               {%- when 'fuel05_ugc_video' -%}
                 <div {{ block.shopify_attributes }}></div>
               {% when 'bundle_builder_2' %}
-                {% render 'bundle-builder-2' %}
+                {% render 'bundle-builder' %}
               {%- when 'magic_perfume_atc' -%}
                 {% render 'magic-perfume-atc' %}
               {%- when 'fuel01_heading' -%}
@@ -1155,7 +1155,7 @@
 </product-info>
 
 {% if product.metafields.custom.choose_your_fragrances_options != blank %}
-    {% render 'bundle-builder-modal-2' %}
+    {% render 'bundle-builder-modal' %}
 {% endif %}
   
 {% render 'schema-breadcrumbs' %}

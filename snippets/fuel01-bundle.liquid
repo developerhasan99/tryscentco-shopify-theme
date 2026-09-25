@@ -11,11 +11,11 @@
   - block: {Object} the hosting block, for its settings (required)
   - mode: {String} 'heading' | 'steps' | 'summary' (required)
   - with_assets: {Boolean} emit the stylesheet and the QA reveal script; pass it on
-    exactly one of the three render sites per page, or the product page loads them
-    three times. The heading site owns it because it comes first in the markup on
-    both bundle templates. Same guard as snippets/fuel05-ugc-pdp.liquid and for the
-    same reason: render gives a snippet its own scope, so this cannot be a page
-    level flag.
+  exactly one of the three render sites per page, or the product page loads them
+  three times. The heading site owns it because it comes first in the markup on
+  both bundle templates. Same guard as snippets/fuel05-ugc-pdp.liquid and for the
+  same reason: render gives a snippet its own scope, so this cannot be a page
+  level flag.
 
   Usage:
   {% render 'fuel01-bundle', product: product, block: block, mode: 'heading', with_assets: true %}
@@ -160,19 +160,18 @@
           });
         });
       </script>
-      <div
-        class="fuel01-steps"
-        x-data="fuel01Steps({{ bottle_count }}, {{ counter_copy | json | escape }}, {{ hint_copy | json | escape }}, {{ hint_one_copy | json | escape }}, {{ done_copy | json | escape }})"
-      >
+      <div class="fuel01-steps" x-data="fuel01Steps({{ bottle_count }}, {{ counter_copy | json | escape }}, {{ hint_copy | json | escape }}, {{ hint_one_copy | json | escape }}, {{ done_copy | json | escape }})">
         <div
           class="fuel01-steps__track"
           role="progressbar"
           aria-valuemin="0"
           aria-valuenow="0"
           aria-valuemax="{{ bottle_count }}"
-          :aria-valuenow="picked"
-        >
-          <div class="fuel01-steps__fill" style="width: 0%" :style="'width: ' + percent + '%'"></div>
+          :aria-valuenow="picked">
+          <div
+            class="fuel01-steps__fill"
+            style="width: 0%"
+            :style="'width: ' + percent + '%'"></div>
         </div>
         <p class="fuel01-steps__label">
           <span class="fuel01-steps__counter" x-text="counter">{{ start_counter | escape }}</span>
@@ -186,12 +185,12 @@
         comment
           The ordinary total is the pack's scents bought one by one at the
           bundle size, read off the pool the builder offers
-          (collections['best-sellers'], the list that
-          snippets/bundle-builder-2.liquid declares), the discount is one
+          (collections[' b est-sellers'], the list that
+          snippets/bundle-builder.liquid declares), the discount is one
           scent, and your price is the difference (review, Sep 2: "four times
           that minus one times that", one perfume free). The bundle product in
           Shopify is meant to be priced at that figure; since Sep 14 the page
-          reads that product's own price for "your price", see below.
+          reads that product' s own price for "your price", see below.
           No compare-at price any more: the first cut showed the
           bundle's own compare-at (1.449 kr against 790) and review could not
           trace the number. The rows repaint from the actual picks through the
@@ -203,12 +202,12 @@
         endcomment
         assign summary_variant = product.selected_or_first_available_variant
         assign your_price = summary_variant.price
-        assign summary_ml = bottle_size | append: 'ml'
-        assign summary_pool = collections['best-sellers']
+        assign summary_ml = bottle_size | append: ' m l'
+        assign summary_pool = collections[' b est-sellers']
         assign unit_default = 0
         for pool_product in summary_pool.products
           for v in pool_product.variants
-            assign vt = v.title | downcase | replace: ' ml', 'ml'
+            assign vt = v.title | downcase | replace: ' ml', ' m l'
             if vt == summary_ml
               if unit_default == 0
                 assign unit_default = v.price
@@ -221,9 +220,9 @@
           endif
         endfor
         comment
-          Sep 14: your price stays the bundle product's own price, read above,
-          because that is what checkout charges. The ordinary total is still
-          the singles, so the saving is the difference today. If the singles
+          Sep 14: your price stays the bundle product' s own price, read above,
+          because that is what checkout charges.The ordinary total is still
+          the singles, so the saving is the difference today.If the singles
           rise before the bundle product is repriced, the page keeps showing
           the figure checkout will charge and the saving grows; it can no
           longer show one number and charge another.
@@ -243,8 +242,8 @@
         comment
           Same two labels as the builder page, and the same rule: "Ord.
           totalpris (4 × 100 ml):" may break before the bracket and never
-          inside it. Everything from the first " (" onwards is split off here
-          so the markup can hold it in one nowrap span. A label written
+          inside it.Everything from the first " (" onwards is split off here
+          so the markup can hold it in one nowrap span.A label written
           without a bracket comes back whole and gains no span, so nothing
           there can break either.
         endcomment
@@ -329,22 +328,29 @@
           });
         });
       </script>
-      <div
-        class="fuel01-summary"
-        x-data="fuel01Summary({{ bottle_count }}, {{ your_price }}, {{ unit_default }}, {{ shop.money_format | json | escape }}, {{ price_map | strip_newlines | escape }})"
-      >
+      <div class="fuel01-summary" x-data="fuel01Summary({{ bottle_count }}, {{ your_price }}, {{ unit_default }}, {{ shop.money_format | json | escape }}, {{ price_map | strip_newlines | escape }})">
         {%- if saving > 0 -%}
-          <div class="fuel01-summary__row" x-show="full" x-cloak>
+          <div
+            class="fuel01-summary__row"
+            x-show="full"
+            x-cloak>
             <span class="fuel01-summary__label">
               {{- total_label_main | escape -}}
-              {%- if total_label_note != blank %} <span class="fuel01-summary__label-note">{{ total_label_note | escape }}</span>{% endif -%}
+              {%- if total_label_note != blank %}
+                <span class="fuel01-summary__label-note">{{ total_label_note | escape }}</span>
+              {% endif -%}
             </span>
             <span class="fuel01-summary__value" x-text="money(ordTotal)">{{ ordinary_price | money }}</span>
           </div>
-          <div class="fuel01-summary__row fuel01-summary__row--discount" x-show="full && discount > 0" x-cloak>
+          <div
+            class="fuel01-summary__row fuel01-summary__row--discount"
+            x-show="full && discount > 0"
+            x-cloak>
             <span class="fuel01-summary__label">
               {{- discount_label_main | escape -}}
-              {%- if discount_label_note != blank %} <span class="fuel01-summary__label-note">{{ discount_label_note | escape }}</span>{% endif -%}
+              {%- if discount_label_note != blank %}
+                <span class="fuel01-summary__label-note">{{ discount_label_note | escape }}</span>
+              {% endif -%}
             </span>
             <span class="fuel01-summary__value" x-text="'\u2212' + money(discount)">&minus;{{ saving | money }}</span>
           </div>
@@ -354,7 +360,10 @@
           <span class="fuel01-summary__value" x-text="money(yourPrice)">{{ 0 | money }}</span>
         </div>
         {%- if saving > 0 -%}
-          <p class="fuel01-summary__pill" x-show="full && discount > 0" x-cloak>
+          <p
+            class="fuel01-summary__pill"
+            x-show="full && discount > 0"
+            x-cloak>
             <span class="fuel01-summary__pill-label">{{ savings_label | escape }}</span>
             <span class="fuel01-summary__pill-value" x-text="money(discount)">{{ saving | money }}</span>
           </p>

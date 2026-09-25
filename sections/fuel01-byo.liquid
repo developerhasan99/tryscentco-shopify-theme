@@ -12,7 +12,7 @@
   so a strategist can configure the content next to the control sections.
 
   Picking scents fills an Alpine store with the same shape as the one
-  snippets/bundle-builder-2.liquid declares on the bundle PDPs. Since Sep 23
+  snippets/bundle-builder.liquid declares on the bundle PDPs. Since Sep 23
   the sticky bar's button puts the pack in the cart as its own bottles, each
   at its own price, and adds the pack's discount code (a Buy X get Y code in
   Discounts), which takes one bottle off, the cheapest when they differ. So
@@ -46,7 +46,7 @@
 
     comment
       Same variant key the builder itself derives on the PDP
-      (snippets/bundle-builder-2.liquid lines 1-4): the ml metafield plus 'ml',
+      (snippets/bundle-builder.liquid lines 1-4): the ml metafield plus 'ml',
       matched against downcased variant titles. The grid only offers scents
       that carry that variant, because a pick without it could never be added
       to the builder on the other side.
@@ -773,7 +773,7 @@
       if (window.fuel01ByoRegistered) return;
       window.fuel01ByoRegistered = true;
 
-      // Same store name and product shape as snippets/bundle-builder-2.liquid
+      // Same store name and product shape as snippets/bundle-builder.liquid
       // declares on the bundle PDPs, so the pick semantics match the builder's
       // own. That snippet never runs on a collection page, so this is the only
       // declaration here.
