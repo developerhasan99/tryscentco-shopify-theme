@@ -173,6 +173,7 @@
     },
     "popular_products_CbL6aJ": {
       "type": "popular-products",
+      "disabled": true,
       "name": "Popular Products",
       "settings": {
         "background_color": "#fcfbf9",
