@@ -1,5 +1,9 @@
-{% assign bundle_collection_handles = product.metafields.custom.bundle_collections | default: block.settings.collection_handles %}
-{% assign bundle_collection_handles = bundle_collection_handles | split: ',' %}
+{% liquid
+  # The "New" filter in bundle-builder-modal matches products in this collection, so always load it into the pool
+  assign new_arrivals_handle = 'new'
+  assign bundle_collection_handles = product.metafields.custom.bundle_collections | default: block.settings.collection_handles
+  assign bundle_collection_handles = bundle_collection_handles | append: ',' | append: new_arrivals_handle | remove: ' ' | split: ',' | uniq
+%}
 {% assign product_count = product.metafields.custom.choose_your_fragrances_options %}
 {% assign dropdown_ml = product.metafields.custom.select_bundle_dropdown_ml | default: "50" %}
 {% assign bundle_ml = dropdown_ml | append: "ml" %}
@@ -151,6 +155,7 @@
       availableProducts: Array.from(new Map([
         {% for bundle_collection_handle in bundle_collection_handles %}
           {% assign bundle_collection = collections[bundle_collection_handle] %}
+          {% if bundle_collection == blank %}{% continue %}{% endif %}
           {% paginate bundle_collection.products by 250 %}
             {% for bundle_product in bundle_collection.products %}
               {% liquid
