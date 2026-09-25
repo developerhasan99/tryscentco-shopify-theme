@@ -115,6 +115,22 @@
             "inspired_name": "Jean Paul Gaultier Le Male"
           }
         },
+        "selling_fast_jHkKKn": {
+          "type": "selling_fast",
+          "settings": {
+            "heading": "Säljer slut snabbt",
+            "subheading": "På grund av hög efterfrågan finns endast ett begränsat antal tillgängligt.",
+            "sold_text": "[percent]% Såld",
+            "percent_min": 12,
+            "percent_max": 32,
+            "show_countdown": true,
+            "countdown_label": "Ends in",
+            "end_time": "",
+            "bar_color": "#F1652E",
+            "track_color": "#F9BCA4",
+            "accent_color": "#F1652E"
+          }
+        },
         "tsr_block_CWYfba": {
           "type": "tsr_block",
           "settings": {
@@ -183,22 +199,6 @@
             "video_url": "",
             "product": "",
             "audience_tag": ""
-          }
-        },
-        "selling_fast_jHkKKn": {
-          "type": "selling_fast",
-          "settings": {
-            "heading": "Säljer slut snabbt",
-            "subheading": "På grund av hög efterfrågan finns endast ett begränsat antal tillgängligt.",
-            "sold_text": "[percent]% Såld",
-            "percent_min": 80,
-            "percent_max": 95,
-            "show_countdown": true,
-            "countdown_label": "Ends in",
-            "end_time": "",
-            "bar_color": "#137C44",
-            "track_color": "#B1E4C9",
-            "accent_color": "#137C44"
           }
         },
         "money_back_Wrmpn7": {
@@ -315,6 +315,7 @@
         "fuel03_pair_3",
         "fuel03_pair_4",
         "fuel03_pair_5",
+        "selling_fast_jHkKKn",
         "tsr_block_CWYfba",
         "fuel03_pair_v2",
         "fuel05_ugc_slot",
@@ -324,7 +325,6 @@
         "fuel05_vid_4",
         "fuel05_vid_5",
         "fuel05_vid_6",
-        "selling_fast_jHkKKn",
         "money_back_Wrmpn7",
         "videos_iXPFhh",
         "expanded_notes_3Qg4Mi",
