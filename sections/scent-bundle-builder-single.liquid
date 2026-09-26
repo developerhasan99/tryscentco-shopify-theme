@@ -198,6 +198,22 @@
               {%- endform -%}
             </product-form>
           {%- endif -%}
+          {%- if st.badge_shipping_text != blank or st.badge_guarantee_text != blank -%}
+            <div class="sbb-badges">
+              {%- if st.badge_shipping_text != blank -%}
+                <span class="sbb-badge">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 3h15v13H1z"></path><path d="M16 8h4l3 3v5h-7z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                  <span>{{ st.badge_shipping_text | escape }}</span>
+                </span>
+              {%- endif -%}
+              {%- if st.badge_guarantee_text != blank -%}
+                <span class="sbb-badge">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                  <span>{{ st.badge_guarantee_text | escape }}</span>
+                </span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
         </div>
       </div>
     </div>
@@ -850,6 +866,24 @@
         "label": "Savings pill label",
         "info": "[amount]",
         "default": "Spara [amount] idag"
+      },
+      {
+        "type": "header",
+        "content": "Badges under buy button"
+      },
+      {
+        "type": "text",
+        "id": "badge_shipping_text",
+        "label": "Shipping badge",
+        "info": "Leave blank to hide",
+        "default": "Fri frakt"
+      },
+      {
+        "type": "text",
+        "id": "badge_guarantee_text",
+        "label": "Guarantee badge",
+        "info": "Leave blank to hide",
+        "default": "60 dagars pengarna tillbaka-garanti"
       },
       {
         "type": "header",

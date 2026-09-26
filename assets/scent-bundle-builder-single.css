@@ -178,6 +178,30 @@
 .sbb-content .sbb-summary__form-inner {
   display: block;
 }
+.sbb-badges {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.sbb-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid #cfe6d7;
+  border-radius: 999px;
+  background: #fff;
+  color: #1d5c3b;
+  font-size: 12px;
+  font-weight: 700;
+}
+.sbb-badge svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
 
 .sbb--single .sbb-slot__price {
   display: block;
