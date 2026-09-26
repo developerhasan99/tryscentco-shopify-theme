@@ -109,7 +109,9 @@
         },
         "atc_bundle_builder_aLJUaV": {
           "type": "atc_bundle_builder",
-          "settings": {}
+          "settings": {
+            "collection_handles": "best-sellers,new"
+          }
         },
         "money_back_cEqkRK": {
           "type": "money_back",
@@ -361,6 +363,12 @@
         "heading": "Bygg ditt doftskåp och",
         "heading_accent": "få 3 flaskor GRATIS",
         "subheading": "<p>Köp 2x100ml av dina favoritparfymer och få <strong>3x100ml GRATIS. Betala </strong>60% MINDRE i detta LÖNEDAGSERBJUDANDE!<br/><br/></p>",
+        "timer_deadline": "2026-09-28T00:00:00+02:00",
+        "timer_label": "Erbjudandet slutar om",
+        "timer_days_label": "dagar",
+        "timer_hours_label": "tim",
+        "timer_minutes_label": "min",
+        "timer_seconds_label": "sek",
         "slot_label": "Välj din doft",
         "discount_slot_label": "Rabatterad doft",
         "discount_pill_label": "GRATIS",
