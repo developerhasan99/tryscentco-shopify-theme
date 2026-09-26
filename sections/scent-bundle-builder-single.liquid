@@ -139,6 +139,21 @@
           </div>
         </div>
 
+        {%- if st.timer_deadline != blank -%}
+          <div class="bb-timer" data-deadline="{{ st.timer_deadline | escape }}" hidden>
+            <span class="bb-timer__label">{{ st.timer_label | escape }}</span>
+            <div class="bb-timer__clock">
+              <span class="bb-timer__unit" data-bb-timer-days><b data-bb-timer="d">00</b><small>{{ st.timer_days_label | escape }}</small></span>
+              <span class="bb-timer__sep" data-bb-timer-days>:</span>
+              <span class="bb-timer__unit"><b data-bb-timer="h">00</b><small>{{ st.timer_hours_label | escape }}</small></span>
+              <span class="bb-timer__sep">:</span>
+              <span class="bb-timer__unit"><b data-bb-timer="m">00</b><small>{{ st.timer_minutes_label | escape }}</small></span>
+              <span class="bb-timer__sep">:</span>
+              <span class="bb-timer__unit"><b data-bb-timer="s">00</b><small>{{ st.timer_seconds_label | escape }}</small></span>
+            </div>
+          </div>
+        {%- endif -%}
+
         <div class="sbb-summary">
           <p class="sbb-summary__original">
             <span>{{ st.total_label | escape }}</span>
@@ -575,6 +590,47 @@
   });
 </script>
 
+<script>
+  (function () {
+    var timer = document.querySelector('#shopify-section-{{ section.id }} .bb-timer');
+    if (!timer) return;
+
+    var end = new Date(timer.dataset.deadline).getTime();
+    if (isNaN(end)) return;
+
+    var d = timer.querySelector('[data-bb-timer="d"]');
+    var dayEls = timer.querySelectorAll('[data-bb-timer-days]');
+    var h = timer.querySelector('[data-bb-timer="h"]');
+    var m = timer.querySelector('[data-bb-timer="m"]');
+    var s = timer.querySelector('[data-bb-timer="s"]');
+    var interval;
+
+    function pad(n) {
+      return n < 10 ? '0' + n : String(n);
+    }
+
+    function tick() {
+      var left = Math.floor((end - Date.now()) / 1000);
+      if (left <= 0) {
+        timer.hidden = true;
+        clearInterval(interval);
+        return;
+      }
+      var days = Math.floor(left / 86400);
+      // Hide the days box on the last day.
+      for (var i = 0; i < dayEls.length; i++) dayEls[i].hidden = days === 0;
+      d.textContent = pad(days);
+      h.textContent = pad(Math.floor((left % 86400) / 3600));
+      m.textContent = pad(Math.floor((left % 3600) / 60));
+      s.textContent = pad(left % 60);
+      timer.hidden = false;
+    }
+
+    tick();
+    interval = setInterval(tick, 1000);
+  })();
+</script>
+
 {%- if product.images.size > 1 -%}
   <script>
     (function () {
@@ -675,6 +731,47 @@
         "id": "subheading",
         "label": "Subheading",
         "default": "<p>Köp 2x100ml av dina favoritparfymer och få <strong>3x100ml GRATIS</strong> i lönehelgspaketet</p>"
+      },
+      {
+        "type": "header",
+        "content": "Countdown timer"
+      },
+      {
+        "type": "text",
+        "id": "timer_deadline",
+        "label": "Deadline",
+        "info": "Format: YYYY-MM-DDTHH:MM:SS+02:00 (Swedish summer time). Timer hides after this. Leave blank to hide",
+        "default": "2026-10-04T00:00:00+02:00"
+      },
+      {
+        "type": "text",
+        "id": "timer_label",
+        "label": "Label",
+        "default": "Erbjudandet slutar om"
+      },
+      {
+        "type": "text",
+        "id": "timer_days_label",
+        "label": "Days label",
+        "default": "dagar"
+      },
+      {
+        "type": "text",
+        "id": "timer_hours_label",
+        "label": "Hours label",
+        "default": "tim"
+      },
+      {
+        "type": "text",
+        "id": "timer_minutes_label",
+        "label": "Minutes label",
+        "default": "min"
+      },
+      {
+        "type": "text",
+        "id": "timer_seconds_label",
+        "label": "Seconds label",
+        "default": "sek"
       },
       {
         "type": "header",
