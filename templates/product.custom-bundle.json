@@ -70,7 +70,7 @@
         "atc_bundle_builder_aLJUaV": {
           "type": "atc_bundle_builder",
           "settings": {
-            "collection_handles": "best-sellers:Best Scents,new"
+            "collection_handles": "best-sellers,new"
           }
         },
         "fuel01_summary": {
