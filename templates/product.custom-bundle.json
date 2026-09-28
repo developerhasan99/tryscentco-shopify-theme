@@ -70,7 +70,7 @@
         "atc_bundle_builder_aLJUaV": {
           "type": "atc_bundle_builder",
           "settings": {
-            "collection_handles": "best-sellers,new"
+            "collection_handles": "top-sellers-men:För män,top-seller-women:För kvinnor,new"
           }
         },
         "fuel01_summary": {
