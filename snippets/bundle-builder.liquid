@@ -1,7 +1,16 @@
 {% liquid
+  # Each entry is "handle" or "handle:Button label", e.g. "men:Men,women,new:New arrivals".
   # Each collection is both part of the product pool and a filter button in bundle-builder-modal
-  assign bundle_collection_handles = product.metafields.custom.bundle_collections | default: block.settings.collection_handles
-  assign bundle_collection_handles = bundle_collection_handles | remove: ' ' | split: ',' | uniq
+  assign bundle_collection_entries = product.metafields.custom.bundle_collections | default: block.settings.collection_handles | split: ','
+  assign bundle_collection_handles = ''
+  for entry in bundle_collection_entries
+    assign entry_handle = entry | split: ':' | first | strip | downcase
+    if entry_handle == blank
+      continue
+    endif
+    assign bundle_collection_handles = bundle_collection_handles | append: entry_handle | append: ','
+  endfor
+  assign bundle_collection_handles = bundle_collection_handles | split: ',' | uniq
 %}
 {% assign product_count = product.metafields.custom.choose_your_fragrances_options %}
 {% assign dropdown_ml = product.metafields.custom.select_bundle_dropdown_ml | default: "50" %}
@@ -133,16 +142,28 @@
       bundleLength: {{ product_count }},
       showModal: false,
       activeCategory: "All",
-      // Button text is the collection's custom.filter_label metafield, falling back to its title
+      // Button text: inline "handle:Label", else the collection's custom.filter_label metafield, else its title
       filters: [
-        {% for bundle_collection_handle in bundle_collection_handles %}
-          {% assign bundle_collection = collections[bundle_collection_handle] %}
-          {% if bundle_collection == blank %}{% continue %}{% endif %}
+        {%- assign seen_handles = ',' -%}
+        {%- for entry in bundle_collection_entries -%}
+          {%- liquid
+            assign raw_handle = entry | split: ':' | first
+            assign entry_handle = raw_handle | strip | downcase
+            assign seen_key = ',' | append: entry_handle | append: ','
+            assign bundle_collection = collections[entry_handle]
+            assign filter_label = ''
+            if entry contains ':'
+              assign filter_label = entry | remove_first: raw_handle | remove_first: ':' | strip
+            endif
+            assign filter_label = filter_label | default: bundle_collection.metafields.custom.filter_label.value | default: bundle_collection.title
+          -%}
+          {%- if entry_handle == blank or bundle_collection == blank or seen_handles contains seen_key -%}{%- continue -%}{%- endif -%}
+          {%- assign seen_handles = seen_handles | append: entry_handle | append: ',' -%}
           {
             handle: {{ bundle_collection.handle | json }},
-            label: {{ bundle_collection.metafields.custom.filter_label.value | default: bundle_collection.title | json }}
+            label: {{ filter_label | json }}
           },
-        {% endfor %}
+        {%- endfor -%}
       ],
       searchText: "",
       addingToCart: false,
