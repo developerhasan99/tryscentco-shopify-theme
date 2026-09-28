@@ -1,8 +1,7 @@
 {% liquid
-  # The "New" filter in bundle-builder-modal matches products in this collection, so always load it into the pool
-  assign new_arrivals_handle = 'new'
+  # Each collection is both part of the product pool and a filter button in bundle-builder-modal
   assign bundle_collection_handles = product.metafields.custom.bundle_collections | default: block.settings.collection_handles
-  assign bundle_collection_handles = bundle_collection_handles | append: ',' | append: new_arrivals_handle | remove: ' ' | split: ',' | uniq
+  assign bundle_collection_handles = bundle_collection_handles | remove: ' ' | split: ',' | uniq
 %}
 {% assign product_count = product.metafields.custom.choose_your_fragrances_options %}
 {% assign dropdown_ml = product.metafields.custom.select_bundle_dropdown_ml | default: "50" %}
@@ -134,6 +133,17 @@
       bundleLength: {{ product_count }},
       showModal: false,
       activeCategory: "All",
+      // Button text is the collection's custom.filter_label metafield, falling back to its title
+      filters: [
+        {% for bundle_collection_handle in bundle_collection_handles %}
+          {% assign bundle_collection = collections[bundle_collection_handle] %}
+          {% if bundle_collection == blank %}{% continue %}{% endif %}
+          {
+            handle: {{ bundle_collection.handle | json }},
+            label: {{ bundle_collection.metafields.custom.filter_label.value | default: bundle_collection.title | json }}
+          },
+        {% endfor %}
+      ],
       searchText: "",
       addingToCart: false,
       selectedProducts: [
