@@ -98,13 +98,7 @@
             id="HeaderMenu-{{ block.id }}"
             href="{{ block.settings.url }}"
             class="header__menu-item list-menu__item link link--text focus-inset">
-            {%- if block.id == 'menu_item_JjXgCN' -%}
-              {%- comment -%} FUEL_01: the Doftpaket item reads "Välj & spara" in the variant. Keyed on the block id, not the label, because Weglot and the theme editor both own the label text. {%- endcomment -%}
-              <span class="fuel01-nav-c">{{ block.settings.label }}</span>
-              <span class="fuel01-nav-v" style="display: none;">Välj &amp; spara</span>
-            {%- else -%}
-              <span>{{ block.settings.label }}</span>
-            {%- endif -%}
+            <span>{{ block.settings.label }}</span>
           </a>
         </li>
       {% endif %}

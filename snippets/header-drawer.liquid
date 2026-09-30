@@ -109,12 +109,7 @@
                       id="HeaderMenu-{{ block.id }}"
                       href="{{ block.settings.url }}"
                       class="header__menu-item list-menu__item link link--text focus-inset !pl-0 border-0 border-b border-solid border-gray-200">
-                      {%- if block.id == 'menu_item_JjXgCN' -%}
-                        {%- comment -%} FUEL_01: same id-keyed label swap as header-mega-menu.liquid. {%- endcomment -%}
-                        <span>Välj &amp; spara</span>
-                      {%- else -%}
-                        <span>{{ block.settings.label }}</span>
-                      {%- endif -%}
+                      <span>{{ block.settings.label }}</span>
                     </a>
                   </li>
                 {% endif %}
