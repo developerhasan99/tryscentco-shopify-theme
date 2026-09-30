@@ -36,15 +36,6 @@
 {%- if bottle_count != blank and request.locale.iso_code == 'sv' -%}
   {%- if with_assets -%}
     {{ 'fuel01-restyle.css' | asset_url | stylesheet_tag }}
-    <script>
-      // QA and preview reveal, mirrors the one in fuel03-pair-scent.liquid. On any
-      // theme that is not the live one, #f01 in the address shows the variant, so
-      // it can be checked without running the testing tool. Shopify.theme.role is
-      // 'main' on the live theme, so this can never fire there.
-      if (window.Shopify && Shopify.theme && Shopify.theme.role !== 'main') {
-        if (window.location.hash === '#f01') document.documentElement.classList.add('ab-f01-v1');
-      }
-    </script>
     {%- if request.locale.iso_code == 'sv' -%}
       <script>
         // Prefill from the build-your-own page (sections/fuel01-byo.liquid): its
@@ -53,11 +44,8 @@
         // same gate the build-your-own page itself carries, so a link shared onto
         // another market changes nothing there.
         //
-        // The variant class is the gate, not the param. A handoff link can be
-        // shared, bookmarked or replayed from history, and the param on its own
-        // used to be enough to fill the stock builder for a control bucketed
-        // visitor. The testing tool can add its class after Alpine has
-        // initialised, so a miss is retried once and then given up on silently.
+        // Alpine's store can be a tick late, so a miss is retried once and then
+        // given up on silently.
         //
         // The run is also deferred out of the alpine:initialized handler and the
         // array is reassigned once the loop is done. Pushing from inside that
@@ -75,7 +63,6 @@
           if (!raw) return;
 
           const apply = function () {
-            if (!document.documentElement.classList.contains('ab-f01-v1')) return false;
             const store = (window.Alpine && typeof Alpine.store === 'function') ? Alpine.store('bundleBuilder') : null;
             if (!store || !Array.isArray(store.selectedProducts) || !Array.isArray(store.availableProducts)) return true;
             for (const id of raw.split(',')) {
