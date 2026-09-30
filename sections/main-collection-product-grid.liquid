@@ -198,9 +198,7 @@
                           data-fuel05-row
                           {% if settings.animations_reveal_on_scroll %}
                           data-cascade
-                          style="display: none; --animation-order: {{ product_position }};"
-                          {% else %}
-                          style="display: none;"
+                          style="--animation-order: {{ product_position }};"
                           {% endif %}
                           {{ block.shopify_attributes }}>
                           {% render 'fuel05-ugc-tile',
