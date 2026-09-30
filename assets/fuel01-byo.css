@@ -4,12 +4,12 @@
  * in assets/fuel01-global.css, which loads sitewide.
  */
 
-/* In the variant the page takes the collection over: everything else in the
+/* The page takes the collection over: everything else in the
  * template goes away. The section's own wrapper carries fuel01-byo-wrap from
  * the schema, and the :has() guard keeps collections that render no builder
  * (every collection but the configured one) untouched. In the editor nothing
  * hides, so the control sections stay editable next to this one. */
-html.ab-f01-v1 #MainContent:has(.fuel01-byo) > .shopify-section:not(.fuel01-byo-wrap) {
+#MainContent:has(.fuel01-byo) > .shopify-section:not(.fuel01-byo-wrap) {
   display: none !important;
 }
 
@@ -21,10 +21,10 @@ html.ab-f01-v1 #MainContent:has(.fuel01-byo) > .shopify-section:not(.fuel01-byo-
  * the bar is off screen, so the button keeps the 18px the theme gives it in
  * assets/scent-quiz-popup.css and lands exactly where control puts it: lifted
  * by a bar that was not there, it sat on the builder itself at every width.
- * Variant arm only, and this file loads on the one collection the page is
+ * This file loads on the one collection the page is
  * mounted on, so nothing else on the store moves. In the theme editor the bar
  * sits in the flow and there is nothing to clear. */
-html.ab-f01-v1 body:not(.shopify-design-mode) #scent-quiz-fab {
+body:not(.shopify-design-mode) #scent-quiz-fab {
   bottom: calc(env(safe-area-inset-bottom) + 18px + var(--fuel01-sticky-h, 0px));
 }
 
@@ -38,17 +38,17 @@ html.ab-f01-v1 body:not(.shopify-design-mode) #scent-quiz-fab {
  * the page does not resize as the bar comes and goes. The two values below
  * are what the panel measures at each of its two layouts, for the load
  * before the script runs and for a browser where it does not. */
-html.ab-f01-v1 {
+html {
   --fuel01-sticky-reserve: 280px;
 }
 
 @media screen and (min-width: 750px) {
-  html.ab-f01-v1 {
+  html {
     --fuel01-sticky-reserve: 160px;
   }
 }
 
-html.ab-f01-v1 body:not(.shopify-design-mode) .shopify-section-group-footer-group {
+body:not(.shopify-design-mode) .shopify-section-group-footer-group {
   padding-bottom: var(--fuel01-sticky-reserve, 0px);
 }
 
@@ -1547,9 +1547,9 @@ html.ab-f01-v1 body:not(.shopify-design-mode) .shopify-section-group-footer-grou
 }
 
 @media screen and (max-width: 989px) {
-  html.ab-f01-v1 .header .\[grid-area\:search\],
-  html.ab-f01-v1 .header predictive-search.search-modal__form,
-  html.ab-f01-v1 .header search-form.search-modal__form {
+  .header .\[grid-area\:search\],
+  .header predictive-search.search-modal__form,
+  .header search-form.search-modal__form {
     display: none !important;
   }
 }
