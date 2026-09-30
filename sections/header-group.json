@@ -170,6 +170,14 @@
             "url": "shopify://collections/bestseller-singles"
           }
         },
+        "menu_item_ValjSpara": {
+          "type": "menu_item",
+          "disabled": true,
+          "settings": {
+            "label": "Välj & spara",
+            "url": "shopify://collections/bundle-save"
+          }
+        },
         "menu_item_JjXgCN": {
           "type": "menu_item",
           "disabled": true,
@@ -201,6 +209,7 @@
         "mega_menu_item_PtL8ng",
         "mega_menu_item_LAwC3B",
         "menu_item_8Yf436",
+        "menu_item_ValjSpara",
         "menu_item_JjXgCN",
         "menu_item_xWyRaA",
         "menu_item_dLfQGR"

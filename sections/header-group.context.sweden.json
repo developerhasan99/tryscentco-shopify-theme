@@ -26,6 +26,13 @@
     "header": {
       "settings": {},
       "blocks": {
+        "menu_item_ValjSpara": {
+          "disabled": false,
+          "settings": {
+            "label": "Välj & spara",
+            "url": "shopify://collections/bundle-save"
+          }
+        },
         "menu_item_JjXgCN": {
           "disabled": false,
           "settings": {
