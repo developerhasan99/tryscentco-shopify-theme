@@ -426,16 +426,14 @@
                       {% endif %}
                     </div>
                   {%- endif -%}  
-                  {% if product.template_suffix == 'cro-deck' %}
                     <h1 class="font-[700] leading-tight !tracking-normal text-xl md:text-3xl {% if product.tags contains 'bestseller' or product.tags contains 'onsale' %}pt-8{% endif %}">
                       {% assign title_list = product.title |  split: '-' %}
-                      <span class="title-prefix">Inspirerad av</span> {{ product.metafields.custom.inspiration.value.name }} - {{ title_list[1] }}
+                      {% if product.metafields.custom.inspiration != blank %}
+                        <span class="title-prefix">Inspirerad av</span> {{ product.metafields.custom.inspiration.value.name }} - {{ title_list[1] }}
+                      {% else %}
+                        {{ product.title }}
+                      {% endif %}
                     </h1>
-                  {% else %}
-                    <h1 class="font-[700] leading-tight !tracking-normal text-3xl {% if product.tags contains 'bestseller' or product.tags contains 'onsale' %}pt-8{% endif %}">
-                      {{ product.title }}
-                    </h1>
-                  {% endif %}
                 </div>
               {%- when 'price' -%}
                 <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
