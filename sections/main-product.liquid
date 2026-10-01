@@ -237,6 +237,8 @@
                 {% render 'fuel03-pair-scent', product: product, section: section, block: block, mode: 'v1' %}
               {%- when 'fuel03_pair_scent_v2' -%}
                 {% render 'fuel03-pair-scent', product: product, section: section, host_block: block, mode: 'v2m' %}
+              {%- when 'fuel04_offer_banner' -%}
+                {% render 'fuel04-pdp', block: block %}
               {%- when 'fuel05_ugc' -%}
                 <div
                   class="fuel05-ugc fuel05-ugc--pdp fuel05-ugc--pdp-mobile"
@@ -1484,6 +1486,57 @@
           "id": "inspired_name",
           "label": "Inspired by",
           "info": "Leave blank to use the recommended product's own data"
+        }
+      ]
+    },
+    {
+      "type": "fuel04_offer_banner",
+      "name": "Multi-buy offer",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "info": "Anything between asterisks is picked out in green.",
+          "default": "Köp fler, *spara mer!* 🎉"
+        },
+        {
+          "type": "text",
+          "id": "sub_text",
+          "label": "Line under the heading",
+          "default": "Dina gåvor låses upp automatiskt."
+        },
+        {
+          "type": "text",
+          "id": "unit_label",
+          "label": "Bottle size",
+          "info": "Follows the number on both tier rows, so a row reads \"3 × 100 ml\".",
+          "default": "× 100 ml"
+        },
+        {
+          "type": "number",
+          "id": "tier_1_count",
+          "label": "First tier, bottles",
+          "default": 3
+        },
+        {
+          "type": "text",
+          "id": "tier_1_text",
+          "label": "First tier reward",
+          "default": "Välj en 30 ml GRATIS"
+        },
+        {
+          "type": "number",
+          "id": "tier_2_count",
+          "label": "Second tier, bottles",
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "tier_2_text",
+          "label": "Second tier reward",
+          "default": "100 ml Mystery Scent GRATIS"
         }
       ]
     },
