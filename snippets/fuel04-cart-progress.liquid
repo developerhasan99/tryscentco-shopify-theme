@@ -1,0 +1,262 @@
+{% comment %}
+  FUEL_04 cart drawer ladder. Rendered from snippets/cart-drawer.liquid,
+  inside .drawer__inner and above the line items.
+
+  Why there and not in a script: cart-drawer.js re-renders .drawer__inner (and
+  #CartDrawer on add) through the section rendering API on every cart change,
+  so a bar that lives inside that element is redrawn by Liquid with the fresh
+  cart on every add, remove and quantity change. That is why the bar needs no
+  JavaScript: the gift script in snippets/fuel04-global.liquid writes the cart
+  and never draws here.
+
+  Shape from frames 127:150993 and 127:151012: a rail with a #003900 fill and
+  round chips standing on it, a caption under the chips that carry a reward,
+  then a #f1f2ee strip with an icon and one sentence, in that order.
+
+  Content from the brief, not from those frames. The frames still draw the free
+  shipping and 10 / 15 / 20 % ladder this test replaces; the brief sets the
+  ladder to 1 | 2 | 3 gift 30 ml GRATIS | 4 | 5 gift +100 ml MYSTERY. Every
+  chip and caption is a theme setting, so a ruling the other way needs no
+  deploy.
+
+  Display only. It states the offer, it does not grant it: the free 30 ml and
+  the mystery 100 ml come from the gift app's (Kite) two offers, whose codes
+  snippets/fuel04-global.liquid puts on the cart. Nothing here writes a line
+  item property, a discount code or a cart attribute.
+
+  The app owned gift ladder that is already in this drawer (Kite) is hidden for
+  the variant only, at the end of assets/fuel04-multibuy.css. Hidden, not
+  removed: the app keeps running and keeps adding its own gift.
+
+  Every number and every string is a theme setting, under "FUEL_04 Multi-buy"
+  in theme settings. This snippet has no section of its own to hang settings on
+  because layout/theme.liquid renders the drawer as a snippet, not a section.
+  Write [n] in a line where the number of bottles still needed should appear,
+  and put the part that should stand out in green between asterisks.
+
+  Swedish market only, like the rest of the test. The gate below cannot tell
+  the markets apart on its own (one Shopify locale, Weglot at the edge), so
+  what actually keeps this off the Danish, Finnish and Norwegian pages is the
+  market guard in snippets/fuel04-global.liquid and its belt in
+  assets/fuel04-multibuy.css.
+{% endcomment %}
+{%- liquid
+  assign fuel04_tier_1 = settings.fuel04_cart_tier_1
+  assign fuel04_tier_2 = settings.fuel04_cart_tier_2
+  assign fuel04_size = settings.fuel04_cart_size_token | downcase | strip | replace: ' ', ''
+  assign fuel04_gift_id = settings.fuel04_gift_variant_tier_2 | strip
+-%}
+{%- if request.locale.iso_code == 'sv' and cart != empty and fuel04_tier_2 > 0 and fuel04_tier_1 > 0 -%}
+  {%- liquid
+    comment
+      What counts is a single bottle of the size the offer is written for, the
+      same unit the gift app (Kite) counts when it grants the gift: the variant
+      title compared with the token WHOLE, on the normalised strings (downcased,
+      spaces out). A substring test once read "Doftar som... Si Passione - No.
+      100" as eligible when its 30 ml was bought three times.
+
+      Multi bottle boxes ("5X 100ml") and bottles sold without a size variant
+      used to count from their product name. They no longer do: Kite counts
+      only the single 100 ml bottles of the test perfumes, so a box lit both
+      gifts here while checkout gave neither. Whether a box should count is the
+      strategist's call; if it should, the gift app's offer has to change first.
+
+      Gift lines never count: the mystery bottle snippets/fuel04-global.liquid
+      puts in itself (the variant in theme settings), and every line the gift app adds
+      (property _free_product, a FREEGIFT discount). The app auto-adds "Gömd
+      Skatt" and "Gratis Mystik Parfym", and the price cannot be the test,
+      because the same app once ran the shop's 2+1 deal, which made the
+      shopper's own third bottle cost nothing (QA, Sep 16).
+
+      An empty token counts every line in the cart that is not a gift.
+    endcomment
+    assign fuel04_count = 0
+    for line_item in cart.items
+      assign line_vid = line_item.variant_id | append: ''
+      if line_vid == fuel04_gift_id or line_item.properties._free_product == 'true'
+        continue
+      endif
+      assign line_is_gift = false
+      for allocation in line_item.line_level_discount_allocations
+        if allocation.discount_application.title contains 'FREEGIFT'
+          assign line_is_gift = true
+        endif
+      endfor
+      if line_is_gift
+        continue
+      endif
+
+      assign line_variant = line_item.variant.title | downcase | strip | replace: ' ', ''
+      if fuel04_size == blank or line_variant == fuel04_size
+        assign fuel04_count = fuel04_count | plus: line_item.quantity
+      endif
+    endfor
+
+    comment
+      The rail is the cart frame's own (Figma 211:2623): the numbered steps
+      with a reward node after each tier, tier_2 + 2 nodes spread evenly over
+      a 373 px rail, and a 5 px track inset 10 px at both ends (347 px). The
+      fill ends on the middle of the last lit number, on the near edge of a
+      lit reward node (the frame draws 161 of 347 at three bottles), and runs
+      the whole track once the last reward is reached. Node pitch is
+      (373 - 32.109) / (nodes - 1); everything below is a share of the track,
+      so a narrower drawer keeps the same picture.
+    endcomment
+    assign fuel04_reached = fuel04_count | at_most: fuel04_tier_2
+    assign fuel04_nodes = fuel04_tier_2 | plus: 2
+    assign fuel04_pct = 0
+    if fuel04_reached >= fuel04_tier_2
+      assign fuel04_pct = 100
+    elsif fuel04_reached > 0
+      assign fuel04_gaps = fuel04_nodes | minus: 1
+      assign fuel04_pitch = 340.891 | divided_by: fuel04_gaps
+      assign fuel04_idx = fuel04_reached | minus: 1
+      assign fuel04_offset = 16.054
+      if fuel04_reached >= fuel04_tier_1
+        assign fuel04_idx = fuel04_idx | plus: 1
+        if fuel04_reached == fuel04_tier_1
+          assign fuel04_offset = 0
+        endif
+      endif
+      assign fuel04_end = fuel04_idx | times: fuel04_pitch | plus: fuel04_offset | minus: 10.0
+      assign fuel04_pct = fuel04_end | times: 100.0 | divided_by: 347.0 | round: 2
+    endif
+
+    comment
+      One bottle left takes the singular line. "Lägg [n] flaskor till" reads
+      "Lägg 1 flaskor till" at the last step, and both counting lines land on
+      one with the tiers as they are set (3 and 5), so both have a singular of
+      their own. An empty singular setting falls back to the plural line rather
+      than to nothing.
+    endcomment
+    if fuel04_count >= fuel04_tier_2
+      assign fuel04_line = settings.fuel04_cart_text_done
+      assign fuel04_left = 0
+    elsif fuel04_count >= fuel04_tier_1
+      assign fuel04_left = fuel04_tier_2 | minus: fuel04_count
+      assign fuel04_line = settings.fuel04_cart_text_mid
+      if fuel04_left == 1 and settings.fuel04_cart_text_mid_one != blank
+        assign fuel04_line = settings.fuel04_cart_text_mid_one
+      endif
+    else
+      assign fuel04_left = fuel04_tier_1 | minus: fuel04_count
+      assign fuel04_line = settings.fuel04_cart_text_start
+      if fuel04_left == 1 and settings.fuel04_cart_text_start_one != blank
+        assign fuel04_line = settings.fuel04_cart_text_start_one
+      endif
+    endif
+
+    comment
+      Two readings of the same line. The visible one carries the number in
+      bold and the reward phrase in green; the one on the progress bar is
+      plain, because assistive tech reads the label as it stands and used to
+      be handed the raw [n] placeholder.
+    endcomment
+    assign fuel04_left_markup = fuel04_left | prepend: '<strong>' | append: '</strong>'
+    assign fuel04_line_plain = fuel04_line | replace: '[n]', fuel04_left | replace: '*', ''
+  -%}
+  {%- capture fuel04_line_html -%}
+    {%- assign fuel04_runs = fuel04_line | escape | replace: '[n]', fuel04_left_markup | split: '*' -%}
+    {%- for fuel04_run in fuel04_runs -%}
+      {%- assign fuel04_odd = forloop.index0 | modulo: 2 -%}
+      {%- if fuel04_odd == 1 -%}
+        <b class="fuel04-cart__hl">{{ fuel04_run }}</b>
+      {%- else -%}
+        {{- fuel04_run -}}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- liquid
+    comment
+      The frame sets each reward label on two lines, the last word on its
+      own: "30 ml" over "GRATIS", "+100 ml" over "MYSTERY".
+    endcomment
+    assign fuel04_label_1_words = settings.fuel04_cart_label_1 | strip | split: ' '
+    assign fuel04_label_2_words = settings.fuel04_cart_label_2 | strip | split: ' '
+    assign fuel04_label_1_last = fuel04_label_1_words | last
+    assign fuel04_label_2_last = fuel04_label_2_words | last
+    assign fuel04_label_1_head = ''
+    for fuel04_word in fuel04_label_1_words
+      unless forloop.last
+        assign fuel04_label_1_head = fuel04_label_1_head | append: fuel04_word | append: ' '
+      endunless
+    endfor
+    assign fuel04_label_2_head = ''
+    for fuel04_word in fuel04_label_2_words
+      unless forloop.last
+        assign fuel04_label_2_head = fuel04_label_2_head | append: fuel04_word | append: ' '
+      endunless
+    endfor
+    assign fuel04_label_1_head = fuel04_label_1_head | strip
+    assign fuel04_label_2_head = fuel04_label_2_head | strip
+    assign fuel04_rail_label = settings.fuel04_cart_label_1 | append: ' · ' | append: settings.fuel04_cart_label_2 | strip
+  -%}
+  <div class="fuel04 fuel04-cart" style="display: none;">
+    <div class="fuel04-cart__row">
+      <div
+        class="fuel04-cart__rail"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="{{ fuel04_tier_2 }}"
+        aria-valuenow="{{ fuel04_reached }}"
+        aria-label="{{ fuel04_rail_label | escape }}"
+        style="--fuel04-fill: {{ fuel04_pct }}%;">
+        <div class="fuel04-cart__track"><div class="fuel04-cart__fill"></div></div>
+        {%- for fuel04_step in (1..fuel04_tier_2) -%}
+          <span class="fuel04-cart__node{% if fuel04_count >= fuel04_step %} is-on{% endif %}">{{ fuel04_step }}</span>
+          {%- if fuel04_step == fuel04_tier_1 or fuel04_step == fuel04_tier_2 -%}
+            {%- if fuel04_count >= fuel04_step -%}
+              <span class="fuel04-cart__gift is-on" aria-hidden="true"><img src="{{ 'fuel04-cart-gift-on.svg' | asset_url }}" width="40" height="40" alt=""></span>
+            {%- else -%}
+              <span class="fuel04-cart__gift" aria-hidden="true"><img src="{{ 'fuel04-cart-gift-off.svg' | asset_url }}" width="34" height="33" alt=""></span>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+    {%- liquid
+      comment
+        The first reward node stands after tier_1 numbers, so its share of the
+        rail is tier_1 over the number of gaps; the second is the last node.
+      endcomment
+      assign fuel04_label_gaps = fuel04_nodes | minus: 1
+      assign fuel04_label_a = fuel04_tier_1 | times: 1.0 | divided_by: fuel04_label_gaps | round: 4
+    -%}
+    <div class="fuel04-cart__labels" aria-hidden="true" style="--fuel04-label-a: {{ fuel04_label_a }};">
+      {%- if settings.fuel04_cart_label_1 != blank -%}
+        <span class="fuel04-cart__label fuel04-cart__label--a">{{ fuel04_label_1_head }}{% if fuel04_label_1_head != blank %}<br>{% endif %}{{ fuel04_label_1_last }}</span>
+      {%- endif -%}
+      {%- if settings.fuel04_cart_label_2 != blank -%}
+        <span class="fuel04-cart__label fuel04-cart__label--b">{{ fuel04_label_2_head }}{% if fuel04_label_2_head != blank %}<br>{% endif %}{{ fuel04_label_2_last }}</span>
+      {%- endif -%}
+    </div>
+    {%- comment -%}
+      The frame draws no message under the rail (the strip of the earlier
+      round was removed from the design). The line survives as an option for
+      the strategist and stays off until a setting turns it on.
+    {%- endcomment -%}
+    {%- if settings.fuel04_cart_show_message and fuel04_line != blank -%}
+      <p class="fuel04-cart__msg">
+        <svg
+          class="fuel04-cart__msg-icon"
+          width="18"
+          height="18"
+          viewBox="0 0 20.28 20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          focusable="false">
+          <rect x="1.14" y="6.5" width="18" height="3.5" rx="0.75" />
+          <path d="M2.64 10v8.25a.75.75 0 0 0 .75.75h13.5a.75.75 0 0 0 .75-.75V10" />
+          <path d="M10.14 6.5V19" />
+          <path d="M10.14 6.5S9.1 1 6.4 1a2.2 2.2 0 0 0 0 5.5z" />
+          <path d="M10.14 6.5s1.04-5.5 3.74-5.5a2.2 2.2 0 0 1 0 5.5z" />
+        </svg>
+        <span>{{ fuel04_line_html }}</span>
+      </p>
+    {%- endif -%}
+  </div>
+{%- endif -%}

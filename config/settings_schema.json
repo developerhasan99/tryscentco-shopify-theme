@@ -8,6 +8,112 @@
     "theme_support_url": "https://support.shopify.com/"
   },
   {
+    "name": "Multi-buy gift offer",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Copy and tiers for the multi-buy progress bar in the cart drawer. It is hidden while the offer is switched off, and it appears on the Swedish market only. It states the offer, it does not grant it. These live in theme settings and not on a section because the cart drawer is rendered as a snippet, so there is no section to hang them on."
+      },
+      {
+        "type": "number",
+        "id": "fuel04_cart_tier_1",
+        "label": "First tier, bottles",
+        "default": 3
+      },
+      {
+        "type": "number",
+        "id": "fuel04_cart_tier_2",
+        "label": "Second tier, bottles",
+        "default": 5
+      },
+      {
+        "type": "text",
+        "id": "fuel04_cart_size_token",
+        "label": "Bottle size that counts",
+        "info": "The variant name of the size the offer is written for, spaces ignored. Only single bottles of that size count, the same unit the gift app counts: a multi bottle box (\"5X 100ml\") and a bottle sold without a size variant do not. Leave empty to count every line in the cart.",
+        "default": "100ml"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_code_tier_1",
+        "label": "Discount code, first tier",
+        "info": "The Shopify discount code that gives the first tier's gift (buy the first tier of bottles, get a 30 ml free). The test version puts it on the cart once the first tier is reached and takes it off again below it; the normal site never touches it. Leave empty and no code is applied.",
+        "default": "FUEL04-30ML"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_code_tier_2",
+        "label": "Discount code, second tier",
+        "info": "Same for the second tier's gift (the mystery 100 ml). Leave empty and no code is applied for it.",
+        "default": "FUEL04-100ML"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_gift_variant_tier_2",
+        "label": "Second tier gift, variant ID",
+        "info": "The variant the test version puts in the cart at the second tier (Gratis Mystik Parfym 100 ml). It goes in with the code above and comes out again below the tier, or straight away if the code does not make it free. Leave empty and the second tier adds nothing and applies no code.",
+        "default": "50537448505414"
+      },
+      {
+        "type": "paragraph",
+        "content": "Write [n] where the number of bottles still needed should appear, and put the part that should stand out in green between asterisks."
+      },
+      {
+        "type": "text",
+        "id": "fuel04_cart_text_start",
+        "label": "Line before the first tier",
+        "default": "Lägg [n] flaskor till och *välj en 30 ml GRATIS*"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_cart_text_start_one",
+        "label": "Line before the first tier, one bottle left",
+        "info": "Used in place of the line above when exactly one bottle is missing, so it reads flaska and not flaskor. Leave empty to keep using the line above.",
+        "default": "Lägg [n] flaska till och *välj en 30 ml GRATIS*"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_cart_text_mid",
+        "label": "Line between the tiers",
+        "default": "Din 30 ml är upplåst. Lägg [n] flaskor till och få även *en 100 ml Mystery Scent GRATIS*"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_cart_text_mid_one",
+        "label": "Line between the tiers, one bottle left",
+        "info": "Used in place of the line above when exactly one bottle is missing. Leave empty to keep using the line above.",
+        "default": "Din 30 ml är upplåst. Lägg [n] flaska till och få även *en 100 ml Mystery Scent GRATIS*"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_cart_text_done",
+        "label": "Line at the second tier",
+        "default": "*Din 30 ml och din 100 ml Mystery Scent är upplåsta*"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_cart_label_1",
+        "label": "First tier caption",
+        "info": "Sits under the chip for the first tier on the ladder.",
+        "default": "30 ml GRATIS"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_cart_label_2",
+        "label": "Second tier caption",
+        "info": "Sits under the chip for the second tier on the ladder.",
+        "default": "+100 ml MYSTERY"
+      },
+      {
+        "type": "checkbox",
+        "id": "fuel04_cart_show_message",
+        "label": "Show a line under the progress rail",
+        "info": "The lines above only render when this is on.",
+        "default": false
+      }
+    ]
+  },
+  {
     "name": "Scent Quiz (popup)",
     "settings": [
       {

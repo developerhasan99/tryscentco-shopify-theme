@@ -1,0 +1,193 @@
+{% comment %}
+  FUEL_04 collection grid offer card. One cell in the product grid, dropped in
+  at the position the block is given, on the same seam the theme's own
+  quiz-promo-card uses, so the grid keeps its own column and row rules and
+  nothing about the surrounding cards changes.
+
+  The brief asks for "the same placement style as the promotional cards
+  currently being tested", and that is snippets/quiz-promo-card.liquid: a
+  photograph behind a dark gradient, rounded corners, a shadow. Frames
+  127:126079, 127:126253 and 127:126350 draw the same treatment with the copy
+  centred, two banded translucent tier rows and a button across the foot, and
+  that is what is built here.
+
+  Two ways in. The grid section renders it on its own after every Nth product,
+  passing section_settings and a design number, 1 to 3, which picks one of the
+  three drawn cards (photograph, band position, button face); those cards show
+  on every screen. A fuel04_offer_card block renders it too, pinned at one
+  spot, and then everything comes from the block, its screen included. Every
+  string is the frame's own.
+
+  The snippet owns its <li>, exactly like snippets/quiz-promo-card.liquid, and
+  ships hidden. assets/fuel04-multibuy.css reveals it behind the variant class,
+  and in the theme editor so it can be found and configured.
+
+  The stylesheet is NOT emitted here. facets.js replaces #ProductGridContainer's
+  innerHTML on every filter and sort and a tag inserted through innerHTML never
+  runs, so every FUEL_04 asset loads once from the head, in
+  snippets/fuel04-global.liquid.
+
+  Messaging only, no cart or discount mechanics.
+
+  Accepts:
+  - block: {Object} a fuel04_offer_card block (one of block or section_settings)
+  - section_settings: {Object} the grid section's settings (one of block or
+    section_settings)
+  - design: {Number} 1, 2 or 3, which drawn card to show when rendered from
+    section_settings (optional, 1)
+  - product_position: {Number} the grid position the card is standing in, used
+    for the theme's own reveal-on-scroll ordering (optional)
+{% endcomment %}
+{%- if request.locale.iso_code == 'sv' -%}
+  {%- liquid
+    comment
+      The card is one big link, so it always needs somewhere to go. An empty
+      URL setting used to drop the href and leave an anchor that looks like a
+      button and does nothing, so the setting falls back to the all products
+      collection instead. routes.* is used for the fallback so it carries the
+      market prefix on its own.
+    endcomment
+    if block
+      assign fuel04_card_url = block.settings.url
+
+      comment
+        Which screen a pinned card is for. A pinned card sits in one cell, and
+        the grid runs four columns on a wide screen and two on a phone, so it is
+        placed per device the way the UGC tiles in this same section are, and
+        assets/fuel04-multibuy.css takes it out on the other screen. Defaulted
+        rather than required, so a block saved before this setting existed
+        still draws somewhere.
+      endcomment
+      assign fuel04_device = block.settings.device | default: 'desktop'
+      assign fuel04_photo = block.settings.photo | default: '1'
+      assign fuel04_tiers = block.settings.tiers_position | default: 'middle'
+      assign fuel04_button = block.settings.button_style | default: 'dark'
+      assign fuel04_image = block.settings.image
+      assign fuel04_heading = block.settings.heading
+      assign fuel04_sub_text = block.settings.sub_text
+      assign fuel04_tier_1_count = block.settings.tier_1_count
+      assign fuel04_tier_1_text = block.settings.tier_1_text
+      assign fuel04_tier_2_count = block.settings.tier_2_count
+      assign fuel04_tier_2_text = block.settings.tier_2_text
+      assign fuel04_cta_text = block.settings.cta_text
+    else
+      assign fuel04_card_url = section_settings.fuel04_card_url
+
+      comment
+        A repeating card shows on every screen, so no device class. The design
+        number picks one of the three drawn cards: 127:126079 bands at the
+        foot with a light button, 127:126253 and 127:126350 bands at the top
+        with a dark button, each on its own photograph.
+      endcomment
+      assign fuel04_device = 'all'
+      case design
+        when 2
+          assign fuel04_photo = '2'
+          assign fuel04_tiers = 'top'
+          assign fuel04_button = 'dark'
+        when 3
+          assign fuel04_photo = '3'
+          assign fuel04_tiers = 'top'
+          assign fuel04_button = 'dark'
+        else
+          assign fuel04_photo = '1'
+          assign fuel04_tiers = 'bottom'
+          assign fuel04_button = 'light'
+      endcase
+      assign fuel04_image = section_settings.fuel04_card_image
+      assign fuel04_heading = section_settings.fuel04_card_heading
+      assign fuel04_sub_text = section_settings.fuel04_card_sub_text
+      assign fuel04_tier_1_count = section_settings.fuel04_card_tier_1_count
+      assign fuel04_tier_1_text = section_settings.fuel04_card_tier_1_text
+      assign fuel04_tier_2_count = section_settings.fuel04_card_tier_2_count
+      assign fuel04_tier_2_text = section_settings.fuel04_card_tier_2_text
+      assign fuel04_cta_text = section_settings.fuel04_card_cta_text
+    endif
+
+    if fuel04_card_url == blank
+      assign fuel04_card_url = routes.all_products_collection_url
+    endif
+
+    comment
+      The photograph. Each of the three cards carries its own, shipped as a
+      theme asset because the frames are the source and nothing in the admin
+      holds them. A merchant picked image still wins.
+    endcomment
+    assign fuel04_photo_asset = 'fuel04-card-' | append: fuel04_photo | append: '.jpg'
+    case fuel04_photo
+      when '2'
+        assign fuel04_photo_h = 785
+      when '3'
+        assign fuel04_photo_h = 746
+      else
+        assign fuel04_photo_h = 1001
+    endcase
+  -%}
+  <li
+    {% if block %}{{ block.shopify_attributes }}{% endif %}
+    class="grid__item fuel04 fuel04-card fuel04-card--{{ fuel04_device }} fuel04-card--tiers-{{ fuel04_tiers }}{% if fuel04_button == 'light' %} fuel04-card--cta-light{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+    {% if settings.animations_reveal_on_scroll %}
+      data-cascade
+      style="display: none; --animation-order: {{ product_position }};"
+    {% else %}
+      style="display: none;"
+    {% endif %}>
+    <a class="fuel04-card__inner" href="{{ fuel04_card_url }}">
+      {%- comment -%}
+        The picture behind the card. A merchant picked image wins; with none
+        picked the card still gets the photograph the frame draws, shipped as a
+        theme asset, rather than falling back to a flat colour the design does
+        not have. Decorative either way: the heading below carries the meaning.
+      {%- endcomment -%}
+      {%- if fuel04_image != blank -%}
+        {{
+          fuel04_image
+          | image_url: width: 700
+          | image_tag:
+            class: 'fuel04-card__media',
+            loading: 'lazy',
+            widths: '350, 550, 700',
+            sizes: '(min-width: 750px) 25vw, 50vw',
+            alt: ''
+        }}
+      {%- else -%}
+        <img
+          class="fuel04-card__media"
+          src="{{ fuel04_photo_asset | asset_url }}"
+          width="560"
+          height="{{ fuel04_photo_h }}"
+          loading="lazy"
+          alt="">
+      {%- endif -%}
+      <span class="fuel04-card__head">
+        {%- if fuel04_heading != blank -%}
+          <span class="fuel04-card__heading">{{ fuel04_heading }}</span>
+        {%- endif -%}
+        {%- if fuel04_sub_text != blank -%}
+          <span class="fuel04-card__sub">{{ fuel04_sub_text }}</span>
+        {%- endif -%}
+      </span>
+      <span class="fuel04-card__tiers">
+        {%- if fuel04_tier_1_text != blank -%}
+          <span class="fuel04-card__tier">
+            {%- if fuel04_tier_1_count != blank -%}
+              <span class="fuel04-card__tier-count">{{ fuel04_tier_1_count }}</span>
+            {%- endif -%}
+            <span class="fuel04-card__tier-text">{{ fuel04_tier_1_text }}</span>
+          </span>
+        {%- endif -%}
+        {%- if fuel04_tier_2_text != blank -%}
+          <span class="fuel04-card__tier">
+            {%- if fuel04_tier_2_count != blank -%}
+              <span class="fuel04-card__tier-count">{{ fuel04_tier_2_count }}</span>
+            {%- endif -%}
+            <span class="fuel04-card__tier-text">{{ fuel04_tier_2_text }}</span>
+          </span>
+        {%- endif -%}
+      </span>
+      {%- if fuel04_cta_text != blank -%}
+        <span class="fuel04-card__cta">{{ fuel04_cta_text }}</span>
+      {%- endif -%}
+    </a>
+  </li>
+{%- endif -%}

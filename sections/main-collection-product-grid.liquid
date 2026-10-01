@@ -164,6 +164,21 @@
                 grid--{{ section.settings.columns_desktop }}-col-desktop
                 {% if section.settings.quick_add == 'bulk' %} collection-quick-add-bulk{% endif %}
               ">
+              {%- liquid
+                comment
+                  FUEL_04 offer cards down the grid. One card after every N products,
+                  the three drawn designs taking turns, on every collection template
+                  and on every page the load more button fetches (it appends every
+                  #product-grid .grid__item it gets back, cards included). N comes
+                  from the section settings; the default applies on templates that
+                  never saved the setting, which is what puts the cards on every
+                  collection page. Zero means off.
+                endcomment
+                assign fuel04_cards_every = 0
+                if section.settings.fuel04_cards
+                  assign fuel04_cards_every = section.settings.fuel04_cards_every | default: 5
+                endif
+              -%}
               {%- for product in collection.products -%}
                 {% assign product_position = forloop.index %}
 
@@ -171,6 +186,18 @@
                   {% if block.settings.position == product_position %}
                     {% if block.type == 'quiz_promo_card' %}
                       {% render 'quiz-promo-card'
+                        , block: block
+                        , product_position: product_position %}
+                    {% elsif block.type == 'fuel04_offer_card' %}
+                      {% comment %}
+                        Same seam as the promo card above: the snippet owns its own
+                        grid cell. Its stylesheet is not emitted here. facets.js
+                        replaces #ProductGridContainer's innerHTML on every filter
+                        and sort and a tag inserted that way never runs, so every
+                        FUEL_04 asset loads once from the head, in
+                        snippets/fuel04-global.liquid.
+                      {% endcomment %}
+                      {% render 'fuel04-offer-card'
                         , block: block
                         , product_position: product_position %}
                     {% elsif block.type == 'fuel05_ugc_video' %}
@@ -257,6 +284,24 @@
                     , section_id: section.id
                   %}
                 </li>
+                {%- if fuel04_cards_every > 0 -%}
+                  {%- comment -%}
+                    Counted from the first product of the collection, not of the page,
+                    so the rhythm and the turn of the three designs carry across the
+                    pages the load more button appends. Per page the count restarts at
+                    one and the third design never comes up.
+                  {%- endcomment -%}
+                  {%- assign fuel04_cards_nth = paginate.current_offset | plus: forloop.index -%}
+                  {%- assign fuel04_cards_gap = fuel04_cards_nth | modulo: fuel04_cards_every -%}
+                  {%- if fuel04_cards_gap == 0 -%}
+                    {%- assign fuel04_cards_design = fuel04_cards_nth | divided_by: fuel04_cards_every | minus: 1 | modulo: 3 | plus: 1 -%}
+                    {%- render 'fuel04-offer-card',
+                      section_settings: section.settings,
+                      design: fuel04_cards_design,
+                      product_position: forloop.index
+                    -%}
+                  {%- endif -%}
+                {%- endif -%}
                 {%- assign skip_card_product_styles = true -%}
               {%- endfor -%}
             </ul>
@@ -591,6 +636,83 @@
         "unit": "px",
         "label": "t:sections.all.padding.padding_bottom",
         "default": 36
+      },
+      {
+        "type": "header",
+        "content": "Multi-buy offer cards"
+      },
+      {
+        "type": "paragraph",
+        "content": "The multi-buy gift offer as cards down the product grid, on every collection page. Hidden while the offer is switched off, and on the Swedish market only. They state the offer, they do not grant the gift."
+      },
+      {
+        "type": "checkbox",
+        "id": "fuel04_cards",
+        "label": "Repeat the offer card down the grid",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "fuel04_cards_every",
+        "min": 3,
+        "max": 20,
+        "step": 1,
+        "default": 5,
+        "label": "One card after every N products",
+        "info": "Five puts three cards in the first sixteen products, the way the desktop frame draws them. The three drawn cards take turns, and they carry on through every page the grid loads."
+      },
+      {
+        "type": "url",
+        "id": "fuel04_card_url",
+        "label": "Card link",
+        "info": "Empty sends the card to all products."
+      },
+      {
+        "type": "image_picker",
+        "id": "fuel04_card_image",
+        "label": "Photograph",
+        "info": "Replaces the three drawn photographs on every card."
+      },
+      {
+        "type": "text",
+        "id": "fuel04_card_heading",
+        "label": "Heading",
+        "default": "Köp fler, spara mer!"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_card_sub_text",
+        "label": "Line under the heading"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_card_tier_1_count",
+        "label": "Tier 1 count",
+        "default": "Köp 3"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_card_tier_1_text",
+        "label": "Tier 1 reward",
+        "default": "Välj en 30 ml doft GRATIS"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_card_tier_2_count",
+        "label": "Tier 2 count",
+        "default": "KÖP 5"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_card_tier_2_text",
+        "label": "Tier 2 reward",
+        "default": "Få en 100 ml Mystery Scent GRATIS"
+      },
+      {
+        "type": "text",
+        "id": "fuel04_card_cta_text",
+        "label": "Button text",
+        "default": "LÅS UPP DINA GÅVOR"
       }
     ],
     "blocks": [
@@ -639,6 +761,149 @@
             "type": "product",
             "id": "product",
             "label": "Select Product"
+          }
+        ]
+      },
+      {
+        "type": "fuel04_offer_card",
+        "name": "Multi-buy offer card",
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "Pins one extra multi-buy offer card at a fixed spot. The cards that repeat down the grid come from the section settings above; this block is only for a spot they do not cover."
+          },
+          {
+            "type": "number",
+            "id": "position",
+            "label": "Position",
+          "info": "The card is drawn in front of the product with this number, so a card placed earlier in the grid moves every card after it one cell along. Cards at 8, 10 and 11 stand in cells 8, 11 and 13."
+        },
+        {
+          "type": "select",
+          "id": "device",
+          "label": "Show on",
+          "options": [
+            {
+              "value": "desktop",
+              "label": "Desktop"
+            },
+            {
+              "value": "mobile",
+              "label": "Mobile"
+            }
+          ],
+          "default": "desktop",
+          "info": "The grid runs four columns on a wide screen and two on a phone, so each screen gets its own cards in its own cells."
+        },
+        {
+          "type": "select",
+          "id": "photo",
+          "label": "Photograph",
+          "options": [
+            {
+              "value": "1",
+              "label": "Bottle on denim"
+            },
+            {
+              "value": "2",
+              "label": "Bottle on sand"
+            },
+            {
+              "value": "3",
+              "label": "Bottle on knit"
+            }
+          ],
+          "default": "1"
+        },
+        {
+          "type": "select",
+          "id": "tiers_position",
+          "label": "Tier stack position",
+          "options": [
+            {
+              "value": "top",
+              "label": "Under the heading"
+            },
+            {
+              "value": "middle",
+              "label": "Middle"
+            },
+            {
+              "value": "bottom",
+              "label": "Above the button"
+            }
+          ],
+          "default": "middle"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "options": [
+            {
+              "value": "dark",
+              "label": "Black"
+            },
+            {
+              "value": "light",
+              "label": "White"
+            }
+          ],
+          "default": "dark"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Background image",
+          "info": "Overrides the photograph above. Left empty the card keeps the one chosen there."
+          },
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+          "default": "Köp fler, spara mer!"
+          },
+          {
+            "type": "text",
+            "id": "sub_text",
+            "label": "Line under the heading",
+          "info": "Empty by default, because the card is drawn without one."
+          },
+          {
+            "type": "text",
+            "id": "tier_1_count",
+            "label": "First tier label",
+          "default": "Köp 3"
+          },
+          {
+            "type": "text",
+            "id": "tier_1_text",
+            "label": "First tier reward",
+            "default": "Välj en 30 ml doft GRATIS"
+          },
+          {
+            "type": "text",
+            "id": "tier_2_count",
+            "label": "Second tier label",
+            "default": "KÖP 5"
+          },
+          {
+            "type": "text",
+            "id": "tier_2_text",
+            "label": "Second tier reward",
+            "default": "Få en 100 ml Mystery Scent GRATIS"
+          },
+          {
+            "type": "text",
+            "id": "cta_text",
+            "label": "Button text",
+          "default": "LÅS UPP DINA GÅVOR"
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "Card URL",
+            "info": "Where the whole card links to. Left empty it falls back to the all products collection, never to a card that does nothing."
           }
         ]
       },

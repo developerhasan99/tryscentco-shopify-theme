@@ -35,6 +35,13 @@
           </span>
         </button>
       </div>
+      {%- comment -%}
+        FUEL_04 progress bar. Inside .drawer__inner on purpose: cart-drawer.js
+        re-renders that element through the section rendering API on every cart
+        change, so the bar is redrawn by Liquid with the fresh cart and needs no
+        script of its own. Hidden unless the test is running.
+      {%- endcomment -%}
+      {%- render 'fuel04-cart-progress' -%}
       <div class="flex-grow overflow-y-auto -mr-3 pr-3 bg-white">
         {%- if cart == empty -%}
           <div class="drawer__inner-empty">

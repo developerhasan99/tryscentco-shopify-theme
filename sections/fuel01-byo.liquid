@@ -185,7 +185,7 @@
     }
   </style>
 
-  <div class="fuel01 fuel01-byo" style="display: none;" x-data="fuel01Byo">
+  <div class="fuel01 fuel01-byo" x-data="fuel01Byo">
     <header class="fuel01-byo__head">
       {%- if st.heading != blank -%}
         <h1 class="fuel01-byo__title">{{ st.heading | escape }}</h1>
@@ -363,6 +363,19 @@
         {%- endfor -%}
       </div>
     {%- endif -%}
+
+    {%- comment -%}
+      FUEL_04 multi-buy offer, above the scent grid. The same module as on the
+      product page (snippets/fuel04-pdp.liquid), with its strings in this
+      section's settings. Hidden like every FUEL_04 placement until the testing
+      tool's class is on the html element, and on the Swedish market only; the
+      wrapper has side padding only, so it takes no room while the module is
+      hidden. Every pick on this page goes into the cart as its own 100 ml
+      bottle, so the gift counts them like any other.
+    {%- endcomment -%}
+    <div class="fuel01-byo__offer">
+      {%- render 'fuel04-pdp', section_settings: section.settings -%}
+    </div>
 
     <div class="fuel01-byo__shop" x-ref="gridtop">
       <div class="fuel01-controls" :class="{ 'fuel01-controls--open': filtersOpen }">
@@ -1429,6 +1442,58 @@
       "id": "sticky_cta_checkout",
       "label": "Button second line",
       "default": "Gå till kassan"
+    },
+    {
+      "type": "header",
+      "content": "Multi-buy offer"
+    },
+    {
+      "type": "paragraph",
+      "content": "The multi-buy gift offer, shown above the scents. Hidden while the offer is switched off, and on the Swedish market only. It states the offer, it does not grant the gift."
+    },
+    {
+      "type": "text",
+      "id": "fuel04_offer_heading",
+      "label": "Offer heading",
+      "info": "Anything between asterisks is picked out in green, the way the design draws the second half of the line.",
+      "default": "Köp fler, *spara mer!* 🎉"
+    },
+    {
+      "type": "text",
+      "id": "fuel04_offer_sub_text",
+      "label": "Line under the offer heading",
+      "default": "Dina gåvor låses upp automatiskt."
+    },
+    {
+      "type": "text",
+      "id": "fuel04_offer_unit_label",
+      "label": "Offer bottle size",
+      "info": "Follows the number on both tier rows, so a row reads \"3 × 100 ml\".",
+      "default": "× 100 ml"
+    },
+    {
+      "type": "number",
+      "id": "fuel04_offer_tier_1_count",
+      "label": "First tier, bottles",
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "fuel04_offer_tier_1_text",
+      "label": "First tier reward",
+      "default": "Välj en 30 ml GRATIS"
+    },
+    {
+      "type": "number",
+      "id": "fuel04_offer_tier_2_count",
+      "label": "Second tier, bottles",
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "fuel04_offer_tier_2_text",
+      "label": "Second tier reward",
+      "default": "100 ml Mystery Scent GRATIS"
     }
   ],
   "blocks": [

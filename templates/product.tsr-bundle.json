@@ -63,6 +63,18 @@
           "type": "atc_bundle_builder",
           "settings": {}
         },
+        "fuel04_offer_banner_1": {
+          "type": "fuel04_offer_banner",
+          "settings": {
+            "heading": "Köp fler, *spara mer!* 🎉",
+            "sub_text": "Dina gåvor låses upp automatiskt.",
+            "unit_label": "× 100 ml",
+            "tier_1_count": 3,
+            "tier_1_text": "Välj en 30 ml GRATIS",
+            "tier_2_count": 5,
+            "tier_2_text": "100 ml Mystery Scent GRATIS"
+          }
+        },
         "fuel03_pair_1": {
           "type": "fuel03_pair_scent",
           "settings": {
@@ -298,6 +310,7 @@
         "fuel03_pair_4",
         "fuel03_pair_5",
         "tsr_block_CWYfba",
+        "fuel04_offer_banner_1",
         "fuel03_pair_v2",
         "fuel05_ugc_slot",
         "fuel05_vid_1",

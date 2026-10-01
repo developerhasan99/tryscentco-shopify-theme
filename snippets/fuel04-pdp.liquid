@@ -1,0 +1,106 @@
+{% comment %}
+  FUEL_04 product page offer module. Renders from the fuel04_offer_banner case
+  in sections/main-product.liquid, so the strategist positions it in the buy
+  area by dragging the block rather than by editing code. Frame 127:133522
+  puts it after the bundle upsell block, which is where the block is ordered
+  in the template.
+
+  Shipped hidden; assets/fuel04-multibuy.css reveals it behind the variant
+  class, and in the theme editor so it can be found and configured.
+
+  The module is the two column tier table the frame draws: a count, a short
+  rule, and the reward, one row per tier, with a hairline between the rows and
+  the artwork from the frame across the left of the card. The heading takes its
+  second half in #126930; write that part between asterisks.
+
+  Messaging only. It states the offer, it does not grant it: the free 30 ml and
+  the mystery 100 ml come from the gift app's (Kite) two offers, whose codes
+  snippets/fuel04-global.liquid puts on the cart in the test version. Nothing
+  here touches the cart, the form or the price.
+
+  Every string and both bottle counts are settings: the block's on the product
+  page, and the section's own on the build-your-own bundle page
+  (sections/fuel01-byo.liquid), which shows the same module above its scent
+  grid. That page re-sorts and filters its grid in place, so a card standing
+  between the scents would drift and pile up; one module above the grid does
+  not.
+
+  Accepts:
+  - block: {Object} the fuel04_offer_banner block (one of block or
+    section_settings)
+  - section_settings: {Object} a section's settings carrying the same strings
+    under fuel04_offer_* ids (one of block or section_settings)
+{% endcomment %}
+{%- liquid
+  if block
+    assign fuel04_heading = block.settings.heading
+    assign fuel04_sub_text = block.settings.sub_text
+    assign fuel04_unit_label = block.settings.unit_label
+    assign fuel04_tier_1_count = block.settings.tier_1_count
+    assign fuel04_tier_1_text = block.settings.tier_1_text
+    assign fuel04_tier_2_count = block.settings.tier_2_count
+    assign fuel04_tier_2_text = block.settings.tier_2_text
+  else
+    assign fuel04_heading = section_settings.fuel04_offer_heading
+    assign fuel04_sub_text = section_settings.fuel04_offer_sub_text
+    assign fuel04_unit_label = section_settings.fuel04_offer_unit_label
+    assign fuel04_tier_1_count = section_settings.fuel04_offer_tier_1_count
+    assign fuel04_tier_1_text = section_settings.fuel04_offer_tier_1_text
+    assign fuel04_tier_2_count = section_settings.fuel04_offer_tier_2_count
+    assign fuel04_tier_2_text = section_settings.fuel04_offer_tier_2_text
+  endif
+-%}
+{%- if request.locale.iso_code == 'sv' -%}
+  <div class="fuel04 fuel04-pdp" style="display: none;" {% if block %}{{ block.shopify_attributes }}{% endif %}>
+    {%- comment -%}
+      The artwork is a theme asset, so its URL has to come from Liquid. The
+      stylesheet owns where it sits and how big it is; only the file name is
+      dynamic, on the wrapper, the way the theme passes every other dynamic
+      value into CSS.
+    {%- endcomment -%}
+    <div
+      class="fuel04-pdp__card"
+      style="background-image: url({{ 'fuel04-percent.png' | asset_url }});">
+      {%- if fuel04_heading != blank -%}
+        <p class="fuel04-pdp__heading">
+          {%- assign fuel04_head = fuel04_heading | escape | split: '*' -%}
+          {%- for fuel04_part in fuel04_head -%}
+            {%- assign fuel04_odd = forloop.index0 | modulo: 2 -%}
+            {%- if fuel04_odd == 1 -%}
+              <span class="fuel04-pdp__heading-alt">{{ fuel04_part }}</span>
+            {%- else -%}
+              {{ fuel04_part }}
+            {%- endif -%}
+          {%- endfor -%}
+        </p>
+      {%- endif -%}
+      {%- if fuel04_sub_text != blank -%}
+        <p class="fuel04-pdp__sub">{{ fuel04_sub_text }}</p>
+      {%- endif -%}
+      <ul class="fuel04-pdp__tiers">
+        {%- if fuel04_tier_1_text != blank -%}
+          <li class="fuel04-pdp__tier">
+            {%- if fuel04_tier_1_count > 0 -%}
+              <span class="fuel04-pdp__count">
+                {{- fuel04_tier_1_count }} {{ fuel04_unit_label -}}
+              </span>
+              <span class="fuel04-pdp__rule"></span>
+            {%- endif -%}
+            <p class="fuel04-pdp__reward">{{ fuel04_tier_1_text }}</p>
+          </li>
+        {%- endif -%}
+        {%- if fuel04_tier_2_text != blank -%}
+          <li class="fuel04-pdp__tier">
+            {%- if fuel04_tier_2_count > 0 -%}
+              <span class="fuel04-pdp__count">
+                {{- fuel04_tier_2_count }} {{ fuel04_unit_label -}}
+              </span>
+              <span class="fuel04-pdp__rule"></span>
+            {%- endif -%}
+            <p class="fuel04-pdp__reward">{{ fuel04_tier_2_text }}</p>
+          </li>
+        {%- endif -%}
+      </ul>
+    </div>
+  </div>
+{%- endif -%}

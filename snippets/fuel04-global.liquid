@@ -1,0 +1,421 @@
+{% comment %}
+  FUEL_04 sitewide assets. Rendered once from the head of layout/theme.liquid.
+
+  The test has four placements and they sit in four different hosts: the offer
+  timebar in the header group, the product page block loop, the collection grid
+  and the cart drawer. Their hide and reveal rules therefore have to load on
+  every page, so assets/fuel04-multibuy.css is emitted here rather than by each
+  host. This also settles the collection grid on its own: facets.js replaces
+  #ProductGridContainer's innerHTML on every filter and sort, and a tag inserted
+  through innerHTML never runs, so the grid's assets have to come from outside
+  that container anyway.
+
+  Every string in this test is written in Swedish and none of it is
+  translated, so it must reach the Swedish market and no other. The Liquid
+  gate below asks request.locale.iso_code, and the placements are gated the
+  same way in their own snippets, but on this store that question has only one
+  answer: it runs ONE Shopify locale and Weglot translates at the edge, so the
+  gate reads 'sv' on the Danish, Finnish and Norwegian pages as well. QA
+  proved it, with the Swedish copy on /da-dk.
+
+  So the market guard below is what actually holds the line, and the Liquid
+  gate is left as it is, doing what it can. The guard settles the market from
+  the path prefix (/da-dk, /fi-fi, /no-no against /sv-se or the bare root) and
+  from Weglot's own stamp on <html>, then writes data-fuel04-market="off",
+  which is what assets/fuel04-multibuy.css holds both gate classes shut
+  behind. It runs on every theme, the live one included, because the live
+  theme is where the testing tool adds the class.
+
+  The preview switch stays ungated by theme role so a tester on those markets
+  can still add the class by hand and confirm that nothing moves. It obeys the
+  market guard, though: on a market this test is not written for, neither the
+  tool nor the switch can reveal anything.
+
+  Preview switch: on any theme that is not the live one, #f04 in the address
+  turns the variant on and #f04-off turns it back off. The choice is kept in
+  sessionStorage so QA can click through the site like a customer instead of
+  retyping the hash on every navigation. Shopify.theme.role is 'main' on the
+  live theme, so none of this can ever fire there; in production only the
+  testing tool adds the class.
+{% endcomment %}
+{%- if request.locale.iso_code == 'sv' -%}
+  {{ 'fuel04-multibuy.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+<script>
+  (function () {
+    var root = document.documentElement;
+
+    // Which market this page is on.
+    //
+    // true  the market the test is written for, Swedish
+    // false a market it is not written for, so nothing may be revealed
+    // null  not settled yet, Weglot has not stamped <html> and the path says
+    //       nothing either
+    //
+    // Two readings, and either one is enough to say no. The path prefix
+    // (/da-dk, /fi-fi, /no-no against /sv-se or the bare root) is there at
+    // parse time. Weglot's data-wg-translated arrives whenever its script
+    // gets around to it, which can be after this one. Matched on the first
+    // two letters so that a regional value like sv-SE still reads as Swedish.
+    var readMarket = function () {
+      var stamp = (root.getAttribute('data-wg-translated') || '').toLowerCase();
+      if (stamp && stamp.slice(0, 2) !== 'sv') return false;
+      var prefix = /^\/([a-z]{2}-[a-z]{2})(?:\/|$)/.exec(window.location.pathname);
+      if (prefix) return prefix[1] === 'sv-se';
+      if (stamp) return true;
+      return null;
+    };
+
+    // Returns true once the market is settled, either way, so the caller can
+    // stop watching. Writing the attribute is what does the work: the
+    // stylesheet hides .fuel04 and .fuel04-v behind it and drops the
+    // announcement swap, so once it is set nothing in the test can be revealed
+    // again, whoever adds the class afterwards. The class is taken off as well
+    // for anything that reads it rather than the CSS.
+    var settle = function () {
+      var swedish = readMarket();
+      if (swedish === null) return false;
+      if (swedish === false) {
+        root.setAttribute('data-fuel04-market', 'off');
+        root.classList.remove('ab-f04-multibuy');
+      }
+      return true;
+    };
+
+    if (!settle()) {
+      // One decision, then the watch goes away. Load is the hard stop, for the
+      // ordinary case: a Swedish page, where Weglot never stamps anything and
+      // the attribute we are waiting for is never coming.
+      var observer;
+      var stop = function () {
+        if (observer) observer.disconnect();
+        window.removeEventListener('load', onLoad);
+      };
+      var onLoad = function () {
+        settle();
+        stop();
+      };
+      observer = new MutationObserver(function () {
+        if (settle()) stop();
+      });
+      observer.observe(root, { attributes: true, attributeFilter: ['data-wg-translated'] });
+      if (document.readyState === 'complete') {
+        onLoad();
+      } else {
+        window.addEventListener('load', onLoad);
+      }
+    }
+
+    if (!window.Shopify || !Shopify.theme || Shopify.theme.role === 'main') return;
+    var apply = function () {
+      // The market guard wins over the switch. On a market the test is not
+      // written for the hash must not be able to put the class on by hand
+      // either, and if the guard settles later it takes the class straight
+      // back off.
+      if (root.getAttribute('data-fuel04-market') === 'off') return;
+      var off = window.location.hash === '#f04-off';
+      var on = window.location.hash === '#f04';
+      try {
+        if (on) sessionStorage.setItem('fuel04Qa', '1');
+        if (off) sessionStorage.removeItem('fuel04Qa');
+        on = sessionStorage.getItem('fuel04Qa') === '1';
+      } catch (e) {
+        // Storage can be blocked; the hash alone still works for that load.
+      }
+      // Add only, never a two argument toggle. The class belongs to the testing
+      // tool, which also runs on the themes this switch is allowed on, so the
+      // switch must never take it away behind the tool's back. apply() re-runs
+      // on every hashchange and the skip to content link is the first focusable
+      // element on every page, so an ordinary fragment jump must be a no-op.
+      // #f04-off is the one explicit way back out.
+      if (on) {
+        root.classList.add('ab-f04-multibuy');
+      } else if (off) {
+        root.classList.remove('ab-f04-multibuy');
+      }
+    };
+    apply();
+    window.addEventListener('hashchange', apply);
+  })();
+</script>
+
+{%- comment -%}
+  The gift itself. The theme states the offer; what grants it is two discount
+  codes of the client's gift app (Kite), named in theme settings: buy the first
+  tier of 100 ml bottles and a 30 ml the shopper adds is free, buy the second
+  tier and a mystery 100 ml is free on top. Kite runs on Shopify Functions, so
+  its gift prices at zero next to the client's own sale, where a plain Shopify
+  code is refused. Only the test version applies the codes, so the normal site
+  never gives the gift by accident.
+
+  The script below counts the bottles the way Kite does (single bottles of the
+  size in theme settings), puts the codes on the cart once a tier is reached
+  and takes them off again below it, keeping any code the shopper or another
+  app put there. The mystery bottle is nobody's pick, so at the second tier the
+  script puts it in itself (the variant in theme settings) and takes it out
+  again below the tier. Bottle and code go in the same request, so the bottle
+  never sits in the cart at full price, and if Kite does not price it at zero
+  with the cart mark below in place (Kite not switched on for shoppers) it
+  comes straight back out for the rest of the visit. The same happens if the
+  shopper removes it: nobody pays for it and nobody has it forced back on them.
+
+  Timing. Several apps write to this cart after every change (ABsolutely
+  rewrites each new line, Kite adds its own gifts and attributes, Intelligems
+  its attributes), and two writes that overlap can cost the cart a line. So
+  this script writes once per change, combining bottle and codes, and only
+  after the cart has been quiet for 700 ms with no other app's request still
+  open.
+
+  Shopify replaces the whole code list on every write, and other apps write it
+  too (Klaviyo coupons, Shopjar referrals through sendBeacon, Selleasy through
+  the Storefront API), so the list is checked again after any cart write that
+  is not this script's own, whether it came through fetch, XMLHttpRequest,
+  sendBeacon or the Storefront API. This script's own requests carry the
+  X-Fuel04 header and are never answered, and writing the same list a fourth
+  time in ten seconds is skipped, so it cannot fall into a loop with an app
+  that keeps writing its own list.
+
+  While a code is on, the cart also carries the hidden attribute _fuel04=on.
+  The Kite offers accept their code only on a cart with that mark, so the code
+  is useless to anyone who finds it in the page source (Kite publishes every
+  offer's name there) and to the control version, where nothing sets it.
+  With both codes empty in theme settings nothing here is emitted.
+{%- endcomment -%}
+{%- if settings.fuel04_code_tier_1 != blank or settings.fuel04_code_tier_2 != blank -%}
+<script>
+  (function () {
+    var cfg = {
+      tier1: {{ settings.fuel04_cart_tier_1 | default: 3 }},
+      tier2: {{ settings.fuel04_cart_tier_2 | default: 5 }},
+      size: {{ settings.fuel04_cart_size_token | downcase | strip | replace: ' ', '' | json }},
+      code1: {{ settings.fuel04_code_tier_1 | strip | upcase | json }},
+      code2: {{ settings.fuel04_code_tier_2 | strip | upcase | json }},
+      gift2: {{ settings.fuel04_gift_variant_tier_2 | strip | json }}
+    };
+    var OWN = 'X-Fuel04';
+    var ADDED = 'fuel04GiftAdded';
+    var OUT = 'fuel04GiftOut';
+    var MARK = '_fuel04';
+    var root = document.documentElement;
+    var updateUrl = {{ routes.cart_update_url | json }} + '.js';
+    var cartUrl = {{ routes.cart_url | json }} + '.js';
+    var ours = [cfg.code1, cfg.code2].filter(Boolean);
+    var active = function () {
+      return root.classList.contains('ab-f04-multibuy') && root.getAttribute('data-fuel04-market') !== 'off';
+    };
+    var norm = function (s) { return String(s || '').toLowerCase().replace(/\s+/g, ''); };
+    var store = function (key, value) {
+      try {
+        if (value === undefined) return sessionStorage.getItem(key);
+        if (value === null) sessionStorage.removeItem(key); else sessionStorage.setItem(key, value);
+      } catch (e) {
+        // Storage can be blocked; the gift then simply follows the tiers.
+      }
+      return null;
+    };
+    var isGift = function (it) { return !!cfg.gift2 && String(it.variant_id) === cfg.gift2; };
+    // The same reading as the rail in snippets/fuel04-cart-progress.liquid.
+    // Gift lines never count: the mystery bottle, and every line the gift app
+    // adds (property _free_product, a FREEGIFT discount).
+    var countBottles = function (cart) {
+      var n = 0;
+      (cart.items || []).forEach(function (it) {
+        if (isGift(it) || (it.properties && it.properties._free_product === 'true')) return;
+        var appGift = (it.line_level_discount_allocations || []).some(function (a) {
+          return String((a.discount_application && a.discount_application.title) || '').indexOf('FREEGIFT') > -1;
+        });
+        if (appGift) return;
+        if (!cfg.size || norm(it.variant_title) === cfg.size) n += it.quantity || 0;
+      });
+      return n;
+    };
+    // Selleasy rewrites the code list through the Storefront API whenever its
+    // own offer is in the cart, and keeps only its codes, the ones listed in
+    // window.lbExDiscounts and the ones applicable at that moment. Ours is not
+    // applicable between the third bottle and the 30 ml going in, so it is
+    // listed there.
+    var keepForSelleasy = function (want) {
+      var others = (window.lbExDiscounts || []).filter(function (c) { return ours.indexOf(String(c).toUpperCase()) < 0; });
+      window.lbExDiscounts = others.concat(want);
+    };
+    // Writing the same list again means something took it off since the last
+    // write. Three times in ten seconds is an app writing its own list on
+    // every change, and answering it again would only feed the loop.
+    var last = '', rewrites = [];
+    var braked = function (list) {
+      var now = Date.now();
+      rewrites = rewrites.filter(function (t) { return now - t < 10000; });
+      if (list !== last) { last = list; return false; }
+      if (rewrites.length >= 3) return true;
+      rewrites.push(now);
+      return false;
+    };
+    // The one write the cart still needs, as a cart/update body, or null once
+    // the cart matches the tiers.
+    var plan = function (cart) {
+      var count = countBottles(cart);
+      var gifts = (cart.items || []).filter(isGift);
+      var have = (cart.discount_codes || []).map(function (d) { return String(d.code).toUpperCase(); });
+      var giftDue = !!(cfg.gift2 && cfg.code2 && count >= cfg.tier2);
+      if (!giftDue) {
+        store(ADDED, null);
+        store(OUT, null);
+      } else if (gifts.length && have.indexOf(cfg.code2) > -1 && gifts[0].final_line_price > 0 && String((cart.attributes || {})[MARK] || '') === 'on') {
+        // In the cart with its code and the cart mark Kite checks, and still
+        // not free: Kite is not on for this shopper. A missing mark is put
+        // back below instead, the gift stays.
+        store(OUT, '1');
+      } else if (!gifts.length && store(ADDED) === '1') {
+        // It was in the cart and someone took it out.
+        store(OUT, '1');
+      }
+      var wantGift = giftDue && store(OUT) !== '1';
+      store(ADDED, wantGift ? '1' : null);
+
+      var want = [];
+      if (cfg.code1 && count >= cfg.tier1) want.push(cfg.code1);
+      if (wantGift) want.push(cfg.code2);
+      keepForSelleasy(want);
+      var next = have.filter(function (c) { return ours.indexOf(c) < 0; }).concat(want);
+      var codesSame = next.length === have.length && next.every(function (c) { return have.indexOf(c) > -1; });
+      var giftSame = wantGift ? gifts.length === 1 && gifts[0].quantity === 1 : !gifts.length;
+      var mark = want.length ? 'on' : '';
+      var markSame = String((cart.attributes || {})[MARK] || '') === mark;
+      if (codesSame && giftSame && markSame) return null;
+      var body = { discount: next.join(','), attributes: {} };
+      body.attributes[MARK] = mark;
+      if (!giftSame) {
+        var updates = {};
+        if (gifts.length) {
+          gifts.forEach(function (it, i) { updates[it.key] = wantGift && i === 0 ? 1 : 0; });
+        } else {
+          updates[cfg.gift2] = 1;
+        }
+        body.updates = updates;
+      } else if (markSame && braked(body.discount)) {
+        return null;
+      }
+      return body;
+    };
+    var redraw = function (state) {
+      var drawer = document.querySelector('cart-drawer');
+      if (!drawer || !state || !state.sections || !drawer.getSectionsToRender) return;
+      drawer.getSectionsToRender().forEach(function (s) {
+        var el = s.selector ? document.querySelector(s.selector) : document.getElementById(s.id);
+        if (el && state.sections[s.id]) el.innerHTML = drawer.getSectionInnerHTML(state.sections[s.id], s.selector);
+      });
+      var overlay = drawer.querySelector('#CartDrawer-Overlay');
+      if (overlay && drawer.close) overlay.addEventListener('click', drawer.close.bind(drawer));
+    };
+    var json = function (r) {
+      if (!r.ok) throw new Error('cart ' + r.status);
+      return r.json();
+    };
+    var getCart = function () {
+      return fetch(cartUrl, { credentials: 'same-origin', headers: { Accept: 'application/json' } }).then(json);
+    };
+    var write = function (body) {
+      var headers = { 'Content-Type': 'application/json', Accept: 'application/json' };
+      headers[OWN] = '1';
+      body.sections = 'cart-drawer,cart-icon-bubble';
+      body.sections_url = window.location.pathname;
+      return fetch(updateUrl, { method: 'POST', credentials: 'same-origin', headers: headers, body: JSON.stringify(body) }).then(json);
+    };
+
+    // Other apps' cart requests still open. This script writes only once
+    // they have all settled and the cart has been quiet for a moment.
+    var inflight = 0, timer = 0;
+    var later = function (wait) {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        if (inflight > 0) later(400); else sync();
+      }, wait || 700);
+    };
+    var settled = function () {
+      inflight = Math.max(0, inflight - 1);
+      later();
+    };
+    var busy = false, again = false, failures = 0;
+    var sync = function () {
+      if (!active()) return;
+      if (busy) { again = true; return; }
+      busy = true;
+      var rounds = 0;
+      var loop = function (cart) {
+        if (inflight > 0) { later(400); return null; }
+        var body = rounds++ < 3 ? plan(cart) : null;
+        if (!body) return null;
+        return write(body).then(function (state) { redraw(state); return state; }).then(loop);
+      };
+      // A write the cart refuses (a line key gone stale under another app's
+      // write) is tried again on a fresh read, three times at most in a row.
+      getCart().then(loop)
+        .then(function () { failures = 0; }, function () { if (++failures < 3) later(1500); })
+        .then(function () { busy = false; if (again) { again = false; later(); } });
+    };
+
+    // Which requests can change the cart: the AJAX cart endpoints, and cart
+    // mutations sent to the Storefront API.
+    var CART = /\/cart\/(add|change|update|clear)(\.js|\.json)?(\?|$)/;
+    var API = /\/api\/[^/?]+\/graphql(\.json)?(\?|$)/;
+    var touchesCart = function (url, body) {
+      url = String(url || '');
+      if (CART.test(url)) return true;
+      return API.test(url) && typeof body === 'string' && /mutation[\s\S]*\bcart[A-Z]/.test(body);
+    };
+    var isOwn = function (init) {
+      var h = init && init.headers;
+      return !!(h && (h[OWN] || (typeof h.get === 'function' && h.get(OWN))));
+    };
+    var nativeFetch = window.fetch;
+    window.fetch = function (input, init) {
+      var p = nativeFetch.apply(this, arguments);
+      var url = typeof input === 'string' ? input : (input && input.url) || '';
+      if (!isOwn(init) && touchesCart(url, init && init.body)) {
+        inflight++;
+        p.then(settled, settled);
+      }
+      return p;
+    };
+    var xhrOpen = XMLHttpRequest.prototype.open;
+    var xhrSend = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.open = function (method, url) {
+      this.fuel04Url = url;
+      return xhrOpen.apply(this, arguments);
+    };
+    XMLHttpRequest.prototype.send = function (body) {
+      if (touchesCart(this.fuel04Url, body)) {
+        inflight++;
+        this.addEventListener('loadend', settled);
+      }
+      return xhrSend.apply(this, arguments);
+    };
+    if (navigator.sendBeacon) {
+      var beacon = navigator.sendBeacon;
+      navigator.sendBeacon = function (url) {
+        var sent = beacon.apply(navigator, arguments);
+        if (CART.test(String(url || ''))) later(1000);
+        return sent;
+      };
+    }
+
+    // The testing tool can add the class after this has loaded and after the
+    // other apps' first cart calls, so if it is not there yet, the class on
+    // <html> (written by the testing tool, not by us) is watched until it
+    // arrives, and for thirty seconds after load at most.
+    var start = function () {
+      if (active()) { later(); return; }
+      if (root.getAttribute('data-fuel04-market') === 'off') return;
+      var watch = new MutationObserver(function () {
+        if (!active()) return;
+        watch.disconnect();
+        later();
+      });
+      watch.observe(root, { attributes: true, attributeFilter: ['class'] });
+      var end = function () { setTimeout(function () { watch.disconnect(); }, 30000); };
+      if (document.readyState === 'complete') end(); else window.addEventListener('load', end);
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+  })();
+</script>
+{%- endif -%}
