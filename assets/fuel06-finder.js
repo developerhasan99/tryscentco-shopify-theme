@@ -780,7 +780,12 @@
         .map((chip) => `<li class="fuel06-finder__chip fuel06-finder__chip--static">${escapeHtml(chip)}</li>`)
         .join('');
 
-      const noteLabels = (copy.f06NoteLabels || '').split(',').map((label) => label.trim());
+      // One label per element when the copy block has them: a translated
+      // list does not keep its commas, so it cannot be split afterwards.
+      const noteNodes = this.querySelectorAll('[data-f06-copy-note]');
+      const noteLabels = noteNodes.length
+        ? Array.from(noteNodes, (node) => node.textContent.trim())
+        : (copy.f06NoteLabels || '').split(',').map((label) => label.trim());
       const notes = (match.notes || []).map((note) => (note || '').trim());
       this.el('notes-block').hidden = !notes.some(Boolean);
       this.el('notes').innerHTML = notes

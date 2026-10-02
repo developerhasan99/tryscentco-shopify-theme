@@ -114,6 +114,27 @@
     data-f06-empty="{{ s.fuel06_empty | escape }}"
     data-f06-cart-error="{{ s.fuel06_cart_error | escape }}">
 
+    {%- comment -%}
+      The same strings again as text. The store's translation app translates text on the
+      page but not data attributes, so on the Danish, Norwegian and Finnish sites the
+      script reads these and falls back to the attributes above.
+    {%- endcomment -%}
+    <div hidden data-f06-copy>
+      <span data-f06-copy-key="f06BasedOn">{{ s.fuel06_based_on | escape }}</span>
+      <span data-f06-copy-key="f06InspiredPrefix">{{ s.fuel06_inspired_prefix | escape }}</span>
+      <span data-f06-copy-key="f06SaveLabel">{{ s.fuel06_save_label | escape }}</span>
+      <span data-f06-copy-key="f06LessSuffix">{{ s.fuel06_less_suffix | escape }}</span>
+      <span data-f06-copy-key="f06AddLabel">{{ s.fuel06_add_label | escape }}</span>
+      {%- assign f06_note_labels = s.fuel06_note_labels | split: ',' -%}
+      {%- for f06_note_label in f06_note_labels -%}
+        <span data-f06-copy-note>{{ f06_note_label | strip | escape }}</span>
+      {%- endfor -%}
+      <span data-f06-copy-key="f06RefNote">{{ s.fuel06_ref_note | escape }}</span>
+      <span data-f06-copy-key="f06RemoveLabel">{{ s.fuel06_remove_label | escape }}</span>
+      <span data-f06-copy-key="f06Empty">{{ s.fuel06_empty | escape }}</span>
+      <span data-f06-copy-key="f06CartError">{{ s.fuel06_cart_error | escape }}</span>
+    </div>
+
     {%- if mode == 'home' -%}
     {%- comment -%} Entry band, Figma 124:2178. {%- endcomment -%}
     <div class="fuel06-finder fuel06-finder--entry" data-f06-entry>
