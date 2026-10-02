@@ -105,7 +105,14 @@
         this.states[node.dataset.f06State] = node;
       });
 
-      this.copy = this.dataset;
+      // The strings arrive twice: as data attributes, and as text in the
+      // hidden copy block. The text wins, because the store's translation app
+      // translates text on the page and leaves data attributes in Swedish.
+      this.copy = Object.assign({}, this.dataset);
+      this.querySelectorAll('[data-f06-copy-key]').forEach((node) => {
+        const text = node.textContent.trim();
+        if (text) this.copy[node.dataset.f06CopyKey] = text;
+      });
       this.index = null;
       this.indexPromise = null;
       this.recent = this.readRecent();
@@ -929,7 +936,14 @@
 
       fetch(this.dataset.f06CartAdd, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        // X-Requested-With is the header the theme's own product form sends.
+        // Without it the translated market sites (Danish, Norwegian, Finnish)
+        // answer this address with a redirect, and the add is lost on the way.
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
         body: JSON.stringify({
           items: [{ id: Number(variantId), quantity: 1 }],
           // The same section refresh the theme's own cart code asks for, so
