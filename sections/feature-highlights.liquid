@@ -35,6 +35,47 @@
   </div>
 </div>
 
+{%- comment -%}
+  FUEL_06: the Search & Compare fragrance finder rides inside this section
+  because templates/index.json sits at Shopify's 25 section cap and a new
+  homepage section is impossible without removing client content. The design
+  puts the band immediately after this benefits row and before the Trustpilot
+  block, which is exactly here. Same approach as the FUEL_05 home row.
+
+  Homepage only. This section file is also used by thirteen product templates
+  and the finder must not appear on any of them: request.page_type carries the
+  gate, and the homepage section id is the belt to those braces, because the
+  editor bot rewrites templates/index.json from editor state several times a
+  day and a section deleted and re-added in the editor comes back under a new
+  id. Either test alone keeps the band alive on the homepage, and neither can
+  ever put it on a product page.
+
+  It ships hidden. Nothing below is visible until Intelligems puts
+  ab-f06-finder on the html element, so with the test off the homepage renders
+  exactly as it does today.
+
+  No new block type is added to this section: the loop above renders every
+  block as a perk with no case guard, so a FUEL_06 block would draw a broken
+  perk tile alongside the finder. The copy lives in section settings instead,
+  which also means the Swedish translation is a theme editor edit rather than
+  a deploy.
+
+  Remove this block with the FUEL_06 cleanup.
+{%- endcomment -%}
+{%- if request.page_type == 'index' or section.id contains 'feature_highlights_wfUacV' -%}
+  {% render 'fuel06-finder', section: section, mode: 'assets' %}
+  {% render 'fuel06-finder', section: section, mode: 'home' %}
+{%- elsif request.page_type == 'product' -%}
+  {%- comment -%}
+    Product page (2026-09-30): the dialog alone, opened by the link that
+    snippets/reactive-variant-selector.liquid renders under the buy button. This section sits
+    on every perfume template, so the dialog and its copy travel with it; a
+    template without it has no dialog and the link stays hidden.
+  {%- endcomment -%}
+  {% render 'fuel06-finder', section: section, mode: 'assets' %}
+  {% render 'fuel06-finder', section: section, mode: 'dialog' %}
+{%- endif -%}
+
 {% schema %}
   {
     "name": "Feature Highlights",
@@ -65,6 +106,231 @@
         "unit": "px",
         "label": "t:sections.all.padding.padding_bottom",
         "default": 36
+      }, {
+        "type": "header",
+        "content": "FUEL_06 fragrance finder"
+      }, {
+        "type": "paragraph",
+        "content": "Homepage only, and hidden until the A/B test is switched on. Every default below is a Swedish draft of the wording in the design and is waiting on Korana's approval. No prices are set here: the finder reads them from each product."
+      }, {
+        "type": "text",
+        "id": "fuel06_heading",
+        "label": "Band heading",
+        "default": "Hitta din designerdoft för mindre"
+      }, {
+        "type": "text",
+        "id": "fuel06_heading_accent",
+        "label": "Heading word in green",
+        "info": "The first time this word appears in the band heading it is set in green italics. Leave it empty for a plain heading.",
+        "default": "mindre"
+      }, {
+        "type": "text",
+        "id": "fuel06_placeholder",
+        "label": "Search placeholder",
+        "default": "t.ex. YSL Black Opium, Dior"
+      }, {
+        "type": "text",
+        "id": "fuel06_cta",
+        "label": "Band button",
+        "default": "Hitta min match"
+      }, {
+        "type": "text",
+        "id": "fuel06_modal_title",
+        "label": "Finder title",
+        "default": "Hitta din designerdoft för mindre"
+      }, {
+        "type": "text",
+        "id": "fuel06_search_label",
+        "label": "Search field label",
+        "default": "Sök en parfym du redan älskar"
+      }, {
+        "type": "text",
+        "id": "fuel06_popular_label",
+        "label": "Popular searches label",
+        "default": "Populära sökningar"
+      }, {
+        "type": "textarea",
+        "id": "fuel06_popular_terms",
+        "label": "Popular searches",
+        "info": "Separated by commas. Replace with the real top search terms from the Searchanise report.",
+        "default": "Dior Sauvage, Baccarat Rouge 540, Creed Aventus, YSL Black Opium, Bleu de Chanel, JPG Le Male"
+      }, {
+        "type": "text",
+        "id": "fuel06_how_label",
+        "label": "How it works label",
+        "default": "Så fungerar det"
+      }, {
+        "type": "textarea",
+        "id": "fuel06_steps",
+        "label": "How it works steps",
+        "info": "One step per line. They are numbered automatically.",
+        "default": "Sök en doft du redan älskar\nVi hittar den TryScent-doft som ligger närmast\nJämför doften och vad du sparar"
+      }, {
+        "type": "text",
+        "id": "fuel06_suggestions_label",
+        "label": "Suggestions label",
+        "default": "Förslag"
+      }, {
+        "type": "text",
+        "id": "fuel06_recent_label",
+        "label": "Recent searches label",
+        "default": "Senaste sökningar"
+      }, {
+        "type": "text",
+        "id": "fuel06_clear_label",
+        "label": "Clear label",
+        "default": "Rensa"
+      }, {
+        "type": "text",
+        "id": "fuel06_close_label",
+        "label": "Close button label",
+        "info": "Read out by screen readers, not shown on screen.",
+        "default": "Stäng"
+      }, {
+        "type": "text",
+        "id": "fuel06_loading_title",
+        "label": "Loading title",
+        "default": "Vi letar upp din närmaste match ..."
+      }, {
+        "type": "text",
+        "id": "fuel06_loading_sub",
+        "label": "Loading subtitle",
+        "default": "Vi jämför doftprofil, noter och kundfavoriter."
+      }, {
+        "type": "textarea",
+        "id": "fuel06_loading_note",
+        "label": "Loading footnote",
+        "default": "Vår matchningsteknik går igenom tusentals recensioner och doftdata för att hitta din perfekta match."
+      }, {
+        "type": "text",
+        "id": "fuel06_result_title",
+        "label": "Result title",
+        "default": "Din bästa match"
+      }, {
+        "type": "text",
+        "id": "fuel06_based_on",
+        "label": "Result subtitle prefix",
+        "info": "The fragrance the shopper searched for is added after this.",
+        "default": "Baserat på"
+      }, {
+        "type": "text",
+        "id": "fuel06_inspired_prefix",
+        "label": "Inspired by prefix",
+        "info": "Never change this to a claim that our perfume is the same as the designer one.",
+        "default": "Inspirerad av"
+      }, {
+        "type": "text",
+        "id": "fuel06_scent_label",
+        "label": "Scent profile label",
+        "default": "Doftprofil"
+      }, {
+        "type": "text",
+        "id": "fuel06_notes_label",
+        "label": "Key notes label",
+        "default": "Nyckelnoter"
+      }, {
+        "type": "text",
+        "id": "fuel06_note_labels",
+        "label": "Note row labels",
+        "info": "Three labels separated by commas, in this order: top, heart, base. Kept short so they fit the 64px label column.",
+        "default": "Topp, Mellan, Bas"
+      }, {
+        "type": "text",
+        "id": "fuel06_brand_label",
+        "label": "Our column label",
+        "default": "TryScent"
+      }, {
+        "type": "text",
+        "id": "fuel06_brand_note",
+        "label": "Our column note",
+        "info": "Concentration of our own bottle. It is printed after the size the variant carries, so \"100ML\" and \"Extrait de parfum\" read as \"100ML / Extrait de parfum\".",
+        "default": "Extrait de parfum"
+      }, {
+        "type": "text",
+        "id": "fuel06_ref_note",
+        "label": "Designer column note",
+        "info": "Size and concentration of the designer bottle the price refers to. Change it as soon as one figure cannot stand for every fragrance.",
+        "default": "100 ml / Eau de parfum"
+      }, {
+        "type": "text",
+        "id": "fuel06_save_label",
+        "label": "Savings column label",
+        "default": "Du sparar"
+      }, {
+        "type": "text",
+        "id": "fuel06_less_suffix",
+        "label": "Savings percentage suffix",
+        "info": "The percentage is worked out from the product's own prices and printed before this word.",
+        "default": "billigare"
+      }, {
+        "type": "text",
+        "id": "fuel06_reviews_noun",
+        "label": "Reviews word",
+        "info": "Printed after the number of reviews, as in \"(5,432 reviews)\".",
+        "default": "reviews"
+      }, {
+        "type": "text",
+        "id": "fuel06_remove_label",
+        "label": "Remove recent search label",
+        "info": "Read out by screen readers on the cross beside a remembered search, not shown on screen.",
+        "default": "Ta bort"
+      }, {
+        "type": "text",
+        "id": "fuel06_similar_label",
+        "label": "Similar perfumes label",
+        "default": "Liknande parfymer du kan gilla"
+      }, {
+        "type": "text",
+        "id": "fuel06_add_label",
+        "label": "Add to cart label",
+        "info": "The price is added after this, from the product itself.",
+        "default": "Lägg i kundvagnen"
+      }, {
+        "type": "text",
+        "id": "fuel06_view_label",
+        "label": "View product label",
+        "default": "Visa hela produktsidan"
+      }, {
+        "type": "text",
+        "id": "fuel06_again_label",
+        "label": "Search again label",
+        "default": "Inte rätt doft? Sök igen"
+      }, {
+        "type": "text",
+        "id": "fuel06_added_title",
+        "label": "Added to bag title",
+        "default": "Tillagd i kundvagnen"
+      }, {
+        "type": "text",
+        "id": "fuel06_also_label",
+        "label": "You may also like label",
+        "default": "Du kanske också gillar"
+      }, {
+        "type": "text",
+        "id": "fuel06_bag_label",
+        "label": "View bag label",
+        "default": "Visa kundvagn"
+      }, {
+        "type": "text",
+        "id": "fuel06_keep_label",
+        "label": "Keep exploring label",
+        "default": "Fortsätt handla"
+      }, {
+        "type": "text",
+        "id": "fuel06_noresult_title",
+        "label": "No result title",
+        "info": "The design has no no-result frame. This wording is a placeholder for Omar and Korana to replace.",
+        "default": "Ingen match ännu"
+      }, {
+        "type": "text",
+        "id": "fuel06_empty",
+        "label": "No result text",
+        "default": "Vi hittade inte den doften. Prova ett annat namn, eller välj en av de populära sökningarna."
+      }, {
+        "type": "text",
+        "id": "fuel06_cart_error",
+        "label": "Add to cart error",
+        "default": "Något gick fel. Försök igen."
       }
     ],
     "blocks": [
