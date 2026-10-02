@@ -113,6 +113,13 @@
         const text = node.textContent.trim();
         if (text) this.copy[node.dataset.f06CopyKey] = text;
       });
+      // The popular chips are designer names, and the translation app
+      // rewrites their visible text ("YSL Svart Opioid" on the Norwegian
+      // site). It leaves the attribute alone, so the name is printed back
+      // from there.
+      this.querySelectorAll('.fuel06-finder__popular [data-f06-pick]').forEach((chip) => {
+        chip.textContent = chip.dataset.f06Pick;
+      });
       this.index = null;
       this.indexPromise = null;
       this.recent = this.readRecent();
@@ -951,10 +958,13 @@
         },
         body: JSON.stringify({
           items: [{ id: Number(variantId), quantity: 1 }],
-          // The same section refresh the theme's own cart code asks for, so
-          // the header count moves. Nothing else on the page is re-rendered
-          // and no app widget is touched.
-          sections: 'cart-icon-bubble',
+          // The same sections the theme's own buy button asks for
+          // (assets/product-form.js), so the header count and the cart
+          // drawer are redrawn from this one answer.
+          sections: this.cartSections()
+            .map((section) => section.id)
+            .join(','),
+          sections_url: window.location.pathname,
         }),
       })
         .then((response) => response.json())
@@ -963,7 +973,7 @@
             this.showError(data.description || data.message || '');
             return;
           }
-          this.refreshCartBubble(data.sections);
+          this.refreshCart(data.sections);
           this.renderAdded(product);
           this.show('added');
         })
@@ -975,14 +985,38 @@
         });
     }
 
-    refreshCartBubble(sections) {
-      if (!sections || !sections['cart-icon-bubble']) return;
-      const target = document.getElementById('shopify-section-cart-icon-bubble');
-      if (!target) return;
-      const parsed = new DOMParser()
-        .parseFromString(sections['cart-icon-bubble'], 'text/html')
-        .querySelector('.shopify-section');
-      if (parsed) target.innerHTML = parsed.innerHTML;
+    // What the theme's cart drawer redraws after an add, read off the drawer
+    // itself (assets/cart-drawer.js) so the two can never name different
+    // sections. A page without the drawer has nothing to redraw.
+    cartSections() {
+      const drawer = document.querySelector('cart-drawer');
+      return drawer && typeof drawer.getSectionsToRender === 'function' ? drawer.getSectionsToRender() : [];
+    }
+
+    // The drawer's own renderContents() does this and then opens the drawer.
+    // The finder shows its own confirmation, so the drawer is redrawn and
+    // left closed: without this the header count stayed empty and the drawer
+    // read "your cart is empty" until the next page load.
+    refreshCart(sections) {
+      const drawer = document.querySelector('cart-drawer');
+      if (!sections || !drawer) return;
+
+      this.cartSections().forEach((section) => {
+        const target = section.selector
+          ? document.querySelector(section.selector)
+          : document.getElementById(section.id);
+        if (!target || !sections[section.id]) return;
+        const parsed = new DOMParser()
+          .parseFromString(sections[section.id], 'text/html')
+          .querySelector(section.selector || '.shopify-section');
+        if (parsed) target.innerHTML = parsed.innerHTML;
+      });
+
+      drawer.classList.remove('is-empty');
+      // The overlay is part of what was just replaced, so its close handler
+      // goes back on, the way renderContents() puts it back.
+      const overlay = drawer.querySelector('#CartDrawer-Overlay');
+      if (overlay) overlay.addEventListener('click', () => drawer.close());
     }
 
     /* --------------------------------------------------------- recent searches */
