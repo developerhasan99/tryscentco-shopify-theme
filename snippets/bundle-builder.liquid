@@ -15,6 +15,8 @@
 {% assign product_count = product.metafields.custom.choose_your_fragrances_options %}
 {% assign dropdown_ml = product.metafields.custom.select_bundle_dropdown_ml | default: "50" %}
 {% assign bundle_ml = dropdown_ml | append: "ml" %}
+{%- comment -%} Normalised size token ("50", "50ml", "50 ML" -> "50ml"), compared against variant titles normalised the same way {%- endcomment -%}
+{% assign bundle_size_token = dropdown_ml | append: '' | downcase | strip | replace: ' ', '' | remove: 'ml' | append: 'ml' %}
 {% assign selected_variant = product.selected_or_first_available_variant %}
 {% assign fixed_bundle_products = product.metafields.custom.fixed_bundle_products.value %}
 
@@ -146,7 +148,7 @@
 <script>
   document.addEventListener('alpine:init', function() {
     Alpine.store('bundleBuilder', {
-      selectedVariant: "{{ bundle_ml }}",
+      selectedVariant: {{ bundle_size_token | json }},
       bundleLength: {{ product_count }},
       showModal: false,
       activeCategory: "All",
@@ -199,6 +201,23 @@
           {% paginate bundle_collection.products by 250 %}
             {% for bundle_product in bundle_collection.products %}
               {% liquid
+                # Find this product's bundle-size variant; skip the product when it has none or it is out of stock
+                assign bundle_variant = nil
+                for variant in bundle_product.variants
+                  assign variant_token = variant.title | downcase | strip | replace: ' ', ''
+                  if variant_token == bundle_size_token
+                    assign bundle_variant = variant
+                    break
+                  endif
+                endfor
+                if bundle_variant == blank or bundle_variant.available == false
+                  continue
+                endif
+                # available stays true for tracked variants set to "continue selling when out of stock"
+                if bundle_variant.inventory_management == 'shopify' and bundle_variant.inventory_quantity < 1
+                  continue
+                endif
+
                 assign collection_handles = ''
                 for collection in bundle_product.collections
                   assign collection_handles = collection_handles | append: collection.handle
@@ -217,22 +236,16 @@
                 tags: {{ bundle_product.tags | json }},
                 collections: "{{ collection_handles }}",
                 variants: {
-                  {% for variant in bundle_product.variants %}
-                    {% unless variant.available %}{% continue %}{% endunless %}
-                    "{{ variant.title | downcase |  replace: ' ml', 'ml' }}": {
-                      title: "{{ variant.title }}",
-                      id: "{{ variant.id }}"
-                    },
-                  {% endfor %}
+                  {{ bundle_size_token | json }}: {
+                    title: {{ bundle_variant.title | json }},
+                    id: "{{ bundle_variant.id }}"
+                  }
                 }
               },
             {% endfor %}
           {% endpaginate %}
         {% endfor %}
-      ]
-        // Drop products whose bundle-size variant is out of stock (unavailable variants are skipped above)
-        .filter(product => product.variants[{{ bundle_ml | downcase | json }}])
-        .map(product => [product.id, product])).values()),
+      ].map(product => [product.id, product])).values()),
       addRemoveProduct(product) {
         if (this.selectedProducts.length < {{ product_count }} && !this.isProductSelected(product.id)) {
           product.variant = product.variants[this.selectedVariant]
@@ -257,7 +270,12 @@
         // Set loading state
         this.addingToCart = true;
         this.cartError = '';
-        
+
+        // Products pushed directly (e.g. quiz prefill) have no variant set yet
+        this.selectedProducts.forEach(product => {
+          product.variant = product.variant || product.variants[this.selectedVariant];
+        });
+
         // Create properties object with bundle items
         const properties = {
           "_bundle_items": this.selectedProducts.map(product => 
