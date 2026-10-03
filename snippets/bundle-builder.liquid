@@ -125,6 +125,14 @@
       </svg>
     </div>
   </button>
+  <p
+    x-data
+    x-show="$store.bundleBuilder.cartError"
+    x-text="$store.bundleBuilder.cartError"
+    role="alert"
+    aria-live="assertive"
+    class="!mt-2 !mb-0 text-sm text-center text-red-600"
+  ></p>
 </div>
 
 <div class="!my-6">
@@ -167,6 +175,7 @@
       ],
       searchText: "",
       addingToCart: false,
+      cartError: '',
       selectedProducts: [
         {% if product.tags contains 'fixed_bundle' %}
           {% for fixed_var in fixed_bundle_products %}
@@ -243,6 +252,7 @@
       doATCandCheckout() {
         // Set loading state
         this.addingToCart = true;
+        this.cartError = '';
         
         // Create properties object with bundle items
         const properties = {
@@ -272,19 +282,24 @@
           },
           body: JSON.stringify(items),
         })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
+        .then(async response => {
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok || data.status) {
+            // Shopify returns { status, message, description } on failure
+            const error = new Error(data.description || data.message || `Request failed with status ${response.status}`);
+            error.response = data;
+            throw error;
           }
-          return response.json();
+          return data;
         })
         .then(() => {
           // Redirect to cart after successful addition
           window.location.href = '/checkout';
         })
         .catch(error => {
-          console.error('Error adding to cart:', error);
-          // Handle error (e.g., show error message to user)
+          console.error('Error adding to cart:', error, error.response || '');
+          this.cartError = (error.response && (error.response.description || error.response.message))
+            || {{ 'sections.cart.cart_error' | t | json }};
         })
         .finally(() => {
           this.addingToCart = false;
