@@ -218,6 +218,7 @@
                 collections: "{{ collection_handles }}",
                 variants: {
                   {% for variant in bundle_product.variants %}
+                    {% unless variant.available %}{% continue %}{% endunless %}
                     "{{ variant.title | downcase |  replace: ' ml', 'ml' }}": {
                       title: "{{ variant.title }}",
                       id: "{{ variant.id }}"
@@ -228,7 +229,10 @@
             {% endfor %}
           {% endpaginate %}
         {% endfor %}
-      ].map(product => [product.id, product])).values()),
+      ]
+        // Drop products whose bundle-size variant is out of stock (unavailable variants are skipped above)
+        .filter(product => product.variants[{{ bundle_ml | downcase | json }}])
+        .map(product => [product.id, product])).values()),
       addRemoveProduct(product) {
         if (this.selectedProducts.length < {{ product_count }} && !this.isProductSelected(product.id)) {
           product.variant = product.variants[this.selectedVariant]
