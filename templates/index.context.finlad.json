@@ -14,6 +14,7 @@
   "parent": "index.json",
   "sections": {
     "homepage_hero_GDeBtq": {
+      "disabled": true,
       "settings": {
         "title": "Palkkapäiväale – 30% alennus koko ostoskorista",
         "subtitle": "Osta suosikkituoksusi entistäkin edullisemmilla hinnoilla! Ja säästä vielä enemmän pakettitarjouksilla!",
@@ -21,6 +22,14 @@
         "button_link": "https://tryscent.co/apps/quiz/hvJ2kT",
         "secondary_button_text": "Mestomyyty",
         "secondary_button_link": "https://tryscent.co/fi-fi/collections/4-2"
+      },
+      "blocks": {}
+    },
+    "home_hero_banner_qmaB3G": {
+      "disabled": false,
+      "settings": {
+        "image": "shopify://shop_images/MAGYX_Deal_Header_-_Finnish_-_Desktop.png",
+        "mobile_image": "shopify://shop_images/MAGYX_Deal_Header_-_Finnish_-_Mobile.png"
       },
       "blocks": {}
     }
