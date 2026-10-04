@@ -14,10 +14,19 @@
   "parent": "index.json",
   "sections": {
     "homepage_hero_GDeBtq": {
+      "disabled": true,
       "settings": {
         "title": "Lønningsdagsalg – 30% rabatt på hele handlekurven",
         "subtitle": "Kjøp favorittduftene dine til enda bedre priser! Og spar enda mer med pakketilbud!",
         "button_text": "Finn din favorittparfyme"
+      },
+      "blocks": {}
+    },
+    "home_hero_banner_qmaB3G": {
+      "disabled": false,
+      "settings": {
+        "image": "shopify://shop_images/MAGYX_Deal_Header_-_Norwegian_-_Desktop.png",
+        "mobile_image": "shopify://shop_images/MAGYX_Deal_Header_-_Norwegian_-_Mobile.png"
       },
       "blocks": {}
     }
