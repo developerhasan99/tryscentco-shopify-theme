@@ -39,6 +39,14 @@
           }
         }
       }
+    },
+    "home_hero_banner_qmaB3G": {
+      "disabled": true,
+      "settings": {
+        "image": "shopify://shop_images/TryScent_Autumn_Header_-_Swedish_-_Desktop.png",
+        "mobile_image": "shopify://shop_images/TryScent_Autumn_Header_-_Swedish_-_Mobile.png"
+      },
+      "blocks": {}
     }
   }
 }
