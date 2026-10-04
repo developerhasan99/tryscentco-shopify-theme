@@ -14,10 +14,19 @@
   "parent": "index.json",
   "sections": {
     "homepage_hero_GDeBtq": {
+      "disabled": true,
       "settings": {
         "background_image": "shopify://shop_images/MAGYX_Site_Header.webp",
         "mobile_background_image": "shopify://shop_images/MAGYX_Site_Header_Mobile_A.webp",
         "title": "Lönedagsrea – 30% rabatt på hela varukorgen"
+      },
+      "blocks": {}
+    },
+    "home_hero_banner_qmaB3G": {
+      "disabled": false,
+      "settings": {
+        "image": "shopify://shop_images/MAGYX_Deal_Header_-_Swedish_-_Desktop_1_1.png",
+        "mobile_image": "shopify://shop_images/MAGYX_Deal_Header_-_Swedish_-_Mobile.png"
       },
       "blocks": {}
     },
@@ -39,14 +48,6 @@
           }
         }
       }
-    },
-    "home_hero_banner_qmaB3G": {
-      "disabled": true,
-      "settings": {
-        "image": "shopify://shop_images/TryScent_Autumn_Header_-_Swedish_-_Desktop.png",
-        "mobile_image": "shopify://shop_images/TryScent_Autumn_Header_-_Swedish_-_Mobile.png"
-      },
-      "blocks": {}
     }
   }
 }
