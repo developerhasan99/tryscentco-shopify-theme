@@ -26,7 +26,8 @@
       "disabled": false,
       "settings": {
         "image": "shopify://shop_images/MAGYX_Deal_Header_-_Norwegian_-_Desktop.png",
-        "mobile_image": "shopify://shop_images/MAGYX_Deal_Header_-_Norwegian_-_Mobile.png"
+        "mobile_image": "shopify://shop_images/MAGYX_Deal_Header_-_Norwegian_-_Mobile.png",
+        "link": "https://tryscent.co/no-no/collections/best-sellers"
       },
       "blocks": {}
     }
