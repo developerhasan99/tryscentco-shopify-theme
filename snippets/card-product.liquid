@@ -183,11 +183,11 @@ TODO: Show bestseller tag if the product contains "bestseller" tag.
               {%- endif -%}
             </div>
             {% unless card_product.tags contains 'Bundle_Price_Show' %}
-              {%- if settings.product_card_promo_text != blank -%}
+              {%- if settings.product_card_promo_text != blank and false -%}
                 <div class="card__promo-marquee absolute left-0 right-0 bottom-0 bg-[#137c44] text-white" aria-label="{{ settings.product_card_promo_text }}">
                   <div class="card__promo-marquee-rail">
                     <div class="card__promo-marquee-group">
-                      <span class="card__promo-marquee-text">{{ settings.product_card_promo_text }}</span>
+                      <span class="card__promo-marquee-text">{{ settings.x }}</span>
                       <span class="card__promo-marquee-dot" aria-hidden="true"></span>
                       <span class="card__promo-marquee-text">{{ settings.product_card_promo_text }}</span>
                       <span class="card__promo-marquee-dot" aria-hidden="true"></span>
