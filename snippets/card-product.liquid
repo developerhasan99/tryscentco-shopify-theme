@@ -328,11 +328,15 @@ TODO: Show bestseller tag if the product contains "bestseller" tag.
               {% if card_product.compare_at_price > card_product.price %}
                 {% assign discount_percent = card_product.compare_at_price | minus: card_product.price | times: 100.0 | divided_by: card_product.compare_at_price | round %}
               {% endif %}
-              <span class="inline-block bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
-                {{ discount_percent }}% <span class="discount_off_text">Av</span>
+              <span class="inline-block bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded">
+                <svg class="size-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c.5 3.5-1.5 5.5-3 7.5C7.5 11.4 6 13.3 6 16a6 6 0 0 0 12 0c0-2.6-1.2-4.6-2.6-6.2-.3 1.5-1.1 2.6-2.4 3.2.4-3.8-.2-7.8-1-11z"></path></svg> BOGO
               </span>
             {% endif %}
               </div>
+            <div class="mt-2 flex flex-col gap-1 font-bold tracking-normal text-[#c8202f] text-sm leading-tight">
+              <p class="m-0 !text-[#c8202f]">Köp 2, få 2 gratis</p>
+              <p class="m-0 !text-[#c8202f]">Köp 4, få 4 gratis</p>
+            </div>
             
             {%- if card_product.quantity_price_breaks_configured? -%}
               {% if card_product.variants_count == 1 and quick_add == 'bulk' %}
