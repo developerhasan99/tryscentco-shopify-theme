@@ -134,7 +134,7 @@
     "show_cart_note": false,
     "cart_drawer_collection": "cart-upsell",
     "cart_color_scheme": "scheme-1",
-    "product_card_promo_text": "",
+    "product_card_promo_text": "Köp 1, få 1 gratis",
     "sections": {
       "main-password-header": {
         "type": "main-password-header",
