@@ -134,7 +134,7 @@
     "show_cart_note": false,
     "cart_drawer_collection": "cart-upsell",
     "cart_color_scheme": "scheme-1",
-    "product_card_promo_text": "1+1 gratis · 2+2 gratis · 3+3 gratis · 4+4 gratis",
+    "product_card_promo_text": "1+1 gratis\n2+2 gratis\n3+3 gratis\n4+4 gratis",
     "sections": {
       "main-password-header": {
         "type": "main-password-header",
