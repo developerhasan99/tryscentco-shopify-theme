@@ -426,7 +426,7 @@
                       {% endif %}
                     </div>
                   {%- endif -%}  
-                    <h1 class="font-[700] leading-tight !tracking-normal text-xl md:text-3xl {% if product.tags contains 'bestseller' or product.tags contains 'onsale' %}pt-8{% endif %}">
+                    <h1 class="font-[700] leading-tight !tracking-normal font-serif text-4xl md:text-5xl {% if product.tags contains 'bestseller' or product.tags contains 'onsale' %}pt-8{% endif %}">
                       {{ product.title | split: ' - ' | last }}
                     </h1>
                 </div>
