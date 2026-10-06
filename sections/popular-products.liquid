@@ -24,15 +24,15 @@
     <div class="swiper !pt-14 -mt-14" id="slider-{{ section.id }}">
       <div class="swiper-wrapper">
         {% for product in section.settings.collection.products limit: 8 %}
-          <div class="swiper-slide max-w-[260px]">
+          <div class="swiper-slide max-w-[260px] !h-auto">
             {% render 'product-card'
               , product: product
             %}
           </div>
         {% endfor %}
       </div>
-      <button class="swiper-button-prev !top-6 !left-[calc(100%-85px)] border border-solid border-gray-200 rounded-full !flex bg-white !size-9 [&]:after:!text-base [&]:after:text-black disabled:!pointer-events-auto" aria-label="Previous"></button>
-      <button class="swiper-button-next !top-6 !right-0 border border-solid border-gray-200 rounded-full !flex bg-white !size-9 [&]:after:!text-base [&]:after:text-black disabled:!pointer-events-auto" aria-label="Next"></button>
+      <button class="swiper-button-prev !top-6 !left-[calc(100%-85px)] border border-solid border-gray-200 rounded-full !flex bg-white !size-9 [&]:after:!text-base [&]:after:text-black disabled:!pointer-events-auto" aria-label="Föregående"></button>
+      <button class="swiper-button-next !top-6 !right-0 border border-solid border-gray-200 rounded-full !flex bg-white !size-9 [&]:after:!text-base [&]:after:text-black disabled:!pointer-events-auto" aria-label="Nästa"></button>
     </div>
     <div class="text-center mt-6">
       <a href="{{ section.settings.button_link }}" class="text-black uppercase tracking-wider">{{ section.settings.button_text }}</a>

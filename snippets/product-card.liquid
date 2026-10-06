@@ -1,11 +1,11 @@
-<a href="{{ product.url }}" class="flex flex-col bg-white p-4 shadow-sm rounded-lg relative h-full no-underline text-black">
+<a href="{{ product.url }}" class="flex flex-col bg-white p-4 rounded-lg border border-solid border-gray-200 relative h-full box-border no-underline text-black">
   {% if product.tags contains 'bestseller' %}
     <div class="absolute z-10 top-3 left-4 flex gap-4">
         <div class="bg-[#137c44] text-white px-2 py-1 text-xs rounded-full flex items-center gap-1">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star">
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
           </svg>
-          <span>Bestseller</span>
+          <span>Bästsäljare</span>
         </div>
     </div>
   {% endif %}
@@ -47,7 +47,7 @@
   </h3>
 
   {% if product.metafields.custom.inspiration != blank %}
-    <h4 class="text-base tracking-normal my-0 text-gray-700 leading-snug">Inspiriert von {{ product.metafields.custom.inspiration.value.name }}</h4>
+    <h4 class="text-base tracking-normal my-0 text-gray-700 leading-snug">Inspirerad av {{ product.metafields.custom.inspiration.value.name }}</h4>
     <p class="text-sm my-0 tracking-tight italic text-gray-500">Om du gillade {{ product.metafields.custom.inspiration.value.name }} kommer du att älska den här.</p>
   {% endif %}
 
@@ -70,7 +70,7 @@
         <svg class="size-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M12 2c.5 3.5-1.5 5.5-3 7.5C7.5 11.4 6 13.3 6 16a6 6 0 0 0 12 0c0-2.6-1.2-4.6-2.6-6.2-.3 1.5-1.1 2.6-2.4 3.2.4-3.8-.2-7.8-1-11z"></path>
         </svg>
-        BOGO
+        1+1 gratis
       </span>
     {% endif %}
   </div>
@@ -79,7 +79,7 @@
   {% endunless %}
   <div class="mt-auto">
     <span class="hover:bg-[#17803d] bg-[#146b32] text-white uppercase text-sm font-semibold tracking-[2px] py-3 px-4 rounded-lg no-underline text-center block">
-      Duft ansehen
+      Se doften
     </span>
   </div>
 </a>
