@@ -174,6 +174,10 @@
   top: 10px;
 }
 
+.top-3 {
+  top: 12px;
+}
+
 .top-4 {
   top: 16px;
 }
@@ -315,6 +319,11 @@
 .my-2 {
   margin-top: 8px;
   margin-bottom: 8px;
+}
+
+.my-3 {
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
 
 .my-4 {
@@ -548,6 +557,10 @@
   margin-top: 44px;
 }
 
+.mt-auto {
+  margin-top: auto;
+}
+
 .line-clamp-1 {
   overflow: hidden;
   display: -webkit-box;
@@ -699,6 +712,11 @@
   height: 12px;
 }
 
+.size-3\.5 {
+  width: 14px;
+  height: 14px;
+}
+
 .size-32 {
   width: 128px;
   height: 128px;
@@ -730,11 +748,6 @@
 }
 
 .size-\[14px\] {
-  width: 14px;
-  height: 14px;
-}
-
-.size-3\.5 {
   width: 14px;
   height: 14px;
 }
@@ -1947,9 +1960,18 @@
   background-color: rgb(219 234 254 / var(--tw-bg-opacity, 1));
 }
 
+.bg-blue-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(239 246 255 / var(--tw-bg-opacity, 1));
+}
+
 .bg-blue-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(59 130 246 / var(--tw-bg-opacity, 1));
+}
+
+.bg-blue-500\/10 {
+  background-color: rgb(59 130 246 / 0.1);
 }
 
 .bg-gray-100 {
@@ -2220,6 +2242,11 @@
   padding-right: 0px;
 }
 
+.px-1\.5 {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
 .px-2 {
   padding-left: 8px;
   padding-right: 8px;
@@ -2328,11 +2355,6 @@
 .py-\[2px\] {
   padding-top: 2px;
   padding-bottom: 2px;
-}
-
-.px-1\.5 {
-  padding-left: 6px;
-  padding-right: 6px;
 }
 
 .\!pb-3 {
@@ -2757,6 +2779,10 @@
   letter-spacing: 0.2em;
 }
 
+.tracking-\[2px\] {
+  letter-spacing: 2px;
+}
+
 .tracking-normal {
   letter-spacing: 0em;
 }
@@ -2932,6 +2958,16 @@
 .text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity, 1));
+}
+
+.text-blue-500 {
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity, 1));
+}
+
+.text-blue-600 {
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity, 1));
 }
 
 .text-gray-200 {
@@ -3198,6 +3234,11 @@
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+.blur {
+  --tw-blur: blur(8px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .drop-shadow {

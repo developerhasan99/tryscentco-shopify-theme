@@ -1709,10 +1709,10 @@
     "name": "Custom Texts",
     "settings": [
       {
-        "type": "text",
+        "type": "textarea",
         "id": "product_card_promo_text",
         "label": "Product Card promo text",
-        "info": "Leave empty to hide this text on product cards."
+        "info": "One message per line. Leave empty to hide this text on product cards."
       }
     ]
   }

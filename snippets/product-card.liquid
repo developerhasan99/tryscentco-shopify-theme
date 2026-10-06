@@ -1,0 +1,90 @@
+<div class="flex flex-col bg-white p-4 shadow-sm rounded-lg relative h-full">
+  {% if product.tags contains 'bestseller' or product.tags contains 'onsale' %}
+    <div class="absolute top-3 left-4 flex gap-4">
+      {% if product.tags contains 'bestseller' %}
+        <div class="bg-blue-50 text-blue-600 px-2 py-1 text-xs rounded-full flex items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span>Bestseller</span>
+        </div>
+      {% elsif product.tags contains 'onsale' %}
+        <div class="bg-red-50 text-red-600 px-2 py-1 text-xs rounded-full">⚡ Angebot</div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <a href="{{ product.url }}" class="flex relative">
+    <img
+      class="w-full h-auto"
+      src="{{ product.images.first | image_url: width: 300 }}"
+      alt="{{ product.title }}"
+      height="{{ product.images.first.height }}"
+      width="{{ product.images.first.width }}"
+    >
+    {% unless product.tags contains 'Bundle_Price_Show' %}
+      <div class="card__promo-marquee absolute left-0 right-0 bottom-0 bg-[#137c44] text-white" aria-label="30 % Rabatt">
+        <div class="card__promo-marquee-rail">
+          <div class="card__promo-marquee-group">
+            <span class="card__promo-marquee-text">1 kaufen, 1 gratis dazu!</span>
+            <span class="card__promo-marquee-dot" aria-hidden="true"></span>
+            <span class="card__promo-marquee-text">1 kaufen, 1 gratis dazu!</span>
+            <span class="card__promo-marquee-dot" aria-hidden="true"></span>
+          </div>
+          <div class="card__promo-marquee-group" aria-hidden="true">
+            <span class="card__promo-marquee-text">1 kaufen, 1 gratis dazu!</span>
+            <span class="card__promo-marquee-dot" aria-hidden="true"></span>
+            <span class="card__promo-marquee-text">1 kaufen, 1 gratis dazu!</span>
+            <span class="card__promo-marquee-dot" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+    {% endunless %}
+  </a>
+
+  <h3 class="mb-0 mt-2 text-base">
+    <a class="no-underline text-black font-semibold" href="{{ product.url }}">
+      {{ product.title }}
+    </a>
+  </h3>
+
+  {% if product.metafields.custom.inspiration != blank %}
+    <div class="flex items-center gap-2 mt-2">
+      <img 
+        style="filter: blur(2px);" 
+        class="object-contain object-center bg-white"
+        src="{{ product.metafields.custom.inspiration.value.image | image_url }}"
+        alt="{{ product.metafields.custom.inspiration.value.image.alt | escape }}"
+        width="35" 
+        height="35"
+      >
+      <div>
+        <p class="text-xs my-0">Inspiriert von:</p>
+        <h4 class="text-sm font-semibold my-0 line-clamp-1 inspiration_heading">{{ product.metafields.custom.inspiration.value.name }}</h4>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="my-3">
+    {%- render 'price',
+      product: product,
+      use_variant: true,
+      show_badges: false,
+      price_class: 'price--large'
+    -%}
+  </div>
+  {% unless product.tags contains 'Bundle_Price_Show' %}
+    <div class="mb-3 flex flex-col gap-1 font-bold tracking-normal text-[#c8202f] {% if collection.template_suffix == 'action-modal' %}text-sm{% else %}text-base{% endif %} leading-tight">
+      <p class="m-0 !text-[#c8202f]">Kaufe 1, erhalte 1 GRATIS!</p>
+      <p class="m-0 !text-[#c8202f]">Kaufe 2, erhalte 3 GRATIS!</p>
+    </div>
+  {% endunless %}
+  <div class="mt-auto">
+    <a 
+      class="hover:bg-[#17803d] bg-[#146b32] text-white uppercase text-sm font-semibold tracking-[2px] py-3 px-4 rounded-lg no-underline w-full text-center block" 
+      href="{{ product.url }}"
+    >
+      Duft ansehen
+    </a>
+  </div>
+</div>

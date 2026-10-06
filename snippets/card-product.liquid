@@ -184,20 +184,22 @@ TODO: Show bestseller tag if the product contains "bestseller" tag.
             </div>
             {% unless card_product.tags contains 'Bundle_Price_Show' %}
               {%- if settings.product_card_promo_text != blank -%}
-                <div class="card__promo-marquee absolute left-0 right-0 bottom-0 bg-[#137c44] text-white" aria-label="{{ settings.product_card_promo_text }}">
+                {%- assign promo_lines = settings.product_card_promo_text | newline_to_br | split: '<br />' -%}
+                <div class="card__promo-marquee absolute left-0 right-0 bottom-0 bg-[#137c44] text-white" aria-label="{{ settings.product_card_promo_text | strip_newlines | escape }}">
                   <div class="card__promo-marquee-rail">
-                    <div class="card__promo-marquee-group">
-                      <span class="card__promo-marquee-text">{{ settings.x }}</span>
-                      <span class="card__promo-marquee-dot" aria-hidden="true"></span>
-                      <span class="card__promo-marquee-text">{{ settings.product_card_promo_text }}</span>
-                      <span class="card__promo-marquee-dot" aria-hidden="true"></span>
-                    </div>
-                    <div class="card__promo-marquee-group" aria-hidden="true">
-                      <span class="card__promo-marquee-text">{{ settings.product_card_promo_text }}</span>
-                      <span class="card__promo-marquee-dot" aria-hidden="true"></span>
-                      <span class="card__promo-marquee-text">{{ settings.product_card_promo_text }}</span>
-                      <span class="card__promo-marquee-dot" aria-hidden="true"></span>
-                    </div>
+                    {%- for group in (1..2) -%}
+                      <div class="card__promo-marquee-group"{% if group == 2 %} aria-hidden="true"{% endif %}>
+                        {%- for pass in (1..2) -%}
+                          {%- for line in promo_lines -%}
+                            {%- assign line = line | strip -%}
+                            {%- if line != blank -%}
+                              <span class="card__promo-marquee-text">{{ line }}</span>
+                              <span class="card__promo-marquee-dot" aria-hidden="true"></span>
+                            {%- endif -%}
+                          {%- endfor -%}
+                        {%- endfor -%}
+                      </div>
+                    {%- endfor -%}
                   </div>
                 </div>
               {%- endif -%}
