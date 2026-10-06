@@ -42,7 +42,7 @@
 
   <h3 class="my-2 text-base">
     <span class="text-3xl md:text-4xl font-semibold font-serif">
-      {{ product.title | split: ' - ' | last }}
+      {{ product.title | split: '-' | last }}
     </span>
   </h3>
 
@@ -52,27 +52,18 @@
   {% endif %}
 
   <div class="font-bold tracking-normal my-2 {% if collection.template_suffix == 'action-modal' %}text-sm{% else %}text-base{% endif %} flex items-center flex-wrap gap-1">
-    {% unless product.tags contains 'onsale' %}
-      <span class="starts_at_text">Från</span>
-    {% endunless %}
     <span class="ab-current-price">{{ product.price | money }}</span>
-    {% if product.tags contains 'onsale' %}
+    {% if product.compare_at_price > product.price %}
       <span class="line-through text-[#c8202f] font-normal">
         {{ cart.currency.symbol }}{{ product.compare_at_price | money_without_currency }}
       </span>
     {% endif %}
-    {% if product.tags contains 'onsale' %}
-      {% assign discount_percent = 0 %}
-      {% if product.compare_at_price > product.price %}
-        {% assign discount_percent = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round %}
-      {% endif %}
-      <span class="inline-block bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded">
+    <span class="inline-block bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded">
         <svg class="size-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12 2c.5 3.5-1.5 5.5-3 7.5C7.5 11.4 6 13.3 6 16a6 6 0 0 0 12 0c0-2.6-1.2-4.6-2.6-6.2-.3 1.5-1.1 2.6-2.4 3.2.4-3.8-.2-7.8-1-11z"></path>
+            <path d="M12 2c.5 3.5-1.5 5.5-3 7.5C7.5 11.4 6 13.3 6 16a6 6 0 0 0 12 0c0-2.6-1.2-4.6-2.6-6.2-.3 1.5-1.1 2.6-2.4 3.2.4-3.8-.2-7.8-1-11z"></path>
         </svg>
-        1+1 gratis
-      </span>
-    {% endif %}
+        BOGO
+    </span>
   </div>
   {% unless product.tags contains 'Bundle_Price_Show' %}
     <p class="mt-0 mb-2 text-[#17803d] font-semibold">Köp mer. Få mer.</p>

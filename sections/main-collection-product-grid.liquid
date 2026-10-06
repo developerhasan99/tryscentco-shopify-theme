@@ -166,13 +166,13 @@
               ">
               {%- liquid
                 comment
-                  FUEL_04 offer cards down the grid. One card after every N products,
+                  FUEL_04 offer cards down the grid.One card after every N products,
                   the three drawn designs taking turns, on every collection template
                   and on every page the load more button fetches (it appends every
-                  #product-grid .grid__item it gets back, cards included). N comes
+                  #product-grid.grid__item it gets back, cards included).N comes
                   from the section settings; the default applies on templates that
                   never saved the setting, which is what puts the cards on every
-                  collection page. Zero means off.
+                  collection page.Zero means off.
                 endcomment
                 assign fuel04_cards_every = 0
                 if section.settings.fuel04_cards
@@ -200,7 +200,7 @@
                       {% render 'fuel04-offer-card'
                         , block: block
                         , product_position: product_position %}
-                    {% elsif block.type == 'fuel05_ugc_video' %}
+                      {% elsif block.type == 'fuel05_ugc_video' %}
                       {%- comment -%}
                         Page one only. Desktop emits 16 products plus 7 visible tiles per
                         page and 23 does not divide by 4, so from page two the whole grid
@@ -228,11 +228,11 @@
                           style="--animation-order: {{ product_position }};"
                           {% endif %}
                           {{ block.shopify_attributes }}>
-                          {% render 'fuel05-ugc-tile',
-                            video: block.settings.video,
-                            video_url: block.settings.video_url,
-                            poster: block.settings.video_poster,
-                            product_item: block.settings.product
+                          {% render 'fuel05-ugc-tile'
+                            , video: block.settings.video
+                            , video_url: block.settings.video_url
+                            , poster: block.settings.video_poster
+                            , product_item: block.settings.product
                           %}
                         </li>
                       {%- endif -%}
@@ -271,17 +271,8 @@
                   data-cascade
                   style="--animation-order: {{ forloop.index }};"
                   {% endif %}>
-                  {% render 'card-product'
-                    , card_product: product
-                    , media_aspect_ratio: section.settings.image_ratio
-                    , image_shape: section.settings.image_shape
-                    , show_secondary_image: section.settings.show_secondary_image
-                    , show_vendor: section.settings.show_vendor
-                    , show_rating: section.settings.show_rating
-                    , lazy_load: lazy_load
-                    , skip_styles: skip_card_product_styles
-                    , quick_add: section.settings.quick_add
-                    , section_id: section.id
+                  {% render 'product-card'
+                    , product: product
                   %}
                 </li>
                 {%- if fuel04_cards_every > 0 -%}
@@ -295,10 +286,10 @@
                   {%- assign fuel04_cards_gap = fuel04_cards_nth | modulo: fuel04_cards_every -%}
                   {%- if fuel04_cards_gap == 0 -%}
                     {%- assign fuel04_cards_design = fuel04_cards_nth | divided_by: fuel04_cards_every | minus: 1 | modulo: 3 | plus: 1 -%}
-                    {%- render 'fuel04-offer-card',
-                      section_settings: section.settings,
-                      design: fuel04_cards_design,
-                      product_position: forloop.index
+                    {%- render 'fuel04-offer-card'
+                      , section_settings: section.settings
+                      , design: fuel04_cards_design
+                      , product_position: forloop.index
                     -%}
                   {%- endif -%}
                 {%- endif -%}
@@ -776,104 +767,104 @@
             "type": "number",
             "id": "position",
             "label": "Position",
-          "info": "The card is drawn in front of the product with this number, so a card placed earlier in the grid moves every card after it one cell along. Cards at 8, 10 and 11 stand in cells 8, 11 and 13."
-        },
-        {
-          "type": "select",
-          "id": "device",
-          "label": "Show on",
-          "options": [
-            {
-              "value": "desktop",
-              "label": "Desktop"
-            },
-            {
-              "value": "mobile",
-              "label": "Mobile"
-            }
-          ],
-          "default": "desktop",
-          "info": "The grid runs four columns on a wide screen and two on a phone, so each screen gets its own cards in its own cells."
-        },
-        {
-          "type": "select",
-          "id": "photo",
-          "label": "Photograph",
-          "options": [
-            {
-              "value": "1",
-              "label": "Bottle on denim"
-            },
-            {
-              "value": "2",
-              "label": "Bottle on sand"
-            },
-            {
-              "value": "3",
-              "label": "Bottle on knit"
-            }
-          ],
-          "default": "1"
-        },
-        {
-          "type": "select",
-          "id": "tiers_position",
-          "label": "Tier stack position",
-          "options": [
-            {
-              "value": "top",
-              "label": "Under the heading"
-            },
-            {
-              "value": "middle",
-              "label": "Middle"
-            },
-            {
-              "value": "bottom",
-              "label": "Above the button"
-            }
-          ],
-          "default": "middle"
-        },
-        {
-          "type": "select",
-          "id": "button_style",
-          "label": "Button style",
-          "options": [
-            {
-              "value": "dark",
-              "label": "Black"
-            },
-            {
-              "value": "light",
-              "label": "White"
-            }
-          ],
-          "default": "dark"
+            "info": "The card is drawn in front of the product with this number, so a card placed earlier in the grid moves every card after it one cell along. Cards at 8, 10 and 11 stand in cells 8, 11 and 13."
+          },
+          {
+            "type": "select",
+            "id": "device",
+            "label": "Show on",
+            "options": [
+              {
+                "value": "desktop",
+                "label": "Desktop"
+              },
+              {
+                "value": "mobile",
+                "label": "Mobile"
+              }
+            ],
+            "default": "desktop",
+            "info": "The grid runs four columns on a wide screen and two on a phone, so each screen gets its own cards in its own cells."
+          },
+          {
+            "type": "select",
+            "id": "photo",
+            "label": "Photograph",
+            "options": [
+              {
+                "value": "1",
+                "label": "Bottle on denim"
+              },
+              {
+                "value": "2",
+                "label": "Bottle on sand"
+              },
+              {
+                "value": "3",
+                "label": "Bottle on knit"
+              }
+            ],
+            "default": "1"
+          },
+          {
+            "type": "select",
+            "id": "tiers_position",
+            "label": "Tier stack position",
+            "options": [
+              {
+                "value": "top",
+                "label": "Under the heading"
+              },
+              {
+                "value": "middle",
+                "label": "Middle"
+              },
+              {
+                "value": "bottom",
+                "label": "Above the button"
+              }
+            ],
+            "default": "middle"
+          },
+          {
+            "type": "select",
+            "id": "button_style",
+            "label": "Button style",
+            "options": [
+              {
+                "value": "dark",
+                "label": "Black"
+              },
+              {
+                "value": "light",
+                "label": "White"
+              }
+            ],
+            "default": "dark"
           },
           {
             "type": "image_picker",
             "id": "image",
             "label": "Background image",
-          "info": "Overrides the photograph above. Left empty the card keeps the one chosen there."
+            "info": "Overrides the photograph above. Left empty the card keeps the one chosen there."
           },
           {
             "type": "text",
             "id": "heading",
             "label": "Heading",
-          "default": "Köp fler, spara mer!"
+            "default": "Köp fler, spara mer!"
           },
           {
             "type": "text",
             "id": "sub_text",
             "label": "Line under the heading",
-          "info": "Empty by default, because the card is drawn without one."
+            "info": "Empty by default, because the card is drawn without one."
           },
           {
             "type": "text",
             "id": "tier_1_count",
             "label": "First tier label",
-          "default": "Köp 3"
+            "default": "Köp 3"
           },
           {
             "type": "text",
@@ -897,7 +888,7 @@
             "type": "text",
             "id": "cta_text",
             "label": "Button text",
-          "default": "LÅS UPP DINA GÅVOR"
+            "default": "LÅS UPP DINA GÅVOR"
           },
           {
             "type": "url",
