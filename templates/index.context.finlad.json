@@ -29,7 +29,7 @@
       "disabled": false,
       "settings": {
         "image": "shopify://shop_images/Finnish_offer_desktop.png",
-        "mobile_image": "shopify://shop_images/MAGYX_Deal_Header_-_Finnish_-_Mobile.png"
+        "mobile_image": "shopify://shop_images/finnish_mobile_offer.png"
       },
       "blocks": {}
     }
