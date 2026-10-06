@@ -24,6 +24,15 @@
       },
       "blocks": {}
     },
+    "home_hero_banner_qmaB3G": {
+      "disabled": false,
+      "settings": {
+        "image": "shopify://shop_images/Danish_offer_desktop.png",
+        "mobile_image": "shopify://shop_images/danish_offer_mobile.png",
+        "link": "https://tryscent.co/da-dk/collections/bestseller-singles"
+      },
+      "blocks": {}
+    },
     "feature_highlights_wfUacV": {
       "settings": {},
       "blocks": {
@@ -234,14 +243,6 @@
           }
         }
       }
-    },
-    "home_hero_banner_qmaB3G": {
-      "disabled": false,
-      "settings": {
-        "image": "shopify://shop_images/MAGYX_Deal_Header_-_Danish_-_Desktop.png",
-        "mobile_image": "shopify://shop_images/MAGYX_Deal_Header_-_Danish_-_Mobile.png"
-      },
-      "blocks": {}
     }
   }
 }
