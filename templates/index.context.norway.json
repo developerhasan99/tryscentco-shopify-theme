@@ -25,8 +25,8 @@
     "home_hero_banner_qmaB3G": {
       "disabled": false,
       "settings": {
-        "image": "shopify://shop_images/MAGYX_Deal_Header_-_Norwegian_-_Desktop.png",
-        "mobile_image": "shopify://shop_images/MAGYX_Deal_Header_-_Norwegian_-_Mobile.png",
+        "image": "shopify://shop_images/Norway_offer_desktop.png",
+        "mobile_image": "shopify://shop_images/Norway_mobile_offer.png",
         "link": "https://tryscent.co/no-no/collections/best-sellers"
       },
       "blocks": {}
