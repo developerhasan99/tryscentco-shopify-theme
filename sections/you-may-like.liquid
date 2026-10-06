@@ -51,14 +51,27 @@
                   width="216"
                   class="w-full h-full object-cover">
               </a>
-              <p class="text-xs text-gray-500 m-0 mb-1 line-clamp-1">Inspirerad av: {{ product.metafields.custom.inspiration.value.name }}</p>
-              <h3 class="text-sm font-semibold m-0 mb-2 line-clamp-1">
-                <a class="text-black no-underline" href="{{ product.url }}">{{ product.title }}</a>
+              <h3 class="text-3xl font-semibold m-0 mb-2 line-clamp-1 font-serif">
+                <a class="text-black no-underline text-center" href="{{ product.url }}">{{ product.title | split: ' - ' | last }}</a>
               </h3>
-              <div class="flex items-center gap-2 mb-2">
-                <span class="text-sm font-bold text-gray-900">{{ product.price | money }}</span>
-                <span class="text-xs text-gray-400 line-through">{{ product.compare_at_price | money }}</span>
+              <p class="text-xs text-gray-500 m-0 mb-1 line-clamp-1">Inspirerad av {{ product.metafields.custom.inspiration.value.name }}</p>
+              <div class="font-bold tracking-normal my-2 {% if collection.template_suffix == 'action-modal' %}text-sm{% else %}text-base{% endif %} flex items-center flex-wrap gap-1">
+                <span class="ab-current-price">{{ product.price | money }}</span>
+                {% if product.compare_at_price > product.price %}
+                  <span class="line-through text-[#c8202f] font-normal">
+                    {{ cart.currency.symbol }}{{ product.compare_at_price | money_without_currency }}
+                  </span>
+                {% endif %}
+                <span class="inline-block bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded">
+                    <svg class="size-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 2c.5 3.5-1.5 5.5-3 7.5C7.5 11.4 6 13.3 6 16a6 6 0 0 0 12 0c0-2.6-1.2-4.6-2.6-6.2-.3 1.5-1.1 2.6-2.4 3.2.4-3.8-.2-7.8-1-11z"></path>
+                    </svg>
+                    BOGO
+                </span>
               </div>
+              {% unless product.tags contains 'Bundle_Price_Show' %}
+                <p class="mt-0 mb-2 text-[#17803d] font-semibold">Köp mer. Få mer.</p>
+              {% endunless %}
               {% comment %} Add to cart form {% endcomment %}
               <product-form
                 class="product-form !m-0 [&_form]:flex"
