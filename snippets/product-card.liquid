@@ -1,20 +1,16 @@
-<div class="flex flex-col bg-white p-4 shadow-sm rounded-lg relative h-full">
-  {% if product.tags contains 'bestseller' or product.tags contains 'onsale' %}
-    <div class="absolute top-3 left-4 flex gap-4">
-      {% if product.tags contains 'bestseller' %}
-        <div class="bg-blue-50 text-blue-600 px-2 py-1 text-xs rounded-full flex items-center gap-1">
+<a href="{{ product.url }}" class="flex flex-col bg-white p-4 shadow-sm rounded-lg relative h-full no-underline text-black">
+  {% if product.tags contains 'bestseller' %}
+    <div class="absolute z-10 top-3 left-4 flex gap-4">
+        <div class="bg-[#137c44] text-white px-2 py-1 text-xs rounded-full flex items-center gap-1">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star">
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
           </svg>
           <span>Bestseller</span>
         </div>
-      {% elsif product.tags contains 'onsale' %}
-        <div class="bg-red-50 text-red-600 px-2 py-1 text-xs rounded-full">⚡ Angebot</div>
-      {% endif %}
     </div>
   {% endif %}
 
-  <a href="{{ product.url }}" class="flex relative">
+  <div class="flex relative">
     <img
       class="w-full h-auto"
       src="{{ product.images.first | image_url: width: 300 }}"
@@ -23,68 +19,67 @@
       width="{{ product.images.first.width }}"
     >
     {% unless product.tags contains 'Bundle_Price_Show' %}
-      <div class="card__promo-marquee absolute left-0 right-0 bottom-0 bg-[#137c44] text-white" aria-label="30 % Rabatt">
-        <div class="card__promo-marquee-rail">
-          <div class="card__promo-marquee-group">
-            <span class="card__promo-marquee-text">1 kaufen, 1 gratis dazu!</span>
-            <span class="card__promo-marquee-dot" aria-hidden="true"></span>
-            <span class="card__promo-marquee-text">1 kaufen, 1 gratis dazu!</span>
-            <span class="card__promo-marquee-dot" aria-hidden="true"></span>
-          </div>
-          <div class="card__promo-marquee-group" aria-hidden="true">
-            <span class="card__promo-marquee-text">1 kaufen, 1 gratis dazu!</span>
-            <span class="card__promo-marquee-dot" aria-hidden="true"></span>
-            <span class="card__promo-marquee-text">1 kaufen, 1 gratis dazu!</span>
-            <span class="card__promo-marquee-dot" aria-hidden="true"></span>
-          </div>
+        {%- if settings.product_card_promo_text != blank -%}
+        {%- assign promo_lines = settings.product_card_promo_text | newline_to_br | split: '<br />' -%}
+        <div class="card__promo-marquee absolute left-0 right-0 bottom-0 bg-[#137c44] text-white" aria-label="{{ settings.product_card_promo_text | strip_newlines | escape }}">
+            <div class="card__promo-marquee-rail">
+            {%- for group in (1..2) -%}
+                <div class="card__promo-marquee-group"{% if group == 2 %} aria-hidden="true"{% endif %}>
+                {%- for line in promo_lines -%}
+                    {%- assign line = line | strip -%}
+                    {%- if line != blank -%}
+                    <span class="card__promo-marquee-text">{{ line }}</span>
+                    <span class="card__promo-marquee-dot" aria-hidden="true"></span>
+                    {%- endif -%}
+                {%- endfor -%}
+                </div>
+            {%- endfor -%}
+            </div>
         </div>
-      </div>
+        {%- endif -%}
     {% endunless %}
-  </a>
+  </div>
 
-  <h3 class="mb-0 mt-2 text-base">
-    <a class="no-underline text-black font-semibold" href="{{ product.url }}">
-      {{ product.title }}
-    </a>
+  <h3 class="my-2 text-base">
+    <span class="text-3xl md:text-4xl font-semibold font-serif">
+      {{ product.title | split: ' - ' | last }}
+    </span>
   </h3>
 
   {% if product.metafields.custom.inspiration != blank %}
-    <div class="flex items-center gap-2 mt-2">
-      <img 
-        style="filter: blur(2px);" 
-        class="object-contain object-center bg-white"
-        src="{{ product.metafields.custom.inspiration.value.image | image_url }}"
-        alt="{{ product.metafields.custom.inspiration.value.image.alt | escape }}"
-        width="35" 
-        height="35"
-      >
-      <div>
-        <p class="text-xs my-0">Inspiriert von:</p>
-        <h4 class="text-sm font-semibold my-0 line-clamp-1 inspiration_heading">{{ product.metafields.custom.inspiration.value.name }}</h4>
-      </div>
-    </div>
+    <h4 class="text-base tracking-normal my-0 text-gray-700 leading-snug">Inspiriert von {{ product.metafields.custom.inspiration.value.name }}</h4>
+    <p class="text-sm my-0 tracking-tight italic text-gray-500">Om du gillade {{ product.metafields.custom.inspiration.value.name }} kommer du att älska den här.</p>
   {% endif %}
 
-  <div class="my-3">
-    {%- render 'price',
-      product: product,
-      use_variant: true,
-      show_badges: false,
-      price_class: 'price--large'
-    -%}
+  <div class="font-bold tracking-normal my-2 {% if collection.template_suffix == 'action-modal' %}text-sm{% else %}text-base{% endif %} flex items-center flex-wrap gap-1">
+    {% unless product.tags contains 'onsale' %}
+      <span class="starts_at_text">Från</span>
+    {% endunless %}
+    <span class="ab-current-price">{{ product.price | money }}</span>
+    {% if product.tags contains 'onsale' %}
+      <span class="line-through text-[#c8202f] font-normal">
+        {{ cart.currency.symbol }}{{ product.compare_at_price | money_without_currency }}
+      </span>
+    {% endif %}
+    {% if product.tags contains 'onsale' %}
+      {% assign discount_percent = 0 %}
+      {% if product.compare_at_price > product.price %}
+        {% assign discount_percent = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round %}
+      {% endif %}
+      <span class="inline-block bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded">
+        <svg class="size-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2c.5 3.5-1.5 5.5-3 7.5C7.5 11.4 6 13.3 6 16a6 6 0 0 0 12 0c0-2.6-1.2-4.6-2.6-6.2-.3 1.5-1.1 2.6-2.4 3.2.4-3.8-.2-7.8-1-11z"></path>
+        </svg>
+        BOGO
+      </span>
+    {% endif %}
   </div>
   {% unless product.tags contains 'Bundle_Price_Show' %}
-    <div class="mb-3 flex flex-col gap-1 font-bold tracking-normal text-[#c8202f] {% if collection.template_suffix == 'action-modal' %}text-sm{% else %}text-base{% endif %} leading-tight">
-      <p class="m-0 !text-[#c8202f]">Kaufe 1, erhalte 1 GRATIS!</p>
-      <p class="m-0 !text-[#c8202f]">Kaufe 2, erhalte 3 GRATIS!</p>
-    </div>
+    <p class="mt-0 mb-2 text-[#17803d] font-semibold">Köp mer. Få mer.</p>
   {% endunless %}
   <div class="mt-auto">
-    <a 
-      class="hover:bg-[#17803d] bg-[#146b32] text-white uppercase text-sm font-semibold tracking-[2px] py-3 px-4 rounded-lg no-underline w-full text-center block" 
-      href="{{ product.url }}"
-    >
+    <span class="hover:bg-[#17803d] bg-[#146b32] text-white uppercase text-sm font-semibold tracking-[2px] py-3 px-4 rounded-lg no-underline text-center block">
       Duft ansehen
-    </a>
+    </span>
   </div>
-</div>
+</a>

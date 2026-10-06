@@ -1706,7 +1706,7 @@
     ]
   },
   {
-    "name": "Custom Texts",
+    "name": "Product Card",
     "settings": [
       {
         "type": "textarea",
