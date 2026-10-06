@@ -160,9 +160,17 @@
         },
         "mega_menu_item_LAwC3B": {
           "type": "mega_menu_item",
+          "disabled": true,
           "settings": {
             "label": "Unisex",
             "collection": "unisex"
+          }
+        },
+        "menu_item_6QUbXP": {
+          "type": "menu_item",
+          "settings": {
+            "label": "Unisex",
+            "url": "shopify://collections/unisex"
           }
         },
         "menu_item_8Yf436": {
@@ -210,6 +218,7 @@
         "mega_menu_item_kgEd9W",
         "mega_menu_item_PtL8ng",
         "mega_menu_item_LAwC3B",
+        "menu_item_6QUbXP",
         "menu_item_8Yf436",
         "menu_item_ValjSpara",
         "menu_item_JjXgCN",
