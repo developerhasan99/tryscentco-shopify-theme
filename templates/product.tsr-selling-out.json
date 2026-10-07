@@ -59,6 +59,22 @@
             "cart_item_text": ""
           }
         },
+        "selling_fast_jHkKKn": {
+          "type": "selling_fast",
+          "settings": {
+            "heading": "Säljer slut snabbt",
+            "subheading": "På grund av hög efterfrågan finns endast ett begränsat antal tillgängligt.",
+            "sold_text": "[percent]% Såld",
+            "percent_min": 12,
+            "percent_max": 32,
+            "show_countdown": true,
+            "countdown_label": "Slutar om",
+            "end_time": "",
+            "bar_color": "#f1652e",
+            "track_color": "#f9bca4",
+            "accent_color": "#f1652e"
+          }
+        },
         "atc_bundle_builder_aLJUaV": {
           "type": "atc_bundle_builder",
           "settings": {
@@ -113,22 +129,6 @@
             "pair_name": "Lavender Mint — No. 247",
             "reason": "Komplettera din doftgarderob med en varmare, mer förförisk doft för kvällen.",
             "inspired_name": "Jean Paul Gaultier Le Male"
-          }
-        },
-        "selling_fast_jHkKKn": {
-          "type": "selling_fast",
-          "settings": {
-            "heading": "Säljer slut snabbt",
-            "subheading": "På grund av hög efterfrågan finns endast ett begränsat antal tillgängligt.",
-            "sold_text": "[percent]% Såld",
-            "percent_min": 12,
-            "percent_max": 32,
-            "show_countdown": true,
-            "countdown_label": "Slutar om",
-            "end_time": "",
-            "bar_color": "#F1652E",
-            "track_color": "#F9BCA4",
-            "accent_color": "#F1652E"
           }
         },
         "tsr_block_CWYfba": {
@@ -309,13 +309,13 @@
         "designer_price_NbU6nd",
         "custom_liquid_eKzwKK",
         "subscribfy_block_product_page_vip_widget_yWfexG",
+        "selling_fast_jHkKKn",
         "atc_bundle_builder_aLJUaV",
         "fuel03_pair_1",
         "fuel03_pair_2",
         "fuel03_pair_3",
         "fuel03_pair_4",
         "fuel03_pair_5",
-        "selling_fast_jHkKKn",
         "tsr_block_CWYfba",
         "fuel03_pair_v2",
         "fuel05_ugc_slot",
@@ -414,7 +414,48 @@
       "settings": {
         "background_color": "#ffffff",
         "padding_top": 32,
-        "padding_bottom": 32
+        "padding_bottom": 32,
+        "fuel06_heading": "Hitta din designerdoft för mindre",
+        "fuel06_heading_accent": "mindre",
+        "fuel06_placeholder": "t.ex. YSL Black Opium, Dior",
+        "fuel06_cta": "Hitta min match",
+        "fuel06_modal_title": "Hitta din designerdoft för mindre",
+        "fuel06_search_label": "Sök en parfym du redan älskar",
+        "fuel06_popular_label": "Populära sökningar",
+        "fuel06_popular_terms": "Dior Sauvage, Baccarat Rouge 540, Creed Aventus, YSL Black Opium, Bleu de Chanel, JPG Le Male",
+        "fuel06_how_label": "Så fungerar det",
+        "fuel06_steps": "Sök en doft du redan älskar\nVi hittar den TryScent-doft som ligger närmast\nJämför doften och vad du sparar",
+        "fuel06_suggestions_label": "Förslag",
+        "fuel06_recent_label": "Senaste sökningar",
+        "fuel06_clear_label": "Rensa",
+        "fuel06_close_label": "Stäng",
+        "fuel06_loading_title": "Vi letar upp din närmaste match ...",
+        "fuel06_loading_sub": "Vi jämför doftprofil, noter och kundfavoriter.",
+        "fuel06_loading_note": "Vår matchningsteknik går igenom tusentals recensioner och doftdata för att hitta din perfekta match.",
+        "fuel06_result_title": "Din bästa match",
+        "fuel06_based_on": "Baserat på",
+        "fuel06_inspired_prefix": "Inspirerad av",
+        "fuel06_scent_label": "Doftprofil",
+        "fuel06_notes_label": "Nyckelnoter",
+        "fuel06_note_labels": "Topp, Mellan, Bas",
+        "fuel06_brand_label": "TryScent",
+        "fuel06_brand_note": "Extrait de parfum",
+        "fuel06_ref_note": "100 ml / Eau de parfum",
+        "fuel06_save_label": "Du sparar",
+        "fuel06_less_suffix": "billigare",
+        "fuel06_reviews_noun": "reviews",
+        "fuel06_remove_label": "Ta bort",
+        "fuel06_similar_label": "Liknande parfymer du kan gilla",
+        "fuel06_add_label": "Lägg i kundvagnen",
+        "fuel06_view_label": "Visa hela produktsidan",
+        "fuel06_again_label": "Inte rätt doft? Sök igen",
+        "fuel06_added_title": "Tillagd i kundvagnen",
+        "fuel06_also_label": "Du kanske också gillar",
+        "fuel06_bag_label": "Visa kundvagn",
+        "fuel06_keep_label": "Fortsätt handla",
+        "fuel06_noresult_title": "Ingen match ännu",
+        "fuel06_empty": "Vi hittade inte den doften. Prova ett annat namn, eller välj en av de populära sökningarna.",
+        "fuel06_cart_error": "Något gick fel. Försök igen."
       }
     },
     "scent_breakdown_rG4H3T": {
