@@ -126,7 +126,7 @@
               stroke="#226139"
               stroke-width="0.25" />
           </svg>
-          <p class="m-0 leading-snug font-semibold text-[#226139] text-xs lg:text-sm">Samma doft                                                                                                                                              
+          <p class="m-0 leading-snug font-semibold text-[#226139] text-xs lg:text-sm">Samma doft                                                                                                                                                 
           bättre pris</p>
         </div>
         <div class="p-2 lg:px-4 bg-[#EBF4EF] rounded-lg text-center flex flex-col items-center justify-center gap-2">
@@ -249,17 +249,17 @@
     , section: section
     , mode: 'v2d' %}
 
-  <div
-    class="fuel05-ugc fuel05-ugc--pdp fuel05-ugc--pdp-desktop"
-    data-fuel05-row
-    data-gap-mobile="10"
-    data-gap-desktop="8">
-    {% render 'fuel05-ugc-pdp'
-      , section: section
-      , product: product
-      , mode: 'desktop'
-      , with_assets: true %}
-  </div>
+  {% comment %} <div
+                class="fuel05-ugc fuel05-ugc--pdp fuel05-ugc--pdp-desktop"
+                data-fuel05-row
+                data-gap-mobile="10"
+                data-gap-desktop="8">
+                {% render 'fuel05-ugc-pdp'
+                  , section: section
+                  , product: product
+                  , mode: 'desktop'
+                  , with_assets: true %}
+        </div> {% endcomment %}
 
   <script>
     // Swiper Slider For product images with thumbnail sync
