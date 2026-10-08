@@ -14,9 +14,9 @@
   "parent": "index.json",
   "sections": {
     "homepage_hero_GDeBtq": {
-      "disabled": true,
+      "disabled": false,
       "settings": {
-        "title": "Palkkapäiväale – 30% alennus koko ostoskorista",
+        "title": "Suosikkituoksusi edullisemmin",
         "subtitle": "Osta suosikkituoksusi entistäkin edullisemmilla hinnoilla! Ja säästä vielä enemmän pakettitarjouksilla!",
         "button_text": "Löydä suosikkihajuvetesi",
         "button_link": "https://tryscent.co/apps/quiz/hvJ2kT",
@@ -26,7 +26,7 @@
       "blocks": {}
     },
     "home_hero_banner_qmaB3G": {
-      "disabled": false,
+      "disabled": true,
       "settings": {
         "image": "shopify://shop_images/Finnish_offer_desktop.png",
         "mobile_image": "shopify://shop_images/finnish_mobile_offer.png"

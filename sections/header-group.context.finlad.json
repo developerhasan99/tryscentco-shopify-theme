@@ -15,10 +15,10 @@
   "sections": {
     "offer_timebar_xLgmJd": {
       "settings": {
-        "top_banner_text": "SUURIN ALEMME",
-        "prepend_text": "Suurin Alemme",
+        "top_banner_text": "",
+        "prepend_text": "Syysmyynti",
         "countdown_date": "",
-        "append_text": "50 % alennus",
+        "append_text": "Osta 3 saat 1 ILMAISEKSI",
         "link": "https://tryscent.co/fi-fi/collections/bestseller-singles"
       },
       "blocks": {

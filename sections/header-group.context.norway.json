@@ -15,10 +15,10 @@
   "sections": {
     "offer_timebar_xLgmJd": {
       "settings": {
-        "top_banner_text": "VÅRT STØRSTE SALG",
-        "prepend_text": "Vårt største salg:",
+        "top_banner_text": "",
+        "prepend_text": "Høstsalg",
         "countdown_date": "",
-        "append_text": "50 % rabatt",
+        "append_text": "Kjøp 3 få 1 GRATIS",
         "link": "https://tryscent.co/no-no/collections/best-sellers"
       },
       "blocks": {

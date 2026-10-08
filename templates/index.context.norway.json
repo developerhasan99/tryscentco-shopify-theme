@@ -14,16 +14,16 @@
   "parent": "index.json",
   "sections": {
     "homepage_hero_GDeBtq": {
-      "disabled": true,
+      "disabled": false,
       "settings": {
-        "title": "Lønningsdagsalg – 30% rabatt på hele handlekurven",
+        "title": "Dine favorittdufter for mindre",
         "subtitle": "Kjøp favorittduftene dine til enda bedre priser! Og spar enda mer med pakketilbud!",
         "button_text": "Finn din favorittparfyme"
       },
       "blocks": {}
     },
     "home_hero_banner_qmaB3G": {
-      "disabled": false,
+      "disabled": true,
       "settings": {
         "image": "shopify://shop_images/Norway_offer_desktop.png",
         "mobile_image": "shopify://shop_images/Norway_mobile_offer.png",

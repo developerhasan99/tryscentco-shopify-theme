@@ -14,10 +14,10 @@
   "parent": "index.json",
   "sections": {
     "homepage_hero_GDeBtq": {
-      "disabled": true,
+      "disabled": false,
       "settings": {
         "review_text": "Over 10.000 danskere har allerede fundet deresyndlingsduft.",
-        "title": "Løndagsrea – 30% rabat på hele kurven",
+        "title": "Dine yndlingsdufte for mindre",
         "subtitle": "Inspireret af designerdufte. Udendesignerprisen. Du betaler for duften - ikke for mærket, flaskenog reklamerne.",
         "button_text": "FIND DIN DUFT PÅ 60 SEKUNDER",
         "secondary_button_text": "Bestseller"
@@ -25,10 +25,10 @@
       "blocks": {}
     },
     "home_hero_banner_qmaB3G": {
-      "disabled": false,
+      "disabled": true,
       "settings": {
         "image": "shopify://shop_images/Danish_offer_desktop.png",
-        "mobile_image": "shopify://shop_images/danish_offer_mobile.png",
+        "mobile_image": "shopify://shop_images/Danis_offer_mobile.png",
         "link": "https://tryscent.co/da-dk/collections/bestseller-singles"
       },
       "blocks": {}

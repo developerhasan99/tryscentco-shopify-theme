@@ -14,16 +14,16 @@
   "parent": "index.json",
   "sections": {
     "homepage_hero_GDeBtq": {
-      "disabled": true,
+      "disabled": false,
       "settings": {
         "background_image": "shopify://shop_images/MAGYX_Site_Header.webp",
         "mobile_background_image": "shopify://shop_images/MAGYX_Site_Header_Mobile_A.webp",
-        "title": "Lönedagsrea – 30% rabatt på hela varukorgen"
+        "title": "Dina favoritdofter för mindre"
       },
       "blocks": {}
     },
     "home_hero_banner_qmaB3G": {
-      "disabled": false,
+      "disabled": true,
       "settings": {
         "image": "shopify://shop_images/desktop_offer.png",
         "mobile_image": "shopify://shop_images/mobile_offer.png"
