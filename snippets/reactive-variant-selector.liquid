@@ -6,14 +6,14 @@
   for variant in product.variants
     assign variant_title_down = variant.title | downcase
 
-    if variant_title_down contains '100'
+    if variant_title_down contains '100' and variant.available == product.available
       assign selected_variant = variant
       break
     endif
   endfor
 %}
 
-{% if product.variants.size > 1 %}
+{% if product.variants.size > 1 and product.available %}
   {% comment %} Variant Selector {% endcomment %}
   <div class="flex justify-between items-center mb-3 !mt-6">
     <h2 class="m-0 text-base font-semibold">Välj storlek:</h2>
@@ -63,68 +63,88 @@
   {% endif %}
 {% endif %}
 
-{% render 'fuel01-pdp', product: product, section: section %}
+{% render 'fuel01-pdp'
+  , product: product
+  , section: section %}
 
-{% comment %} Add to cart form {% endcomment %}
-<product-form
-  class="product-form !m-0"
-  data-hide-errors="{{ gift_card_recipient_feature_active }}"
-  data-section-id="{{ section.id }}">
-  {%- form 'product'
-    , product
-    , id: product_form_id
-    , class: 'form'
-    , novalidate: 'novalidate'
-    , data-type: 'add-to-cart-form' -%}
-    <input
-      type="hidden"
-      name="id"
-      id="product-variant-id"
-      value="{{ selected_variant.id }}"
-      class="product-variant-id">
-    {% if product.metafields.custom.choose_your_fragrances_options != blank %}
-      {% render 'bundle-mix-dropdown' %}
-    {% else %}
+  {% unless product.available %}
+  {% comment %} Sold out: no add to cart, an in stock alternative instead (snippets/sold-out-alternative.liquid) {% endcomment %}
+  <div class="!mt-6 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-100 text-gray-500 !py-3 !px-3 text-center cursor-not-allowed select-none" aria-disabled="true">
+    <span class="text-[16px] leading-snug md:text-[19px] font-semibold">{{ 'products.product.sold_out' | t }} – tillfälligt slut i lager</span>
+    <span class="text-sm leading-snug">Den här doften kan inte beställas just nu. Prova vårt alternativ nedan.</span>
+  </div>
+  {% render 'sold-out-alternative'
+    , product: product
+    , section: section %}
+  {% else %}
+  {% comment %} Add to cart form {% endcomment %}
+  <product-form
+    class="product-form !m-0"
+    data-hide-errors="{{ gift_card_recipient_feature_active }}"
+    data-section-id="{{ section.id }}">
+    {%- form 'product'
+      , product
+      , id: product_form_id
+      , class: 'form'
+      , novalidate: 'novalidate'
+      , data-type: 'add-to-cart-form' -%}
       <input
         type="hidden"
-        name="properties[Inspired By]"
-        value="{{ product.metafields.custom.nuta }}" />
-    {% endif %}
-    <button
-      type="submit"
-      name="add"
-      value="1"
-      class="atc-button shimmer-btn cta_product_from_submit_btn flex gap-2 flex-wrap items-center !mb-0 !py-4 !px-3 rounded-lg button bg-[#22613a] hover:bg-[#368856] transition-colors shadow-xl tracking-normal button--full-width button--primary"
-      aria-label="{{ 'products.product.add_to_cart' | t }}"
+        name="id"
+        id="product-variant-id"
+        value="{{ selected_variant.id }}"
+        class="product-variant-id">
       {% if product.metafields.custom.choose_your_fragrances_options != blank %}
-      disabled="disabled"
-      {% endif %}>
-      <span class="text-[20px] md:text-[24px]">{{ 'products.product.add_to_cart' | t }}</span>
-      <div class="flex items-center">
-        <div
-          class="inline-block text-base md:text-lg bg-[#1E5834] px-3 rounded"
-          id="product-price"
-          role="status"
-          {{ block.shopify_attributes }}>
-          {% if selected_variant.compare_at_price > selected_variant.price %}
-            <span class="compare-price line-through text-white/50 text-sm md:text-base">{{ selected_variant.compare_at_price | money }}</span>
-          {% endif %}
-          <span class="current-price">{{ selected_variant.price | money }}</span>
+        {% render 'bundle-mix-dropdown' %}
+      {% else %}
+        <input
+          type="hidden"
+          name="properties[Inspired By]"
+          value="{{ product.metafields.custom.nuta }}" />
+      {% endif %}
+      <button
+        type="submit"
+        name="add"
+        value="1"
+        class="atc-button shimmer-btn cta_product_from_submit_btn flex gap-2 flex-wrap items-center !mb-0 !py-4 !px-3 rounded-lg button bg-[#22613a] hover:bg-[#368856] transition-colors shadow-xl tracking-normal button--full-width button--primary"
+        aria-label="{{ 'products.product.add_to_cart' | t }}"
+        {% if product.metafields.custom.choose_your_fragrances_options != blank %}
+        disabled="disabled"
+        {% endif %}
+        {%- unless selected_variant.available %}
+        disabled="disabled"
+        data-sold-out{% endunless %}>
+        <span class="text-[20px] md:text-[24px]">
+          {% if selected_variant.available %}
+            {{ 'products.product.add_to_cart' | t }}
+          {% else %}
+            {{ 'products.product.sold_out' | t }}{% endif %}
+        </span>
+        <div class="flex items-center">
+          <div
+            class="inline-block text-base md:text-lg bg-[#1E5834] px-3 rounded"
+            id="product-price"
+            role="status"
+            {{ block.shopify_attributes }}>
+            {% if selected_variant.compare_at_price > selected_variant.price %}
+              <span class="compare-price line-through text-white/50 text-sm md:text-base">{{ selected_variant.compare_at_price | money }}</span>
+            {% endif %}
+            <span class="current-price">{{ selected_variant.price | money }}</span>
+          </div>
         </div>
+        {%- render 'loading-spinner' -%}
+      </button>
+      <div
+        class="product-form__error-message-wrapper !mt-3 !mb-0 text-[#c8202f]"
+        role="alert"
+        hidden>
+        <span class="svg-wrapper">
+          {{- 'icon-error.svg' | inline_asset_content -}}
+        </span>
+        <span class="product-form__error-message"></span>
       </div>
-      {%- render 'loading-spinner' -%}
-    </button>
-    <div
-      class="product-form__error-message-wrapper !mt-3 !mb-0 text-[#c8202f]"
-      role="alert"
-      hidden>
-      <span class="svg-wrapper">
-        {{- 'icon-error.svg' | inline_asset_content -}}
-      </span>
-      <span class="product-form__error-message"></span>
-    </div>
-  {%- endform -%}
-</product-form>
+    {%- endform -%}
+  </product-form>{% endunless %}
 
 {%- comment -%} FUEL_06 product page entry (2026-09-30), see snippets/fuel06-pdp-link.liquid. {%- endcomment -%}
 {%- render 'fuel06-pdp-link' -%}
@@ -161,7 +181,8 @@
           hasComparePrice: {% if variant.compare_at_price > variant.price %}true{% else %}false{% endif %},
           nextVariant: "{{ variant.metafields.custom.next_variant | default: '' }}",
           priceDifference: "{{ variant.metafields.custom.price_difference.value | money | default: '' }}",
-          afterpayPrice: "{{ variant.price |  divided_by: 4 |  money }}"
+          afterpayPrice: "{{ variant.price |  divided_by: 4 |  money }}",
+          available: {{ variant.available }}
         }{% unless forloop.last %},{% endunless %}
       {% endfor %}
     };
@@ -173,6 +194,8 @@
     const variantButtons = document.querySelectorAll('.variant-button');
     const variantIdInput = document.getElementById('product-variant-id');
     const priceContainer = document.getElementById('product-price');
+    // Sold out products render no size selector or price (see the sold out notice above)
+    if (!priceContainer) return;
     const comparePriceSpan = priceContainer.querySelector('.compare-price');
     const currentPriceSpan = priceContainer.querySelector('.current-price');
     const variantSuggestion = document.getElementById('variantSuggestion');
@@ -183,8 +206,19 @@
       selectedVariantId = variantId;
       const variantData = variantsData[variantId];
 
-      // Update hidden input
-      variantIdInput.value = variantId;
+      // Update hidden input (absent when the whole product is sold out)
+      if (variantIdInput) variantIdInput.value = variantId;
+
+      // A sold out size can't be added; the label and lock follow the selected size
+      const atcButton = document.querySelector('.atc-button');
+      if (atcButton && variantIdInput) {
+        // Only lift a lock this added, never the bundle one (choose_your_fragrances_options).
+        if (!variantData.available || atcButton.hasAttribute('data-sold-out')) atcButton.disabled = !variantData.available;
+        atcButton.toggleAttribute('data-sold-out', !variantData.available);
+        atcButton.querySelector('span').textContent = variantData.available
+          ? window.variantStrings.addToCart
+          : window.variantStrings.soldOut;
+      }
 
       // Update button styles
       variantButtons.forEach(button => {

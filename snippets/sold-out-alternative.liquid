@@ -1,0 +1,177 @@
+{% comment %}
+  Recommended alternative shown in place of the add to cart form when a product is sold out.
+  Picks the first in stock product from the related products set in Shopify's Search & Discovery
+  app, falling back to the product's own collections. Shopify's automatic recommendations are
+  only reachable from JS (the recommendations endpoint), not from Liquid on the product page.
+  Styled with plain CSS, as Tailwind here is precompiled.
+
+  Accepts:
+  - product: {Object} the sold out product (required)
+  - section: {Object} the hosting section
+
+  Usage:
+  {% render 'sold-out-alternative', product: product, section: section %}
+{% endcomment %}
+{%- liquid
+  assign alt = false
+  for p in product.metafields['shopify--discovery--product_recommendation'].related_products.value
+    if p.available and p.id != product.id
+      assign alt = p
+      break
+    endif
+  endfor
+
+  unless alt
+    for c in product.collections
+      for p in c.products
+        if p.available and p.id != product.id
+          assign alt = p
+          break
+        endif
+      endfor
+      if alt
+        break
+      endif
+    endfor
+  endunless
+-%}
+{%- if alt -%}
+  {%- liquid
+    assign alt_variant = alt.selected_or_first_available_variant
+    for v in alt.variants
+      assign v_title = v.title | downcase
+      if v.available and v_title contains '100'
+        assign alt_variant = v
+        break
+      endif
+    endfor
+  -%}
+  <div class="mt-4 rounded-xl border-2 border-solid border-gray-200 overflow-hidden bg-white" data-sold-out-alternative>
+    <div class="bg-[#22613a] text-white font-semibold px-4 py-2">✓ Rekommenderat alternativ</div>
+    <div class="p-4">
+      <a href="{{ alt.url }}" class="flex items-center gap-4 no-underline text-black">
+        {%- if alt.featured_image -%}
+          <img
+            src="{{ alt.featured_image | image_url: width: 160 }}"
+            alt="{{ alt.featured_image.alt | default: alt.title | escape }}"
+            width="80"
+            height="80"
+            loading="lazy"
+            class="w-20 h-20 object-contain shrink-0">
+        {%- endif -%}
+        <div>
+          <h2 class="my-0 font-semibold font-serif">{{ alt.title | split: '-' | last }}</h2>
+          <h4 class="text-base tracking-normal my-0 text-gray-700 leading-snug">Inspirerad av {{ product.metafields.custom.inspiration.value.name }}</h4>
+          <p class="mt-1 mb-0 text-sm text-green-700 flex items-center gap-1.5">
+            <span class="inline-block w-2 h-2 rounded-full bg-green-600"></span>I lager</p>
+        </div>
+      </a>
+      <product-form
+        class="product-form !m-0"
+        data-section-id="{{ section.id }}"
+        data-hide-errors="false">
+        {%- form 'product'
+          , alt
+          , class: 'form'
+          , novalidate: 'novalidate'
+          , data-type: 'add-to-cart-form' -%}
+          {%- if alt.variants.size > 1 -%}
+            <div class="flex justify-between items-center mb-3 !mt-6">
+              <h2 class="m-0 text-base font-semibold">Välj storlek:</h2>
+            </div>
+            <div
+              class="grid grid-cols-3 gap-3 mb-3"
+              role="radiogroup"
+              aria-label="Välj storlek">
+              {%- for v in alt.variants -%}
+                {%- if v.available -%}
+                  {%- liquid
+                    assign v_ml = 0
+                    if v.title contains '100'
+                      assign v_ml = 100
+                    elsif v.title contains '50'
+                      assign v_ml = 50
+                    elsif v.title contains '30'
+                      assign v_ml = 30
+                    endif
+                  -%}
+                  <label class="variant-button rounded-lg px-2 pt-4 pb-3 bg-white border-2 border-solid border-gray-200 has-[:checked]:border-green-700 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-green-700 has-[:focus-visible]:outline-offset-2 cursor-pointer font-['Figtree'] relative text-center">
+                    <input
+                      class="sr-only"
+                      type="radio"
+                      name="id"
+                      value="{{ v.id }}"
+                      {% if v.id == alt_variant.id %}
+                      checked{% endif %}>
+                    <div class="text-sm font-semibold">{{ v.title }}</div>
+                    {% if v.title contains '50' %}
+                      <span class="text-xs italic text-white rounded absolute -top-2.5 left-1/2 [transform:translateX(-50%)] bg-[#c8202f] px-2 py-0.5 whitespace-nowrap">Mest Populär</span>
+                    {% endif %}
+                    {% if v.title contains '100' %}
+                      <span class="text-xs italic text-white rounded absolute -top-2.5 left-1/2 [transform:translateX(-50%)] bg-[#22613a] px-2 py-0.5 whitespace-nowrap">Bäst värde</span>
+                    {% endif %}
+                    {% if v_ml > 0 %}
+                      <div class="text-xs text-gray-500">{{ v.price | times: 1.0 | divided_by: v_ml | money }} / ml</div>
+                    {% endif %}
+                  </label>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          {%- else -%}
+            <input
+              type="hidden"
+              name="id"
+              value="{{ alt_variant.id }}">
+          {%- endif -%}
+          {%- if alt.metafields.custom.nuta != blank -%}
+            <input
+              type="hidden"
+              name="properties[Inspired By]"
+              value="{{ alt.metafields.custom.nuta | escape }}">
+          {%- endif -%}
+          <button
+            type="submit"
+            name="add"
+            class="shimmer-btn cta_product_from_submit_btn flex gap-2 flex-wrap items-center !mb-0 !py-4 !px-3 rounded-lg button bg-[#22613a] hover:bg-[#368856] transition-colors shadow-xl tracking-normal button--full-width button--primary"
+            aria-label="{{ 'products.product.add_to_cart' | t }}: {{ alt.title | escape }}">
+            <span class="text-[20px] md:text-[24px]">{{ 'products.product.add_to_cart' | t }}</span>
+            <div class="flex items-center">
+              <div class="inline-block text-base md:text-lg bg-[#1E5834] px-3 rounded">
+                {%- for v in alt.variants -%}
+                  {%- if v.available -%}
+                    <span
+                      data-price-for="{{ v.id }}"
+                      {% if v.id != alt_variant.id %}
+                      hidden{% endif %}>
+                      {%- if v.compare_at_price > v.price -%}
+                        <span class="line-through text-white/50 text-sm md:text-base">{{ v.compare_at_price | money }}</span>
+                      {% endif -%}
+                      {{ v.price | money -}}
+                    </span>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            </div>
+            {%- render 'loading-spinner' -%}
+          </button>
+          <div
+            class="product-form__error-message-wrapper !mt-3 !mb-0 text-[#c8202f]"
+            role="alert"
+            hidden>
+            <span class="svg-wrapper">{{- 'icon-error.svg' | inline_asset_content -}}</span>
+            <span class="product-form__error-message"></span>
+          </div>
+        {%- endform -%}
+      </product-form>
+    </div>
+  </div>
+  <script>
+    // Keeps the price in the button on the selected size, as the main selector does.
+    document.querySelectorAll('[data-sold-out-alternative] form').forEach((form) => {
+      form.addEventListener('change', (e) => {
+        if (e.target.name !== 'id') return;
+        form.querySelectorAll('[data-price-for]').forEach((el) => (el.hidden = el.dataset.priceFor !== e.target.value));
+      });
+    });
+  </script>
+{%- endif -%}
