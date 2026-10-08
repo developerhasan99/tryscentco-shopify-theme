@@ -70,9 +70,9 @@
         rea
     </span> {% endcomment %}
   </div>
-  {% unless product.tags contains 'Bundle_Price_Show' %}
+  {% comment %} {% unless product.tags contains 'Bundle_Price_Show' %}
     <p class="mt-0 mb-2 text-[#17803d] font-semibold">Köp mer. Få mer.</p>
-  {% endunless %}
+  {% endunless %} {% endcomment %}
   <div class="mt-auto">
     <span class="hover:bg-[#17803d] bg-[#146b32] text-white uppercase text-sm font-semibold tracking-[2px] py-3 px-4 rounded-lg no-underline text-center block">
       Se doften
