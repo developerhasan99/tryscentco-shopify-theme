@@ -41,14 +41,19 @@
   </div>
 
   <h3 class="my-2 text-base">
-    <span class="text-3xl md:text-4xl font-semibold font-serif">
-      {{ product.title | split: '-' | last }}
+    <span class="text-lg md:text-xl font-semibold">
+      {{ product.title }}
     </span>
   </h3>
 
   {% if product.metafields.custom.inspiration != blank %}
-    <h4 class="text-base tracking-normal my-0 text-gray-700 leading-snug">Inspirerad av {{ product.metafields.custom.inspiration.value.name }}</h4>
-    <p class="text-sm my-0 tracking-tight italic text-gray-500">Om du gillade {{ product.metafields.custom.inspiration.value.name }} kommer du att älska den här.</p>
+    <div class="flex items-center gap-2 mb-3">
+      <img class="object-contain object-center" src="{{ product.metafields.custom.inspiration.value.image |  image_url: width: 90, height: 90 }}" alt="{{ product.metafields.custom.inspiration.value.image.alt | escape }}" width="35" height="35">
+      <div>
+        <p class="text-xs my-0">Inspirerad av:</p>
+        <h4 class="text-sm font-semibold my-0 line-clamp-1 inspiration_heading">{{ product.metafields.custom.inspiration.value.name }}</h4>
+      </div>
+    </div>
   {% endif %}
 
   <div class="font-bold tracking-normal my-2 {% if collection.template_suffix == 'action-modal' %}text-sm{% else %}text-base{% endif %} flex items-center flex-wrap gap-1">

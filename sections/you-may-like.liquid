@@ -51,8 +51,8 @@
                   width="216"
                   class="w-full h-full object-cover">
               </a>
-              <h3 class="text-3xl font-semibold m-0 mb-2 line-clamp-1 font-serif">
-                <a class="text-black no-underline text-center" href="{{ product.url }}">{{ product.title | split: ' - ' | last }}</a>
+              <h3 class="text-base line-clamp-2 font-semibold leading-snug tracking-tight m-0 mb-2">
+                <a class="text-black no-underline text-center" href="{{ product.url }}">{{ product.title }}</a>
               </h3>
               <p class="text-xs text-gray-500 m-0 mb-1 line-clamp-1">Inspirerad av {{ product.metafields.custom.inspiration.value.name }}</p>
               <div class="font-bold tracking-normal my-2 {% if collection.template_suffix == 'action-modal' %}text-sm{% else %}text-base{% endif %} flex items-center flex-wrap gap-1">
