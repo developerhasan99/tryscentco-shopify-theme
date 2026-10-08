@@ -637,9 +637,33 @@ function exm_drawer_autoselect() {
   if (!setExisonEl) return;
   if (setExisonEl.classList.contains('exm_active')) return;
 
+  exm_drawer_autoselect_click(0);
+}
+
+function exm_drawer_autoselect_click(attempt) {
   setTimeout(function() {
+    const colMember = document.querySelector('[data-exm-managed] .col-member');
+
+    if (exm_getCookie('exmcart') === 'PAYG') {
+      return;
+    }
+
+    if (!colMember) {
+      if (attempt >= 10) {
+        return;
+      }
+
+      exm_drawer_autoselect_click(attempt + 1);
+
+      return;
+    }
+
+    if (colMember.classList.contains('exm_active')) {
+      return;
+    }
+
     colMember.click();
-  }, 500);
+  }, attempt === 0 ? 500 : 300);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
