@@ -1,0 +1,273 @@
+{% comment %}
+  FUEL_09 preview switch. Rendered once from the head of layout/theme.liquid.
+
+  The offer box on the product page (snippets/fuel09-box.liquid) ships
+  hidden and is opened by a class on <html>: ab-f09-v1 for look A, ab-f09-v2
+  for look B, ab-f09-v3 for look C. In production only the testing tool adds
+  that class. This switch is for QA on a theme that is not the live one:
+  #f09-v1, #f09-v2 or #f09-v3 in the address turns that look on, #f09-off
+  turns them all off. The choice is kept
+  in sessionStorage, so it survives clicking through the site like a customer
+  instead of retyping the hash on every page.
+
+  The whole script is left out of the live theme in Liquid (theme.role is
+  'main' there), so none of this can ever run for a shopper.
+
+  A hash that names a look also takes the other looks off, because no two
+  are ever meant to be on together. Replaying the stored choice only ever
+  adds: the testing tool's own preview runs on these themes too, and an
+  ordinary fragment jump (the skip to content link is the first focusable
+  element on every page) must not take its class away. #f09-off is the one
+  explicit way back out.
+
+  It runs in the head, before the body is parsed, so the look is already on
+  when the box and the size tiles are laid out.
+{% endcomment %}
+{%- if theme.role != 'main' -%}
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const looks = { '#f09-v1': 'ab-f09-v1', '#f09-v2': 'ab-f09-v2', '#f09-v3': 'ab-f09-v3' };
+      const classes = Object.values(looks);
+
+      const apply = () => {
+        const { hash } = window.location;
+        const off = hash === '#f09-off';
+        const asked = looks[hash] ?? null;
+        let look = asked;
+        try {
+          if (asked) sessionStorage.setItem('fuel09Qa', asked);
+          if (off) sessionStorage.removeItem('fuel09Qa');
+          if (!look) look = sessionStorage.getItem('fuel09Qa');
+        } catch (error) {
+          // Storage can be blocked; the hash alone still works for that load.
+        }
+
+        if (off) {
+          root.classList.remove(...classes);
+        } else if (classes.includes(look)) {
+          if (asked) root.classList.remove(...classes);
+          root.classList.add(look);
+        }
+      };
+
+      apply();
+      window.addEventListener('hashchange', apply);
+    })();
+  </script>
+{%- endif -%}
+
+{% comment %}
+  FUEL_09 mystery bottle, after it is in the cart. On every theme and every
+  page, the live one included: the bottle goes into the cart on the product
+  page (assets/fuel09-offer.js) and has to stay right in the cart drawer and
+  on the cart page wherever the shopper goes next.
+
+  The bottle is an ordinary product with a price. What makes it free is a
+  discount code of the client's gift app, which accepts the code only on a
+  cart carrying the attribute _fuel09=on and with enough sale bottles in it.
+  The box writes a second attribute, _fuel09_gift ("item:code"), and that is
+  all this script reads: no setting, no class on <html>. A cart without it
+  costs nothing here, not even a request, because Liquid prints below whether
+  the attribute is there.
+
+  What it does once the cart has come to rest:
+
+  - the code or the mark is gone (other apps on this store rewrite the code
+    list): both are put back, other codes kept;
+  - a bottle is still not free on a second look, with code and mark in place
+    (the shopper went below the bottles the offer asks for, or holds more
+    bottles than the offer frees): those bottles are taken out, so nobody
+    pays for a gift;
+  - no bottle left, on a second look as well: the code and both marks come
+    off.
+
+  It never puts a bottle in.
+
+  Timing. After every change several apps write to this cart for seconds on
+  end (the price testing app sends each line again, more than once; the gift
+  app adds its own gifts and attributes), and a cart read in the middle of
+  that is not the cart the shopper ends up with. So nothing is decided until
+  no cart write of anyone's has finished for a second and a half. The
+  browser's own list of finished requests says so (PerformanceObserver), for
+  fetch, XMLHttpRequest and sendBeacon alike, with nothing of the page
+  wrapped or replaced. The observer only exists while a cart carries the
+  attribute. While the box is adding (between its two events, fuel09:adding
+  and fuel09:gift) the script stands back altogether: the marks are on the
+  cart then and the bottle is not there yet.
+
+  Each write is followed by the theme's own cart update word, so the drawer
+  and the cart page redraw themselves. Putting the same code back a third
+  time within ten seconds is skipped, so this cannot loop with an app that
+  keeps writing its own list.
+{% endcomment %}
+<script>
+  (() => {
+    const MARK = '_fuel09';
+    const GIFT = '_fuel09_gift';
+    const OWN = 'fuel09-gift';
+    const FLAG = 'fuel09Gift';
+    const QUIET = 1500;
+    const WRITES = /\/cart\/(add|change|update|clear)(\.js|\.json)?(\?|$)/;
+    const cartUrl = `${ {{ routes.cart_url | json }} }.js`;
+    const updateUrl = `${ {{ routes.cart_update_url | json }} }.js`;
+
+    const flag = (value) => {
+      try {
+        if (value === undefined) return sessionStorage.getItem(FLAG) === '1';
+        if (value) sessionStorage.setItem(FLAG, '1');
+        else sessionStorage.removeItem(FLAG);
+      } catch (error) {
+        // Storage can be blocked; Liquid's reading below still arms the page.
+      }
+      return false;
+    };
+
+    let timer = 0;
+    let watcher = null;
+    let busy = false;
+    let again = false;
+    let hold = false;
+    let doubt = '';
+    let failures = 0;
+    let restores = [];
+
+    const later = (wait = QUIET) => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(check, wait);
+    };
+    // Any cart write that finishes, whoever sent it, starts the wait again.
+    const arm = () => {
+      flag(true);
+      if (!watcher && 'PerformanceObserver' in window) {
+        watcher = new PerformanceObserver((list) => {
+          if (list.getEntries().some((entry) => WRITES.test(entry.name))) later();
+        });
+        watcher.observe({ type: 'resource' });
+      }
+      later();
+    };
+    const disarm = () => {
+      flag(false);
+      watcher?.disconnect();
+      watcher = null;
+      window.clearTimeout(timer);
+      doubt = '';
+    };
+
+    const read = async () => {
+      const response = await fetch(cartUrl, { cache: 'no-store', headers: { Accept: 'application/json' } });
+      if (!response.ok) throw new Error(`cart ${response.status}`);
+      return response.json();
+    };
+    const write = async (body) => {
+      const response = await fetch(updateUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ ...body, sections: 'cart-icon-bubble', sections_url: window.location.pathname })
+      });
+      if (!response.ok) throw new Error(`cart ${response.status}`);
+      const state = await response.json();
+      const bubble = document.getElementById('cart-icon-bubble');
+      const html = state.sections?.['cart-icon-bubble'];
+      const fresh = html ? new DOMParser().parseFromString(html, 'text/html').querySelector('.shopify-section') : null;
+      if (bubble && fresh) bubble.innerHTML = fresh.innerHTML;
+      if (typeof publish === 'function' && typeof PUB_SUB_EVENTS === 'object') {
+        publish(PUB_SUB_EVENTS.cartUpdate, { source: OWN, cartData: state });
+      }
+    };
+
+    // How many bottles of a line the code has made free.
+    const freed = (item) => {
+      if (!item.original_price) return item.quantity;
+      const off = item.original_line_price - item.final_line_price;
+      return Math.min(item.quantity, Math.floor(off / item.original_price + 0.001));
+    };
+    // A finding counts on the second look in a row that makes it, and the
+    // second look comes only after the cart has been at rest once more.
+    const twice = (finding) => {
+      if (doubt === finding) {
+        doubt = '';
+        return true;
+      }
+      doubt = finding;
+      later();
+      return false;
+    };
+
+    const check = async () => {
+      // The box is in the middle of adding. It says when it is through.
+      if (hold) return;
+      if (busy) {
+        again = true;
+        return;
+      }
+      busy = true;
+      try {
+        const cart = await read();
+        const attributes = cart.attributes ?? {};
+        const [id, code] = String(attributes[GIFT] ?? '').split(':');
+        if (!id || !code) {
+          disarm();
+          return;
+        }
+        const bottles = (cart.items ?? []).filter((item) => String(item.variant_id) === id);
+        const codes = (cart.discount_codes ?? []).map((entry) => String(entry.code));
+        const others = codes.filter((other) => other.toLowerCase() !== code.toLowerCase());
+        const listed = others.length < codes.length;
+
+        if (!bottles.length) {
+          if (!twice('gone')) return;
+          await write({ discount: others.join(','), attributes: { [MARK]: '', [GIFT]: '' } });
+          disarm();
+          return;
+        }
+        if (!listed || attributes[MARK] !== 'on') {
+          doubt = '';
+          const now = Date.now();
+          restores = restores.filter((time) => now - time < 10000);
+          if (restores.length >= 2) return;
+          restores.push(now);
+          await write({ discount: [...others, code].join(','), attributes: { [MARK]: 'on' } });
+          return;
+        }
+        if (bottles.every((item) => freed(item) >= item.quantity)) {
+          doubt = '';
+          failures = 0;
+          return;
+        }
+        if (!twice('paid')) return;
+        // By item where it is one line: the price testing app gives a line
+        // a new key each time it sends it again.
+        const updates = {};
+        if (bottles.length === 1) updates[id] = freed(bottles[0]);
+        else for (const item of bottles) updates[item.key] = freed(item);
+        await write({ updates });
+        failures = 0;
+      } catch (error) {
+        // A write the cart refused (a line key gone stale under another
+        // app's write) is tried again on a fresh read, three times at most.
+        failures += 1;
+        if (failures < 3) later();
+      } finally {
+        busy = false;
+        if (again) {
+          again = false;
+          later();
+        }
+      }
+    };
+
+    document.addEventListener('fuel09:adding', () => {
+      hold = true;
+    });
+    document.addEventListener('fuel09:gift', () => {
+      hold = false;
+      arm();
+    });
+    if ({{ cart.attributes['_fuel09_gift'] | default: '' | json }} !== '' || flag()) {
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', arm);
+      else arm();
+    }
+  })();
+</script>

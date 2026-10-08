@@ -1,0 +1,709 @@
+{% comment %}
+  FUEL_09 offer box on the single-perfume PDP. Rendered by a fuel09_offer_box
+  block in sections/main-product.liquid, placed directly before the
+  atc_bundle_builder block. One block instance is one look of the box: the
+  Layout setting picks A (four cards), B (three cards and a benefits row) or
+  C (B's cards with a scent for every bottle in place of the size choice).
+
+  The box takes the place of the size tiles and nothing else. The add to cart
+  form, its button and the theme's own size script stay as they are:
+  assets/fuel09-offer.js clicks the hidden size tile to change size and writes
+  the bottle count into the form, so the cart request is still the theme's.
+
+  The block names the sizes the box offers (100 and 50 ml as shipped). A size
+  that is not named gets no tile, no price and no free shipping mark, and a
+  form found on such a size is put on the box's opening size by the script.
+
+  Gated six ways, all in Liquid: a perfume that can be bought (sold out in
+  every size, the page has no add to cart button for the box to drive), the
+  Swedish market only (every string in the block is written in Swedish, none
+  of it is translated and the shipping figures are kronor; the country is
+  asked as well as the language, because this store runs one language and is
+  translated at the edge, so the language alone reads Swedish on the Danish,
+  Finnish and Norwegian pages too), a product with more than one size, a product in one of the collections named in the
+  block, never a bundle product (the metafield check), and only a template
+  whose main section also holds the atc_bundle_builder block the box drives.
+  On top of that the box ships hidden: assets/fuel09-offer.css opens look A
+  behind html.ab-f09-v1 and look B behind html.ab-f09-v2, and both in the
+  theme editor.
+
+  Layout C keeps the page's own size tiles: assets/fuel09-offer.js lifts
+  them, heading row and all, to just above the box while the look is on and
+  switches off the tiles of sizes the box does not offer, and every bottle
+  of the card comes in the size chosen there. It offers only the named
+  sizes this perfume has in stock and is left out on a perfume that has
+  none. Its open card lists one slot per bottle: the
+  first is the perfume of the page, the rest are chosen in the picker at the
+  foot of this file, whose rows come from sections/fuel09-pool.liquid the
+  first time it is opened. The bottles go into the cart one by one, each at
+  its own price, with the card's discount code where the block names one;
+  assets/fuel09-offer.js does that in place of the theme's own add, because
+  a quantity can only repeat one perfume.
+
+  Nothing is priced by hand. Every card is worked out for every size from the
+  size's own price: price x bottles paid, plus the shipping cost while that
+  stays under the free shipping limit, and the per-bottle figure is that
+  amount over the bottles the card counts: the paid and the free ones, and
+  the mystery ones too where the block says so (the two looks are drawn
+  differently on this). All of it is printed here through the money filters
+  and the script only switches which size's figures are on show.
+
+  Accepts:
+  - product: {Object} the product being viewed (required)
+  - section: {Object} the hosting section, to find its atc_bundle_builder
+    block (required; without it nothing renders)
+  - block: {Object} the fuel09_offer_box block carrying the settings (required)
+{% endcomment %}
+
+{%- liquid
+  assign fuel09_layout = block.settings.layout
+  assign fuel09_render = false
+
+  if fuel09_layout == 'a' or fuel09_layout == 'b' or fuel09_layout == 'c'
+    if request.locale.iso_code == 'sv' and localization.country.iso_code == 'SE' and product.available and product.variants.size > 1 and product.metafields.custom.choose_your_fragrances_options == blank
+      assign fuel09_buy_area = section.blocks | where: 'type', 'atc_bundle_builder' | first
+      if fuel09_buy_area
+        assign fuel09_render = true
+      endif
+    endif
+  endif
+
+  if fuel09_render and block.settings.collections != blank
+    assign fuel09_render = false
+    assign fuel09_product_handles = product.collections | map: 'handle'
+    assign fuel09_wanted_handles = block.settings.collections | split: ','
+    for fuel09_wanted_handle in fuel09_wanted_handles
+      assign fuel09_handle = fuel09_wanted_handle | strip
+      if fuel09_handle != blank and fuel09_product_handles contains fuel09_handle
+        assign fuel09_render = true
+        break
+      endif
+    endfor
+  endif
+
+  comment
+    The sizes the box offers: a size whose name holds one of the block's
+    words, and every size while the block names none or no size of this
+    perfume carries any of them. Kept as two lists a loop can ask with
+    "contains": the ids, and for layout C "word:id:price" per size, the
+    word being what a size is called across perfumes
+    (sections/fuel09-pool.liquid prints the same words). Layout C
+    adds the bottles through the cart itself, so there a size also has to
+    be in stock to be listed. In every layout a perfume with none of the
+    offered sizes in stock gets no box: the page keeps its own size tiles,
+    and a size the box does not offer can still be bought there.
+  endcomment
+  assign fuel09_picks = false
+  assign fuel09_offered = ' '
+  assign fuel09_keyed = ''
+  assign fuel09_named = false
+  assign fuel09_in_stock = false
+  if fuel09_render
+    if fuel09_layout == 'c'
+      assign fuel09_picks = true
+    endif
+    assign fuel09_size_words = block.settings.sizes | downcase | split: ','
+    for fuel09_size_word in fuel09_size_words
+      assign fuel09_word = fuel09_size_word | strip | remove: ' ' | remove: ':'
+      if fuel09_word == blank
+        continue
+      endif
+      for variant in product.variants
+        assign fuel09_title_down = variant.title | downcase
+        assign fuel09_id_mark = ' ' | append: variant.id | append: ' '
+        if fuel09_title_down contains fuel09_word
+          assign fuel09_named = true
+          unless fuel09_offered contains fuel09_id_mark
+            if variant.available
+              assign fuel09_in_stock = true
+            endif
+            if variant.available or fuel09_picks == false
+              assign fuel09_offered = fuel09_offered | append: variant.id | append: ' '
+              assign fuel09_keyed = fuel09_keyed | append: fuel09_word | append: ':' | append: variant.id | append: ':' | append: variant.price | append: ' '
+            endif
+          endunless
+        endif
+      endfor
+    endfor
+    if fuel09_named == false
+      for variant in product.variants
+        if variant.available
+          assign fuel09_in_stock = true
+        endif
+        if variant.available or fuel09_picks == false
+          assign fuel09_word = variant.title | downcase | remove: ' ' | remove: ':'
+          assign fuel09_offered = fuel09_offered | append: variant.id | append: ' '
+          assign fuel09_keyed = fuel09_keyed | append: fuel09_word | append: ':' | append: variant.id | append: ':' | append: variant.price | append: ' '
+        endif
+      endfor
+    endif
+    assign fuel09_keyed = fuel09_keyed | strip
+    if fuel09_in_stock == false
+      assign fuel09_render = false
+    endif
+  endif
+
+  comment
+    Exactly one card opens selected: the first one ticked in the settings,
+    or the first card that is switched on when none is.
+  endcomment
+  assign fuel09_first_card = 0
+  assign fuel09_selected_card = 0
+  if fuel09_render
+    for i in (1..4)
+      assign fuel09_key = 'card_' | append: i | append: '_paid'
+      assign fuel09_paid = block.settings[fuel09_key] | default: 0 | plus: 0
+      if fuel09_paid < 1
+        continue
+      endif
+      if fuel09_first_card == 0
+        assign fuel09_first_card = i
+      endif
+      assign fuel09_key = 'card_' | append: i | append: '_selected'
+      if block.settings[fuel09_key] and fuel09_selected_card == 0
+        assign fuel09_selected_card = i
+      endif
+    endfor
+    if fuel09_selected_card == 0
+      assign fuel09_selected_card = fuel09_first_card
+    endif
+    if fuel09_first_card == 0
+      assign fuel09_render = false
+    endif
+  endif
+-%}
+
+{%- if fuel09_render -%}
+  {%- liquid
+    comment
+      The size the page opens on, picked the way
+      snippets/reactive-variant-selector.liquid picks it (the 100 ml size
+      while it is in stock, the first size in stock otherwise), so the
+      figures on show match the id already sitting in the form. Where the
+      box does not offer that size it opens on the first size in stock it
+      does offer, and the script puts the form on it.
+    endcomment
+    assign fuel09_variant = product.selected_or_first_available_variant
+    for variant in product.variants
+      assign fuel09_title_down = variant.title | downcase
+      if fuel09_title_down contains '100' and variant.available
+        assign fuel09_variant = variant
+        break
+      endif
+    endfor
+    assign fuel09_id_mark = ' ' | append: fuel09_variant.id | append: ' '
+    unless fuel09_offered contains fuel09_id_mark and fuel09_variant.available
+      for variant in product.variants
+        assign fuel09_variant_mark = ' ' | append: variant.id | append: ' '
+        if fuel09_offered contains fuel09_variant_mark and variant.available
+          assign fuel09_variant = variant
+          break
+        endif
+      endfor
+    endunless
+
+    assign fuel09_look_class = 'ab-f09-v1'
+    if fuel09_layout == 'b'
+      assign fuel09_look_class = 'ab-f09-v2'
+    elsif fuel09_layout == 'c'
+      assign fuel09_look_class = 'ab-f09-v3'
+    endif
+
+    assign fuel09_shipping = block.settings.shipping_cost | default: 0 | times: 100
+    assign fuel09_free_from = block.settings.free_shipping_from | default: 0 | times: 100
+
+    comment
+      Layout C only: the short name under a slot is the perfume's number,
+      and the picker's rows are asked for per collection named in the block.
+    endcomment
+    if fuel09_picks
+      assign fuel09_short = product.title
+      if product.title contains 'No.'
+        assign fuel09_short = product.title | split: 'No.' | last | strip | prepend: 'No. '
+      endif
+      assign fuel09_pick_image = fuel09_variant.featured_image | default: product.featured_image
+      assign fuel09_pool = ''
+      assign fuel09_pool_handles = block.settings.collections | default: 'best-sellers' | split: ','
+      for fuel09_pool_handle in fuel09_pool_handles
+        assign fuel09_handle = fuel09_pool_handle | strip
+        if fuel09_handle != blank
+          assign fuel09_pool = fuel09_pool | append: routes.collections_url | append: '/' | append: fuel09_handle | append: '?section_id=fuel09-pool '
+        endif
+      endfor
+      assign fuel09_pool = fuel09_pool | strip
+    endif
+  -%}
+
+  {{ 'fuel09-offer.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'fuel09-offer.js' | asset_url }}" defer="defer"></script>
+
+  <fuel09-box
+    id="fuel09-box-{{ block.id }}"
+    class="fuel09-box fuel09-box--{{ fuel09_layout }}"
+    data-look-class="{{ fuel09_look_class }}"
+    data-open-id="{{ fuel09_variant.id }}"
+    data-mystery-item-id="{{ block.settings.mystery_item_id | escape }}"
+    data-mystery-code="{{ block.settings.mystery_code | escape }}"
+    {% if fuel09_picks %}
+      data-pick-product="{{ product.id }}"
+      data-pick-sizes="{{ fuel09_keyed | escape }}"
+      data-shipping="{{ fuel09_shipping | round }}"
+      data-free-from="{{ fuel09_free_from | round }}"
+      data-money-format="{{ shop.money_format | strip_html | escape }}"
+      data-pool="{{ fuel09_pool | escape }}"
+      data-left-text="{{ block.settings.picks_left_text | escape }}"
+      data-done-text="{{ block.settings.picks_done_text | escape }}"
+      data-per-bottle-text="{{ block.settings.per_bottle_text | escape }}"
+      data-error-text="{{ block.settings.picker_error | escape }}"
+    {% endif %}
+    {{ block.shopify_attributes }}>
+    <div class="fuel09-box__panel">
+      {%- if block.settings.heading != blank or block.settings.subheading != blank -%}
+        <div class="fuel09-box__header">
+          {%- if block.settings.heading != blank -%}
+            <span class="fuel09-box__heading" aria-hidden="true">
+              <span class="fuel09-box__heading-icon">
+                {{- 'fuel09-gift-header.svg' | inline_asset_content -}}
+              </span>
+              <span class="fuel09-box__heading-text">{{ block.settings.heading | escape }}</span>
+            </span>
+          {%- endif -%}
+          {%- if block.settings.subheading != blank -%}
+            <span class="fuel09-box__subheading" id="fuel09-note-{{ block.id }}">
+              {{- block.settings.subheading | escape -}}
+            </span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="fuel09-box__content">
+        <fieldset
+          class="fuel09-box__cards"
+          {% if block.settings.subheading != blank %}
+            aria-describedby="fuel09-note-{{ block.id }}"
+          {% endif %}>
+          <legend class="visually-hidden">{{ block.settings.heading | default: product.title | escape }}</legend>
+
+          {%- for i in (1..4) -%}
+            {%- liquid
+              assign fuel09_key = 'card_' | append: i | append: '_paid'
+              assign fuel09_paid = block.settings[fuel09_key] | default: 0 | plus: 0
+              if fuel09_paid < 1
+                continue
+              endif
+              assign fuel09_key = 'card_' | append: i | append: '_free'
+              assign fuel09_free = block.settings[fuel09_key] | default: 0 | at_least: 0
+              assign fuel09_key = 'card_' | append: i | append: '_mystery'
+              assign fuel09_mystery = block.settings[fuel09_key] | default: 0 | at_least: 0
+              assign fuel09_key = 'card_' | append: i | append: '_badge'
+              assign fuel09_badge = block.settings[fuel09_key]
+              assign fuel09_key = 'card_' | append: i | append: '_free_shipping'
+              assign fuel09_free_shipping = block.settings[fuel09_key]
+
+              comment
+                The quantity is the paid and the free bottles. The mystery
+                bottle is another product, so it is drawn in the row but never
+                in the quantity: the card carries its count (data-mystery)
+                and assets/fuel09-offer.js adds that many. Whether it counts in the
+                card's bottle total and per-bottle figure is the block's
+                call: look A's frame leaves it out, look B's counts it.
+              endcomment
+              assign fuel09_quantity = fuel09_paid | plus: fuel09_free
+              assign fuel09_drawn = fuel09_quantity | plus: fuel09_mystery
+              assign fuel09_bottles = fuel09_quantity
+              if block.settings.count_mystery
+                assign fuel09_bottles = fuel09_drawn
+              endif
+
+              comment
+                A card can name another free count than the one it adds: look
+                B's middle card is 2 paid, 2 free and 1 mystery and reads
+                "KÖP 2, FÅ 3".
+              endcomment
+              assign fuel09_key = 'card_' | append: i | append: '_free_shown'
+              assign fuel09_free_shown = block.settings[fuel09_key] | default: 0 | plus: 0
+              if fuel09_free_shown < 1
+                assign fuel09_free_shown = fuel09_free
+              endif
+
+              comment
+                The sizes at which this card ships free, worked out the way
+                the price below works out when the shipping cost is added.
+                The pill is only true for those.
+              endcomment
+              assign fuel09_free_sizes = ''
+              assign fuel09_free_now = false
+              for variant in product.variants
+                assign fuel09_variant_mark = ' ' | append: variant.id | append: ' '
+                unless fuel09_offered contains fuel09_variant_mark
+                  continue
+                endunless
+                assign fuel09_total = variant.price | times: fuel09_paid
+                if fuel09_shipping == 0 or fuel09_total >= fuel09_free_from
+                  assign fuel09_free_sizes = fuel09_free_sizes | append: variant.id | append: ' '
+                  if variant.id == fuel09_variant.id
+                    assign fuel09_free_now = true
+                  endif
+                endif
+              endfor
+              assign fuel09_free_sizes = fuel09_free_sizes | strip
+
+              assign fuel09_title = block.settings.title_text | replace: '[paid]', fuel09_paid | replace: '[free]', fuel09_free_shown
+              assign fuel09_count_line = block.settings.total_text | replace: '[total]', fuel09_bottles
+              assign fuel09_included = block.settings.included_text | replace: '[paid]', fuel09_paid | replace: '[free]', fuel09_free_shown
+              assign fuel09_mystery_line = block.settings.mystery_text | replace: '[n]', fuel09_mystery
+
+              assign fuel09_card_id = 'fuel09-' | append: block.id | append: '-' | append: i
+              assign fuel09_code_key = 'card_' | append: i | append: '_code'
+
+              comment
+                Layout C draws and counts no mystery bottle, whatever the
+                card's settings say: every bottle of it is a chosen one.
+              endcomment
+              if fuel09_picks
+                assign fuel09_mystery = 0
+                assign fuel09_drawn = fuel09_quantity
+                assign fuel09_bottles = fuel09_quantity
+                assign fuel09_count_line = block.settings.total_text | replace: '[total]', fuel09_bottles
+              endif
+            -%}
+            <div
+              class="fuel09-card{% if fuel09_drawn >= 6 %} fuel09-card--long{% endif %}"
+              data-quantity="{{ fuel09_quantity }}"
+              {% if fuel09_mystery > 0 %}
+                data-mystery="{{ fuel09_mystery }}"
+              {% endif %}
+              {% if fuel09_picks %}
+                data-paid="{{ fuel09_paid }}"
+                data-bottles="{{ fuel09_bottles }}"
+                data-code="{{ block.settings[fuel09_code_key] | strip | escape }}"
+              {% endif %}>
+              <input
+                type="radio"
+                class="fuel09-card__input visually-hidden"
+                id="{{ fuel09_card_id }}"
+                name="fuel09-offer-{{ block.id }}"
+                value="{{ i }}"
+                {% if i == fuel09_selected_card %}
+                  checked
+                {% endif %}>
+              <label class="fuel09-card__summary" for="{{ fuel09_card_id }}">
+                <span class="fuel09-card__radio" aria-hidden="true">
+                  {%- unless fuel09_layout == 'c' -%}
+                    <span class="fuel09-card__radio-on">
+                      {{- 'fuel09-radio-on.svg' | inline_asset_content -}}
+                    </span>
+                  {%- endunless -%}
+                  {%- if fuel09_layout == 'b' -%}
+                    <span class="fuel09-card__radio-on fuel09-card__radio-on--wide">
+                      {{- 'fuel09-radio-on-b.svg' | inline_asset_content -}}
+                    </span>
+                  {%- elsif fuel09_layout == 'c' -%}
+                    <span class="fuel09-card__radio-on fuel09-card__radio-on--pick">
+                      {{- 'fuel09-radio-on-c.svg' | inline_asset_content -}}
+                    </span>
+                  {%- endif -%}
+                </span>
+
+                <span class="fuel09-card__details">
+                  {%- if fuel09_title != blank -%}
+                    <span class="fuel09-card__title">{{ fuel09_title | escape }}</span>
+                  {%- endif -%}
+                  {%- if fuel09_count_line != blank -%}
+                    <span class="fuel09-card__count">{{ fuel09_count_line | escape }}</span>
+                  {%- endif -%}
+                  <span class="fuel09-card__perks">
+                    {%- if fuel09_included != blank -%}
+                      <span class="fuel09-card__included">{{ fuel09_included | escape }}</span>
+                    {%- endif -%}
+                    {%- if fuel09_picks and fuel09_free_shipping and block.settings.shipping_pill_text != blank -%}
+                      <span
+                        class="fuel09-pill fuel09-pill--shipping"
+                        data-fuel09-free-pill
+                        {% unless fuel09_free_now %}
+                          hidden
+                        {% endunless %}>
+                        <span class="fuel09-pill__icon" aria-hidden="true">
+                          {{- 'fuel09-truck.svg' | inline_asset_content -}}
+                        </span>
+                        {{- block.settings.shipping_pill_text | escape -}}
+                      </span>
+                    {%- elsif fuel09_free_shipping and fuel09_free_sizes != blank and block.settings.shipping_pill_text != blank -%}
+                      <span
+                        class="fuel09-pill fuel09-pill--shipping"
+                        data-fuel09-free-sizes="{{ fuel09_free_sizes }}"
+                        {% unless fuel09_free_now %}
+                          hidden
+                        {% endunless %}>
+                        <span class="fuel09-pill__icon" aria-hidden="true">
+                          {{- 'fuel09-truck.svg' | inline_asset_content -}}
+                        </span>
+                        {{- block.settings.shipping_pill_text | escape -}}
+                      </span>
+                    {%- endif -%}
+                    {%- if fuel09_mystery > 0 and fuel09_mystery_line != blank -%}
+                      <span class="fuel09-pill fuel09-pill--mystery">
+                        <span class="fuel09-pill__icon" aria-hidden="true">
+                          {{- 'fuel09-gift.svg' | inline_asset_content -}}
+                        </span>
+                        {{- fuel09_mystery_line | escape -}}
+                      </span>
+                    {%- endif -%}
+                  </span>
+                </span>
+
+                <span
+                  class="fuel09-bottles{% if fuel09_drawn >= 9 %} fuel09-bottles--dense{% endif %}{% if fuel09_drawn >= 10 %} fuel09-bottles--denser{% endif %}"
+                  aria-hidden="true">
+                  {%- for n in (1..fuel09_quantity) -%}
+                    <span class="fuel09-bottle">
+                      <span class="fuel09-bottle__cap"></span>
+                      <span class="fuel09-bottle__neck"></span>
+                      <span class="fuel09-bottle__body"><span class="fuel09-bottle__label"></span></span>
+                    </span>
+                  {%- endfor -%}
+                  {%- if fuel09_mystery > 0 -%}
+                    <span class="fuel09-bottles__plus">
+                      {{- 'fuel09-plus.svg' | inline_asset_content -}}
+                    </span>
+                    {%- for n in (1..fuel09_mystery) -%}
+                      <span class="fuel09-bottle fuel09-bottle--mystery">
+                        <span class="fuel09-bottle__cap"></span>
+                        <span class="fuel09-bottle__neck"></span>
+                        <span class="fuel09-bottle__body"><span class="fuel09-bottle__mark">?</span></span>
+                      </span>
+                    {%- endfor -%}
+                  {%- endif -%}
+                </span>
+
+                <span class="fuel09-card__prices">
+                  {%- if fuel09_badge != blank -%}
+                    <span class="fuel09-card__badge">{{ fuel09_badge | escape }}</span>
+                  {%- endif -%}
+                  {%- for variant in product.variants -%}
+                    {%- liquid
+                      assign fuel09_variant_mark = ' ' | append: variant.id | append: ' '
+                      unless fuel09_offered contains fuel09_variant_mark
+                        continue
+                      endunless
+                      comment
+                        Layout C prints the opening size only: its figures
+                        depend on the scents chosen, so the script writes
+                        them from there on, size changes included.
+                      endcomment
+                      if fuel09_picks and variant.id != fuel09_variant.id
+                        continue
+                      endif
+                      assign fuel09_total = variant.price | times: fuel09_paid
+                      assign fuel09_shown = fuel09_total
+                      if fuel09_shipping > 0 and fuel09_total < fuel09_free_from
+                        assign fuel09_shown = fuel09_total | plus: fuel09_shipping
+                      endif
+                      assign fuel09_per_bottle = fuel09_shown | times: 1.0 | divided_by: fuel09_bottles | round
+                      assign fuel09_per_bottle_money = fuel09_per_bottle | money_without_trailing_zeros
+                      assign fuel09_per_bottle_line = block.settings.per_bottle_text | escape | replace: '[price]', fuel09_per_bottle_money
+                    -%}
+                    <span
+                      class="fuel09-card__price"
+                      data-fuel09-price="{{ variant.id }}"
+                      data-atc-price="{{ fuel09_shown | money | strip_html | escape }}"
+                      {% unless variant.id == fuel09_variant.id %}
+                        hidden
+                      {% endunless %}>
+                      <span class="fuel09-card__total" data-fuel09-total>{{ fuel09_shown | money_without_trailing_zeros }}</span>
+                      {%- if fuel09_per_bottle_line != blank -%}
+                        <span class="fuel09-card__per" data-fuel09-per>{{ fuel09_per_bottle_line }}</span>
+                      {%- endif -%}
+                      {%- if block.settings.shipping_note != blank -%}
+                        <span class="fuel09-card__shipping">{{ block.settings.shipping_note | escape }}</span>
+                      {%- endif -%}
+                    </span>
+                  {%- endfor -%}
+                </span>
+              </label>
+
+              {%- if fuel09_picks -%}
+                {%- liquid
+                  assign fuel09_left = fuel09_bottles | minus: 1
+                  assign fuel09_picks_heading = block.settings.picks_heading | replace: '[total]', fuel09_bottles
+                  assign fuel09_left_line = block.settings.picks_left_text | replace: '[n]', fuel09_left
+                  if fuel09_left < 1
+                    assign fuel09_left_line = block.settings.picks_done_text
+                  endif
+                -%}
+                <div class="fuel09-card__picks">
+                  <div class="fuel09-picks__head">
+                    {%- if fuel09_picks_heading != blank -%}
+                      <span class="fuel09-picks__title" id="{{ fuel09_card_id }}-picks">{{ fuel09_picks_heading | escape }}</span>
+                    {%- endif -%}
+                    <span class="fuel09-picks__left" data-fuel09-left aria-live="polite">{{ fuel09_left_line | escape }}</span>
+                  </div>
+                  <ul
+                    class="fuel09-picks__list"
+                    role="list"
+                    {% if fuel09_picks_heading != blank %}
+                      aria-labelledby="{{ fuel09_card_id }}-picks"
+                    {% endif %}>
+                    {%- for n in (1..fuel09_bottles) -%}
+                      <li
+                        class="fuel09-pick{% if n == 1 %} fuel09-pick--set fuel09-pick--own{% endif %}"
+                        data-fuel09-slot="{{ forloop.index0 }}">
+                        <button type="button" class="fuel09-pick__add" data-fuel09-open{% if n == 1 %} hidden{% endif %}>
+                          <span class="fuel09-pick__frame" aria-hidden="true"></span>
+                          <span class="fuel09-pick__label">{{ block.settings.pick_empty_label | escape }}</span>
+                        </button>
+                        <span class="fuel09-pick__set"{% unless n == 1 %} hidden{% endunless %}>
+                          <span class="fuel09-pick__frame">
+                            {%- if n == 1 and fuel09_pick_image -%}
+                              {{ fuel09_pick_image | image_url: width: 160 | image_tag: class: 'fuel09-pick__image', alt: '', loading: 'lazy', widths: '80, 160', sizes: '72px' }}
+                            {%- else -%}
+                              <img class="fuel09-pick__image" alt="" width="72" height="72" loading="lazy" hidden>
+                            {%- endif -%}
+                          </span>
+                          <span class="fuel09-pick__name" data-fuel09-name>{% if n == 1 %}{{ fuel09_short | escape }}{% endif %}</span>
+                          <span class="fuel09-pick__state">
+                            <span class="fuel09-pick__tick" aria-hidden="true"></span>
+                            <span class="fuel09-pick__added">{{ block.settings.pick_added_label | escape }}</span>
+                          </span>
+                          {%- unless n == 1 -%}
+                            <button
+                              type="button"
+                              class="fuel09-pick__remove"
+                              data-fuel09-remove
+                              data-label="{{ block.settings.pick_remove_label | escape }}"
+                              aria-label="{{ block.settings.pick_remove_label | replace: '[name]', '' | strip | escape }}">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          {%- endunless -%}
+                        </span>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              {%- else -%}
+              <div class="fuel09-card__sizes">
+                <span class="fuel09-card__sizes-label" id="{{ fuel09_card_id }}-sizes">
+                  {{- block.settings.size_heading | escape -}}
+                </span>
+                <div class="fuel09-sizes" role="radiogroup" aria-labelledby="{{ fuel09_card_id }}-sizes">
+                  {%- for variant in product.variants -%}
+                    {%- liquid
+                      assign fuel09_variant_mark = ' ' | append: variant.id | append: ' '
+                      unless fuel09_offered contains fuel09_variant_mark
+                        continue
+                      endunless
+                      comment
+                        The size in ml and the price per ml, read the way the
+                        size tiles this box stands in for read them.
+                      endcomment
+                      assign fuel09_ml = 0
+                      if variant.title contains '100'
+                        assign fuel09_ml = 100
+                      elsif variant.title contains '50'
+                        assign fuel09_ml = 50
+                      elsif variant.title contains '30'
+                        assign fuel09_ml = 30
+                      endif
+                      if fuel09_ml > 0
+                        assign fuel09_per_ml = variant.price | times: 1.0 | divided_by: fuel09_ml
+                      endif
+                      assign fuel09_tabbed = false
+                      if fuel09_ml == 100 and block.settings.size_badge != blank
+                        assign fuel09_tabbed = true
+                      endif
+                    -%}
+                    <label class="fuel09-size{% if fuel09_tabbed %} fuel09-size--tabbed{% endif %}">
+                      <input
+                        type="radio"
+                        class="fuel09-size__input visually-hidden"
+                        name="fuel09-size-{{ block.id }}-{{ i }}"
+                        value="{{ variant.id }}"
+                        {% if variant.id == fuel09_variant.id %}
+                          checked
+                        {% endif %}>
+                      <span class="fuel09-size__box">
+                        {%- if fuel09_tabbed -%}
+                          <span class="fuel09-size__tab">{{ block.settings.size_badge | escape }}</span>
+                        {%- endif -%}
+                        <span class="fuel09-size__name">{{ variant.title | escape }}</span>
+                        {%- if fuel09_ml > 0 -%}
+                          <span class="fuel09-size__rate">{{ fuel09_per_ml | money }} / ml</span>
+                        {%- endif -%}
+                      </span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </fieldset>
+
+        {%- if fuel09_layout == 'b' or fuel09_layout == 'c' -%}
+          {%- capture fuel09_benefits -%}
+            {%- for n in (1..3) -%}
+              {%- liquid
+                assign fuel09_key = 'benefit_' | append: n | append: '_title'
+                assign fuel09_benefit_title = block.settings[fuel09_key]
+                assign fuel09_key = 'benefit_' | append: n | append: '_text'
+                assign fuel09_benefit_text = block.settings[fuel09_key]
+              -%}
+              {%- if fuel09_benefit_title != blank or fuel09_benefit_text != blank -%}
+                <li class="fuel09-benefit">
+                  <span class="fuel09-benefit__icon" aria-hidden="true">
+                    {%- if n == 2 -%}
+                      {{- 'fuel09-truck.svg' | inline_asset_content -}}
+                    {%- else -%}
+                      {{- 'fuel09-gift-benefit.svg' | inline_asset_content -}}
+                    {%- endif -%}
+                  </span>
+                  {%- if fuel09_benefit_title != blank -%}
+                    <span class="fuel09-benefit__title">{{ fuel09_benefit_title | escape }}</span>
+                  {%- endif -%}
+                  {%- if fuel09_benefit_text != blank -%}
+                    <span class="fuel09-benefit__text">{{ fuel09_benefit_text | escape }}</span>
+                  {%- endif -%}
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- if fuel09_benefits != blank -%}
+            <ul class="fuel09-benefits">
+              {{- fuel09_benefits -}}
+            </ul>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if fuel09_picks -%}
+      {%- comment -%}
+        The picker. One for the whole box: the open card decides how many
+        slots it fills. A native dialog, so the page behind it is inert, Tab
+        stays inside it and Escape closes it without a line of script.
+      {%- endcomment -%}
+      <dialog class="fuel09-picker" aria-labelledby="fuel09-picker-{{ block.id }}">
+        <div class="fuel09-picker__head">
+          <span class="fuel09-picker__title" id="fuel09-picker-{{ block.id }}">{{ block.settings.picker_title | escape }}</span>
+          <span class="fuel09-picker__left" data-fuel09-left aria-live="polite"></span>
+          <button type="button" class="fuel09-picker__close" data-fuel09-close aria-label="{{ block.settings.picker_close | escape }}">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <label class="fuel09-picker__search">
+          <span class="visually-hidden">{{ block.settings.picker_search | escape }}</span>
+          <input
+            type="search"
+            class="fuel09-picker__input"
+            data-fuel09-search
+            placeholder="{{ block.settings.picker_search | escape }}"
+            autocomplete="off">
+        </label>
+        <div class="fuel09-picker__body" data-fuel09-list tabindex="-1">
+          <p class="fuel09-picker__status" data-fuel09-status role="status">{{ block.settings.picker_loading | escape }}</p>
+          <p class="fuel09-picker__status" data-fuel09-none hidden>{{ block.settings.picker_none | escape }}</p>
+        </div>
+      </dialog>
+    {%- endif -%}
+  </fuel09-box>
+{%- endif -%}

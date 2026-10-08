@@ -233,6 +233,8 @@
                     {% render 'reactive-variant-selector', product: product, section: section %}
                   {% endif %}
                 </div>
+              {%- when 'fuel09_offer_box' -%}
+                {% render 'fuel09-box', product: product, section: section, block: block %}
               {%- when 'fuel03_pair_scent' -%}
                 {% render 'fuel03-pair-scent', product: product, section: section, block: block, mode: 'v1' %}
               {%- when 'fuel03_pair_scent_v2' -%}
@@ -3314,6 +3316,501 @@
           "id": "link",
           "label": "Button link",
           "info": "Empty goes to /collections/bundle-save."
+        }
+      ]
+    },
+    {
+      "type": "fuel09_offer_box",
+      "name": "Special offer box",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Place this block directly above the Atc Bundle Builder block. It stands in for the size buttons of that block and uses its add to cart button. Swedish market only, never on bundle products."
+        },
+        {
+          "type": "select",
+          "id": "layout",
+          "label": "Layout",
+          "options": [
+            {
+              "value": "a",
+              "label": "A"
+            },
+            {
+              "value": "b",
+              "label": "B"
+            },
+            {
+              "value": "c",
+              "label": "C"
+            }
+          ],
+          "default": "a",
+          "info": "A: offer cards. B: offer cards and the benefits row. C: B's cards with a scent chosen for every bottle, in one size."
+        },
+        {
+          "type": "text",
+          "id": "collections",
+          "label": "Show only on products in these collections (handles, comma separated)",
+          "default": "best-sellers,top-sellers",
+          "info": "Leave empty to show on every single-perfume product."
+        },
+        {
+          "type": "text",
+          "id": "sizes",
+          "label": "Bottle sizes offered (comma separated)",
+          "default": "100,50",
+          "info": "As written in the size names. A size that is not listed cannot be chosen in the box. Leave empty to offer every size. The scent list section (Offer box scent list) carries the same sizes."
+        },
+        {
+          "type": "header",
+          "content": "Header"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Specialerbjudande"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Line next to the heading",
+          "default": "Endast under begränsad tid"
+        },
+        {
+          "type": "header",
+          "content": "Card 1"
+        },
+        {
+          "type": "number",
+          "id": "card_1_paid",
+          "label": "Bottles paid",
+          "default": 1,
+          "info": "0 switches this card off."
+        },
+        {
+          "type": "number",
+          "id": "card_1_free",
+          "label": "Bottles free",
+          "default": 1
+        },
+        {
+          "type": "number",
+          "id": "card_1_mystery",
+          "label": "Mystery bottles",
+          "default": 0
+        },
+        {
+          "type": "number",
+          "id": "card_1_free_shown",
+          "label": "Free bottles named in the texts",
+          "info": "Empty uses the free bottles above."
+        },
+        {
+          "type": "text",
+          "id": "card_1_badge",
+          "label": "Badge"
+        },
+        {
+          "type": "checkbox",
+          "id": "card_1_selected",
+          "label": "Selected by default",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "card_1_free_shipping",
+          "label": "Free shipping pill",
+          "info": "Shown only at the sizes where this card reaches the free shipping limit.",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Card 2"
+        },
+        {
+          "type": "number",
+          "id": "card_2_paid",
+          "label": "Bottles paid",
+          "default": 2,
+          "info": "0 switches this card off."
+        },
+        {
+          "type": "number",
+          "id": "card_2_free",
+          "label": "Bottles free",
+          "default": 2
+        },
+        {
+          "type": "number",
+          "id": "card_2_mystery",
+          "label": "Mystery bottles",
+          "default": 1
+        },
+        {
+          "type": "number",
+          "id": "card_2_free_shown",
+          "label": "Free bottles named in the texts",
+          "info": "Empty uses the free bottles above."
+        },
+        {
+          "type": "text",
+          "id": "card_2_badge",
+          "label": "Badge",
+          "default": "REKOMMENDERAS"
+        },
+        {
+          "type": "checkbox",
+          "id": "card_2_selected",
+          "label": "Selected by default",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "card_2_free_shipping",
+          "label": "Free shipping pill",
+          "info": "Shown only at the sizes where this card reaches the free shipping limit.",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Card 3"
+        },
+        {
+          "type": "number",
+          "id": "card_3_paid",
+          "label": "Bottles paid",
+          "default": 3,
+          "info": "0 switches this card off."
+        },
+        {
+          "type": "number",
+          "id": "card_3_free",
+          "label": "Bottles free",
+          "default": 3
+        },
+        {
+          "type": "number",
+          "id": "card_3_mystery",
+          "label": "Mystery bottles",
+          "default": 0
+        },
+        {
+          "type": "number",
+          "id": "card_3_free_shown",
+          "label": "Free bottles named in the texts",
+          "info": "Empty uses the free bottles above."
+        },
+        {
+          "type": "text",
+          "id": "card_3_badge",
+          "label": "Badge"
+        },
+        {
+          "type": "checkbox",
+          "id": "card_3_selected",
+          "label": "Selected by default",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "card_3_free_shipping",
+          "label": "Free shipping pill",
+          "info": "Shown only at the sizes where this card reaches the free shipping limit.",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Card 4"
+        },
+        {
+          "type": "number",
+          "id": "card_4_paid",
+          "label": "Bottles paid",
+          "default": 4,
+          "info": "0 switches this card off."
+        },
+        {
+          "type": "number",
+          "id": "card_4_free",
+          "label": "Bottles free",
+          "default": 4
+        },
+        {
+          "type": "number",
+          "id": "card_4_mystery",
+          "label": "Mystery bottles",
+          "default": 1
+        },
+        {
+          "type": "number",
+          "id": "card_4_free_shown",
+          "label": "Free bottles named in the texts",
+          "info": "Empty uses the free bottles above."
+        },
+        {
+          "type": "text",
+          "id": "card_4_badge",
+          "label": "Badge"
+        },
+        {
+          "type": "checkbox",
+          "id": "card_4_selected",
+          "label": "Selected by default",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "card_4_free_shipping",
+          "label": "Free shipping pill",
+          "info": "Shown only at the sizes where this card reaches the free shipping limit.",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Prices",
+          "info": "Every price is worked out from the product: price x bottles paid, plus the shipping cost while that stays under the free shipping limit."
+        },
+        {
+          "type": "number",
+          "id": "shipping_cost",
+          "label": "Shipping cost",
+          "default": 64
+        },
+        {
+          "type": "number",
+          "id": "free_shipping_from",
+          "label": "Free shipping from",
+          "default": 600
+        },
+        {
+          "type": "checkbox",
+          "id": "count_mystery",
+          "label": "Count mystery bottles in the bottle total and the price per bottle",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Card texts"
+        },
+        {
+          "type": "text",
+          "id": "title_text",
+          "label": "Card title",
+          "default": "KÖP [paid], FÅ [free] GRATIS",
+          "info": "[paid] and [free] become the card's numbers. In layout B the free number includes the mystery bottles."
+        },
+        {
+          "type": "text",
+          "id": "total_text",
+          "label": "Bottle count line",
+          "default": "[total] flaskor totalt",
+          "info": "[total] is paid + free + mystery."
+        },
+        {
+          "type": "text",
+          "id": "included_text",
+          "label": "Offer line",
+          "default": "[paid] + [free] GRATIS"
+        },
+        {
+          "type": "text",
+          "id": "mystery_text",
+          "label": "Mystery pill",
+          "default": "+ [n] GRATIS MYSTERY SCENT",
+          "info": "[n] is the number of mystery bottles. Shown on cards that have at least one."
+        },
+        {
+          "type": "text",
+          "id": "shipping_pill_text",
+          "label": "Free shipping pill",
+          "default": "FRI FRAKT"
+        },
+        {
+          "type": "text",
+          "id": "per_bottle_text",
+          "label": "Price per bottle",
+          "default": "[price]/flaska",
+          "info": "[price] is the card's price divided by all of its bottles."
+        },
+        {
+          "type": "text",
+          "id": "shipping_note",
+          "label": "Note under the price",
+          "default": "inkl. frakt",
+          "info": "Shown when the shipping cost is part of the card's price."
+        },
+        {
+          "type": "text",
+          "id": "size_heading",
+          "label": "Size heading",
+          "default": "Välj storlek:"
+        },
+        {
+          "type": "text",
+          "id": "size_badge",
+          "label": "Tab on the 100 ml size",
+          "default": "BÄST VÄRDE"
+        },
+        {
+          "type": "header",
+          "content": "Benefits row",
+          "info": "Layout B only."
+        },
+        {
+          "type": "text",
+          "id": "benefit_1_title",
+          "label": "Benefit 1 title",
+          "default": "Gratis mystery scent"
+        },
+        {
+          "type": "text",
+          "id": "benefit_1_text",
+          "label": "Benefit 1 line",
+          "default": "Vid köp över 500 kr"
+        },
+        {
+          "type": "text",
+          "id": "benefit_2_title",
+          "label": "Benefit 2 title",
+          "default": "Fri frakt"
+        },
+        {
+          "type": "text",
+          "id": "benefit_2_text",
+          "label": "Benefit 2 line",
+          "default": "Vid köp över 600 kr"
+        },
+        {
+          "type": "text",
+          "id": "benefit_3_title",
+          "label": "Benefit 3 title",
+          "default": "Gratis flaska nr 2"
+        },
+        {
+          "type": "text",
+          "id": "benefit_3_text",
+          "label": "Benefit 3 line",
+          "default": "Vid köp över 700 kr"
+        },
+        {
+          "type": "header",
+          "content": "Mystery bottle",
+          "info": "With both filled in, a card that has mystery bottles adds that item with its perfumes and puts the code on the cart. With either empty the card adds its perfumes only. Anything entered here is readable in the page source."
+        },
+        {
+          "type": "text",
+          "id": "mystery_item_id",
+          "label": "Mystery bottle item ID"
+        },
+        {
+          "type": "text",
+          "id": "mystery_code",
+          "label": "Mystery bottle discount code"
+        },
+        {
+          "type": "header",
+          "content": "Layout C: one scent per bottle"
+        },
+        {
+          "type": "paragraph",
+          "content": "Layout C shows the size choice above the box and every bottle comes in the size chosen there. The first bottle is the perfume of the page and the shopper chooses the others from the collections named above. The bottles go into the cart one by one, so a card only costs what it says while its discount code below exists and covers those collections."
+        },
+        {
+          "type": "text",
+          "id": "card_1_code",
+          "label": "Card 1 discount code",
+          "info": "Added to the cart with the bottles. Empty adds no code."
+        },
+        {
+          "type": "text",
+          "id": "card_2_code",
+          "label": "Card 2 discount code"
+        },
+        {
+          "type": "text",
+          "id": "card_3_code",
+          "label": "Card 3 discount code"
+        },
+        {
+          "type": "text",
+          "id": "card_4_code",
+          "label": "Card 4 discount code"
+        },
+        {
+          "type": "text",
+          "id": "picks_heading",
+          "label": "Line above the scents",
+          "default": "[total] dofter i paketet – välj dina favoriter",
+          "info": "[total] is the number of bottles."
+        },
+        {
+          "type": "text",
+          "id": "picks_left_text",
+          "label": "Scents left to choose",
+          "default": "[n] kvar att välja",
+          "info": "[n] is the number left."
+        },
+        {
+          "type": "text",
+          "id": "picks_done_text",
+          "label": "All scents chosen",
+          "default": "Alla dofter valda"
+        },
+        {
+          "type": "text",
+          "id": "pick_empty_label",
+          "label": "Empty scent",
+          "default": "Välj doft"
+        },
+        {
+          "type": "text",
+          "id": "pick_added_label",
+          "label": "Chosen scent",
+          "default": "Tillagd"
+        },
+        {
+          "type": "text",
+          "id": "pick_remove_label",
+          "label": "Remove a scent (screen readers)",
+          "default": "Ta bort [name]"
+        },
+        {
+          "type": "text",
+          "id": "picker_title",
+          "label": "Scent list heading",
+          "default": "Välj doft"
+        },
+        {
+          "type": "text",
+          "id": "picker_search",
+          "label": "Scent list search",
+          "default": "Sök doft"
+        },
+        {
+          "type": "text",
+          "id": "picker_loading",
+          "label": "Scent list while loading",
+          "default": "Laddar dofter…"
+        },
+        {
+          "type": "text",
+          "id": "picker_none",
+          "label": "Scent list with no match",
+          "default": "Inga dofter hittades"
+        },
+        {
+          "type": "text",
+          "id": "picker_error",
+          "label": "Scent list when it cannot load",
+          "default": "Dofterna kunde inte laddas. Försök igen."
+        },
+        {
+          "type": "text",
+          "id": "picker_close",
+          "label": "Close the scent list (screen readers)",
+          "default": "Stäng"
         }
       ]
     }

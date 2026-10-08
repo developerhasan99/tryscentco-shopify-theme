@@ -1,0 +1,1849 @@
+/*
+ * FUEL_09 offer box. Loaded from snippets/fuel09-box.liquid, only on a page
+ * the box renders on.
+ *
+ * Frames (file 9HgoZST5puLTIuPPHSLVub): look A 787:521 (510 wide) and
+ * 787:297 (280 wide), look B 720:4 (510 wide) and 787:916 (280 wide), look
+ * C 697:483 (502 wide) and 787:1235 (272 wide), at the foot of the file. The
+ * frames were scaled in the design file, so their numbers are fractional
+ * (9.903, 11.553 ...); lengths here are those numbers rounded to whole
+ * pixels, and every colour is the frame's own. The wide frames were scaled
+ * to the width the box really has on a desktop, the narrow ones to a 280
+ * box no phone has, which is what --fuel09-u below makes up for.
+ *
+ * Colours go through the custom properties below and lengths are written
+ * out. The --fuel09-card-* set is what the cards paint with; look B's wide
+ * frame is drawn in its own greens and greys, and it re-points that set and
+ * nothing else.
+ *
+ * Type: the frames set Arimo and Inter, the store serves Figtree only, so
+ * the box takes the store's face at the frames' sizes and weights. The
+ * line height is Arimo's own 1.15, which is what the frames' row heights
+ * were measured with.
+ */
+
+.fuel09-box {
+  --fuel09-surface: #ffffff;
+  --fuel09-ink: #080a0f;
+  --fuel09-muted: #536071;
+  --fuel09-green: #075b40;
+  --fuel09-tint: #d5eee4;
+  --fuel09-wash: linear-gradient(to right, #eaf7f2, #f7fbf9 52%, #e8f6f1);
+  --fuel09-divider: #bed4cb;
+  --fuel09-header-surface: #ebf4ef;
+  --fuel09-header-ink: #115c43;
+  --fuel09-header-note: #1f2937;
+  --fuel09-shadow: rgba(18, 37, 26, 0.08);
+
+  --fuel09-card-ink: var(--fuel09-ink);
+  --fuel09-card-muted: var(--fuel09-muted);
+  --fuel09-card-accent: var(--fuel09-green);
+  --fuel09-card-count-selected: #044a35;
+  --fuel09-card-line: #dce2e2;
+  --fuel09-card-line-selected: #8bc2ac;
+  --fuel09-card-radio-line: #c9ced1;
+  --fuel09-card-wash: var(--fuel09-wash);
+  --fuel09-card-badge: var(--fuel09-green);
+  --fuel09-card-on-accent: #ffffff;
+
+  --fuel09-bottle-dark: #151716;
+  --fuel09-bottle-glass: #f6f8f7;
+  --fuel09-bottle-line: #858b8a;
+  --fuel09-bottle-label: #ffffff;
+  --fuel09-bottle-label-line: #d9dddc;
+  --fuel09-bottle-mark: #ffffff;
+  --fuel09-plus: #000000;
+  --fuel09-u: 1px;
+
+  /* The box's own width is the query container. Two columns from 750 make
+   * the buy box as narrow as 275px on a 750px window and it only reaches
+   * the wide frame's 510 near 1200, so a window breakpoint would hand the
+   * one-row layout to boxes that cannot hold it. */
+  container: fuel09 / inline-size;
+  display: none;
+  font-family: var(--font-body-family);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-align: left;
+  color: var(--fuel09-ink);
+}
+
+/* ------------------------------------------------------------------ *
+ * Gate. The box ships hidden and nothing here reveals it on its own:
+ * the class on <html> comes from the testing tool, or from the preview
+ * switch in snippets/fuel09-global.liquid on a theme that is not live:
+ * ab-f09-v1 for look A, ab-f09-v2 for look B, ab-f09-v3 for look C.
+ *
+ * A look that is on, on a page that holds that look's box, takes the
+ * size tiles off: the #variant-selector grid and the heading row right
+ * before it in the buy area. The form, the button and everything else in
+ * .atc-bundle-builder stay. The strike-through price in the button goes
+ * with them, because the button then carries the offer's total and not
+ * one bottle's price.
+ *
+ * :has() is what keeps a page without the box on its tiles, so the
+ * reveal sits behind the same support test: a browser that cannot run
+ * the swap keeps the tiles and never gets the box next to them.
+ *
+ * Look C keeps the page's size tiles, above the box and not under it:
+ * assets/fuel09-offer.js lifts the heading row and the grid out of the
+ * buy area to just before the box (both then carry data-fuel09-lifted),
+ * so the rule below hides them only until that has happened. A tile of a
+ * size the box does not offer is marked data-fuel09-off, and the grid is
+ * told how many tiles are left so they share its width.
+ * ------------------------------------------------------------------ */
+
+@supports selector(:has(*)) {
+  html.ab-f09-v1 .fuel09-box--a,
+  html.ab-f09-v2 .fuel09-box--b,
+  html.ab-f09-v3 .fuel09-box--c {
+    display: block;
+  }
+
+  html.ab-f09-v1 .product__info-container:has(.fuel09-box--a) .atc-bundle-builder #variant-selector,
+  html.ab-f09-v1 .product__info-container:has(.fuel09-box--a) .atc-bundle-builder :has(+ #variant-selector),
+  html.ab-f09-v1 .product__info-container:has(.fuel09-box--a) .atc-bundle-builder #product-price .compare-price,
+  html.ab-f09-v2 .product__info-container:has(.fuel09-box--b) .atc-bundle-builder #variant-selector,
+  html.ab-f09-v2 .product__info-container:has(.fuel09-box--b) .atc-bundle-builder :has(+ #variant-selector),
+  html.ab-f09-v2 .product__info-container:has(.fuel09-box--b) .atc-bundle-builder #product-price .compare-price,
+  html.ab-f09-v3 .product__info-container:has(.fuel09-box--c) .atc-bundle-builder #variant-selector,
+  html.ab-f09-v3 .product__info-container:has(.fuel09-box--c) .atc-bundle-builder :has(+ #variant-selector),
+  html.ab-f09-v3 .product__info-container:has(.fuel09-box--c) .atc-bundle-builder #product-price .compare-price {
+    display: none;
+  }
+}
+
+.product__info-container > [data-fuel09-lifted] {
+  margin: 24px 0 12px;
+}
+
+.product__info-container > #variant-selector[data-fuel09-lifted] {
+  margin: 0 0 20px;
+}
+
+#variant-selector[data-fuel09-lifted] .variant-button[data-fuel09-off] {
+  display: none;
+}
+
+#variant-selector[data-fuel09-lifted='1'] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+#variant-selector[data-fuel09-lifted='2'] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.shopify-design-mode .fuel09-box {
+  display: block;
+}
+
+/* ------------------------------------------------------------------ *
+ * Panel and header. 787:521 / 787:297 / 787:916: white, radius 11.553,
+ * shadow 0 4.126 14.854 rgba(18, 37, 26, 0.08). Header 38 tall on #ebf4ef,
+ * padding 10, gap 10 around a 17.5 rule; glyph 17.864 x 16.726, heading
+ * Figtree Bold 14 #115c43, note Figtree Medium 12 / 20, tracking 0.6,
+ * #1f2937. The header is the same in all four frames.
+ * ------------------------------------------------------------------ */
+
+.fuel09-box__panel {
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--fuel09-surface);
+  box-shadow: 0 4px 15px var(--fuel09-shadow);
+}
+
+.fuel09-box__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0 10px;
+  min-height: 38px;
+  padding: 0 10px;
+  background: var(--fuel09-header-surface);
+}
+
+.fuel09-box__heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--fuel09-header-ink);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.fuel09-box__heading-icon {
+  flex: none;
+  width: 18px;
+  height: 17px;
+}
+
+.fuel09-box__heading-icon svg,
+.fuel09-card__radio-on svg,
+.fuel09-pill__icon svg,
+.fuel09-bottles__plus svg,
+.fuel09-benefit__icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.fuel09-box__subheading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--fuel09-header-note);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.6px;
+  text-align: center;
+}
+
+.fuel09-box__heading + .fuel09-box__subheading::before {
+  content: '';
+  flex: none;
+  width: 1px;
+  height: 18px;
+  background: var(--fuel09-header-note);
+}
+
+/* The frames' header copy is English and fits one line at 280. The Swedish
+ * copy the block ships with needs about 370, so a narrower box stacks the
+ * two parts and drops the rule between them. */
+@container fuel09 (max-width: 379px) {
+  .fuel09-box__header {
+    flex-direction: column;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .fuel09-box__heading + .fuel09-box__subheading::before {
+    content: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * The narrow frames' unit. Their cards were drawn for a box about 339
+ * wide and shrunk by 0.825 to fit 280 (border 0.825, padding 9.903, title
+ * 11.966: 1, 12 and 14.5 before the shrink), under a header left at its
+ * real size. A phone gives the box 330 to 400, so at the frame's numbers
+ * everything under the header came out a fifth smaller than drawn. Every
+ * length of the narrow arrangement is therefore a count of --fuel09-u:
+ * 1px in a 280 box, growing with the box up to the 1.2121px the cards
+ * were drawn at, which a 339 box reaches. Hairlines stay in pixels.
+ *
+ * Set on the content and not on the box, because the box is the container
+ * the cqw asks about. A browser without container units keeps the 1px
+ * from the box, and the wide arrangement sets it back to 1px.
+ * ------------------------------------------------------------------ */
+
+@supports (width: 1cqw) {
+  .fuel09-box__content {
+    --fuel09-u: clamp(1px, 100cqw / 280, 1.2121px);
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Cards, narrow arrangement. 787:297 / 787:916: content padding
+ * 9.903 9.903 8.252, cards 7.015 apart.
+ *
+ * Compact card: border 0.825 #dce2e2, radius 4.951, padding 6.189 9.903.
+ * Radio 18.155 with a 1.238 #c9ced1 ring, 11.55 to the copy; copy rows
+ * 1.65 apart: title Bold 11.966 #080a0f, count 10.316 #536071, "n + n"
+ * Bold 9.903 #075b40; the bottles sit under the copy; price column 7 to
+ * the right, 3.301 down from the top, rows 1.65 apart: total Bold 15.267,
+ * per bottle 7.84, shipping note 7.427, both #536071.
+ *
+ * Selected card: border 1.65 #8bc2ac on the mint wash, padding
+ * 9.078 11.553, copy rows 3 apart, count in #044a35.
+ *
+ * The padding is on the label and on the size chooser, not on the card,
+ * so the whole face of a compact card selects it.
+ * ------------------------------------------------------------------ */
+
+.fuel09-box__content {
+  padding: calc(10 * var(--fuel09-u)) calc(10 * var(--fuel09-u)) calc(8 * var(--fuel09-u));
+}
+
+.fuel09-box__cards {
+  display: flex;
+  flex-direction: column;
+  gap: calc(7 * var(--fuel09-u));
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fuel09-card {
+  position: relative;
+  border: 1px solid var(--fuel09-card-line);
+  border-radius: calc(5 * var(--fuel09-u));
+  background: var(--fuel09-surface);
+}
+
+.fuel09-card:has(> .fuel09-card__input:checked) {
+  border: 2px solid var(--fuel09-card-line-selected);
+  background: var(--fuel09-card-wash);
+}
+
+.fuel09-card:has(> .fuel09-card__input:focus-visible) {
+  outline: 2px solid var(--fuel09-card-accent);
+  outline-offset: 2px;
+}
+
+.fuel09-card__summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'radio details prices'
+    'radio bottles prices';
+  align-items: center;
+  gap: calc(2 * var(--fuel09-u)) calc(7 * var(--fuel09-u));
+  padding: calc(6 * var(--fuel09-u)) calc(10 * var(--fuel09-u));
+  cursor: pointer;
+}
+
+.fuel09-card__input:checked + .fuel09-card__summary {
+  row-gap: calc(3 * var(--fuel09-u));
+  padding: calc(9 * var(--fuel09-u)) calc(12 * var(--fuel09-u)) 0;
+}
+
+.fuel09-card__radio {
+  position: relative;
+  grid-area: radio;
+  width: calc(18 * var(--fuel09-u));
+  height: calc(18 * var(--fuel09-u));
+  margin-right: calc(5 * var(--fuel09-u));
+  border: 1px solid var(--fuel09-card-radio-line);
+  border-radius: 50%;
+  background: var(--fuel09-surface);
+}
+
+.fuel09-card__radio-on {
+  position: absolute;
+  inset: -1px;
+  display: none;
+}
+
+.fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__radio {
+  border-color: transparent;
+}
+
+.fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__radio-on:not(.fuel09-card__radio-on--wide) {
+  display: block;
+}
+
+.fuel09-card__details {
+  grid-area: details;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(2 * var(--fuel09-u));
+  min-width: 0;
+}
+
+.fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__details {
+  gap: calc(3 * var(--fuel09-u));
+}
+
+.fuel09-card__title {
+  color: var(--fuel09-card-ink);
+  font-size: calc(12 * var(--fuel09-u));
+  font-weight: 700;
+}
+
+.fuel09-card__count {
+  color: var(--fuel09-card-muted);
+  font-size: calc(10 * var(--fuel09-u));
+}
+
+.fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__count {
+  color: var(--fuel09-card-count-selected);
+}
+
+/* The pills follow the "n + n" line and drop under it when the copy
+ * column cannot hold them, which is where the frames have them: beside it
+ * in the wide rows, below it in the 124 wide selected card at 280. */
+.fuel09-card__perks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(2 * var(--fuel09-u));
+}
+
+.fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__perks {
+  row-gap: calc(3 * var(--fuel09-u));
+}
+
+.fuel09-card__included {
+  color: var(--fuel09-card-accent);
+  font-size: calc(10 * var(--fuel09-u));
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Pill: 16.092 tall, radius 7.427, padding 6.189, #d5eee4, glyph 9.49
+ * (gift) or 9.966 (truck) and 3.714 to Bold 7.015 #075b40. */
+.fuel09-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(4 * var(--fuel09-u));
+  height: calc(16 * var(--fuel09-u));
+  padding: 0 calc(6 * var(--fuel09-u));
+  border-radius: calc(7 * var(--fuel09-u));
+  background: var(--fuel09-tint);
+  color: var(--fuel09-green);
+  font-size: calc(7 * var(--fuel09-u));
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.fuel09-pill--shipping {
+  text-transform: uppercase;
+}
+
+.fuel09-pill__icon {
+  flex: none;
+  width: calc(9 * var(--fuel09-u));
+  height: calc(9 * var(--fuel09-u));
+}
+
+.fuel09-pill--shipping .fuel09-pill__icon {
+  width: calc(10 * var(--fuel09-u));
+  height: calc(10 * var(--fuel09-u));
+}
+
+/* ------------------------------------------------------------------ *
+ * Bottles. One drawing in every frame, 42 units wide and 82 tall, scaled
+ * per frame: 14.053 wide at 280, 17.33 at 510, 12.919 and 16.049 where a
+ * row holds ten. Cap 21 x 18 #151716 (radius 2 / 1), neck 12 x 8 and body
+ * 38 x 53 in #f6f8f7 with a #858b8a line (1 and 1.5, body radius 3),
+ * label 23 x 30 white with a 1 #d9dddc line, bottles 8 apart, the plus
+ * 14.6. The mystery bottle is the same drawing with a #151716 body and a
+ * white "?" 29 high.
+ *
+ * So 1em is one bottle's width and every part is that fraction of it;
+ * the font size on the row is the only number that changes with the
+ * frame. The hairlines stay fractions for the same reason: rounded to a
+ * whole pixel they would be a third of the neck.
+ * ------------------------------------------------------------------ */
+
+.fuel09-bottles {
+  grid-area: bottles;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-self: start;
+  gap: 0.1905em;
+  font-size: calc(14 * var(--fuel09-u));
+  line-height: 1;
+}
+
+/* A row of nine or ten bottles is about as wide as the copy column of a
+ * 280 box, so on the narrowest boxes it gives up size before it gives up
+ * the line. The column is the box less 155 units of padding, radio and
+ * price (measured on the page with a four-figure price), and 6 less again
+ * on the selected card with its wider border and padding; a nine-bottle
+ * row is 11.06 bottles wide, a ten-bottle row 12.25. From about 390px of
+ * box both are back on the frames' 14 and 13 units. */
+.fuel09-bottles--dense {
+  font-size: min(14 * var(--fuel09-u), (100cqw - 164 * var(--fuel09-u)) / 11.06);
+}
+
+.fuel09-bottles--denser {
+  font-size: min(13 * var(--fuel09-u), (100cqw - 164 * var(--fuel09-u)) / 12.25);
+}
+
+.fuel09-bottle {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  width: 1em;
+  height: 1.9524em;
+  overflow: hidden;
+}
+
+.fuel09-bottle__cap {
+  flex: none;
+  width: 0.5em;
+  height: 0.4286em;
+  border-radius: 0.0476em 0.0476em 0.0238em 0.0238em;
+  background: var(--fuel09-bottle-dark);
+}
+
+.fuel09-bottle__neck {
+  flex: none;
+  width: 0.2857em;
+  height: 0.1905em;
+  border: 0.0238em solid var(--fuel09-bottle-line);
+  background: var(--fuel09-bottle-glass);
+}
+
+.fuel09-bottle__body {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 0.9048em;
+  height: 1.2619em;
+  overflow: hidden;
+  border: 0.0357em solid var(--fuel09-bottle-line);
+  border-radius: 0.0714em;
+  background: var(--fuel09-bottle-glass);
+}
+
+.fuel09-bottle__label {
+  width: 0.5476em;
+  height: 0.7143em;
+  border: 0.0238em solid var(--fuel09-bottle-label-line);
+  background: var(--fuel09-bottle-label);
+}
+
+.fuel09-bottle--mystery .fuel09-bottle__body {
+  background: var(--fuel09-bottle-dark);
+}
+
+.fuel09-bottle__mark {
+  color: var(--fuel09-bottle-mark);
+  font-size: 0.6924em;
+  font-weight: 900;
+}
+
+.fuel09-bottles__plus {
+  flex: none;
+  width: 0.3482em;
+  height: 0.3482em;
+  color: var(--fuel09-plus);
+}
+
+/* ------------------------------------------------------------------ *
+ * Price column and badge.
+ *
+ * The badge is drawn on the selected card only, and differently per
+ * frame. At 280 look B (787:1185) has it in the column, full width over
+ * the price, 13.84 tall, radius 3.46, Bold 6.92, 3 above the price; that
+ * is the arrangement every card falls back to, so a badged card that is
+ * not the selected one still has room for it. Look A lifts it out of the
+ * column: 787:379 puts it on the first line of the selected card, flush
+ * with the copy's right edge, and the price centres on the card.
+ * ------------------------------------------------------------------ */
+
+.fuel09-card__prices {
+  grid-area: prices;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  align-self: start;
+  padding-top: calc(3 * var(--fuel09-u));
+  text-align: right;
+  white-space: nowrap;
+}
+
+.fuel09-card__price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: calc(2 * var(--fuel09-u));
+}
+
+.fuel09-card__price[hidden],
+.fuel09-pill[hidden] {
+  display: none;
+}
+
+.fuel09-card__total {
+  color: var(--fuel09-card-ink);
+  font-size: calc(15 * var(--fuel09-u));
+  font-weight: 700;
+}
+
+.fuel09-card__per {
+  color: var(--fuel09-card-muted);
+  font-size: calc(8 * var(--fuel09-u));
+}
+
+.fuel09-card__shipping {
+  color: var(--fuel09-card-muted);
+  font-size: calc(7 * var(--fuel09-u));
+}
+
+.fuel09-card__badge {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  justify-content: center;
+  height: calc(14 * var(--fuel09-u));
+  margin: calc(-3 * var(--fuel09-u)) 0 calc(6 * var(--fuel09-u));
+  padding: 0 calc(6 * var(--fuel09-u));
+  border-radius: calc(3 * var(--fuel09-u));
+  background: var(--fuel09-card-badge);
+  color: var(--fuel09-card-on-accent);
+  font-size: calc(7 * var(--fuel09-u));
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.fuel09-box--a .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__prices {
+  align-self: center;
+}
+
+.fuel09-box--a .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__badge {
+  position: absolute;
+  top: calc(9 * var(--fuel09-u));
+  right: calc(12 * var(--fuel09-u));
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ *
+ * Size chooser, selected card only. 787:384 / 787:385: "Choose size:"
+ * 9.078 #080a0f 3 under the summary, the options 14 under that, 6.189
+ * apart and 37.136 tall, radius 3.301: name Bold 9.903 #080a0f, price per
+ * ml 8.252 #536071, 1.65 apart. Line 0.825 #dce2e2, the chosen one 1.238
+ * #075b40. The 100 ml tab stands on the option's top right corner, which
+ * is square for it: 11 tall, padding 8.252, Bold 7.015 white on #075b40,
+ * top corners 3.301.
+ * ------------------------------------------------------------------ */
+
+.fuel09-card__sizes {
+  display: none;
+  padding: 0 calc(12 * var(--fuel09-u)) calc(9 * var(--fuel09-u));
+}
+
+.fuel09-card__input:checked ~ .fuel09-card__sizes {
+  display: block;
+}
+
+.fuel09-card__sizes-label {
+  display: block;
+  margin-top: calc(3 * var(--fuel09-u));
+  color: var(--fuel09-card-ink);
+  font-size: calc(9 * var(--fuel09-u));
+}
+
+.fuel09-sizes {
+  display: flex;
+  gap: calc(6 * var(--fuel09-u));
+  margin-top: calc(14 * var(--fuel09-u));
+}
+
+.fuel09-size {
+  flex: 1 1 0;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.fuel09-size__box {
+  --fuel09-size-line: 1px;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(2 * var(--fuel09-u));
+  height: calc(37 * var(--fuel09-u));
+  border: var(--fuel09-size-line) solid var(--fuel09-card-line);
+  border-radius: calc(3 * var(--fuel09-u));
+  background: var(--fuel09-surface);
+  white-space: nowrap;
+}
+
+.fuel09-size--tabbed .fuel09-size__box {
+  border-top-right-radius: 0;
+}
+
+.fuel09-size__input:checked + .fuel09-size__box {
+  border-color: var(--fuel09-card-accent);
+}
+
+.fuel09-size__input:focus-visible + .fuel09-size__box {
+  outline: 2px solid var(--fuel09-card-accent);
+  outline-offset: 2px;
+}
+
+.fuel09-size__name {
+  color: var(--fuel09-card-ink);
+  font-size: calc(10 * var(--fuel09-u));
+  font-weight: 700;
+}
+
+.fuel09-size__rate {
+  color: var(--fuel09-card-muted);
+  font-size: calc(8 * var(--fuel09-u));
+}
+
+.fuel09-size__tab {
+  position: absolute;
+  right: calc(-1 * var(--fuel09-size-line));
+  bottom: calc(100% + var(--fuel09-size-line));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(11 * var(--fuel09-u));
+  padding: 0 calc(8 * var(--fuel09-u));
+  border-radius: calc(3 * var(--fuel09-u)) calc(3 * var(--fuel09-u)) 0 0;
+  background: var(--fuel09-card-accent);
+  color: var(--fuel09-card-on-accent);
+  font-size: calc(7 * var(--fuel09-u));
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+/* ------------------------------------------------------------------ *
+ * Benefits row, look B only. 787:1214: 260 x 99 on the mint wash, radius
+ * 5, padding 5, 8.252 under the last card; three equal columns 3.301
+ * apart inside: a 33.01 #d5eee4 disc with a 16.505 glyph, title Bold 10
+ * #080a0f, line 9 #536071, both centred; a 0.413 x 49.927 #bed4cb rule
+ * between columns. The rule is a half-pixel border so it stays a hairline
+ * on every screen and never rounds away.
+ * ------------------------------------------------------------------ */
+
+.fuel09-benefits {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  grid-template-rows: repeat(3, auto);
+  align-content: center;
+  row-gap: calc(3 * var(--fuel09-u));
+  min-height: calc(99 * var(--fuel09-u));
+  margin: calc(8 * var(--fuel09-u)) 0 0;
+  padding: calc(5 * var(--fuel09-u));
+  border-radius: calc(5 * var(--fuel09-u));
+  background: var(--fuel09-wash);
+  list-style: none;
+}
+
+/* Each benefit lends its three rows to the row's own grid, so the icons,
+ * titles and lines of the three stay level when one of them wraps. */
+.fuel09-benefit {
+  position: relative;
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  justify-items: center;
+  align-items: start;
+  min-width: 0;
+  padding: 0 calc(4 * var(--fuel09-u));
+  text-align: center;
+  text-wrap: balance;
+}
+
+.fuel09-benefit + .fuel09-benefit::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: calc(50 * var(--fuel09-u));
+  margin-top: calc(-25 * var(--fuel09-u));
+  border-left: 0.5px solid var(--fuel09-divider);
+}
+
+.fuel09-benefit__icon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: calc(33 * var(--fuel09-u));
+  height: calc(33 * var(--fuel09-u));
+  border-radius: 50%;
+  background: var(--fuel09-tint);
+  color: var(--fuel09-green);
+}
+
+.fuel09-benefit__icon svg {
+  width: calc(17 * var(--fuel09-u));
+  height: calc(17 * var(--fuel09-u));
+}
+
+.fuel09-benefit__title {
+  color: var(--fuel09-ink);
+  font-size: calc(10 * var(--fuel09-u));
+  font-weight: 700;
+}
+
+.fuel09-benefit__text {
+  color: var(--fuel09-muted);
+  font-size: calc(9 * var(--fuel09-u));
+}
+
+/* ------------------------------------------------------------------ *
+ * Wide arrangement, look A 787:521. From 500px of box, which is what the
+ * longest row needs: 18 radio, the copy, nine 17.33 bottles and a 57
+ * price column, 11.553 apart, inside a 510 frame.
+ *
+ * One row per card: radio, copy, bottles pushed to the right, price.
+ * Compact card 56.942 tall, and 75 once the pills take a second row; both
+ * come out of 5px of padding around the copy, which is what the frame's
+ * fixed heights leave of its 6.189. Price column 78.398, and 57 to 58 on
+ * the rows that hold six bottles or more. Bottles 3.301 apart, 1.238 on
+ * the nine-bottle row.
+ *
+ * Selected card 136.99 tall: summary 47.864, "Choose size:" and the
+ * options 7.427 apart, options 37.136, which leaves 14 under them. The
+ * pill sits 6.602 from the "n + n" line, the badge (14.854 tall, radius
+ * 3.714, Bold 7.427) on the card's top edge above the price, the 100 ml
+ * tab 14.029 tall.
+ * ------------------------------------------------------------------ */
+
+@container fuel09 (min-width: 500px) {
+  .fuel09-box__content {
+    --fuel09-u: 1px;
+  }
+
+  .fuel09-card__summary {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas: 'radio details bottles prices';
+    column-gap: 12px;
+    min-height: 55px;
+    padding: 5px 10px;
+  }
+
+  .fuel09-card__input:checked + .fuel09-card__summary {
+    min-height: 57px;
+    padding: 9px 12px 0;
+  }
+
+  .fuel09-card__radio {
+    margin-right: 0;
+  }
+
+  .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__details {
+    gap: 2px;
+  }
+
+  .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__perks {
+    gap: 2px 7px;
+  }
+
+  .fuel09-bottles {
+    flex-wrap: nowrap;
+    justify-self: end;
+    font-size: 17px;
+  }
+
+  .fuel09-bottles--dense {
+    gap: 0.0714em;
+  }
+
+  .fuel09-bottles--denser {
+    gap: 0.0577em;
+    font-size: 16px;
+  }
+
+  .fuel09-card__prices {
+    align-self: center;
+    min-width: 78px;
+  }
+
+  .fuel09-card--long .fuel09-card__prices {
+    min-width: 57px;
+  }
+
+  .fuel09-box--a .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__badge {
+    top: 1px;
+    height: 15px;
+    padding: 0 7px;
+    border-radius: 4px;
+  }
+
+  .fuel09-card__sizes {
+    padding-bottom: 14px;
+  }
+
+  .fuel09-card__sizes-label {
+    margin-top: 7px;
+  }
+
+  .fuel09-sizes {
+    margin-top: 7px;
+  }
+
+  .fuel09-size__tab {
+    height: 14px;
+  }
+
+  /* 697:875, the benefits row in the wide frame: 78.398 tall, padding
+   * 5.364 23.107, radius 7.427, 10.366 under the last card; title Bold
+   * 10.728 and line 9.078 on one line each. */
+  .fuel09-benefits {
+    min-height: 78px;
+    margin-top: 10px;
+    padding: 5px 23px;
+    border-radius: 7px;
+  }
+
+  .fuel09-benefit__title {
+    font-size: 11px;
+  }
+
+  /* ---------------------------------------------------------------- *
+   * Look B, wide frame 720:4. This frame is drawn apart from the other
+   * three: Inter instead of Arimo (line height 1.21), its own greens and
+   * greys, larger cards, a price in regular weight, a selected card on a
+   * white-to-mint glow with the badge standing out of its top edge, and
+   * an indented size chooser with taller options. Everything from here
+   * to the end of the query is that frame and only that frame; taking
+   * the block out leaves look B in look A's wide styling.
+   *
+   * Panel radius 13.268, shadow 0 4.976 14.098 rgba(14, 48, 35, 0.09);
+   * content padding 12.439 8.293 6.634, cards 10.366 apart.
+   * Compact card 66.341 tall (80 with two pill rows, so 6 of padding),
+   * line 0.829 #dce3e4, radius 5.805, padding 9.951, parts 14.098 apart;
+   * radio 19.902 with a 1.659 #c8cdd3 ring; title Bold 12.854 #080910,
+   * count 11.195 #657085, "n + n" Regular 10.78 #006044, pills 5 from
+   * it; price Regular 14.927 over 9.122 lines, 1.659 apart, 75.463 wide.
+   * Selected card: line 1.659 #79b29e, padding 11.195 top, 10.366 left,
+   * summary 52.244; badge 66.341 x 16.585, radius 3.317, #007050 to
+   * #00553b, Bold 7.878, 7.05 above the card and 4.14 in from its right.
+   * Chooser: indented 22.805, 23.22 clear on the right, 11.61 under it;
+   * label SemiBold 9.951, 11.195 under the summary; options 11.61 under
+   * the label, 7.463 apart, 44.78 tall, radius 3.317, name Bold 11.195,
+   * per ml 9.122, 2.488 apart, chosen line 1.659 #006044; tab
+   * 67.171 x 16.585, Bold 7.878, down on the option's top line.
+   * ---------------------------------------------------------------- */
+
+  .fuel09-box--b .fuel09-box__panel {
+    --fuel09-shadow: rgba(14, 48, 35, 0.09);
+    --fuel09-card-ink: #080910;
+    --fuel09-card-muted: #657085;
+    --fuel09-card-accent: #006044;
+    --fuel09-card-count-selected: #657085;
+    --fuel09-card-line: #dce3e4;
+    --fuel09-card-line-selected: #79b29e;
+    --fuel09-card-radio-line: #c8cdd3;
+    --fuel09-card-wash: radial-gradient(ellipse 62% 69% at 53% 45%, #ffffff, #e8f7f1);
+    --fuel09-card-badge: linear-gradient(to right, #007050, #00553b);
+    --fuel09-card-lift: 0 1px 2px rgba(0, 61, 43, 0.15);
+
+    border-radius: 13px;
+    box-shadow: 0 5px 14px var(--fuel09-shadow);
+  }
+
+  .fuel09-box--b .fuel09-box__content {
+    padding: 12px 8px 7px;
+  }
+
+  .fuel09-box--b .fuel09-box__cards {
+    gap: 10px;
+  }
+
+  .fuel09-box--b .fuel09-card {
+    border-radius: 6px;
+    line-height: 1.21;
+  }
+
+  .fuel09-box--b .fuel09-card__summary {
+    column-gap: 12px;
+    min-height: 64px;
+    padding: 6px 10px;
+  }
+
+  .fuel09-box--b .fuel09-card__input:checked + .fuel09-card__summary {
+    min-height: 63px;
+    padding: 11px 9px 0 10px;
+  }
+
+  .fuel09-box--b .fuel09-card__radio {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+  }
+
+  .fuel09-box--b .fuel09-card__radio-on {
+    inset: -2px;
+  }
+
+  .fuel09-box--b .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__radio-on:not(.fuel09-card__radio-on--wide) {
+    display: none;
+  }
+
+  .fuel09-box--b .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__radio-on--wide {
+    display: block;
+  }
+
+  .fuel09-box--b .fuel09-card__title {
+    font-size: 13px;
+  }
+
+  .fuel09-box--b .fuel09-card__count {
+    font-size: 11px;
+  }
+
+  .fuel09-box--b .fuel09-card__included {
+    font-size: 11px;
+    font-weight: 400;
+  }
+
+  .fuel09-box--b .fuel09-card__perks {
+    column-gap: 5px;
+  }
+
+  .fuel09-box--b .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__perks {
+    gap: 2px;
+  }
+
+  .fuel09-box--b .fuel09-card__prices,
+  .fuel09-box--b .fuel09-card--long .fuel09-card__prices {
+    min-width: 75px;
+    padding-top: 0;
+  }
+
+  .fuel09-box--b .fuel09-card__total {
+    font-weight: 400;
+  }
+
+  .fuel09-box--b .fuel09-card__per,
+  .fuel09-box--b .fuel09-card__shipping {
+    font-size: 9px;
+  }
+
+  .fuel09-box--b .fuel09-card__badge {
+    margin: 0 0 3px;
+  }
+
+  .fuel09-box--b .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__badge {
+    position: absolute;
+    top: -7px;
+    right: 4px;
+    min-width: 66px;
+    height: 17px;
+    margin: 0;
+    padding: 0 4px;
+    box-shadow: var(--fuel09-card-lift);
+    font-size: 8px;
+  }
+
+  .fuel09-box--b .fuel09-card__sizes {
+    padding: 0 23px 9px 33px;
+  }
+
+  .fuel09-box--b .fuel09-card__sizes-label {
+    margin-top: 11px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .fuel09-box--b .fuel09-sizes {
+    gap: 7px;
+    margin-top: 12px;
+  }
+
+  .fuel09-box--b .fuel09-size__box {
+    height: 45px;
+  }
+
+  .fuel09-box--b .fuel09-size__input:checked + .fuel09-size__box {
+    --fuel09-size-line: 2px;
+  }
+
+  .fuel09-box--b .fuel09-size__name {
+    font-size: 11px;
+  }
+
+  .fuel09-box--b .fuel09-size__rate {
+    font-size: 9px;
+  }
+
+  .fuel09-box--b .fuel09-size__tab {
+    bottom: 100%;
+    min-width: 67px;
+    height: 17px;
+    padding: 0 4px;
+    box-shadow: var(--fuel09-card-lift);
+    font-size: 8px;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Look C, narrow frame 787:1235 (272 wide). The compact cards are the
+ * other looks' compact cards; the frame differs in what stands around
+ * them and in the selected card, which is drawn in Inter (line height
+ * 1.21) and its own green.
+ *
+ * Content on #fbfbfa, padding 5.913, cards 4.435 apart. Selected card
+ * #f1f8f5 with a 1.478 #087a4b line, radius 5.913, summary padding
+ * 4.435 9.609: radio 20.696 filled #087a4b with a white dot, 10.35 to the
+ * copy and 10 on to the price; title Bold 12.565 #16171a, count 10.348
+ * #60656b, "n + n" SemiBold 12.565 #087a4b, 1.478 apart; price column
+ * 87.217 with the badge in it (#087a4b, radius 4.435, padding 2.957 8.13,
+ * Bold 8.87 white), the total Regular 17 and the two lines 8 #60656b.
+ *
+ * Under the summary, where the other looks have the size chooser: a white
+ * bar 34 tall, padding 13.304, two lines 2 apart in 10.348 (the count line
+ * Bold #087a4b), then the scents, one row each 4 apart, padding 4.435
+ * 13.304 3.696: a 62 square (line 0.739 #c4dad1, dashed while empty,
+ * radius 5.913, a Light 28 plus in #90979d) and 6 to a 9.609 #60656b
+ * label; the chosen row ends in a 12.565 #087a4b disc with a white tick
+ * and "Added".
+ *
+ * The frame draws no way to take a chosen scent back out. The mark on the
+ * square's corner is ours, the one the bundle page's slots carry.
+ * ------------------------------------------------------------------ */
+
+.fuel09-box--c {
+  --fuel09-pick-ground: #fbfbfa;
+  --fuel09-pick-ink: #16171a;
+  --fuel09-pick-muted: #60656b;
+  --fuel09-pick-accent: #087a4b;
+  --fuel09-pick-wash: #f1f8f5;
+  --fuel09-pick-line: #c4dad1;
+  --fuel09-pick-line-empty: #c4dad1;
+  --fuel09-pick-plus: #90979d;
+  --fuel09-pick-field: #dde1e3;
+}
+
+.fuel09-box--c .fuel09-box__content {
+  padding: calc(6 * var(--fuel09-u));
+  background: var(--fuel09-pick-ground);
+}
+
+.fuel09-box--c .fuel09-box__cards {
+  gap: calc(4 * var(--fuel09-u));
+}
+
+.fuel09-box--c .fuel09-card:has(> .fuel09-card__input:checked) {
+  --fuel09-card-ink: var(--fuel09-pick-ink);
+  --fuel09-card-muted: var(--fuel09-pick-muted);
+  --fuel09-card-accent: var(--fuel09-pick-accent);
+  --fuel09-card-count-selected: var(--fuel09-pick-muted);
+  --fuel09-card-badge: var(--fuel09-pick-accent);
+
+  overflow: hidden;
+  border: 1.5px solid var(--fuel09-pick-accent);
+  border-radius: calc(6 * var(--fuel09-u));
+  background: var(--fuel09-pick-wash);
+  line-height: 1.21;
+}
+
+.fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary {
+  gap: calc(1 * var(--fuel09-u)) calc(10 * var(--fuel09-u));
+  padding: calc(4 * var(--fuel09-u)) calc(10 * var(--fuel09-u));
+}
+
+.fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__radio {
+  width: calc(21 * var(--fuel09-u));
+  height: calc(21 * var(--fuel09-u));
+  margin-right: 0;
+  border-width: 0;
+}
+
+.fuel09-box--c .fuel09-card__radio-on {
+  inset: 0;
+}
+
+.fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__details {
+  gap: calc(1 * var(--fuel09-u));
+}
+
+/* The frame's column holds "BUY 2, GET 3 FREE" on one line beside an 87
+ * wide price column. The Swedish title is a few units longer, so the
+ * price column keeps 80, which is more than a three-figure price fills,
+ * and the title stays whole. */
+.fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__title,
+.fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__included {
+  font-size: calc(12.5 * var(--fuel09-u));
+}
+
+.fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__included {
+  font-weight: 600;
+}
+
+.fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__prices {
+  min-width: calc(80 * var(--fuel09-u));
+  padding-top: 0;
+}
+
+.fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__price {
+  gap: 0;
+}
+
+.fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__total {
+  font-size: calc(17 * var(--fuel09-u));
+  font-weight: 400;
+}
+
+.fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__per,
+.fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__shipping {
+  font-size: calc(8 * var(--fuel09-u));
+}
+
+.fuel09-box--c .fuel09-card__badge {
+  align-self: flex-end;
+  height: auto;
+  margin: 0;
+  padding: calc(3 * var(--fuel09-u)) calc(8 * var(--fuel09-u));
+  border-radius: calc(4 * var(--fuel09-u));
+  font-size: calc(9 * var(--fuel09-u));
+  line-height: 1.21;
+}
+
+.fuel09-card__picks {
+  display: none;
+}
+
+.fuel09-card__input:checked ~ .fuel09-card__picks {
+  display: block;
+}
+
+.fuel09-picks__head {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: calc(2 * var(--fuel09-u));
+  min-height: calc(34 * var(--fuel09-u));
+  padding: calc(4 * var(--fuel09-u)) calc(13 * var(--fuel09-u));
+  background: var(--fuel09-surface);
+  font-size: calc(10 * var(--fuel09-u));
+}
+
+.fuel09-picks__title {
+  color: var(--fuel09-pick-ink);
+}
+
+.fuel09-picks__left {
+  color: var(--fuel09-pick-accent);
+  font-weight: 700;
+}
+
+.fuel09-picks__list {
+  display: flex;
+  flex-direction: column;
+  gap: calc(4 * var(--fuel09-u));
+  margin: 0;
+  padding: calc(4 * var(--fuel09-u)) calc(13 * var(--fuel09-u));
+  list-style: none;
+}
+
+.fuel09-pick {
+  position: relative;
+  min-width: 0;
+}
+
+.fuel09-pick__add,
+.fuel09-pick__set {
+  display: flex;
+  align-items: center;
+  gap: calc(6 * var(--fuel09-u));
+  width: 100%;
+  min-width: 0;
+}
+
+.fuel09-pick__add[hidden],
+.fuel09-pick__set[hidden],
+.fuel09-pick__image[hidden],
+.fuel09-options__item[hidden],
+.fuel09-picker__status[hidden] {
+  display: none;
+}
+
+.fuel09-pick__add {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: calc(6 * var(--fuel09-u));
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.fuel09-pick__add:focus-visible,
+.fuel09-pick__remove:focus-visible,
+.fuel09-picker__close:focus-visible,
+.fuel09-option:focus-visible {
+  outline: 2px solid var(--fuel09-pick-accent);
+  outline-offset: 2px;
+}
+
+.fuel09-pick__frame {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: calc(62 * var(--fuel09-u));
+  height: calc(62 * var(--fuel09-u));
+  overflow: hidden;
+  border: 1px solid var(--fuel09-pick-line);
+  border-radius: calc(6 * var(--fuel09-u));
+  background: var(--fuel09-surface);
+}
+
+.fuel09-pick__add .fuel09-pick__frame {
+  border-color: var(--fuel09-pick-line-empty);
+  border-style: dashed;
+}
+
+/* The frame's plus is a Light 28 glyph: arms about 18 long, 1 thick. */
+.fuel09-pick__add .fuel09-pick__frame::before,
+.fuel09-pick__add .fuel09-pick__frame::after {
+  content: '';
+  position: absolute;
+  width: calc(18 * var(--fuel09-u));
+  height: 1px;
+  background: var(--fuel09-pick-plus);
+}
+
+.fuel09-pick__add .fuel09-pick__frame::after {
+  transform: rotate(90deg);
+}
+
+.fuel09-pick__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fuel09-pick__label,
+.fuel09-pick__name,
+.fuel09-pick__state {
+  color: var(--fuel09-pick-muted);
+  font-size: calc(10 * var(--fuel09-u));
+}
+
+.fuel09-pick__name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fuel09-pick__state {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: calc(6 * var(--fuel09-u));
+}
+
+.fuel09-pick__tick {
+  position: relative;
+  flex: none;
+  width: calc(13 * var(--fuel09-u));
+  height: calc(13 * var(--fuel09-u));
+  border-radius: 50%;
+  background: var(--fuel09-pick-accent);
+}
+
+.fuel09-pick__tick::after {
+  content: '';
+  position: absolute;
+  top: calc(3 * var(--fuel09-u));
+  left: calc(4.5 * var(--fuel09-u));
+  width: calc(3 * var(--fuel09-u));
+  height: calc(6 * var(--fuel09-u));
+  border: solid var(--fuel09-surface);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+
+.fuel09-pick__remove {
+  position: absolute;
+  top: calc(-5 * var(--fuel09-u));
+  left: calc(50 * var(--fuel09-u));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(17 * var(--fuel09-u));
+  height: calc(17 * var(--fuel09-u));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--fuel09-pick-ink);
+  color: var(--fuel09-surface);
+  font: inherit;
+  font-size: calc(13 * var(--fuel09-u));
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* The mark is 17 across; the press area around it is 29. */
+.fuel09-pick__remove::before {
+  content: '';
+  position: absolute;
+  inset: calc(-6 * var(--fuel09-u));
+}
+
+/* ------------------------------------------------------------------ *
+ * The picker. No frame draws it; the brief names the client's own box
+ * builder as the model: a list of the perfumes with a search on top, one
+ * press per bottle. A sheet off the bottom edge on a phone, a panel in
+ * the middle of the window from 750. It takes the box's own colours.
+ * ------------------------------------------------------------------ */
+
+html:has(.fuel09-picker[open]) {
+  overflow: hidden;
+}
+
+.fuel09-picker {
+  width: 100%;
+  max-width: 100%;
+  max-height: 85vh;
+  max-height: 85dvh;
+  margin: auto 0 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 12px 12px 0 0;
+  background: var(--fuel09-surface);
+  color: var(--fuel09-pick-ink);
+  line-height: 1.21;
+}
+
+.fuel09-picker[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.fuel09-picker::backdrop {
+  background: rgba(8, 10, 15, 0.5);
+}
+
+.fuel09-picker__head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 10px 10px 16px;
+}
+
+.fuel09-picker__title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.fuel09-picker__left {
+  flex: 1 1 auto;
+  color: var(--fuel09-pick-accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.fuel09-picker__close {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--fuel09-pick-ink);
+  font: inherit;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.fuel09-picker__search {
+  display: block;
+  flex: none;
+  padding: 0 16px 10px;
+}
+
+/* 16px keeps a phone from zooming the page when the field takes focus. */
+.fuel09-picker__input {
+  width: 100%;
+  height: 40px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid var(--fuel09-pick-field);
+  border-radius: 8px;
+  background: var(--fuel09-surface);
+  color: var(--fuel09-pick-ink);
+  font: inherit;
+  font-size: 16px;
+}
+
+.fuel09-picker__input:focus-visible {
+  border-color: var(--fuel09-pick-accent);
+  outline: 1px solid var(--fuel09-pick-accent);
+  box-shadow: none;
+}
+
+.fuel09-picker__body {
+  flex: 1 1 auto;
+  min-height: 120px;
+  padding: 0 8px 12px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.fuel09-picker__status {
+  margin: 0;
+  padding: 24px 8px;
+  color: var(--fuel09-pick-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.fuel09-options {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fuel09-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+  padding: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.fuel09-option:focus-visible {
+  outline-offset: -2px;
+}
+
+.fuel09-option__thumb {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border: 1px solid var(--fuel09-pick-line);
+  border-radius: 6px;
+  background: var(--fuel09-surface);
+}
+
+.fuel09-option__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.fuel09-option__text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.fuel09-option__title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.fuel09-option__note {
+  color: var(--fuel09-pick-muted);
+  font-size: 12px;
+}
+
+/* A plus until the perfume is in the box, then how many of it are. */
+.fuel09-option__mark {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--fuel09-pick-accent);
+  border-radius: 50%;
+  color: var(--fuel09-surface);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.fuel09-option__mark:empty::before,
+.fuel09-option__mark:empty::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 1.5px;
+  background: var(--fuel09-pick-accent);
+}
+
+.fuel09-option__mark:empty::after {
+  transform: rotate(90deg);
+}
+
+.fuel09-option--in .fuel09-option__mark {
+  background: var(--fuel09-pick-accent);
+}
+
+@media (hover: hover) {
+  .fuel09-option:hover {
+    background: var(--fuel09-pick-wash);
+  }
+}
+
+@media (min-width: 750px) {
+  .fuel09-picker {
+    width: 440px;
+    max-height: min(640px, 100vh - 64px);
+    margin: auto;
+    border-radius: 12px;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Look C, wide frame 697:483 (502 wide), from 500px of box like the other
+ * looks' wide rows. All three cards are in the Inter drawing here.
+ *
+ * Compact card 62.087 tall: line 1.109 #dde1e3, radius 5.913, padding
+ * 5.913 9.609, parts 10.348 apart; radio 20.696 with a 1.478 #a9b0b4
+ * ring; copy column 144.87; bottles right in what is left, the ten-bottle
+ * row centred in it; price column 87.217, Regular 17 over two 8 lines.
+ * The ship-free pill stands in the price column, over the price, and the
+ * card grows to 66.522 for it. Selected summary 65.043, padding 4.435.
+ *
+ * The bottle is another drawing than the narrow one, 18.478 wide and
+ * 44.348 tall: a 8.87 x 12.565 #101316 cap sunk 1.478 into a
+ * 18.478 x 33.261 #f4f5f3 body (line 0.739 #9ea3a5, corners 2.217 on top,
+ * 1.478 below) that carries a 9.609 tall #e2e3e1 label across its top,
+ * 4.435 down and 2.217 in. Bottles 2.957 apart. The ten-bottle row is the
+ * same drawing at 14.783.
+ *
+ * Scents: the white bar is one 25.13 line, count line on the right; the
+ * scents stand five to a row, each a 77.609 column: a 72.435 x 62.087
+ * square (dashed line #c4cdd0 while empty) and 3.696 under it the label,
+ * centred, the chosen one with the tick in front of its name.
+ * ------------------------------------------------------------------ */
+
+@container fuel09 (min-width: 500px) {
+  /* On the panel, not on the box: the box is the container the query
+   * asks about, and a query cannot restyle its own container. */
+  .fuel09-box--c .fuel09-box__panel {
+    --fuel09-pick-line-empty: #c4cdd0;
+    --fuel09-bottle-dark: #101316;
+    --fuel09-bottle-glass: #f4f5f3;
+    --fuel09-bottle-line: #9ea3a5;
+    --fuel09-bottle-label: #e2e3e1;
+  }
+
+  .fuel09-box--c .fuel09-card {
+    --fuel09-card-ink: var(--fuel09-pick-ink);
+    --fuel09-card-muted: var(--fuel09-pick-muted);
+    --fuel09-card-accent: var(--fuel09-pick-accent);
+    --fuel09-card-count-selected: var(--fuel09-pick-muted);
+    --fuel09-card-line: #dde1e3;
+    --fuel09-card-radio-line: #a9b0b4;
+
+    border-radius: 6px;
+    line-height: 1.21;
+  }
+
+  .fuel09-box--c .fuel09-card__summary {
+    grid-template-columns: auto 145px minmax(0, 1fr) 87px;
+    column-gap: 10px;
+    min-height: 60px;
+    padding: 5px 9px;
+  }
+
+  .fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary {
+    min-height: 65px;
+    padding: 4px 9px;
+  }
+
+  .fuel09-box--c .fuel09-card__radio {
+    width: 21px;
+    height: 21px;
+    border-width: 1.5px;
+  }
+
+  .fuel09-box--c .fuel09-card__details,
+  .fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__details {
+    gap: 1px;
+  }
+
+  .fuel09-box--c .fuel09-card__title,
+  .fuel09-box--c .fuel09-card__included,
+  .fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__title,
+  .fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__included {
+    font-size: 13px;
+  }
+
+  .fuel09-box--c .fuel09-card__included {
+    font-weight: 600;
+  }
+
+  .fuel09-box--c .fuel09-card__prices,
+  .fuel09-box--c .fuel09-card--long .fuel09-card__prices {
+    align-self: center;
+    min-width: 0;
+    padding-top: 0;
+  }
+
+  .fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__prices {
+    min-width: 87px;
+  }
+
+  .fuel09-box--c .fuel09-card__price {
+    gap: 0;
+  }
+
+  .fuel09-box--c .fuel09-card__total {
+    font-size: 17px;
+    font-weight: 400;
+  }
+
+  .fuel09-box--c .fuel09-card__per,
+  .fuel09-box--c .fuel09-card__shipping {
+    font-size: 8px;
+  }
+
+  /* The pill is written in the copy column, where the narrow frame has
+   * it. This frame has it over the price, so it is lifted there and the
+   * price column leaves it the room. A card that also carries a badge
+   * keeps its pill in the copy column: the two would share one spot. */
+  .fuel09-box--c .fuel09-card:not(:has(.fuel09-card__badge)) .fuel09-pill--shipping {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+  }
+
+  .fuel09-box--c .fuel09-card:not(:has(.fuel09-card__badge)):has(.fuel09-pill--shipping:not([hidden])) .fuel09-card__prices {
+    padding-top: 16px;
+  }
+
+  .fuel09-box--c .fuel09-bottles {
+    gap: 0.16em;
+    font-size: 18px;
+  }
+
+  .fuel09-box--c .fuel09-card--long .fuel09-bottles {
+    justify-self: center;
+    gap: 0.2em;
+    font-size: 15px;
+  }
+
+  .fuel09-box--c .fuel09-bottle {
+    height: 2.4em;
+  }
+
+  .fuel09-box--c .fuel09-bottle__cap {
+    width: 0.48em;
+    height: 0.68em;
+    margin-bottom: -0.08em;
+    border-radius: 0.08em 0.08em 0 0;
+  }
+
+  .fuel09-box--c .fuel09-bottle__neck {
+    display: none;
+  }
+
+  .fuel09-box--c .fuel09-bottle__body {
+    align-items: flex-start;
+    width: 1em;
+    height: 1.8em;
+    padding: 0.24em 0.12em 0.12em;
+    border-width: 0.04em;
+    border-radius: 0.12em 0.12em 0.08em 0.08em;
+  }
+
+  .fuel09-box--c .fuel09-bottle__label {
+    width: 100%;
+    height: 0.52em;
+    border: 0;
+    border-radius: 0.04em;
+  }
+
+  .fuel09-box--c .fuel09-card--long .fuel09-bottle {
+    height: 2.65em;
+  }
+
+  .fuel09-box--c .fuel09-card--long .fuel09-bottle__cap {
+    width: 0.5em;
+    height: 0.75em;
+    margin-bottom: -0.1em;
+  }
+
+  .fuel09-box--c .fuel09-card--long .fuel09-bottle__body {
+    height: 2em;
+    padding: 0.3em 0.15em 0.15em;
+  }
+
+  .fuel09-box--c .fuel09-card--long .fuel09-bottle__label {
+    height: 0.6em;
+  }
+
+  .fuel09-picks__head {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 25px;
+    padding: 0 13px;
+  }
+
+  .fuel09-picks__list {
+    display: grid;
+    grid-template-columns: repeat(5, 78px);
+    justify-content: space-between;
+    gap: 6px 0;
+    padding-bottom: 11px;
+  }
+
+  .fuel09-pick__add,
+  .fuel09-pick__set {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .fuel09-pick__set {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    justify-items: center;
+    column-gap: 4px;
+  }
+
+  .fuel09-pick__frame {
+    grid-column: 1 / -1;
+    width: 72px;
+    height: 62px;
+  }
+
+  .fuel09-pick__image {
+    object-fit: contain;
+  }
+
+  .fuel09-pick__label {
+    text-align: center;
+  }
+
+  .fuel09-pick__state {
+    grid-row: 2;
+    grid-column: 1;
+  }
+
+  .fuel09-pick__name {
+    grid-row: 2;
+    grid-column: 2;
+    max-width: 61px;
+  }
+
+  .fuel09-pick__added {
+    display: none;
+  }
+
+  .fuel09-pick__remove {
+    left: 63px;
+  }
+}

@@ -1,0 +1,139 @@
+{% comment %}
+  FUEL_09 scent list. Never placed in a template: the offer box's picker
+  (snippets/fuel09-box.liquid, layout C) asks for it by address,
+  /collections/<handle>?section_id=fuel09-pool, the first time a shopper opens
+  the picker, and puts the rows it gets back into its list. So a page only
+  pays for the list when somebody chooses scents. A collection of more than
+  fifty comes in pages: the list names the next page's address and the
+  script asks for it in turn.
+
+  One row per perfume of the collection that has at least one of the sizes
+  layout C offers in stock. A row is a button: pressing it anywhere takes
+  that perfume. Bundle products (the metafield check) and products with a
+  single size are left out, the same way the box leaves them out.
+
+  Everything a row shows is printed here, by the market's own prices and the
+  store's own titles. The script reads each size's id and price from the row
+  ("word:id:price" per size in stock, the words being the ones the box
+  prints for the page's own perfume) and nothing else, and shows a row only
+  while the size chosen on the page is among them.
+{% endcomment %}
+
+{%- liquid
+  assign pool_words = section.settings.sizes | downcase | split: ','
+-%}
+
+{%- paginate collection.products by 50 -%}
+  <ul
+    class="fuel09-options"
+    data-fuel09-pool
+    {% if paginate.next %}
+      data-next="{{ paginate.next.url | append: '&section_id=' | append: section.id | escape }}"
+    {% endif %}>
+    {%- for item in collection.products -%}
+      {%- liquid
+        if item.variants.size < 2 or item.metafields.custom.choose_your_fragrances_options != blank
+          continue
+        endif
+        assign pool_variant = nil
+        assign pool_listed = ' '
+        assign pool_sizes = ''
+        for pool_size_word in pool_words
+          assign pool_word = pool_size_word | strip | remove: ' ' | remove: ':'
+          if pool_word == blank
+            continue
+          endif
+          for variant in item.variants
+            assign pool_title = variant.title | downcase
+            assign pool_mark = ' ' | append: variant.id | append: ' '
+            if pool_title contains pool_word and variant.available
+              unless pool_listed contains pool_mark
+                assign pool_listed = pool_listed | append: variant.id | append: ' '
+                assign pool_sizes = pool_sizes | append: pool_word | append: ':' | append: variant.id | append: ':' | append: variant.price | append: ' '
+                unless pool_variant
+                  assign pool_variant = variant
+                endunless
+              endunless
+            endif
+          endfor
+        endfor
+        if pool_words.size == 0
+          for variant in item.variants
+            if variant.available
+              assign pool_word = variant.title | downcase | remove: ' ' | remove: ':'
+              assign pool_sizes = pool_sizes | append: pool_word | append: ':' | append: variant.id | append: ':' | append: variant.price | append: ' '
+              unless pool_variant
+                assign pool_variant = variant
+              endunless
+            endif
+          endfor
+        endif
+        unless pool_variant
+          continue
+        endunless
+        assign pool_sizes = pool_sizes | strip
+
+        comment
+          The short name is the perfume's number, which is what the box has
+          room for under a slot and what the store's own labels carry.
+        endcomment
+        assign pool_short = item.title
+        if item.title contains 'No.'
+          assign pool_short = item.title | split: 'No.' | last | strip | prepend: 'No. '
+        endif
+        assign pool_note = ''
+        if item.metafields.custom.inspiration.value
+          assign pool_note = item.metafields.custom.inspiration.value.name
+        endif
+        assign pool_image = pool_variant.featured_image | default: item.featured_image
+      -%}
+      <li class="fuel09-options__item">
+        <button
+          type="button"
+          class="fuel09-option"
+          data-fuel09-option
+          data-product="{{ item.id }}"
+          data-sizes="{{ pool_sizes | escape }}"
+          data-short="{{ pool_short | escape }}"
+          data-search="{{ item.title | append: ' ' | append: pool_note | downcase | escape }}"
+          {% if pool_image %}
+            data-image="{{ pool_image | image_url: width: 160 }}"
+          {% endif %}>
+          <span class="fuel09-option__thumb">
+            {%- if pool_image -%}
+              {{ pool_image | image_url: width: 160 | image_tag: alt: '', loading: 'lazy', widths: '80, 160', sizes: '56px' }}
+            {%- endif -%}
+          </span>
+          <span class="fuel09-option__text">
+            <span class="fuel09-option__title">{{ item.title | escape }}</span>
+            {%- if pool_note != blank -%}
+              <span class="fuel09-option__note">{{ section.settings.note_prefix | escape }} {{ pool_note | escape }}</span>
+            {%- endif -%}
+          </span>
+          <span class="fuel09-option__mark" aria-hidden="true"></span>
+        </button>
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Offer box scent list",
+  "settings": [
+    {
+      "type": "text",
+      "id": "sizes",
+      "label": "Bottle sizes listed (comma separated)",
+      "default": "100,50",
+      "info": "As written in the size names. Keep it the same as the sizes the offer box offers."
+    },
+    {
+      "type": "text",
+      "id": "note_prefix",
+      "label": "Text before the inspiration name",
+      "default": "Inspirerad av:"
+    }
+  ]
+}
+{% endschema %}
