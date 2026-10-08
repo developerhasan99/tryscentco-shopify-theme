@@ -43,6 +43,16 @@
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+  // Nothing fetches video on its own until the page has finished loading and
+  // the main thread has a quiet moment, so clips never compete with the
+  // theme's scripts, styles and above-the-fold images. A tap is not gated:
+  // somebody asked for that clip.
+  const afterLoad = (fn) => {
+    const idle = () => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 2000 }) : setTimeout(fn, 200));
+    if (document.readyState === 'complete') idle();
+    else window.addEventListener('load', idle, { once: true });
+  };
+
   // A tap is the one moment somebody is actively waiting, so the tapped clip
   // gets the connection to itself: the background warm-up parks its chains
   // and clips that were mid-warm-up are paused with whatever they buffered
@@ -427,8 +437,10 @@
     // it cold anyway. Two is still far from the parallel free-for-all that
     // fights iOS's small pool of decoders, and a tap always outranks the
     // queue either way.
-    warmNext();
-    warmNext();
+    afterLoad(() => {
+      warmNext();
+      warmNext();
+    });
 
     if (prefersReduced.matches || !('IntersectionObserver' in window)) return;
     if (!videos.length) return;
@@ -485,7 +497,7 @@
       },
       { threshold: [0, 0.5] }
     );
-    videos.forEach((video) => playObserver.observe(video));
+    afterLoad(() => videos.forEach((video) => playObserver.observe(video)));
   };
 
   const arm = (root) => {
