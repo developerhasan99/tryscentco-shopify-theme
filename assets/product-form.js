@@ -44,6 +44,8 @@ if (!customElements.get("product-form")) {
           this.cart.setActiveElement(document.activeElement);
         }
         config.body = formData;
+        // Without a cap a stalled request leaves the spinner on forever.
+        if (AbortSignal.timeout) config.signal = AbortSignal.timeout(15000);
 
         fetch(`${routes.cart_add_url}`, config)
           .then((response) => response.json())
@@ -55,7 +57,11 @@ if (!customElements.get("product-form")) {
                 errors: response.errors || response.description,
                 message: response.message,
               });
-              this.handleErrorMessage(response.description);
+              this.handleErrorMessage(
+                response.description ||
+                  response.message ||
+                  window.cartStrings.error
+              );
 
               const soldOutMessage =
                 this.submitButton.querySelector(".sold-out-message");
@@ -110,6 +116,8 @@ if (!customElements.get("product-form")) {
           })
           .catch((e) => {
             console.error(e);
+            // Network failure, timeout, or a non-JSON reply (e.g. a redirect page).
+            this.handleErrorMessage(window.cartStrings.error);
           })
           .finally(() => {
             this.submitButton.classList.remove("loading");

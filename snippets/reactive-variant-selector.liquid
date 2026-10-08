@@ -114,6 +114,15 @@
       </div>
       {%- render 'loading-spinner' -%}
     </button>
+    <div
+      class="product-form__error-message-wrapper !mt-3 !mb-0 text-[#c8202f]"
+      role="alert"
+      hidden>
+      <span class="svg-wrapper">
+        {{- 'icon-error.svg' | inline_asset_content -}}
+      </span>
+      <span class="product-form__error-message"></span>
+    </div>
   {%- endform -%}
 </product-form>
 
