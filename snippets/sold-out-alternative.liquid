@@ -1,8 +1,7 @@
 {% comment %}
-  Recommended alternative shown in place of the add to cart form when a product is sold out.
-  Picks the first in stock product from the related products set in Shopify's Search & Discovery
-  app, falling back to the product's own collections. Shopify's automatic recommendations are
-  only reachable from JS (the recommendations endpoint), not from Liquid on the product page.
+  Sold out notice, plus a recommended alternative in place of the add to cart form.
+  The alternative is the first in stock product from the custom.recommended_alternative
+  metafield (list of products, tried in order). None in stock = notice only, no alternative.
   Styled with plain CSS, as Tailwind here is precompiled.
 
   Accepts:
@@ -14,27 +13,21 @@
 {% endcomment %}
 {%- liquid
   assign alt = false
-  for p in product.metafields['shopify--discovery--product_recommendation'].related_products.value
+  for p in product.metafields.custom.recommended_alternative.value
     if p.available and p.id != product.id
       assign alt = p
       break
     endif
   endfor
-
-  unless alt
-    for c in product.collections
-      for p in c.products
-        if p.available and p.id != product.id
-          assign alt = p
-          break
-        endif
-      endfor
-      if alt
-        break
-      endif
-    endfor
-  endunless
 -%}
+<div class="!mt-6 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-100 text-gray-500 !py-3 !px-3 text-center cursor-not-allowed select-none" aria-disabled="true">
+  <span class="text-[16px] leading-snug md:text-[19px] font-semibold">{{ 'products.product.sold_out' | t }} – tillfälligt slut i lager</span>
+  {%- if alt -%}
+    <span class="text-sm leading-snug">Den här doften kan inte beställas just nu. Prova vårt alternativ nedan.</span>
+  {%- else -%}
+    <span class="text-sm leading-snug">Den här doften kan inte beställas just nu.</span>
+  {%- endif -%}
+</div>
 {%- if alt -%}
   {%- liquid
     assign alt_variant = alt.selected_or_first_available_variant
@@ -61,7 +54,7 @@
         {%- endif -%}
         <div>
           <h2 class="my-0 font-semibold font-serif">{{ alt.title | split: '-' | last }}</h2>
-          <h4 class="text-base tracking-normal my-0 text-gray-700 leading-snug">Inspirerad av {{ product.metafields.custom.inspiration.value.name }}</h4>
+          <h4 class="text-base tracking-normal my-0 text-gray-700 leading-snug">Inspirerad av {{ alt.metafields.custom.inspiration.value.name }}</h4>
           <p class="mt-1 mb-0 text-sm text-green-700 flex items-center gap-1.5">
             <span class="inline-block w-2 h-2 rounded-full bg-green-600"></span>I lager</p>
         </div>

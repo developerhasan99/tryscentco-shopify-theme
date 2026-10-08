@@ -68,11 +68,7 @@
   , section: section %}
 
   {% unless product.available %}
-  {% comment %} Sold out: no add to cart, an in stock alternative instead (snippets/sold-out-alternative.liquid) {% endcomment %}
-  <div class="!mt-6 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-100 text-gray-500 !py-3 !px-3 text-center cursor-not-allowed select-none" aria-disabled="true">
-    <span class="text-[16px] leading-snug md:text-[19px] font-semibold">{{ 'products.product.sold_out' | t }} – tillfälligt slut i lager</span>
-    <span class="text-sm leading-snug">Den här doften kan inte beställas just nu. Prova vårt alternativ nedan.</span>
-  </div>
+  {% comment %} Sold out: notice and an in stock alternative instead of add to cart (snippets/sold-out-alternative.liquid) {% endcomment %}
   {% render 'sold-out-alternative'
     , product: product
     , section: section %}
