@@ -12,7 +12,7 @@
           {% break %}
         {% endif %}
       {% endfor %}
-      {% unless in_cart %}
+      {% unless in_cart or product.available == false %}
         {% assign product_form_id = 'product-form-' | append: product.id %}
         <product-form class="product-form">
           {%- form 'product'
@@ -59,9 +59,10 @@
                           value="{{ variant.id }}"
                           data-price="{{ variant.price | money_without_currency }}"
                           data-img="{{ variant_image | image_url: width: 200 }}"
-                          {% if forloop.first %}
+                          {% if variant.available == false %}
+                          disabled{% elsif variant.id == product.selected_or_first_available_variant.id %}
                           selected{% endif %}>
-                          {{ variant.title }} - {{ variant.price | money }}
+                          {{ variant.title }} - {{ variant.price | money }}{% if variant.available == false %} - Slutsåld{% endif %}
                         </option>
                       {% endfor %}
                     </select>
