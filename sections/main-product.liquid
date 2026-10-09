@@ -772,16 +772,14 @@
                 %}
 
          {%- when 'buy_buttons' -%}
- {%- render 'buy-buttons',
+  {%- render 'buy-buttons',
     block: block,
     product: product,
     product_form_id: product_form_id,
     section_id: section.id,
     show_pickup_availability: true
   -%}
-  {%- unless product.selected_or_first_available_variant.available -%}
-    <a class="klaviyo-bis-trigger button" href="#">Meddela mig när den är i lager</a>
-  {%- endunless -%}
+<a class="klaviyo-bis-trigger" href="#" style="display:none;">Meddela mig</a>
                 
               {%- when 'rating' -%}
                 {%- if product.metafields.reviews.rating.value != blank -%}
