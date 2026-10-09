@@ -26,7 +26,7 @@
     assign has_ml = false
     for v in p.variants
       assign vt = v.title | downcase | replace: ' ml', 'ml'
-      if vt == variant_ml
+      if vt == variant_ml and v.available
         assign has_ml = true
         break
       endif
@@ -336,7 +336,7 @@
             {%- assign match = blank -%}
             {%- for v in p.variants -%}
               {%- assign vt = v.title | downcase | replace: ' ml', 'ml' -%}
-              {%- if vt == variant_ml -%}{%- assign match = v -%}{%- break -%}{%- endif -%}
+              {%- if vt == variant_ml and v.available -%}{%- assign match = v -%}{%- break -%}{%- endif -%}
             {%- endfor -%}
             {
               id: {{ p.id }},
