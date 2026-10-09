@@ -11,14 +11,16 @@
  *   (paid + free);
  * - the button's price reads the selected card's total for the selected size.
  *
- * A card of looks A and B that has mystery bottles (data-mystery), in a block
- * that names the mystery item and its discount code, takes the add to cart
- * press over as look C does: the code and the cart marks go on first, then
- * the perfumes and the mystery bottles in one request, then the theme's cart
- * drawer. The bottle is free through that code, which the gift app accepts
- * only on a cart with the mark. From there snippets/fuel09-global.liquid
- * looks after it on every page. Every other card of A and B is added by the
- * theme's own form.
+ * A card of looks A and B that has a discount code of its own (data-code),
+ * or mystery bottles (data-mystery) in a block that names the mystery item
+ * and its discount code, takes the add to cart press over as look C does:
+ * the codes and the cart marks go on first, then the perfumes and the
+ * mystery bottles in one request, then the theme's cart drawer. The free
+ * perfumes are free through the card's code and nothing else: the offer
+ * does not lean on a sale of the store's. The mystery bottle is free
+ * through its own code, which the gift app accepts only on a cart with the
+ * mark. From there snippets/fuel09-global.liquid looks after it on every
+ * page. A card of A and B with neither is added by the theme's own form.
  *
  * All three happen only while the box is the look on show: its class is on
  * <html> and the box has a rendered box of its own. Otherwise the page is left
@@ -33,14 +35,18 @@
  * the page chose it) is put on the box's opening size through that size's
  * own tile.
  *
- * Look C (the box holds a .fuel09-picker) sells a scent per bottle, all in
- * the size chosen on the page's own size tiles, so four things are different
- * for it:
+ * A box that holds a .fuel09-picker sells a scent per bottle. Since Oct 9
+ * that is every look: A and B got the slots look C had, at the client's
+ * asking, and what is written above about a card without them only holds
+ * for a box printed without a picker. Four things are different for a box
+ * with one:
  *
- * - the size tiles stay on show. They sit in the buy area under the box, so
- *   while the look is on the heading row and the grid are lifted to just
- *   above the box, the tiles of sizes the box does not offer are switched
- *   off, and both go back as they were when the look goes away;
+ * - look C has no size choice of its own (no .fuel09-size__input), so the
+ *   page's size tiles stay on show for it. They sit in the buy area under
+ *   the box, so while the look is on the heading row and the grid are
+ *   lifted to just above the box, the tiles of sizes the box does not offer
+ *   are switched off, and both go back as they were when the look goes
+ *   away. Looks A and B choose the size in the open card as before;
  * - no quantity is written into the form: the bottles are different
  *   perfumes, which a quantity cannot say;
  * - the picks are kept here, one list for the whole box, and each card shows
@@ -52,7 +58,8 @@
  *   discount frees the cheapest), plus shipping under the free shipping limit;
  * - the add to cart press is taken over: with a scent still to choose it
  *   opens the picker, and with all chosen it adds the bottles one line per
- *   perfume, adds the card's discount code, and opens the theme's cart drawer.
+ *   perfume, adds the card's discount code, and opens the theme's cart
+ *   drawer. A card with mystery bottles adds those and their code as well.
  */
 if (!customElements.get('fuel09-box')) {
   customElements.define(
@@ -66,8 +73,11 @@ if (!customElements.get('fuel09-box')) {
         this.live = false;
         this.sizeId = this.dataset.openId ?? '';
         this.picker = this.querySelector('.fuel09-picker');
-        // Look C names its sizes on the box, each under the word the scent
-        // list uses for it; the other looks have a tile for every size.
+        // Looks A and B choose the size in the open card; look C leaves it
+        // to the page's own size tiles.
+        this.ownSizes = Boolean(this.querySelector('.fuel09-size__input'));
+        // A box with a picker names its sizes on the box, each under the
+        // word the scent list uses for it.
         this.sizes = this.picker ? this.readSizes(this.dataset.pickSizes) : null;
         this.offered = new Set(
           this.sizes
@@ -187,6 +197,22 @@ if (!customElements.get('fuel09-box')) {
         this.lifted = null;
       }
 
+      // The first time the box comes on show in a page view, a form still
+      // on the size the page itself opened on is put on the box's opening
+      // size, which the block sets apart from it. A form on any other size
+      // was put there by the shopper, or by a browser coming back to the
+      // page, and is left where it is.
+      open() {
+        const { openId, pageId } = this.dataset;
+        const first = !this.opened;
+        this.opened = true;
+        if (first && pageId && openId !== pageId && this.formSizeId === pageId && this.offered.has(openId)) {
+          this.tile(openId)?.click();
+          return openId;
+        }
+        return this.settle();
+      }
+
       // The size the form is on while the box offers it, and the box's
       // opening size otherwise, with the form put on it through its tile.
       settle() {
@@ -208,8 +234,8 @@ if (!customElements.get('fuel09-box')) {
         if (live) {
           // The form is the truth about the size: a tile may have been
           // clicked before the look came on.
-          const id = this.settle();
-          if (this.picker) {
+          const id = this.open();
+          if (this.picker && !this.ownSizes) {
             this.lift();
             // The tiles are on show here, and a browser coming back to the
             // page can bring the form back on one size while the tiles are
@@ -266,7 +292,7 @@ if (!customElements.get('fuel09-box')) {
         if (event.target !== this.form || !this.sync()) return;
         if (!this.picker) {
           this.write();
-          if (!this.gift) return;
+          if (!this.gift && !this.card?.dataset.code) return;
         }
         // Stopped on the form's parent, in the capture phase, so the theme's
         // own listener on the form never sees this press.
@@ -393,10 +419,24 @@ if (!customElements.get('fuel09-box')) {
 
       // The slot that opened the picker is hidden once it is filled, so
       // focus goes on to the next empty one, or to the button when none is.
+      // The pick that fills the last slot also brings the button into view:
+      // on a phone it sits a screen below the cards.
       onPickerClose() {
-        const next =
-          this.card?.querySelector('.fuel09-pick__add:not([hidden])') ?? this.form?.querySelector('[type="submit"]');
-        next?.focus({ preventScroll: true });
+        const next = this.card?.querySelector('.fuel09-pick__add:not([hidden])');
+        const button = this.form?.querySelector('[type="submit"]');
+        (next ?? button)?.focus({ preventScroll: true });
+        if (this.filled && !next) this.showButton(button);
+        this.filled = false;
+      }
+
+      // The page stays where it is while the button can already be pressed:
+      // on screen and with nothing of the theme's lying over it.
+      showButton(button) {
+        if (!button) return;
+        const { left, top, width, height } = button.getBoundingClientRect();
+        if (button.contains(document.elementFromPoint(left + width / 2, top + height / 2))) return;
+        const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        button.scrollIntoView({ block: 'center', behavior: calm ? 'auto' : 'smooth' });
       }
 
       openPicker() {
@@ -423,7 +463,10 @@ if (!customElements.get('fuel09-box')) {
         });
         this.render();
         this.write();
-        if (this.picks.length >= this.capacity) this.picker.close();
+        if (this.picks.length >= this.capacity) {
+          this.filled = true;
+          this.picker.close();
+        }
       }
 
       filter(query) {
@@ -572,11 +615,14 @@ if (!customElements.get('fuel09-box')) {
             price.dataset.atcPrice = this.money(shown);
             const total = price.querySelector('[data-fuel09-total]');
             if (total) total.textContent = this.money(shown, true);
+            // Over the bottles the card counts, which in look B takes in
+            // the mystery ones.
+            const counted = Number(card.dataset.counted) || bottles;
             const per = price.querySelector('[data-fuel09-per]');
-            if (per && bottles > 0) {
+            if (per && counted > 0) {
               per.textContent = (this.dataset.perBottleText ?? '').replace(
                 '[price]',
-                this.money(Math.round(shown / bottles), true)
+                this.money(Math.round(shown / counted), true)
               );
             }
           }
@@ -595,17 +641,17 @@ if (!customElements.get('fuel09-box')) {
         }
       }
 
-      // The card's discount code, then the bottles of the open card, then the
-      // theme's own cart drawer. Look C adds one line per perfume under the
-      // card's own code. Looks A and B come here for a card with mystery
-      // bottles and add the page's perfume and the mystery item under the
-      // mystery code. The cart page is the way out wherever the drawer or its
+      // The codes of the open card, then its bottles, then the theme's own
+      // cart drawer. A box with a picker adds one line per perfume under the
+      // card's own code, one without adds the page's perfume. A card with
+      // mystery bottles adds the mystery item under the mystery code as
+      // well. The cart page is the way out wherever the drawer or its
       // markup is missing.
       async addOffer(button) {
         if (this.busy) return;
         const { card } = this;
         if (!card) return;
-        const gift = this.picker ? null : this.gift;
+        const { gift } = this;
         this.busy = true;
 
         const spinner = this.host?.querySelector('.loading__spinner');
@@ -626,29 +672,33 @@ if (!customElements.get('fuel09-box')) {
         };
 
         const readCart = async () => (await fetch(`${window.routes.cart_url}.js`, { cache: 'no-store' })).json();
-        const code = gift ? gift.code : card.dataset.code;
-        const listed = (cart) =>
-          (cart.discount_codes ?? []).some(({ code: other }) => String(other).toLowerCase() === code.toLowerCase());
+        const offer = card.dataset.code ?? '';
+        const codes = [offer, gift?.code].filter(Boolean);
+        const listed = (cart, wanted = codes) => {
+          const on = new Set((cart.discount_codes ?? []).map(({ code }) => String(code).toLowerCase()));
+          return wanted.every((code) => on.has(code.toLowerCase()));
+        };
         // The two marks the mystery bottle travels with. The gift app takes
         // the code only on a cart that carries the first; the second tells
         // snippets/fuel09-global.liquid, on whatever page the shopper goes
         // to next, which line is the bottle and which code frees it.
         const marks = gift ? { _fuel09: 'on', _fuel09_gift: `${gift.id}:${gift.code}` } : null;
-        // Codes already on the cart are sent back with the card's own: the
-        // cart keeps only the list it is given. The other cards' codes of
-        // this box are left out, one offer at a time.
-        const setCode = async (cart) => {
+        // Codes already on the cart are sent back with the card's: the cart
+        // keeps only the list it is given. The other cards' codes of this
+        // box are left out, one offer at a time. The marks go with the
+        // mystery code and not without it.
+        const setCode = async (cart, wanted = codes) => {
           const own = new Set(
             [...this.querySelectorAll('.fuel09-card')].map((other) => other.dataset.code?.toLowerCase()).filter(Boolean)
           );
-          const codes = new Set();
+          for (const code of wanted) own.add(code.toLowerCase());
+          const list = [];
           for (const { code: other } of (cart ?? (await readCart())).discount_codes ?? []) {
-            if (!own.has(String(other).toLowerCase())) codes.add(other);
+            if (!own.has(String(other).toLowerCase())) list.push(other);
           }
-          codes.add(code);
           await post(window.routes.cart_update_url, {
-            discount: [...codes].join(','),
-            ...(marks ? { attributes: marks } : {})
+            discount: [...list, ...wanted].join(','),
+            ...(marks && wanted.includes(gift.code) ? { attributes: marks } : {})
           });
         };
         const drawer = document.querySelector('cart-drawer');
@@ -685,12 +735,20 @@ if (!customElements.get('fuel09-box')) {
           // The script that looks after the bottle in the cart stands back
           // from here until the add is through (finally, below).
           if (gift) document.dispatchEvent(new CustomEvent('fuel09:adding'));
-          const before = code ? await readCart() : null;
-          if (code) await setCode(before);
+          const before = codes.length ? await readCart() : null;
+          if (codes.length) await setCode(before);
 
           const counts = new Map();
-          if (gift) {
+          if (this.picker) {
+            const word = this.sizeWord;
+            for (const { sizes } of this.picks.slice(0, this.capacity)) {
+              const { id } = sizes[word];
+              counts.set(id, (counts.get(id) ?? 0) + 1);
+            }
+          } else {
             counts.set(this.formSizeId, Number(card.dataset.quantity) || 1);
+          }
+          if (gift) {
             // The box never gives more mystery bottles than its largest
             // card does, however many times a card is added: the ones
             // already in the cart count.
@@ -702,12 +760,6 @@ if (!customElements.get('fuel09-box')) {
               .reduce((sum, item) => sum + item.quantity, 0);
             const more = Math.min(gift.quantity, most - held);
             if (more > 0) counts.set(gift.id, more);
-          } else {
-            const word = this.sizeWord;
-            for (const { sizes } of this.picks.slice(0, this.capacity)) {
-              const { id } = sizes[word];
-              counts.set(id, (counts.get(id) ?? 0) + 1);
-            }
           }
           await post(window.routes.cart_add_url, {
             items: [...counts].map(([id, quantity]) => ({ id: Number(id), quantity }))
@@ -718,15 +770,18 @@ if (!customElements.get('fuel09-box')) {
           // under way when the code went on. The second puts the code back
           // and draws an open drawer again; it runs once, and not at all
           // when the shopper has moved on to another card by then.
-          if (code && !listed(await readCart())) await setCode();
-          // Look C only: the mystery bottle has snippets/fuel09-global.liquid
-          // looking after its code from here, and it may well have taken the
-          // bottle and the code out again by then.
-          if (code && !gift) {
+          if (codes.length && !listed(await readCart())) await setCode();
+          // The card's own code only: the mystery bottle has
+          // snippets/fuel09-global.liquid looking after its code from here,
+          // and it may well have taken the bottle and the code out again by
+          // then.
+          if (offer) {
             window.setTimeout(async () => {
               try {
-                if (this.busy || this.card !== card || listed(await readCart())) return;
-                await setCode();
+                if (this.busy || this.card !== card) return;
+                const cart = await readCart();
+                if (listed(cart, [offer])) return;
+                await setCode(cart, [offer]);
                 if (drawer?.classList.contains('active')) await draw();
               } catch (error) {
                 // The cart page and the checkout price the cart themselves.

@@ -3,16 +3,19 @@
   block in sections/main-product.liquid, placed directly before the
   atc_bundle_builder block. One block instance is one look of the box: the
   Layout setting picks A (four cards), B (three cards and a benefits row) or
-  C (B's cards with a scent for every bottle in place of the size choice).
+  C (B's cards with the page's own size tiles in place of the size choice).
 
   The box takes the place of the size tiles and nothing else. The add to cart
   form, its button and the theme's own size script stay as they are:
-  assets/fuel09-offer.js clicks the hidden size tile to change size and writes
-  the bottle count into the form, so the cart request is still the theme's.
+  assets/fuel09-offer.js clicks the hidden size tile to change size. The add
+  to cart press itself is the script's, for the reason given below.
 
   The block names the sizes the box offers (100 and 50 ml as shipped). A size
   that is not named gets no tile, no price and no free shipping mark, and a
   form found on such a size is put on the box's opening size by the script.
+  The box opens on 50 ml, which is not the size the page opens on: the script
+  puts the form on it when the look comes on, and the page without the look
+  keeps its own opening size.
 
   Gated six ways, all in Liquid: a perfume that can be bought (sold out in
   every size, the page has no add to cart button for the box to drive), the
@@ -27,26 +30,31 @@
   behind html.ab-f09-v1 and look B behind html.ab-f09-v2, and both in the
   theme editor.
 
-  Layout C keeps the page's own size tiles: assets/fuel09-offer.js lifts
-  them, heading row and all, to just above the box while the look is on and
-  switches off the tiles of sizes the box does not offer, and every bottle
-  of the card comes in the size chosen there. It offers only the named
-  sizes this perfume has in stock and is left out on a perfume that has
-  none. Its open card lists one slot per bottle: the
-  first is the perfume of the page, the rest are chosen in the picker at the
-  foot of this file, whose rows come from sections/fuel09-pool.liquid the
-  first time it is opened. The bottles go into the cart one by one, each at
-  its own price, with the card's discount code where the block names one;
-  assets/fuel09-offer.js does that in place of the theme's own add, because
-  a quantity can only repeat one perfume.
+  Every layout sells a scent per bottle (layouts A and B since Oct 9, at
+  the client's asking). The open card lists one slot per paid and free
+  bottle: the first is the perfume of the page, the rest are chosen in the
+  picker at the foot of this file, whose rows come from
+  sections/fuel09-pool.liquid the first time it is opened. The bottles go
+  into the cart one by one, each at its own price, with the card's discount
+  code where the block names one; assets/fuel09-offer.js does that in place
+  of the theme's own add, because a quantity can only repeat one perfume. A
+  box offers only the named sizes this perfume has in stock and is left out
+  on a perfume that has none.
 
-  Nothing is priced by hand. Every card is worked out for every size from the
-  size's own price: price x bottles paid, plus the shipping cost while that
-  stays under the free shipping limit, and the per-bottle figure is that
-  amount over the bottles the card counts: the paid and the free ones, and
-  the mystery ones too where the block says so (the two looks are drawn
-  differently on this). All of it is printed here through the money filters
-  and the script only switches which size's figures are on show.
+  Layouts A and B choose the size in the open card, above the slots, and
+  every bottle comes in that size. Layout C keeps the page's own size tiles
+  instead: assets/fuel09-offer.js lifts them, heading row and all, to just
+  above the box while the look is on and switches off the tiles of sizes
+  the box does not offer. Layout C has no mystery bottle; A and B keep
+  theirs, which is never a slot.
+
+  Nothing is priced by hand. A card is price x bottles paid, plus the
+  shipping cost while that stays under the free shipping limit, and the
+  per-bottle figure is that amount over the bottles the card counts: the
+  paid and the free ones, and the mystery ones too where the block says so
+  (the two looks are drawn differently on this). The opening size's figures
+  are printed here through the money filters; from there on the script
+  writes them, the same sum over the scents chosen and the size on show.
 
   Accepts:
   - product: {Object} the product being viewed (required)
@@ -85,11 +93,10 @@
     The sizes the box offers: a size whose name holds one of the block's
     words, and every size while the block names none or no size of this
     perfume carries any of them. Kept as two lists a loop can ask with
-    "contains": the ids, and for layout C "word:id:price" per size, the
-    word being what a size is called across perfumes
-    (sections/fuel09-pool.liquid prints the same words). Layout C
-    adds the bottles through the cart itself, so there a size also has to
-    be in stock to be listed. In every layout a perfume with none of the
+    "contains": the ids, and "word:id:price" per size, the word being what
+    a size is called across perfumes (sections/fuel09-pool.liquid prints
+    the same words). The bottles are added through the cart itself, so a
+    size also has to be in stock to be listed. A perfume with none of the
     offered sizes in stock gets no box: the page keeps its own size tiles,
     and a size the box does not offer can still be bought there.
   endcomment
@@ -99,9 +106,7 @@
   assign fuel09_named = false
   assign fuel09_in_stock = false
   if fuel09_render
-    if fuel09_layout == 'c'
-      assign fuel09_picks = true
-    endif
+    assign fuel09_picks = true
     assign fuel09_size_words = block.settings.sizes | downcase | split: ','
     for fuel09_size_word in fuel09_size_words
       assign fuel09_word = fuel09_size_word | strip | remove: ' ' | remove: ':'
@@ -178,15 +183,31 @@
     comment
       The size the page opens on, picked the way
       snippets/reactive-variant-selector.liquid picks it (the 100 ml size
-      while it is in stock, the first size in stock otherwise), so the
-      figures on show match the id already sitting in the form. Where the
-      box does not offer that size it opens on the first size in stock it
-      does offer, and the script puts the form on it.
+      while it is in stock, the first size in stock otherwise). That is the
+      id sitting in the form when the page loads.
     endcomment
-    assign fuel09_variant = product.selected_or_first_available_variant
+    assign fuel09_page_variant = product.selected_or_first_available_variant
     for variant in product.variants
       assign fuel09_title_down = variant.title | downcase
       if fuel09_title_down contains '100' and variant.available
+        assign fuel09_page_variant = variant
+        break
+      endif
+    endfor
+
+    comment
+      The size the box opens on: 50 ml while the box offers it and it is in
+      stock, the page's own opening size otherwise, and where the box does
+      not offer that one either, the first size in stock it does offer. The
+      figures on show are this size's, and the script puts the form on it
+      when the look comes on.
+    endcomment
+    assign fuel09_open_word = '50'
+    assign fuel09_variant = fuel09_page_variant
+    for variant in product.variants
+      assign fuel09_title_down = variant.title | downcase
+      assign fuel09_variant_mark = ' ' | append: variant.id | append: ' '
+      if fuel09_title_down contains fuel09_open_word and variant.available and fuel09_offered contains fuel09_variant_mark
         assign fuel09_variant = variant
         break
       endif
@@ -213,8 +234,8 @@
     assign fuel09_free_from = block.settings.free_shipping_from | default: 0 | times: 100
 
     comment
-      Layout C only: the short name under a slot is the perfume's number,
-      and the picker's rows are asked for per collection named in the block.
+      The short name under a slot is the perfume's number, and the picker's
+      rows are asked for per collection named in the block.
     endcomment
     if fuel09_picks
       assign fuel09_short = product.title
@@ -242,6 +263,7 @@
     class="fuel09-box fuel09-box--{{ fuel09_layout }}"
     data-look-class="{{ fuel09_look_class }}"
     data-open-id="{{ fuel09_variant.id }}"
+    data-page-id="{{ fuel09_page_variant.id }}"
     data-mystery-item-id="{{ block.settings.mystery_item_id | escape }}"
     data-mystery-code="{{ block.settings.mystery_code | escape }}"
     {% if fuel09_picks %}
@@ -360,12 +382,19 @@
                 Layout C draws and counts no mystery bottle, whatever the
                 card's settings say: every bottle of it is a chosen one.
               endcomment
-              if fuel09_picks
+              if fuel09_layout == 'c'
                 assign fuel09_mystery = 0
                 assign fuel09_drawn = fuel09_quantity
                 assign fuel09_bottles = fuel09_quantity
                 assign fuel09_count_line = block.settings.total_text | replace: '[total]', fuel09_bottles
               endif
+
+              comment
+                A slot per paid and free bottle. The mystery bottle is the
+                store's choice, so it is never a slot, also where the card
+                counts it in its bottle total.
+              endcomment
+              assign fuel09_slots = fuel09_quantity
             -%}
             <div
               class="fuel09-card{% if fuel09_drawn >= 6 %} fuel09-card--long{% endif %}"
@@ -375,9 +404,10 @@
               {% endif %}
               {% if fuel09_picks %}
                 data-paid="{{ fuel09_paid }}"
-                data-bottles="{{ fuel09_bottles }}"
-                data-code="{{ block.settings[fuel09_code_key] | strip | escape }}"
-              {% endif %}>
+                data-bottles="{{ fuel09_slots }}"
+                data-counted="{{ fuel09_bottles }}"
+              {% endif %}
+              data-code="{{ block.settings[fuel09_code_key] | strip | escape }}">
               <input
                 type="radio"
                 class="fuel09-card__input visually-hidden"
@@ -487,9 +517,9 @@
                         continue
                       endunless
                       comment
-                        Layout C prints the opening size only: its figures
-                        depend on the scents chosen, so the script writes
-                        them from there on, size changes included.
+                        The opening size only: the figures depend on the
+                        scents chosen, so the script writes them from there
+                        on, size changes included.
                       endcomment
                       if fuel09_picks and variant.id != fuel09_variant.id
                         continue
@@ -522,65 +552,7 @@
                 </span>
               </label>
 
-              {%- if fuel09_picks -%}
-                {%- liquid
-                  assign fuel09_left = fuel09_bottles | minus: 1
-                  assign fuel09_picks_heading = block.settings.picks_heading | replace: '[total]', fuel09_bottles
-                  assign fuel09_left_line = block.settings.picks_left_text | replace: '[n]', fuel09_left
-                  if fuel09_left < 1
-                    assign fuel09_left_line = block.settings.picks_done_text
-                  endif
-                -%}
-                <div class="fuel09-card__picks">
-                  <div class="fuel09-picks__head">
-                    {%- if fuel09_picks_heading != blank -%}
-                      <span class="fuel09-picks__title" id="{{ fuel09_card_id }}-picks">{{ fuel09_picks_heading | escape }}</span>
-                    {%- endif -%}
-                    <span class="fuel09-picks__left" data-fuel09-left aria-live="polite">{{ fuel09_left_line | escape }}</span>
-                  </div>
-                  <ul
-                    class="fuel09-picks__list"
-                    role="list"
-                    {% if fuel09_picks_heading != blank %}
-                      aria-labelledby="{{ fuel09_card_id }}-picks"
-                    {% endif %}>
-                    {%- for n in (1..fuel09_bottles) -%}
-                      <li
-                        class="fuel09-pick{% if n == 1 %} fuel09-pick--set fuel09-pick--own{% endif %}"
-                        data-fuel09-slot="{{ forloop.index0 }}">
-                        <button type="button" class="fuel09-pick__add" data-fuel09-open{% if n == 1 %} hidden{% endif %}>
-                          <span class="fuel09-pick__frame" aria-hidden="true"></span>
-                          <span class="fuel09-pick__label">{{ block.settings.pick_empty_label | escape }}</span>
-                        </button>
-                        <span class="fuel09-pick__set"{% unless n == 1 %} hidden{% endunless %}>
-                          <span class="fuel09-pick__frame">
-                            {%- if n == 1 and fuel09_pick_image -%}
-                              {{ fuel09_pick_image | image_url: width: 160 | image_tag: class: 'fuel09-pick__image', alt: '', loading: 'lazy', widths: '80, 160', sizes: '72px' }}
-                            {%- else -%}
-                              <img class="fuel09-pick__image" alt="" width="72" height="72" loading="lazy" hidden>
-                            {%- endif -%}
-                          </span>
-                          <span class="fuel09-pick__name" data-fuel09-name>{% if n == 1 %}{{ fuel09_short | escape }}{% endif %}</span>
-                          <span class="fuel09-pick__state">
-                            <span class="fuel09-pick__tick" aria-hidden="true"></span>
-                            <span class="fuel09-pick__added">{{ block.settings.pick_added_label | escape }}</span>
-                          </span>
-                          {%- unless n == 1 -%}
-                            <button
-                              type="button"
-                              class="fuel09-pick__remove"
-                              data-fuel09-remove
-                              data-label="{{ block.settings.pick_remove_label | escape }}"
-                              aria-label="{{ block.settings.pick_remove_label | replace: '[name]', '' | strip | escape }}">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          {%- endunless -%}
-                        </span>
-                      </li>
-                    {%- endfor -%}
-                  </ul>
-                </div>
-              {%- else -%}
+              {%- unless fuel09_layout == 'c' -%}
               <div class="fuel09-card__sizes">
                 <span class="fuel09-card__sizes-label" id="{{ fuel09_card_id }}-sizes">
                   {{- block.settings.size_heading | escape -}}
@@ -634,6 +606,66 @@
                   {%- endfor -%}
                 </div>
               </div>
+              {%- endunless -%}
+
+              {%- if fuel09_picks -%}
+                {%- liquid
+                  assign fuel09_left = fuel09_slots | minus: 1
+                  assign fuel09_picks_heading = block.settings.picks_heading | replace: '[total]', fuel09_slots
+                  assign fuel09_left_line = block.settings.picks_left_text | replace: '[n]', fuel09_left
+                  if fuel09_left < 1
+                    assign fuel09_left_line = block.settings.picks_done_text
+                  endif
+                -%}
+                <div class="fuel09-card__picks">
+                  <div class="fuel09-picks__head">
+                    {%- if fuel09_picks_heading != blank -%}
+                      <span class="fuel09-picks__title" id="{{ fuel09_card_id }}-picks">{{ fuel09_picks_heading | escape }}</span>
+                    {%- endif -%}
+                    <span class="fuel09-picks__left" data-fuel09-left aria-live="polite">{{ fuel09_left_line | escape }}</span>
+                  </div>
+                  <ul
+                    class="fuel09-picks__list"
+                    role="list"
+                    {% if fuel09_picks_heading != blank %}
+                      aria-labelledby="{{ fuel09_card_id }}-picks"
+                    {% endif %}>
+                    {%- for n in (1..fuel09_slots) -%}
+                      <li
+                        class="fuel09-pick{% if n == 1 %} fuel09-pick--set fuel09-pick--own{% endif %}"
+                        data-fuel09-slot="{{ forloop.index0 }}">
+                        <button type="button" class="fuel09-pick__add" data-fuel09-open{% if n == 1 %} hidden{% endif %}>
+                          <span class="fuel09-pick__frame" aria-hidden="true"></span>
+                          <span class="fuel09-pick__label">{{ block.settings.pick_empty_label | escape }}</span>
+                        </button>
+                        <span class="fuel09-pick__set"{% unless n == 1 %} hidden{% endunless %}>
+                          <span class="fuel09-pick__frame">
+                            {%- if n == 1 and fuel09_pick_image -%}
+                              {{ fuel09_pick_image | image_url: width: 160 | image_tag: class: 'fuel09-pick__image', alt: '', loading: 'lazy', widths: '80, 160', sizes: '72px' }}
+                            {%- else -%}
+                              <img class="fuel09-pick__image" alt="" width="72" height="72" loading="lazy" hidden>
+                            {%- endif -%}
+                          </span>
+                          <span class="fuel09-pick__name" data-fuel09-name>{% if n == 1 %}{{ fuel09_short | escape }}{% endif %}</span>
+                          <span class="fuel09-pick__state">
+                            <span class="fuel09-pick__tick" aria-hidden="true"></span>
+                            <span class="fuel09-pick__added">{{ block.settings.pick_added_label | escape }}</span>
+                          </span>
+                          {%- unless n == 1 -%}
+                            <button
+                              type="button"
+                              class="fuel09-pick__remove"
+                              data-fuel09-remove
+                              data-label="{{ block.settings.pick_remove_label | escape }}"
+                              aria-label="{{ block.settings.pick_remove_label | replace: '[name]', '' | strip | escape }}">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          {%- endunless -%}
+                        </span>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
               {%- endif -%}
             </div>
           {%- endfor -%}

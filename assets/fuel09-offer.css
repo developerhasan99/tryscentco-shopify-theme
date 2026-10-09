@@ -113,6 +113,23 @@
   html.ab-f09-v3 .product__info-container:has(.fuel09-box--c) .atc-bundle-builder #product-price .compare-price {
     display: none;
   }
+
+  /* The two other offers around the button go with a look that is on:
+   * the scent wardrobe module above it and the bundle offer card under
+   * it. The module's own gate in assets/fuel01-global.css is !important
+   * on both sides, hence the one here. The card has no class of its own
+   * in sections/main-product.liquid and is found by its red frame. */
+  html.ab-f09-v1 .product__info-container:has(.fuel09-box--a) .fuel01--pdp-box,
+  html.ab-f09-v2 .product__info-container:has(.fuel09-box--b) .fuel01--pdp-box,
+  html.ab-f09-v3 .product__info-container:has(.fuel09-box--c) .fuel01--pdp-box {
+    display: none !important;
+  }
+
+  html.ab-f09-v1 .product__info-container:has(.fuel09-box--a) a[class*='border-[#cc303d]'],
+  html.ab-f09-v2 .product__info-container:has(.fuel09-box--b) a[class*='border-[#cc303d]'],
+  html.ab-f09-v3 .product__info-container:has(.fuel09-box--c) a[class*='border-[#cc303d]'] {
+    display: none;
+  }
 }
 
 .product__info-container > [data-fuel09-lifted] {
@@ -565,14 +582,14 @@
   font-weight: 700;
 }
 
-.fuel09-card__per {
-  color: var(--fuel09-card-muted);
-  font-size: calc(8 * var(--fuel09-u));
-}
-
+/* The frames have these two lines at 8 and 7 units. The client found them
+ * too small to read on a phone (Oct 9), so both are 9 units here, which
+ * still fits under the price without widening its column, and 10px on the
+ * wide arrangement. */
+.fuel09-card__per,
 .fuel09-card__shipping {
   color: var(--fuel09-card-muted);
-  font-size: calc(7 * var(--fuel09-u));
+  font-size: calc(9 * var(--fuel09-u));
 }
 
 .fuel09-card__badge {
@@ -847,11 +864,24 @@
     min-width: 57px;
   }
 
+  .fuel09-card__per,
+  .fuel09-card__shipping {
+    font-size: 10px;
+  }
+
   .fuel09-box--a .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__badge {
     top: 1px;
     height: 15px;
     padding: 0 7px;
     border-radius: 4px;
+  }
+
+  /* The badge stands on the selected card's top edge, right over the
+   * price. With the larger lines under it a centred price would rise into
+   * the badge, so on a badged card the price starts under the badge. */
+  .fuel09-box--a .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__prices:has(.fuel09-card__badge) {
+    align-self: start;
+    padding-top: 7px;
   }
 
   .fuel09-card__sizes {
@@ -1002,7 +1032,7 @@
 
   .fuel09-box--b .fuel09-card__per,
   .fuel09-box--b .fuel09-card__shipping {
-    font-size: 9px;
+    font-size: 10px;
   }
 
   .fuel09-box--b .fuel09-card__badge {
@@ -1088,7 +1118,8 @@
  * square's corner is ours, the one the bundle page's slots carry.
  * ------------------------------------------------------------------ */
 
-.fuel09-box--c {
+/* The slots' own colours, on every look: A and B carry the slots too. */
+.fuel09-box {
   --fuel09-pick-ground: #fbfbfa;
   --fuel09-pick-ink: #16171a;
   --fuel09-pick-muted: #60656b;
@@ -1172,7 +1203,7 @@
 
 .fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__per,
 .fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__shipping {
-  font-size: calc(8 * var(--fuel09-u));
+  font-size: calc(9 * var(--fuel09-u));
 }
 
 .fuel09-box--c .fuel09-card__badge {
@@ -1629,8 +1660,11 @@ html:has(.fuel09-picker[open]) {
 @container fuel09 (min-width: 500px) {
   /* On the panel, not on the box: the box is the container the query
    * asks about, and a query cannot restyle its own container. */
-  .fuel09-box--c .fuel09-box__panel {
+  .fuel09-box__panel {
     --fuel09-pick-line-empty: #c4cdd0;
+  }
+
+  .fuel09-box--c .fuel09-box__panel {
     --fuel09-bottle-dark: #101316;
     --fuel09-bottle-glass: #f4f5f3;
     --fuel09-bottle-line: #9ea3a5;
@@ -1704,8 +1738,10 @@ html:has(.fuel09-picker[open]) {
   }
 
   .fuel09-box--c .fuel09-card__per,
-  .fuel09-box--c .fuel09-card__shipping {
-    font-size: 8px;
+  .fuel09-box--c .fuel09-card__shipping,
+  .fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__per,
+  .fuel09-box--c .fuel09-card__input:checked + .fuel09-card__summary .fuel09-card__shipping {
+    font-size: 10px;
   }
 
   /* The pill is written in the copy column, where the narrow frame has
@@ -1719,7 +1755,7 @@ html:has(.fuel09-picker[open]) {
   }
 
   .fuel09-box--c .fuel09-card:not(:has(.fuel09-card__badge)):has(.fuel09-pill--shipping:not([hidden])) .fuel09-card__prices {
-    padding-top: 16px;
+    padding-top: 17px;
   }
 
   .fuel09-box--c .fuel09-bottles {
