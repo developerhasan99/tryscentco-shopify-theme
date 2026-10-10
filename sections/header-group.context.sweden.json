@@ -17,9 +17,8 @@
       "settings": {
         "top_banner_text": "",
         "prepend_text": "Höstrean",
-        "countdown_date": "2026/10/10",
-        "append_text": "Köp 3 få 1 GRATIS",
-        "link": "https://tryscent.co/sv-se/collections/4-2"
+        "countdown_date": "",
+        "append_text": "Köp 3 få 1 GRATIS"
       },
       "blocks": {}
     },
