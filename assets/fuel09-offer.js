@@ -403,6 +403,16 @@ if (!customElements.get('fuel09-box')) {
           this.card?.querySelector('.fuel09-pick__add:not([hidden])')?.focus({ preventScroll: true });
           return;
         }
+        const choice = target.closest('[data-fuel09-filter]');
+        if (choice) {
+          this.filterBy = choice.dataset.fuel09Filter;
+          for (const other of this.picker.querySelectorAll('[data-fuel09-filter]')) {
+            other.setAttribute('aria-pressed', String(other === choice));
+          }
+          this.filter(this.picker.querySelector('[data-fuel09-search]')?.value ?? '');
+          this.picker.querySelector('[data-fuel09-list]').scrollTop = 0;
+          return;
+        }
         const option = target.closest('[data-fuel09-option]');
         if (option) {
           this.take(option);
@@ -473,10 +483,34 @@ if (!customElements.get('fuel09-box')) {
         const words = query.toLowerCase().split(/\s+/).filter(Boolean);
         // A row is listed only while the perfume comes in the size on show.
         const size = ` ${this.sizeWord}:`;
+        // The filter on, as "||"-separated tests of which one is enough:
+        // "in:<handle>" against the collections the row came from or the
+        // perfume is in, "gender:<value>" against the gender field (a perfume
+        // for both is under either). An empty gender field matches nothing,
+        // so a gender filter rests on its collection.
+        const tests = (this.filterBy ?? '')
+          .split('||')
+          .filter(Boolean)
+          .map((test) => test.split(/:(.*)/s));
+        const both = this.picker.querySelector('[data-fuel09-both]')?.dataset.fuel09Both || null;
+        const wanted = (option) =>
+          !tests.length ||
+          tests.some(([kind, value]) => {
+            if (kind === 'gender') {
+              const genders = (option.dataset.gender ?? '').split('||').filter(Boolean);
+              return genders.includes(value) || (both !== null && genders.includes(both));
+            }
+            if (kind === 'in') {
+              return ` ${option.dataset.in ?? ''} ${option.dataset.collections ?? ''} `.includes(` ${value} `);
+            }
+            return false;
+          });
         let shown = 0;
         for (const option of this.picker.querySelectorAll('[data-fuel09-option]')) {
           const hit =
-            ` ${option.dataset.sizes}`.includes(size) && words.every((word) => option.dataset.search.includes(word));
+            ` ${option.dataset.sizes}`.includes(size) &&
+            words.every((word) => option.dataset.search.includes(word)) &&
+            wanted(option);
           option.parentElement.hidden = !hit;
           if (hit) shown += 1;
         }
@@ -505,8 +539,16 @@ if (!customElements.get('fuel09-box')) {
           [...options.querySelectorAll('[data-fuel09-option]')].map((option) => option.dataset.product)
         );
 
+        // Each row carries the handles of the collections it came in, for the
+        // filters; a perfume already listed gains the new handle instead.
+        const mark = (option, handle) => {
+          const handles = new Set((option.dataset.in ?? '').split(' ').filter(Boolean)).add(handle);
+          option.dataset.in = [...handles].join(' ');
+        };
+
         this.pool = (async () => {
           for (const first of (this.dataset.pool ?? '').split(' ').filter(Boolean)) {
+            const handle = new URL(first, window.location.origin).pathname.split('/').pop();
             let url = first;
             for (let page = 0; url && page < 10; page += 1) {
               const response = await fetch(url);
@@ -514,10 +556,16 @@ if (!customElements.get('fuel09-box')) {
               const html = new DOMParser().parseFromString(await response.text(), 'text/html');
               const rows = [];
               for (const option of html.querySelectorAll('[data-fuel09-option]')) {
-                if (listed.has(option.dataset.product)) continue;
+                if (listed.has(option.dataset.product)) {
+                  const known = options.querySelector(`[data-fuel09-option][data-product="${option.dataset.product}"]`);
+                  if (known) mark(known, handle);
+                  continue;
+                }
                 listed.add(option.dataset.product);
+                mark(option, handle);
                 rows.push(document.importNode(option.parentElement, true));
               }
+              if (!rows.length && this.filterBy) this.filter(search?.value ?? '');
               if (rows.length) {
                 options.append(...rows);
                 if (status) status.hidden = true;

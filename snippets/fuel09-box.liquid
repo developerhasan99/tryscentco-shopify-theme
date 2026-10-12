@@ -243,12 +243,31 @@
         assign fuel09_short = product.title | split: 'No.' | last | strip | prepend: 'No. '
       endif
       assign fuel09_pick_image = fuel09_variant.featured_image | default: product.featured_image
+      comment
+        The list's own collections where the block names them, else the
+        ones the box shows on. The filter collections are asked for as well,
+        so a filter never comes up empty for want of its perfumes being in
+        the list; the script marks each row with the collections it came
+        from, and a perfume in two of them is listed once.
+      endcomment
       assign fuel09_pool = ''
-      assign fuel09_pool_handles = block.settings.collections | default: 'best-sellers' | split: ','
+      assign fuel09_pool_seen = ','
+      assign fuel09_pool_handles = block.settings.pool_collections | default: block.settings.collections | default: 'best-sellers'
+      if block.settings.filter_best_label != blank and block.settings.filter_best_collection != blank
+        assign fuel09_pool_handles = fuel09_pool_handles | append: ',' | append: block.settings.filter_best_collection
+      endif
+      if block.settings.filter_new_label != blank and block.settings.filter_new_collection != blank
+        assign fuel09_pool_handles = fuel09_pool_handles | append: ',' | append: block.settings.filter_new_collection
+      endif
+      assign fuel09_pool_handles = fuel09_pool_handles | split: ','
       for fuel09_pool_handle in fuel09_pool_handles
         assign fuel09_handle = fuel09_pool_handle | strip
+        assign fuel09_handle_mark = ',' | append: fuel09_handle | append: ','
         if fuel09_handle != blank
-          assign fuel09_pool = fuel09_pool | append: routes.collections_url | append: '/' | append: fuel09_handle | append: '?section_id=fuel09-pool '
+          unless fuel09_pool_seen contains fuel09_handle_mark
+            assign fuel09_pool_seen = fuel09_pool_seen | append: fuel09_handle | append: ','
+            assign fuel09_pool = fuel09_pool | append: routes.collections_url | append: '/' | append: fuel09_handle | append: '?section_id=fuel09-pool '
+          endunless
         endif
       endfor
       assign fuel09_pool = fuel09_pool | strip
@@ -731,6 +750,62 @@
             placeholder="{{ block.settings.picker_search | escape }}"
             autocomplete="off">
         </label>
+        {%- comment -%}
+          Filters over the list: everything, or by being in a collection.
+          Filters 1 and 2 also take a perfume whose gender field says so, on
+          top of their collection. A filter whose label or value is empty is
+          left out.
+        {%- endcomment -%}
+        {%- capture fuel09_filters -%}
+          {%- liquid
+            assign fuel09_men_filter = ''
+            if block.settings.filter_men_collection != blank
+              assign fuel09_men_filter = 'in:' | append: block.settings.filter_men_collection | strip
+            endif
+            if block.settings.filter_men_value != blank
+              assign fuel09_men_filter = fuel09_men_filter | append: '||gender:' | append: block.settings.filter_men_value
+            endif
+            assign fuel09_women_filter = ''
+            if block.settings.filter_women_collection != blank
+              assign fuel09_women_filter = 'in:' | append: block.settings.filter_women_collection | strip
+            endif
+            if block.settings.filter_women_value != blank
+              assign fuel09_women_filter = fuel09_women_filter | append: '||gender:' | append: block.settings.filter_women_value
+            endif
+          -%}
+          {%- if block.settings.filter_men_label != blank and fuel09_men_filter != blank -%}
+            <button type="button" class="fuel09-filter" data-fuel09-filter="{{ fuel09_men_filter | escape }}" aria-pressed="false">
+              {{- block.settings.filter_men_label | escape -}}
+            </button>
+          {%- endif -%}
+          {%- if block.settings.filter_women_label != blank and fuel09_women_filter != blank -%}
+            <button type="button" class="fuel09-filter" data-fuel09-filter="{{ fuel09_women_filter | escape }}" aria-pressed="false">
+              {{- block.settings.filter_women_label | escape -}}
+            </button>
+          {%- endif -%}
+          {%- if block.settings.filter_best_label != blank and block.settings.filter_best_collection != blank -%}
+            <button type="button" class="fuel09-filter" data-fuel09-filter="in:{{ block.settings.filter_best_collection | strip | escape }}" aria-pressed="false">
+              {{- block.settings.filter_best_label | escape -}}
+            </button>
+          {%- endif -%}
+          {%- if block.settings.filter_new_label != blank and block.settings.filter_new_collection != blank -%}
+            <button type="button" class="fuel09-filter" data-fuel09-filter="in:{{ block.settings.filter_new_collection | strip | escape }}" aria-pressed="false">
+              {{- block.settings.filter_new_label | escape -}}
+            </button>
+          {%- endif -%}
+        {%- endcapture -%}
+        {%- if fuel09_filters != blank -%}
+          <div
+            class="fuel09-picker__filters"
+            role="group"
+            aria-label="{{ block.settings.picker_title | escape }}"
+            data-fuel09-both="{{ block.settings.filter_both_value | escape }}">
+            <button type="button" class="fuel09-filter" data-fuel09-filter="" aria-pressed="true">
+              {{- block.settings.filter_all_label | default: 'Alla' | escape -}}
+            </button>
+            {{- fuel09_filters -}}
+          </div>
+        {%- endif -%}
         <div class="fuel09-picker__body" data-fuel09-list tabindex="-1">
           <p class="fuel09-picker__status" data-fuel09-status role="status">{{ block.settings.picker_loading | escape }}</p>
           <p class="fuel09-picker__status" data-fuel09-none hidden>{{ block.settings.picker_none | escape }}</p>

@@ -1505,6 +1505,55 @@ html:has(.fuel09-picker[open]) {
   box-shadow: none;
 }
 
+/* One row of filters under the search; it scrolls sideways rather than
+ * wrapping where a phone is too narrow for all of them. */
+.fuel09-picker__filters {
+  display: flex;
+  flex: none;
+  gap: 6px;
+  padding: 0 16px 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.fuel09-picker__filters::-webkit-scrollbar {
+  display: none;
+}
+
+.fuel09-filter {
+  flex: 1 0 auto;
+  height: 32px;
+  margin: 0;
+  padding: 0 11px;
+  border: 1px solid var(--fuel09-pick-field);
+  border-radius: 16px;
+  background: var(--fuel09-surface);
+  color: var(--fuel09-pick-ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.fuel09-filter[aria-pressed='true'] {
+  border-color: var(--fuel09-pick-accent);
+  background: var(--fuel09-pick-accent);
+  color: var(--fuel09-surface);
+}
+
+.fuel09-filter:focus-visible {
+  outline: 2px solid var(--fuel09-pick-accent);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .fuel09-filter[aria-pressed='false']:hover {
+    background: var(--fuel09-pick-wash);
+  }
+}
+
 .fuel09-picker__body {
   flex: 1 1 auto;
   min-height: 120px;

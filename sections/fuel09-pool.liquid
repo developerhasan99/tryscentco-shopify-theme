@@ -15,8 +15,9 @@
   Everything a row shows is printed here, by the market's own prices and the
   store's own titles. The script reads each size's id and price from the row
   ("word:id:price" per size in stock, the words being the ones the box
-  prints for the page's own perfume) and nothing else, and shows a row only
-  while the size chosen on the page is among them.
+  prints for the page's own perfume), and the perfume's collections and
+  gender field for the picker's filters, and shows a row only while the size
+  chosen on the page is among them.
 {% endcomment %}
 
 {%- liquid
@@ -96,6 +97,8 @@
           data-sizes="{{ pool_sizes | escape }}"
           data-short="{{ pool_short | escape }}"
           data-search="{{ item.title | append: ' ' | append: pool_note | downcase | escape }}"
+          data-gender="{{ item.metafields.custom.gender.value | join: '||' | escape }}"
+          data-collections="{{ item.collections | map: 'handle' | join: ' ' | escape }}"
           {% if pool_image %}
             data-image="{{ pool_image | image_url: width: 160 }}"
           {% endif %}>
