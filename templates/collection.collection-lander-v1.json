@@ -73,7 +73,7 @@
             "device": "desktop",
             "video": "shopify://files/videos/brand_SofiaK_6df4295a_sdr.mp4",
             "video_url": "",
-            "product": "magic-perfume-no-437w"
+            "product": "6-x-50ml-parfymflasko"
           }
         },
         "fuel05_td_2": {
@@ -238,7 +238,17 @@
         "filter_type": "horizontal",
         "enable_sorting": true,
         "padding_top": 36,
-        "padding_bottom": 40
+        "padding_bottom": 40,
+        "fuel04_cards": true,
+        "fuel04_cards_every": 5,
+        "fuel04_card_url": "",
+        "fuel04_card_heading": "Köp fler, spara mer!",
+        "fuel04_card_sub_text": "",
+        "fuel04_card_tier_1_count": "Köp 3",
+        "fuel04_card_tier_1_text": "Välj en 30 ml doft GRATIS",
+        "fuel04_card_tier_2_count": "KÖP 5",
+        "fuel04_card_tier_2_text": "Få en 100 ml Mystery Scent GRATIS",
+        "fuel04_card_cta_text": "LÅS UPP DINA GÅVOR"
       }
     },
     "rich_text_fnCgkL": {
