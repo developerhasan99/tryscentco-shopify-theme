@@ -1,11 +1,6 @@
-/* FUEL_06 Search & Compare designer fragrance finder.
-
-   Everything ships hidden. The first rule below is the whole safety story:
-   with no class on <html> nothing in this file is ever visible, so the
-   homepage renders exactly as it does today. Intelligems reveals the test by
-   putting ab-f06-finder on the html element; on a preview theme the #f06 hash
-   does the same thing (assets/fuel06-finder.js), and the theme editor shows
-   the entry band so the strategist can configure the copy.
+/* FUEL_06 Search & Compare designer fragrance finder. Won its A/B test on
+   2026-10-16 and is now shown to every visitor: the homepage band, the dialog
+   it opens and the product page link.
 
    Every number below comes from the Figma frames: entry band 1440x288 with a
    596 wide centred column, desktop dialog 640 wide with a 616 content column,
@@ -13,9 +8,7 @@
    radius 24 24 0 0. The design draws exactly two widths, 1440 and 390.
    Anything between them is interpolation: the modal flips to the desktop
    layout at the theme's own 750px breakpoint, and the band's art scales with
-   the viewport because no mobile band is drawn anywhere.
-
-   Remove this file with the FUEL_06 cleanup. */
+   the viewport because no mobile band is drawn anywhere. */
 
 /* The design sets everything except the buttons in Plus Jakarta Sans, which
    this theme does not serve. Latin subset of the variable file, 200-800. The
@@ -33,18 +26,9 @@
   src: url('fuel06-plus-jakarta-sans.woff2') format('woff2');
 }
 
-.fuel06-finder {
+/* The dialog stays out of the page until the finder script opens it. */
+.fuel06-finder--modal:not(.is-open) {
   display: none !important;
-}
-
-html.ab-f06-finder .fuel06-finder--entry,
-.shopify-design-mode .fuel06-finder--entry {
-  display: block !important;
-}
-
-html.ab-f06-finder .fuel06-finder--modal.is-open,
-.shopify-design-mode .fuel06-finder--modal.is-open {
-  display: block !important;
 }
 
 .fuel06-finder {
@@ -298,8 +282,7 @@ html.ab-f06-finder .fuel06-finder--modal.is-open,
 /* The shop's own floating "Hitta din doft" quiz pill sits at z-index 9998 and
    Klaviyo's gift teaser sits at 90000. Both are fixed above ordinary page
    content and otherwise cover the open sheet. The finder clears them only
-   while it is open, so the closed page and the control experience do not
-   change. */
+   while it is open, so the closed page does not change. */
 
 .fuel06-finder--modal.is-open .fuel06-finder__scrim {
   z-index: 99999;
@@ -1650,23 +1633,17 @@ html.ab-f06-finder .fuel06-finder--modal.is-open,
   }
 }
 
-/* Product page entry, snippets/fuel06-pdp-link.liquid (2026-09-30). Off until
-   the test class arrives, like the band; the link itself is a button so it
-   never navigates, it only opens the dialog. Colours are the band's green. */
+/* Product page entry, snippets/fuel06-pdp-link.liquid (2026-09-30). The link
+   itself is a button so it never navigates, it only opens the dialog. Colours
+   are the band's green. */
 .fuel06-pdp-link {
-  display: none;
-}
-
-html.ab-f06-finder .fuel06-pdp-link,
-.shopify-design-mode .fuel06-pdp-link {
   display: inline-flex;
 }
 
 /* The server ships the link with the hidden attribute and only the finder
    script clears it, so a page that gets this stylesheet without the dialog
-   keeps the link hidden even with the test class on. */
-html.ab-f06-finder .fuel06-pdp-link[hidden],
-.shopify-design-mode .fuel06-pdp-link[hidden] {
+   keeps the link hidden. */
+.fuel06-pdp-link[hidden] {
   display: none;
 }
 

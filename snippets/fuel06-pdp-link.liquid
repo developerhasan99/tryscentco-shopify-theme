@@ -4,14 +4,11 @@
   renders on product templates (mode 'dialog' of snippets/fuel06-finder.liquid).
 
   Ships with the hidden attribute: assets/fuel06-finder.js drops it once the
-  dialog is on the page, and assets/fuel06-finder.css shows the link only when
-  Intelligems puts ab-f06-finder on the html element (or in the theme editor),
-  so the control version and any template without the dialog never show it.
+  dialog is on the page, so a template without the dialog never shows it.
 
   Rendered from snippets/reactive-variant-selector.liquid, right after the add to
   cart form and before the payment badge (the perfume templates disable the
   theme's own buy_buttons block and draw the button there).
-  Remove this file and that render line with the FUEL_06 cleanup.
 {%- endcomment -%}
 <button type="button" class="fuel06-pdp-link" data-f06-open-external hidden>
   <span class="fuel06-pdp-link__icon" aria-hidden="true">

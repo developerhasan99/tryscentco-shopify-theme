@@ -1,10 +1,8 @@
 {% comment %}
   FUEL_06 Search & Compare designer fragrance finder.
 
-  Renders the homepage entry band and the finder dialog it opens. Both ship
-  hidden: assets/fuel06-finder.css hides everything until Intelligems puts
-  ab-f06-finder on the html element, so this snippet can render on every
-  homepage load without changing a single pixel of the page as it stands.
+  Renders the homepage entry band and the finder dialog it opens. Won its
+  A/B test on 2026-10-16 and shows for every visitor.
 
   It lives in a snippet rather than a section because templates/index.json is
   already at Shopify's 25 section cap and nothing new fits without removing
@@ -34,9 +32,6 @@
   Every amount shown by the finder comes from templates/collection.fuel06-index
   .liquid, which builds it with the theme's money filter. Nothing in this file
   or in the settings below carries a price, a discount or a saving.
-
-  Remove this file, the assets it names, the index template and the render site
-  in sections/feature-highlights.liquid with the FUEL_06 cleanup.
 {% endcomment %}
 
 {%- if mode == 'assets' -%}

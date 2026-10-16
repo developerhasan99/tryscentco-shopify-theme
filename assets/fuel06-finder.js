@@ -6,8 +6,7 @@
    plus a no-result state that the design does not draw and whose wording
    therefore comes from a setting.
 
-   Everything is hidden by assets/fuel06-finder.css until the test is revealed,
-   so this file can run on every homepage load without changing a single pixel.
+   Won its A/B test on 2026-10-16 and runs for every visitor.
 
    Nothing here touches Searchanise or the native /search. The finder matches
    what a shopper types against its own feed (templates/collection.fuel06-index
@@ -18,33 +17,11 @@
 
    Every price, saving and percentage comes from that feed, which builds them
    with the theme's money filter in the market the request came in on. This
-   file does no currency maths and carries no amounts.
-
-   Remove this file with the FUEL_06 cleanup. */
+   file does no currency maths and carries no amounts. */
 
 (() => {
   if (window.fuel06FinderReady) return;
   window.fuel06FinderReady = true;
-
-  // QA and preview reveal, the same shape as fuel03 and fuel05. On any theme
-  // that is not the live one, #f06 in the address turns the test on so it can
-  // be checked without running Intelligems. Shopify.theme.role is 'main' on
-  // the live theme, so this can never fire there. The hash is read again on
-  // every hashchange, because typing #f06 into the bar of a page that is
-  // already open never reloads it.
-  // The switch only ever adds the class on #f06 and removes it on #f06-off. It
-  // must not toggle on every other address, because the testing tool's preview
-  // puts the same class on the page without any hash, and a toggle would take
-  // that straight back off on any theme that is not the live one.
-  if (window.Shopify && Shopify.theme && Shopify.theme.role !== 'main') {
-    const applyHashReveal = () => {
-      if (window.location.hash === '#f06') document.documentElement.classList.add('ab-f06-finder');
-      else if (window.location.hash === '#f06-off') document.documentElement.classList.remove('ab-f06-finder');
-    };
-
-    applyHashReveal();
-    window.addEventListener('hashchange', applyHashReveal);
-  }
 
   const FOCUSABLE =
     'a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -181,8 +158,7 @@
       // Product page entry (snippets/fuel06-pdp-link.liquid). It sits under the
       // buy button, outside this element, and ships with the hidden attribute
       // so a template that carries no dialog never shows a dead link. Only this
-      // code, which runs when the dialog is on the page, makes it visible; the
-      // stylesheet still keeps it off until the test class arrives.
+      // code, which runs when the dialog is on the page, makes it visible.
       document.querySelectorAll('[data-f06-open-external]').forEach((node) => {
         node.hidden = false;
         node.addEventListener('click', (event) => {
@@ -291,8 +267,8 @@
       this.show('search');
       this.loadIndex();
 
-      // The loading frame's looping GIF is lazy so that the control arm and
-      // every product page never fetch it. Once the finder is open the shopper
+      // The loading frame's looping GIF is lazy so that a visitor who never
+      // opens the finder never fetches it. Once the finder is open the shopper
       // is a few seconds away from picking a scent, which is what the download
       // needs on an ordinary line, so it starts now instead of at the pick,
       // when a two second hold was too short and the frame showed an empty box.

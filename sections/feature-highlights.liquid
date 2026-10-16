@@ -50,17 +50,11 @@
   id. Either test alone keeps the band alive on the homepage, and neither can
   ever put it on a product page.
 
-  It ships hidden. Nothing below is visible until Intelligems puts
-  ab-f06-finder on the html element, so with the test off the homepage renders
-  exactly as it does today.
-
   No new block type is added to this section: the loop above renders every
   block as a perk with no case guard, so a FUEL_06 block would draw a broken
   perk tile alongside the finder. The copy lives in section settings instead,
   which also means the Swedish translation is a theme editor edit rather than
   a deploy.
-
-  Remove this block with the FUEL_06 cleanup.
 {%- endcomment -%}
 {%- if request.page_type == 'index' or section.id contains 'feature_highlights_wfUacV' -%}
   {% render 'fuel06-finder', section: section, mode: 'assets' %}
