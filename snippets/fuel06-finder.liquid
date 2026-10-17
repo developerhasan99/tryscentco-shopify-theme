@@ -4,16 +4,16 @@
   Renders the homepage entry band and the finder dialog it opens. Won its
   A/B test on 2026-10-16 and shows for every visitor.
 
-  It lives in a snippet rather than a section because templates/index.json is
-  already at Shopify's 25 section cap and nothing new fits without removing
-  client content. Same approach as the FUEL_05 home row: it is rendered from
-  inside sections/feature-highlights.liquid, gated to the homepage, so it takes
-  no template slot.
+  Rendered from two places:
+  - sections/fuel06-finder.liquid, the homepage band ('home').
+  - layout/theme.liquid on product pages ('dialog'). The product templates sit
+    at Shopify's 25 section cap, so the dialog cannot be a section there.
+
+  All the copy comes from theme settings (config/settings_schema.json, group
+  "FUEL_06 Fragrance finder"), so both placements read one set of strings and
+  a wording change is a theme editor edit, not a deploy.
 
   Accepts:
-  - section: {Object} the hosting section (required). All the copy comes from
-    its settings, so a Swedish translation is a theme editor edit and not a
-    deploy.
   - mode: {String} 'assets' | 'home' | 'dialog' (required). 'assets' emits the
     stylesheet and the script once per page and no markup. 'home' renders the
     entry band and the dialog. 'dialog' renders the dialog alone, for the
@@ -21,9 +21,9 @@
     (snippets/fuel06-pdp-link.liquid, rendered from snippets/reactive-variant-selector.liquid).
 
   Usage:
-  {% render 'fuel06-finder', section: section, mode: 'assets' %}
-  {% render 'fuel06-finder', section: section, mode: 'home' %}
-  {% render 'fuel06-finder', section: section, mode: 'dialog' %}
+  {% render 'fuel06-finder', mode: 'assets' %}
+  {% render 'fuel06-finder', mode: 'home' %}
+  {% render 'fuel06-finder', mode: 'dialog' %}
 
   The product page placement (2026-09-30, Korana: "a link with some decoration,
   somewhere below the CTA") is the 'dialog' mode plus the link snippet. Best
@@ -40,10 +40,10 @@
 
 {%- elsif mode == 'home' or mode == 'dialog' -%}
   {%- liquid
-    assign s = section.settings
+    assign s = settings
     assign terms = s.fuel06_popular_terms | split: ','
     assign steps = s.fuel06_steps | strip | newline_to_br | split: '<br />'
-    assign title_id = 'fuel06-title-' | append: section.id
+    assign title_id = 'fuel06-title-' | append: mode
   -%}
 
   {%- comment -%}
@@ -104,7 +104,6 @@
     data-f06-add-label="{{ s.fuel06_add_label | escape }}"
     data-f06-note-labels="{{ s.fuel06_note_labels | escape }}"
     data-f06-ref-note="{{ s.fuel06_ref_note | escape }}"
-    data-f06-reviews-noun="{{ s.fuel06_reviews_noun | escape }}"
     data-f06-remove-label="{{ s.fuel06_remove_label | escape }}"
     data-f06-empty="{{ s.fuel06_empty | escape }}"
     data-f06-cart-error="{{ s.fuel06_cart_error | escape }}">

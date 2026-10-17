@@ -43,7 +43,6 @@
   --f06-plus: #137c44;
   --f06-flask: #124427;
   --f06-ghost: #1c1c1c;
-  --f06-star: #fbbc04;
   --f06-how: #f4f5ef;
   --f06-note: #f4f4ef;
   --f06-chip: #ede9e6;
@@ -1097,36 +1096,6 @@
   letter-spacing: 0.66px;
   line-height: normal;
   margin: 0;
-}
-
-.fuel06-finder__rating {
-  align-items: center;
-  color: var(--f06-body);
-  display: flex;
-  font-size: 12px;
-  gap: 6px;
-  letter-spacing: 0.66px;
-}
-
-.fuel06-finder__rating svg {
-  color: var(--f06-star);
-  flex: 0 0 auto;
-  height: 12px;
-  width: 12.6px;
-}
-
-.fuel06-finder__rating-n {
-  display: flex;
-  gap: 4px;
-}
-
-.fuel06-finder__rating-v {
-  font-weight: 700;
-}
-
-.fuel06-finder__rating-c {
-  font-weight: 400;
-  opacity: 0.7;
 }
 
 .fuel06-finder__blurb {

@@ -485,6 +485,17 @@ body {
   {% comment %} {% render 'sb-preload-booster' %}  {% endcomment %}
   {% comment %} {% render 'checkout-modal' %} {% endcomment %}
 
+  {%- comment -%}
+    FUEL_06 finder dialog on product pages, opened by the link under the buy
+    button (snippets/fuel06-pdp-link.liquid). Here rather than in a section
+    because the product templates are at Shopify's 25 section cap. The link
+    stays hidden on any page where this dialog is not rendered.
+  {%- endcomment -%}
+  {%- if request.page_type == 'product' and settings.fuel06_pdp_enabled -%}
+    {%- render 'fuel06-finder', mode: 'assets' -%}
+    {%- render 'fuel06-finder', mode: 'dialog' -%}
+  {%- endif -%}
+
   {%- if settings.enable_scent_quiz -%}
     {%- render 'scent-quiz-popup' -%}
     {%- assign scent_quiz_bundle_product = settings.scent_quiz_bundle_product | default: all_products['6x-50ml-perfume-bottles'] -%}

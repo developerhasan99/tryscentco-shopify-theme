@@ -61,8 +61,6 @@
     '<svg class="fuel06-finder__row-go" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M9.5 9.5L2.5 2.5M2.5 2.5H7.5M2.5 2.5V7.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>';
   const ICON_X =
     '<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
-  const ICON_STAR =
-    '<svg viewBox="0 0 13 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M6.5 0L8.28 3.94L12.5 4.44L9.37 7.32L10.22 11.5L6.5 9.42L2.78 11.5L3.63 7.32L0.5 4.44L4.72 3.94L6.5 0Z"/></svg>';
   const ICON_PLUS =
     '<svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M7 1V13M1 7H13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
 
@@ -561,32 +559,6 @@
 
     /* -------------------------------------------------------------- rendering */
 
-    // Rating counts are grouped the way the storefront's own locale groups
-    // them, so 5432 prints as the frame draws it and the noun beside it is a
-    // setting rather than an English word baked into the script.
-    formatCount(value) {
-      const count = Number(value);
-      if (!Number.isFinite(count)) return '';
-      try {
-        return count.toLocaleString(document.documentElement.lang || undefined);
-      } catch (error) {
-        return String(count);
-      }
-    }
-
-    ratingHtml(item) {
-      const rating = Number(item.rating) || 0;
-      if (!rating) return '';
-
-      const count = Number(item.rating_count) || 0;
-      const noun = (this.copy.f06ReviewsNoun || '').trim();
-      const counted = count ? `(${this.formatCount(count)}${noun ? ` ${noun}` : ''})` : '';
-
-      return `<div class="fuel06-finder__rating">${ICON_STAR}<span class="fuel06-finder__rating-n"><span class="fuel06-finder__rating-v">${rating.toFixed(
-        1
-      )}</span>${counted ? `<span class="fuel06-finder__rating-c">${escapeHtml(counted)}</span>` : ''}</span></div>`;
-    }
-
     // Every card that can be added to the bag keeps the entry it was drawn
     // from on the button itself, so the add never has to find it again in the
     // feed and a product missing from the index cannot swallow a confirmation.
@@ -752,7 +724,6 @@
         <div class="fuel06-finder__match-body">
           <p class="fuel06-finder__match-t">${escapeHtml(match.title)}</p>
           <p class="fuel06-finder__match-i">${escapeHtml(copy.f06InspiredPrefix)} ${escapeHtml(match.inspired)}</p>
-          ${this.ratingHtml(match)}
           ${match.blurb ? `<p class="fuel06-finder__blurb">${escapeHtml(match.blurb)}</p>` : ''}
         </div>`;
 
@@ -833,7 +804,6 @@
               : ''
           }
           <div class="fuel06-finder__sim-body">
-            ${this.ratingHtml(product)}
             <p class="fuel06-finder__sim-t">${escapeHtml(product.title)}</p>
             <p class="fuel06-finder__sim-i">${escapeHtml(this.copy.f06InspiredPrefix)} ${escapeHtml(
               product.inspired

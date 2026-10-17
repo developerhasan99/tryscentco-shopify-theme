@@ -134,8 +134,6 @@
         assign note_base = p.metafields.custom.base_notes.value.heading | default: '' | strip_html | strip
 
         assign family = p.metafields.custom.fragrance_family | default: '' | strip_html | strip
-        assign rating = p.metafields.reviews.rating.value.rating | default: 0
-        assign rating_count = p.metafields.reviews.rating_count | default: 0
       -%}
       {{- sep -}}
       {
@@ -156,8 +154,6 @@
       "save_pct":{{ save_pct }},
       "family":{{ family | json }},
       "blurb":{{ blurb | json }},
-      "rating":{{ rating | json }},
-      "rating_count":{{ rating_count | json }},
       "notes":[{{ note_top | json }},{{ note_heart | json }},{{ note_base | json }}],
       "scents":[
         {%- assign tsep = '' -%}

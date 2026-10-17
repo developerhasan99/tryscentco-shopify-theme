@@ -1715,5 +1715,289 @@
         "info": "One message per line. Leave empty to hide this text on product cards."
       }
     ]
+  },
+  {
+    "name": "FUEL_06 Fragrance finder",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Copy for the designer fragrance finder. The homepage band is the \"FUEL_06 Fragrance finder\" section; on product pages the finder opens from the link under the buy button. On-site copy is Swedish; the translation app handles the other markets. No prices are set here: the finder reads them from each product."
+      },
+      {
+        "type": "checkbox",
+        "id": "fuel06_pdp_enabled",
+        "label": "Show on product pages",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "fuel06_pdp_lead",
+        "label": "Product page link: lead-in",
+        "default": "Inte din doft?"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_pdp_link",
+        "label": "Product page link: link text",
+        "default": "Hitta din designerdoft för mindre"
+      },
+      {
+        "type": "header",
+        "content": "Finder copy"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_heading",
+        "label": "Band heading",
+        "default": "Hitta din designerdoft för mindre"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_heading_accent",
+        "label": "Heading word in green",
+        "info": "The first time this word appears in the band heading it is set in green italics. Leave it empty for a plain heading.",
+        "default": "mindre"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_placeholder",
+        "label": "Search placeholder",
+        "default": "t.ex. YSL Black Opium, Dior"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_cta",
+        "label": "Band button",
+        "default": "Hitta min match"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_modal_title",
+        "label": "Finder title",
+        "default": "Hitta din designerdoft för mindre"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_search_label",
+        "label": "Search field label",
+        "default": "Sök en parfym du redan älskar"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_popular_label",
+        "label": "Popular searches label",
+        "default": "Populära sökningar"
+      },
+      {
+        "type": "textarea",
+        "id": "fuel06_popular_terms",
+        "label": "Popular searches",
+        "info": "Separated by commas. Replace with the real top search terms from the Searchanise report.",
+        "default": "Dior Sauvage, Baccarat Rouge 540, Creed Aventus, YSL Black Opium, Bleu de Chanel, JPG Le Male"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_how_label",
+        "label": "How it works label",
+        "default": "Så fungerar det"
+      },
+      {
+        "type": "textarea",
+        "id": "fuel06_steps",
+        "label": "How it works steps",
+        "info": "One step per line. They are numbered automatically.",
+        "default": "Sök en doft du redan älskar\nVi hittar den TryScent-doft som ligger närmast\nJämför doften och vad du sparar"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_suggestions_label",
+        "label": "Suggestions label",
+        "default": "Förslag"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_recent_label",
+        "label": "Recent searches label",
+        "default": "Senaste sökningar"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_clear_label",
+        "label": "Clear label",
+        "default": "Rensa"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_close_label",
+        "label": "Close button label",
+        "info": "Read out by screen readers, not shown on screen.",
+        "default": "Stäng"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_loading_title",
+        "label": "Loading title",
+        "default": "Vi letar upp din närmaste match ..."
+      },
+      {
+        "type": "text",
+        "id": "fuel06_loading_sub",
+        "label": "Loading subtitle",
+        "default": "Vi jämför doftprofil, noter och kundfavoriter."
+      },
+      {
+        "type": "textarea",
+        "id": "fuel06_loading_note",
+        "label": "Loading footnote",
+        "default": "Vår matchningsteknik går igenom tusentals recensioner och doftdata för att hitta din perfekta match."
+      },
+      {
+        "type": "text",
+        "id": "fuel06_result_title",
+        "label": "Result title",
+        "default": "Din bästa match"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_based_on",
+        "label": "Result subtitle prefix",
+        "info": "The fragrance the shopper searched for is added after this.",
+        "default": "Baserat på"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_inspired_prefix",
+        "label": "Inspired by prefix",
+        "info": "Never change this to a claim that our perfume is the same as the designer one.",
+        "default": "Inspirerad av"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_scent_label",
+        "label": "Scent profile label",
+        "default": "Doftprofil"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_notes_label",
+        "label": "Key notes label",
+        "default": "Nyckelnoter"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_note_labels",
+        "label": "Note row labels",
+        "info": "Three labels separated by commas, in this order: top, heart, base. Kept short so they fit the 64px label column.",
+        "default": "Topp, Mellan, Bas"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_brand_label",
+        "label": "Our column label",
+        "default": "TryScent"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_brand_note",
+        "label": "Our column note",
+        "info": "Concentration of our own bottle. It is printed after the size the variant carries, so \"100ML\" and \"Extrait de parfum\" read as \"100ML / Extrait de parfum\".",
+        "default": "Extrait de parfum"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_ref_note",
+        "label": "Designer column note",
+        "info": "Size and concentration of the designer bottle the price refers to. Change it as soon as one figure cannot stand for every fragrance.",
+        "default": "100 ml / Eau de parfum"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_save_label",
+        "label": "Savings column label",
+        "default": "Du sparar"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_less_suffix",
+        "label": "Savings percentage suffix",
+        "info": "The percentage is worked out from the product's own prices and printed before this word.",
+        "default": "billigare"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_remove_label",
+        "label": "Remove recent search label",
+        "info": "Read out by screen readers on the cross beside a remembered search, not shown on screen.",
+        "default": "Ta bort"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_similar_label",
+        "label": "Similar perfumes label",
+        "default": "Liknande parfymer du kan gilla"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_add_label",
+        "label": "Add to cart label",
+        "info": "The price is added after this, from the product itself.",
+        "default": "Lägg i kundvagnen"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_view_label",
+        "label": "View product label",
+        "default": "Visa hela produktsidan"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_again_label",
+        "label": "Search again label",
+        "default": "Inte rätt doft? Sök igen"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_added_title",
+        "label": "Added to bag title",
+        "default": "Tillagd i kundvagnen"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_also_label",
+        "label": "You may also like label",
+        "default": "Du kanske också gillar"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_bag_label",
+        "label": "View bag label",
+        "default": "Visa kundvagn"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_keep_label",
+        "label": "Keep exploring label",
+        "default": "Fortsätt handla"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_noresult_title",
+        "label": "No result title",
+        "info": "The design has no no-result frame. This wording is a placeholder for Omar and Korana to replace.",
+        "default": "Ingen match ännu"
+      },
+      {
+        "type": "text",
+        "id": "fuel06_empty",
+        "label": "No result text",
+        "default": "Vi hittade inte den doften. Prova ett annat namn, eller välj en av de populära sökningarna."
+      },
+      {
+        "type": "text",
+        "id": "fuel06_cart_error",
+        "label": "Add to cart error",
+        "default": "Något gick fel. Försök igen."
+      }
+    ]
   }
 ]
