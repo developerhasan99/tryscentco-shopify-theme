@@ -200,7 +200,48 @@
       "settings": {
         "background_color": "#ffffff",
         "padding_top": 32,
-        "padding_bottom": 32
+        "padding_bottom": 32,
+        "fuel06_heading": "Hitta din designerdoft för mindre",
+        "fuel06_heading_accent": "mindre",
+        "fuel06_placeholder": "t.ex. YSL Black Opium, Dior",
+        "fuel06_cta": "Hitta min match",
+        "fuel06_modal_title": "Hitta din designerdoft för mindre",
+        "fuel06_search_label": "Sök en parfym du redan älskar",
+        "fuel06_popular_label": "Populära sökningar",
+        "fuel06_popular_terms": "Dior Sauvage, Baccarat Rouge 540, Creed Aventus, YSL Black Opium, Bleu de Chanel, JPG Le Male",
+        "fuel06_how_label": "Så fungerar det",
+        "fuel06_steps": "Sök en doft du redan älskar\nVi hittar den TryScent-doft som ligger närmast\nJämför doften och vad du sparar",
+        "fuel06_suggestions_label": "Förslag",
+        "fuel06_recent_label": "Senaste sökningar",
+        "fuel06_clear_label": "Rensa",
+        "fuel06_close_label": "Stäng",
+        "fuel06_loading_title": "Vi letar upp din närmaste match ...",
+        "fuel06_loading_sub": "Vi jämför doftprofil, noter och kundfavoriter.",
+        "fuel06_loading_note": "Vår matchningsteknik går igenom tusentals recensioner och doftdata för att hitta din perfekta match.",
+        "fuel06_result_title": "Din bästa match",
+        "fuel06_based_on": "Baserat på",
+        "fuel06_inspired_prefix": "Inspirerad av",
+        "fuel06_scent_label": "Doftprofil",
+        "fuel06_notes_label": "Nyckelnoter",
+        "fuel06_note_labels": "Topp, Mellan, Bas",
+        "fuel06_brand_label": "TryScent",
+        "fuel06_brand_note": "Extrait de parfum",
+        "fuel06_ref_note": "100 ml / Eau de parfum",
+        "fuel06_save_label": "Du sparar",
+        "fuel06_less_suffix": "billigare",
+        "fuel06_reviews_noun": "reviews",
+        "fuel06_remove_label": "Ta bort",
+        "fuel06_similar_label": "Liknande parfymer du kan gilla",
+        "fuel06_add_label": "Lägg i kundvagnen",
+        "fuel06_view_label": "Visa hela produktsidan",
+        "fuel06_again_label": "Inte rätt doft? Sök igen",
+        "fuel06_added_title": "Tillagd i kundvagnen",
+        "fuel06_also_label": "Du kanske också gillar",
+        "fuel06_bag_label": "Visa kundvagn",
+        "fuel06_keep_label": "Fortsätt handla",
+        "fuel06_noresult_title": "Ingen match ännu",
+        "fuel06_empty": "Vi hittade inte den doften. Prova ett annat namn, eller välj en av de populära sökningarna.",
+        "fuel06_cart_error": "Något gick fel. Försök igen."
       }
     },
     "custom_liquid_4rbfWw": {
@@ -211,38 +252,6 @@
         "color_scheme": "",
         "padding_top": 0,
         "padding_bottom": 0
-      }
-    },
-    "rich_text_4ya4cF": {
-      "type": "rich-text",
-      "blocks": {
-        "heading_hrPEKc": {
-          "type": "heading",
-          "settings": {
-            "heading": "Varför betala3 800 kr när du kan betala 174 kr?",
-            "heading_size": "h2"
-          }
-        },
-        "text_HMARBK": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Stora lyxhus som Creed lägger enorma pengar på glamourösa butiker längs Champs-Élysées, påkostade reklamkampanjer och flaskor som kostar mer än själva innehållet.</p><p>Hos oss betalar du bara för doften.</p><p><strong>Med en doftkoncentration på över 21 % matchar vi de absolut tyngsta lyxmärkena när det kommer till både doftkvalitet och hållbarhet.</strong></p><p>Våra parfymer sitter kvar hela dagen.</p><p>Skillnaden? <strong>Du betalar inte för deras logga.</strong><br/></p>"
-          }
-        }
-      },
-      "block_order": [
-        "heading_hrPEKc",
-        "text_HMARBK"
-      ],
-      "disabled": true,
-      "name": "Creed Attak",
-      "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "",
-        "full_width": true,
-        "padding_top": 32,
-        "padding_bottom": 32
       }
     },
     "popular_products_XDHbay": {
@@ -271,213 +280,6 @@
         "button_link": "shopify://collections/bestseller-singles",
         "padding_top": 40,
         "padding_bottom": 72
-      }
-    },
-    "review_grid_H3xfHP": {
-      "type": "review-grid",
-      "blocks": {
-        "review_MKcdVw": {
-          "type": "review",
-          "settings": {
-            "heading": "Rekommenderas varmt.",
-            "content": "<p>Från kundservice till själva produkten var upplevelsen utmärkt. Allt kom som förväntat, och jag skulle gärna köpa igen.</p>",
-            "author": "Benjamin M.",
-            "date": "2 days ago",
-            "rating": 5,
-            "show_verified_badge": true,
-            "product": ""
-          }
-        },
-        "review_kCUEm4": {
-          "type": "review",
-          "settings": {
-            "heading": "Kom fram perfekt.",
-            "content": "<p>Produkten var väl förpackad, kom fram i utmärkt skick och doftkvaliteten överträffade mina förväntningar. Väldigt nöjd med detta köp.</p>",
-            "author": "Sharley A.",
-            "date": "2 days ago",
-            "rating": 5,
-            "show_verified_badge": true,
-            "product": ""
-          }
-        },
-        "review_EbFNac": {
-          "type": "review",
-          "settings": {
-            "heading": "Mycket prisvärt.",
-            "content": "<p>Jag blev verkligen imponerad av kvaliteten. Doften håller bra och känns jämförbar med mycket dyrare märken.</p>",
-            "author": "Santosh K.",
-            "date": "2 days ago",
-            "rating": 5,
-            "show_verified_badge": true,
-            "product": ""
-          }
-        }
-      },
-      "block_order": [
-        "review_MKcdVw",
-        "review_kCUEm4",
-        "review_EbFNac"
-      ],
-      "disabled": true,
-      "name": "Review Grid",
-      "settings": {
-        "background_color": "#ffffff",
-        "heading": "Vad våra kunder säger",
-        "review_text": "4,9/5 baserat på 10000+ recensioner",
-        "button_text": "Read all reviews",
-        "button_link": "shopify://collections/all",
-        "padding_top": 0,
-        "padding_bottom": 0
-      }
-    },
-    "special_offer_bogo_nMzyNp": {
-      "type": "special-offer-bogo",
-      "blocks": {
-        "perk_wnTHMw": {
-          "type": "perk",
-          "settings": {
-            "icon": "shopify://shop_images/sandwatch.svg",
-            "text": "Lasts 12+ Hours"
-          }
-        },
-        "perk_VkFF3N": {
-          "type": "perk",
-          "settings": {
-            "icon": "shopify://shop_images/heart.svg",
-            "text": "loved by 10,000+"
-          }
-        },
-        "perk_cG7y8p": {
-          "type": "perk",
-          "settings": {
-            "icon": "shopify://shop_images/sheild-star.svg",
-            "text": "60 day satisfaction guarantee"
-          }
-        }
-      },
-      "block_order": [
-        "perk_wnTHMw",
-        "perk_VkFF3N",
-        "perk_cG7y8p"
-      ],
-      "disabled": true,
-      "name": "Special Offer",
-      "settings": {
-        "background_image": "shopify://shop_images/Frame_349.png",
-        "offer_image": "shopify://shop_images/Group_27.png",
-        "offer_text": "Special Offer",
-        "offer_title": "Buy More, Get More Free",
-        "offer_description": "Choose your perfect bundle and receive matching free bottles in the same size: 30ml, 50ml, or 100ml.",
-        "offer_sub_description": "Scents that last all day. Luxury-inspired, up to 90% cheaper than designer brands.",
-        "offer_button_text": "Buy 4 for $44.00 Only",
-        "offer_button_link": "https://tryscent.co/products/4-x-100ml-perfume-bottles",
-        "padding_top": 72,
-        "padding_bottom": 72
-      }
-    },
-    "shop_by_fHtnnB": {
-      "type": "shop-by",
-      "blocks": {
-        "collection_t6NHM7": {
-          "type": "collection",
-          "settings": {
-            "image": "shopify://shop_images/explore.png",
-            "heading": "Scents For Women",
-            "subheading": "100+ scents to choose from",
-            "button_text": "Explore",
-            "button_link": "shopify://collections/woman",
-            "collection": "woman"
-          }
-        },
-        "collection_zqtLKY": {
-          "type": "collection",
-          "settings": {
-            "image": "shopify://shop_images/scent-for-men-explore-img.png",
-            "heading": "Scents For Men",
-            "subheading": "100+ scents to choose from",
-            "button_text": "Explore",
-            "button_link": "shopify://collections/man",
-            "collection": "man"
-          }
-        }
-      },
-      "block_order": [
-        "collection_t6NHM7",
-        "collection_zqtLKY"
-      ],
-      "disabled": true,
-      "name": "Shop By",
-      "settings": {
-        "background_color": "#fcfbf9",
-        "heading": "Shop By Bestsellers",
-        "padding_top": 72,
-        "padding_bottom": 72
-      }
-    },
-    "here_from_them_wccxKG": {
-      "type": "here-from-them",
-      "blocks": {
-        "testimonial_3jMx8n": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/explore.png",
-            "name": "Marcus R.",
-            "quote": "I didn’t expect much, but this is my new signature. It smells expensive, lasts all day, and actually turns heads."
-          }
-        },
-        "testimonial_Bh4nVA": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/explore.png",
-            "name": "Marcus R.",
-            "quote": "I didn’t expect much, but this is my new signature. It smells expensive, lasts all day, and actually turns heads."
-          }
-        },
-        "testimonial_P4hxWQ": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/explore.png",
-            "name": "Marcus R.",
-            "quote": "I didn’t expect much, but this is my new signature. It smells expensive, lasts all day, and actually turns heads."
-          }
-        },
-        "testimonial_yja8kV": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/explore.png",
-            "name": "Marcus R.",
-            "quote": "I didn’t expect much, but this is my new signature. It smells expensive, lasts all day, and actually turns heads."
-          }
-        },
-        "testimonial_MGyB3e": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/explore.png",
-            "name": "Marcus R.",
-            "quote": "I didn’t expect much, but this is my new signature. It smells expensive, lasts all day, and actually turns heads."
-          }
-        },
-        "testimonial_EQziDc": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/explore.png",
-            "name": "Marcus R.",
-            "quote": "I didn’t expect much, but this is my new signature. It smells expensive, lasts all day, and actually turns heads."
-          }
-        }
-      },
-      "block_order": [
-        "testimonial_3jMx8n",
-        "testimonial_Bh4nVA",
-        "testimonial_P4hxWQ",
-        "testimonial_yja8kV",
-        "testimonial_MGyB3e",
-        "testimonial_EQziDc"
-      ],
-      "disabled": true,
-      "name": "Here From Them Carousel",
-      "settings": {
-        "heading": "Hear From Them."
       }
     },
     "image_and_text": {
@@ -521,51 +323,6 @@
         "padding_bottom": 72,
         "mobile_padding_top": 40,
         "mobile_padding_bottom": 40
-      }
-    },
-    "special_offer_bogo_NqVrAK": {
-      "type": "special-offer-bogo",
-      "blocks": {
-        "perk_HrfwXR": {
-          "type": "perk",
-          "settings": {
-            "icon": "shopify://shop_images/sandwatch.svg",
-            "text": "Lasts 12+ Hours"
-          }
-        },
-        "perk_d4dqHJ": {
-          "type": "perk",
-          "settings": {
-            "icon": "shopify://shop_images/heart.svg",
-            "text": "loved by 10,000+"
-          }
-        },
-        "perk_9CajQF": {
-          "type": "perk",
-          "settings": {
-            "icon": "shopify://shop_images/sheild-star.svg",
-            "text": "60 day satisfaction guarantee"
-          }
-        }
-      },
-      "block_order": [
-        "perk_HrfwXR",
-        "perk_d4dqHJ",
-        "perk_9CajQF"
-      ],
-      "disabled": true,
-      "name": "Special Offer",
-      "settings": {
-        "background_image": "shopify://shop_images/special-offer-two-bg.png",
-        "offer_image": "shopify://shop_images/special-offer-two-bottle.png",
-        "offer_text": "Special Offer",
-        "offer_title": "Your Next Signature Scent, Trial-Sized.",
-        "offer_description": "Not ready to commit? Our travel-size perfumes let you explore luxe fragrances one spritz at a time.Perfect for pockets, purses, and perfume commitment issues.",
-        "offer_sub_description": "",
-        "offer_button_text": "BUY 4 for $44.00 Only",
-        "offer_button_link": "https://tryscent.co/products/4-x-100ml-perfume-bottles",
-        "padding_top": 72,
-        "padding_bottom": 72
       }
     },
     "home_category_wNQCfP": {
@@ -1225,76 +982,6 @@
         "padding_top": 72,
         "padding_bottom": 72
       }
-    },
-    "175501299681a2aa62": {
-      "type": "apps",
-      "settings": {
-        "include_margins": true
-      }
-    },
-    "17551175978bd893d1": {
-      "type": "apps",
-      "disabled": true,
-      "settings": {
-        "include_margins": true
-      }
-    },
-    "marquee_labels_pxhCDL": {
-      "type": "marquee-labels",
-      "blocks": {
-        "label_q4pXPr": {
-          "type": "label",
-          "disabled": true,
-          "settings": {
-            "icon": "shopify://shop_images/fast-delivery-truck-van-svgrepo-com.svg",
-            "label": "FREE SHIPPING ON ORDERS ABOVE $50"
-          }
-        },
-        "label_3jXRHH": {
-          "type": "label",
-          "settings": {
-            "icon": "shopify://shop_images/save-pound-svgrepo-com.svg",
-            "label": "SAVE UPTO 50% OFF WITH OUR BUNDLES & GIFT SETS"
-          }
-        },
-        "label_eBrDcC": {
-          "type": "label",
-          "settings": {
-            "icon": "shopify://shop_images/verified-svgrepo-com.svg",
-            "label": "100% AUTHENTIC"
-          }
-        },
-        "label_pNxYCF": {
-          "type": "label",
-          "settings": {
-            "icon": "shopify://shop_images/achievement-svgrepo-com.svg",
-            "label": "EXPERT-CURATED COLLECTIONS"
-          }
-        },
-        "label_jRHLQB": {
-          "type": "label",
-          "settings": {
-            "icon": "shopify://shop_images/money-back-business-warranty-satisfaction-marketing-guaranted-svgrepo-com.svg",
-            "label": "RISK-FREE 60 DAYS MONEY BACK GUARANTEE"
-          }
-        }
-      },
-      "block_order": [
-        "label_q4pXPr",
-        "label_3jXRHH",
-        "label_eBrDcC",
-        "label_pNxYCF",
-        "label_jRHLQB"
-      ],
-      "disabled": true,
-      "name": "Marquee Labels",
-      "settings": {}
-    },
-    "175501299598bc050d": {
-      "type": "apps",
-      "settings": {
-        "include_margins": true
-      }
     }
   },
   "order": [
@@ -1304,24 +991,14 @@
     "marquee_labels_RLdqpN",
     "feature_highlights_wfUacV",
     "custom_liquid_4rbfWw",
-    "rich_text_4ya4cF",
     "popular_products_XDHbay",
     "popular_products_pNDeh4",
-    "review_grid_H3xfHP",
-    "special_offer_bogo_nMzyNp",
-    "shop_by_fHtnnB",
-    "here_from_them_wccxKG",
     "image_and_text",
-    "special_offer_bogo_NqVrAK",
     "home_category_wNQCfP",
     "makes_different_list_YjiDH8",
     "home_occasions_BUcQ8i",
     "massive_review_section",
     "our_bestsellers_niPBnL",
-    "people_are_lovin_VGanra",
-    "175501299681a2aa62",
-    "17551175978bd893d1",
-    "marquee_labels_pxhCDL",
-    "175501299598bc050d"
+    "people_are_lovin_VGanra"
   ]
 }
