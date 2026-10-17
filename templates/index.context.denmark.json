@@ -53,36 +53,11 @@
         }
       }
     },
-    "rich_text_4ya4cF": {
-      "settings": {},
-      "blocks": {
-        "text_HMARBK": {
-          "settings": {
-            "text": "<p>Stora lyxhus som Creed lägger enorma pengar på glamourösa butiker längs Champs-Élysées, påkostade reklamkampanjer och flaskor som kostar mer än själva innehållet.</p><p>Hos oss betalar du bara för doften.</p><p><strong>Med en duftkoncentration på over 21 % matcher vi nogle af de største luksusmærker på både kvalitet og holdbarhed.</strong></p><p>Våra parfymer sitter kvar hela dagen.</p><p>Skillnaden? <strong>Du betalar inte för deras logga.</strong><br/></p>"
-          }
-        }
-      }
-    },
     "popular_products_pNDeh4": {
       "settings": {
         "description": "<p>»Uden tvivl de bedste duftalternativer, jeg har prøvet. De holder i timevis, når man først har dem på — og jeg er allerede ved at vælge min næste<br/>bestilling.« — Jim Rogers</p>"
       },
       "blocks": {}
-    },
-    "review_grid_H3xfHP": {
-      "settings": {},
-      "blocks": {
-        "review_MKcdVw": {
-          "settings": {
-            "content": "<p>Från kundservice till själva produkten var upplevelsen utmärkt. Allt kom som förväntat, “jeg kommer helt sikkert til at handle her igen”</p>"
-          }
-        },
-        "review_kCUEm4": {
-          "settings": {
-            "content": "<p>Produktet var pakket godt ind, kom frem i perfekt stand, og duftkvaliteten var bedre, end jeg havde forventet. Jeg er<br/>virkelig glad for mit køb.</p>"
-          }
-        }
-      }
     },
     "image_and_text": {
       "settings": {},
