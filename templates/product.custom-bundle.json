@@ -964,6 +964,7 @@
       "blocks": {
         "review_eDDGik": {
           "type": "review",
+          "disabled": true,
           "settings": {
             "review_image": "shopify://shop_images/345.png",
             "content": "<p>\"Omg jag älskade den, wow! Precis som originalet och den håller hela dagen!❤️‍🔥❤️‍🔥\"</p>",
@@ -987,6 +988,7 @@
         },
         "review_HMEPFN": {
           "type": "review",
+          "disabled": true,
           "settings": {
             "review_image": "shopify://shop_images/pinkm.png",
             "content": "<p>\"Väldigt bra varumärke, jag älskar förpackningen och doften.\"</p>",
@@ -1216,6 +1218,7 @@
         },
         "review_kRdKwC": {
           "type": "review",
+          "disabled": true,
           "settings": {
             "review_image": "shopify://shop_images/2026-07-02_16h55_49.png",
             "content": "<p>\"Produkten kom fram fint. Parfymen var inte trasig, läckte inte och var i gott skick. Doften är perfekt och luktade inte illa. Jag älskar den, hög kvalitet.\"</p>",
