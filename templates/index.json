@@ -203,6 +203,10 @@
         "padding_bottom": 32
       }
     },
+    "fuel06_finder": {
+      "type": "fuel06-finder",
+      "settings": {}
+    },
     "custom_liquid_4rbfWw": {
       "type": "custom-liquid",
       "name": "t:sections.custom-liquid.presets.name",
@@ -460,6 +464,7 @@
       "blocks": {
         "review_DbGYKc": {
           "type": "review",
+          "disabled": true,
           "settings": {
             "review_image": "shopify://shop_images/345.png",
             "content": "<p>\"Omg jag älskade den, wow! Precis som originalet och den håller hela dagen!❤️‍🔥❤️‍🔥\"</p>",
@@ -483,6 +488,7 @@
         },
         "review_yEyWP7": {
           "type": "review",
+          "disabled": true,
           "settings": {
             "review_image": "shopify://shop_images/pinkm.png",
             "content": "<p>\"Väldigt bra varumärke, jag älskar förpackningen och doften.\"</p>",
@@ -617,6 +623,7 @@
         },
         "review_iPjTCz": {
           "type": "review",
+          "disabled": true,
           "settings": {
             "review_image": "shopify://shop_images/2026-07-02_16h41_42.png",
             "content": "<p>\"Först var jag orolig eftersom leveransen blev lite försenad, men när jag väl fick dem blev jag helt imponerad av doften. När den har lagt sig, herregud, då är den bara fantastisk.\"</p>",
@@ -629,6 +636,7 @@
         },
         "review_myTAe8": {
           "type": "review",
+          "disabled": true,
           "settings": {
             "review_image": "shopify://shop_images/2026-07-02_16h57_29.png",
             "content": "<p>\"Den luktar väldigt gott men håller inte så länge som den borde.\"</p>",
@@ -816,6 +824,7 @@
         },
         "review_GPPnxQ": {
           "type": "review",
+          "disabled": true,
           "settings": {
             "review_image": "shopify://shop_images/Daria_Kononenko_3.jpg",
             "content": "<p>\"Jag är väldigt nöjd med parfymen från det här märket. Den har en så vacker doft, luktar som originalet och är billigare. Jag kommer definitivt att köpa den igen.\"</p>",
@@ -941,10 +950,6 @@
         "padding_top": 72,
         "padding_bottom": 72
       }
-    },
-    "fuel06_finder": {
-      "type": "fuel06-finder",
-      "settings": {}
     }
   },
   "order": [
