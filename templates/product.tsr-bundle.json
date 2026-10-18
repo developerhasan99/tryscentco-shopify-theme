@@ -64,6 +64,7 @@
           "settings": {
             "layout": "a",
             "collections": "best-sellers,top-sellers",
+            "sizes": "100,50",
             "heading": "Specialerbjudande",
             "subheading": "Endast under begränsad tid",
             "card_1_paid": 1,
@@ -72,28 +73,24 @@
             "card_1_badge": "",
             "card_1_selected": false,
             "card_1_free_shipping": false,
-            "card_1_code": "1PLUS1",
             "card_2_paid": 2,
             "card_2_free": 2,
             "card_2_mystery": 1,
             "card_2_badge": "REKOMMENDERAS",
             "card_2_selected": true,
             "card_2_free_shipping": false,
-            "card_2_code": "1PLUS1",
             "card_3_paid": 3,
             "card_3_free": 3,
             "card_3_mystery": 0,
             "card_3_badge": "",
             "card_3_selected": false,
             "card_3_free_shipping": true,
-            "card_3_code": "1PLUS1",
             "card_4_paid": 4,
             "card_4_free": 4,
             "card_4_mystery": 0,
             "card_4_badge": "",
             "card_4_selected": false,
             "card_4_free_shipping": true,
-            "card_4_code": "1PLUS1",
             "shipping_cost": 64,
             "free_shipping_from": 600,
             "count_mystery": false,
@@ -113,7 +110,36 @@
             "benefit_3_title": "Gratis flaska nr 2",
             "benefit_3_text": "Vid köp över 700 kr",
             "mystery_item_id": "45925191942214",
-            "mystery_code": "FUEL09-MYSTERY"
+            "mystery_code": "FUEL09-MYSTERY",
+            "card_1_code": "1PLUS1",
+            "card_2_code": "1PLUS1",
+            "card_3_code": "1PLUS1",
+            "card_4_code": "1PLUS1",
+            "picks_heading": "[total] dofter i paketet – välj dina favoriter",
+            "picks_left_text": "[n] kvar att välja",
+            "picks_done_text": "Alla dofter valda",
+            "pick_empty_label": "Välj doft",
+            "pick_added_label": "Tillagd",
+            "pick_remove_label": "Ta bort [name]",
+            "picker_title": "Välj doft",
+            "picker_search": "Sök doft",
+            "picker_loading": "Laddar dofter…",
+            "picker_none": "Inga dofter hittades",
+            "picker_error": "Dofterna kunde inte laddas. Försök igen.",
+            "picker_close": "Stäng",
+            "pool_collections": "",
+            "filter_all_label": "Alla",
+            "filter_men_label": "Herr",
+            "filter_men_collection": "man",
+            "filter_men_value": "Man",
+            "filter_women_label": "Dam",
+            "filter_women_collection": "woman",
+            "filter_women_value": "Kvinna",
+            "filter_both_value": "Unisex",
+            "filter_best_label": "Bästsäljare",
+            "filter_best_collection": "best-sellers",
+            "filter_new_label": "Nyheter",
+            "filter_new_collection": "new"
           }
         },
         "fuel09_box_b": {
@@ -121,6 +147,7 @@
           "settings": {
             "layout": "b",
             "collections": "best-sellers,top-sellers",
+            "sizes": "100,50",
             "heading": "Specialerbjudande",
             "subheading": "Endast under begränsad tid",
             "card_1_paid": 1,
@@ -129,21 +156,18 @@
             "card_1_badge": "",
             "card_1_selected": false,
             "card_1_free_shipping": false,
-            "card_1_code": "1PLUS1",
             "card_2_paid": 2,
             "card_2_free": 2,
             "card_2_mystery": 1,
             "card_2_badge": "BÄST VÄRDE",
             "card_2_selected": true,
             "card_2_free_shipping": false,
-            "card_2_code": "1PLUS1",
             "card_3_paid": 4,
             "card_3_free": 4,
             "card_3_mystery": 0,
             "card_3_badge": "",
             "card_3_selected": false,
             "card_3_free_shipping": true,
-            "card_3_code": "1PLUS1",
             "card_4_paid": 0,
             "card_4_free": 0,
             "card_4_mystery": 0,
@@ -169,7 +193,36 @@
             "benefit_3_title": "Gratis flaska nr 2",
             "benefit_3_text": "Vid köp över 700 kr",
             "mystery_item_id": "45925191942214",
-            "mystery_code": "FUEL09-MYSTERY"
+            "mystery_code": "FUEL09-MYSTERY",
+            "card_1_code": "1PLUS1",
+            "card_2_code": "1PLUS1",
+            "card_3_code": "1PLUS1",
+            "card_4_code": "",
+            "picks_heading": "[total] dofter i paketet – välj dina favoriter",
+            "picks_left_text": "[n] kvar att välja",
+            "picks_done_text": "Alla dofter valda",
+            "pick_empty_label": "Välj doft",
+            "pick_added_label": "Tillagd",
+            "pick_remove_label": "Ta bort [name]",
+            "picker_title": "Välj doft",
+            "picker_search": "Sök doft",
+            "picker_loading": "Laddar dofter…",
+            "picker_none": "Inga dofter hittades",
+            "picker_error": "Dofterna kunde inte laddas. Försök igen.",
+            "picker_close": "Stäng",
+            "pool_collections": "",
+            "filter_all_label": "Alla",
+            "filter_men_label": "Herr",
+            "filter_men_collection": "man",
+            "filter_men_value": "Man",
+            "filter_women_label": "Dam",
+            "filter_women_collection": "woman",
+            "filter_women_value": "Kvinna",
+            "filter_both_value": "Unisex",
+            "filter_best_label": "Bästsäljare",
+            "filter_best_collection": "best-sellers",
+            "filter_new_label": "Nyheter",
+            "filter_new_collection": "new"
           }
         },
         "fuel09_box_c": {
@@ -177,6 +230,7 @@
           "settings": {
             "layout": "c",
             "collections": "best-sellers,top-sellers",
+            "sizes": "100,50",
             "heading": "Specialerbjudande",
             "subheading": "Endast under begränsad tid",
             "card_1_paid": 1,
@@ -185,21 +239,18 @@
             "card_1_badge": "",
             "card_1_selected": false,
             "card_1_free_shipping": false,
-            "card_1_code": "1PLUS1",
             "card_2_paid": 2,
             "card_2_free": 3,
             "card_2_mystery": 0,
             "card_2_badge": "BÄST VÄRDE",
             "card_2_selected": true,
             "card_2_free_shipping": false,
-            "card_2_code": "2PLUS3",
             "card_3_paid": 4,
             "card_3_free": 6,
             "card_3_mystery": 0,
             "card_3_badge": "",
             "card_3_selected": false,
             "card_3_free_shipping": true,
-            "card_3_code": "4PLUS6",
             "card_4_paid": 0,
             "card_4_free": 0,
             "card_4_mystery": 0,
@@ -225,23 +276,42 @@
             "benefit_3_title": "Gratis flaska nr 2",
             "benefit_3_text": "Vid köp över 700 kr",
             "mystery_item_id": "",
-            "mystery_code": ""
+            "mystery_code": "",
+            "card_1_code": "1PLUS1",
+            "card_2_code": "2PLUS3",
+            "card_3_code": "4PLUS6",
+            "card_4_code": "",
+            "picks_heading": "[total] dofter i paketet – välj dina favoriter",
+            "picks_left_text": "[n] kvar att välja",
+            "picks_done_text": "Alla dofter valda",
+            "pick_empty_label": "Välj doft",
+            "pick_added_label": "Tillagd",
+            "pick_remove_label": "Ta bort [name]",
+            "picker_title": "Välj doft",
+            "picker_search": "Sök doft",
+            "picker_loading": "Laddar dofter…",
+            "picker_none": "Inga dofter hittades",
+            "picker_error": "Dofterna kunde inte laddas. Försök igen.",
+            "picker_close": "Stäng",
+            "pool_collections": "",
+            "filter_all_label": "Alla",
+            "filter_men_label": "Herr",
+            "filter_men_collection": "man",
+            "filter_men_value": "Man",
+            "filter_women_label": "Dam",
+            "filter_women_collection": "woman",
+            "filter_women_value": "Kvinna",
+            "filter_both_value": "Unisex",
+            "filter_best_label": "Bästsäljare",
+            "filter_best_collection": "best-sellers",
+            "filter_new_label": "Nyheter",
+            "filter_new_collection": "new"
           }
         },
         "atc_bundle_builder_aLJUaV": {
           "type": "atc_bundle_builder",
-          "settings": {}
-        },
-        "fuel04_offer_banner_1": {
-          "type": "fuel04_offer_banner",
           "settings": {
-            "heading": "Köp fler, *spara mer!* 🎉",
-            "sub_text": "Dina gåvor låses upp automatiskt.",
-            "unit_label": "× 100 ml",
-            "tier_1_count": 3,
-            "tier_1_text": "Välj en 30 ml GRATIS",
-            "tier_2_count": 5,
-            "tier_2_text": "100 ml Mystery Scent GRATIS"
+            "collection_handles": "best-sellers,new"
           }
         },
         "fuel03_pair_1": {
@@ -298,6 +368,18 @@
           "type": "tsr_block",
           "settings": {
             "product": "6-x-50ml-parfymflasko"
+          }
+        },
+        "fuel04_offer_banner_1": {
+          "type": "fuel04_offer_banner",
+          "settings": {
+            "heading": "Köp fler, *spara mer!* 🎉",
+            "sub_text": "Dina gåvor låses upp automatiskt.",
+            "unit_label": "× 100 ml",
+            "tier_1_count": 3,
+            "tier_1_text": "Välj en 30 ml GRATIS",
+            "tier_2_count": 5,
+            "tier_2_text": "100 ml Mystery Scent GRATIS"
           }
         },
         "fuel03_pair_v2": {
@@ -1621,6 +1703,7 @@
       "blocks": {
         "review_bFcPhW": {
           "type": "review",
+          "disabled": true,
           "settings": {
             "review_image": "shopify://shop_images/345.png",
             "content": "<p>\"Omg jag älskade den, wow! Precis som originalet och den håller hela dagen!❤️‍🔥❤️‍🔥\"</p>",
@@ -1634,7 +1717,6 @@
         "review_Jq6J3q": {
           "type": "review",
           "settings": {
-            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.55_AM.jpg",
             "content": "<p>\"Jag är nöjd med TryScent. Doften luktar väldigt likt originalet och håller bra. Förpackningen är snygg och flaskan ser fin ut. Överlag är det ett jättebra alternativ om du vill ha en kvalitetsdoft till ett rimligt pris.\"</p>",
             "author": "Alina M",
             "date": "för 5 månader sedan",
@@ -1645,6 +1727,7 @@
         },
         "review_3Y9DUi": {
           "type": "review",
+          "disabled": true,
           "settings": {
             "review_image": "shopify://shop_images/pinkm.png",
             "content": "<p>\"Väldigt bra varumärke, jag älskar förpackningen och doften.\"</p>",
@@ -1791,6 +1874,7 @@
         },
         "review_dMridy": {
           "type": "review",
+          "disabled": true,
           "settings": {
             "review_image": "shopify://shop_images/2026-07-02_16h57_29.png",
             "content": "<p>\"Den luktar väldigt gott men håller inte så länge som den borde.\"</p>",
@@ -1816,7 +1900,6 @@
         "review_d3BYaL": {
           "type": "review",
           "settings": {
-            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.50_AM.jpg",
             "content": "<p>\"Parfymerna doftar perfekt, dofterna sitter kvar väldigt länge, fantastisk kvalitet.\"</p>",
             "author": "Kamila G.",
             "date": "för 3 månader sedan",
@@ -1875,6 +1958,7 @@
         },
         "review_cbVwUR": {
           "type": "review",
+          "disabled": true,
           "settings": {
             "review_image": "shopify://shop_images/2026-07-02_16h55_49.png",
             "content": "<p>\"Produkten kom fram fint. Parfymen var inte trasig, läckte inte och var i gott skick. Doften är perfekt och luktade inte illa. Jag älskar den, hög kvalitet.\"</p>",
@@ -1934,7 +2018,6 @@
         "review_h9MjD9": {
           "type": "review",
           "settings": {
-            "review_image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.55_AM_1.jpg",
             "content": "<p>\"Fantastisk produkt! Ett superprisvärt alternativ till märkesparfymerna. Doften håller länge och du får verkligen mycket för pengarna.\"</p>",
             "author": "EM",
             "date": "för 4 månader sedan",
