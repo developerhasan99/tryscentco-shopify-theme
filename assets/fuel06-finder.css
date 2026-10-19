@@ -1596,9 +1596,56 @@
   outline: none;
 }
 
+/* Add to bag in flight. The script sets data-f06-busy on the button for the
+   length of the request; the label goes transparent so the button keeps its
+   size, and a ring spins in its place in the button's own ink. */
+.fuel06-finder [data-f06-busy='true'] {
+  color: transparent !important;
+  cursor: progress;
+  pointer-events: none;
+  position: relative;
+}
+
+.fuel06-finder [data-f06-busy='true'] svg {
+  visibility: hidden;
+}
+
+.fuel06-finder [data-f06-busy='true']::after {
+  animation: f06-spin 0.7s linear infinite;
+  border: 2px solid var(--f06-spin, #ffffff);
+  border-radius: 50%;
+  border-right-color: transparent;
+  content: '';
+  height: 20px;
+  inset: 0;
+  margin: auto;
+  position: absolute;
+  width: 20px;
+}
+
+.fuel06-finder__add[data-f06-busy='true'] {
+  --f06-spin: var(--f06-plus);
+}
+
+.fuel06-finder__add[data-f06-busy='true']::after {
+  height: 14px;
+  width: 14px;
+}
+
+@keyframes f06-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .fuel06-finder * {
     transition: none !important;
+  }
+
+  /* Still shows that something is happening, just slower. */
+  .fuel06-finder [data-f06-busy='true']::after {
+    animation-duration: 2s;
   }
 }
 

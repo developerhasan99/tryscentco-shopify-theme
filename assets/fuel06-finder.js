@@ -232,8 +232,31 @@
         if (add) {
           event.preventDefault();
           this.addToCart(add);
+          return;
+        }
+
+        // "View bag" on the added state. The drawer was already redrawn by
+        // refreshCart() after the add, so it only has to open. Without the
+        // drawer the link's own href takes the shopper to the cart page.
+        const viewCart = event.target.closest('[data-f06-view-cart]');
+        const drawer = document.querySelector('cart-drawer');
+        if (viewCart && drawer && typeof drawer.open === 'function') {
+          event.preventDefault();
+          this.openDrawer(drawer);
         }
       });
+    }
+
+    // The finder closes and the drawer opens over the page. When the drawer
+    // closes it focuses the element handed to it here: whatever opened the
+    // finder, except the band's input, which opens the finder on focus and
+    // would pop it straight back up, so the band's button stands in for it.
+    openDrawer(drawer) {
+      const opener =
+        this.opener && this.opener.tagName === 'INPUT' ? this.querySelector('button[data-f06-open]') : this.opener;
+      this.close();
+      if (opener && typeof drawer.setActiveElement === 'function') drawer.setActiveElement(opener);
+      drawer.open();
     }
 
     entryValue() {
@@ -890,6 +913,8 @@
       const product =
         button.f06Product || (this.index || []).find((item) => String(item.variant_id) === String(variantId)) || null;
       button.dataset.f06Busy = 'true';
+      // Drives the spinner in the CSS; aria-busy tells a screen reader why the button went quiet.
+      button.setAttribute('aria-busy', 'true');
       this.clearErrors();
 
       fetch(this.dataset.f06CartAdd, {
@@ -928,6 +953,7 @@
         })
         .finally(() => {
           delete button.dataset.f06Busy;
+          button.removeAttribute('aria-busy');
         });
     }
 
