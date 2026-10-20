@@ -29,11 +29,11 @@
     class="fuel09-options"
     data-fuel09-pool
     {% if paginate.next %}
-      data-next="{{ paginate.next.url | append: '&section_id=' | append: section.id | escape }}"
+    data-next="{{ paginate.next.url | append: '&section_id=' | append: section.id | escape }}"
     {% endif %}>
     {%- for item in collection.products -%}
       {%- liquid
-        if item.variants.size < 2 or item.metafields.custom.choose_your_fragrances_options != blank
+        if item.variants.size < 2 or item.metafields.custom.bundle_size != blank
           continue
         endif
         assign pool_variant = nil
@@ -76,7 +76,7 @@
 
         comment
           The short name is the perfume's number, which is what the box has
-          room for under a slot and what the store's own labels carry.
+          room for under a slot and what the store' s own labels carry.
         endcomment
         assign pool_short = item.title
         if item.title contains 'No.'
@@ -100,7 +100,7 @@
           data-gender="{{ item.metafields.custom.gender.value | join: '||' | escape }}"
           data-collections="{{ item.collections | map: 'handle' | join: ' ' | escape }}"
           {% if pool_image %}
-            data-image="{{ pool_image | image_url: width: 160 }}"
+          data-image="{{ pool_image | image_url: width: 160 }}"
           {% endif %}>
           <span class="fuel09-option__thumb">
             {%- if pool_image -%}
@@ -121,22 +121,22 @@
 {%- endpaginate -%}
 
 {% schema %}
-{
-  "name": "Offer box scent list",
-  "settings": [
-    {
-      "type": "text",
-      "id": "sizes",
-      "label": "Bottle sizes listed (comma separated)",
-      "default": "100,50",
-      "info": "As written in the size names. Keep it the same as the sizes the offer box offers."
-    },
-    {
-      "type": "text",
-      "id": "note_prefix",
-      "label": "Text before the inspiration name",
-      "default": "Inspirerad av:"
-    }
-  ]
-}
+  {
+    "name": "Offer box scent list",
+    "settings": [
+      {
+        "type": "text",
+        "id": "sizes",
+        "label": "Bottle sizes listed (comma separated)",
+        "default": "100,50",
+        "info": "As written in the size names. Keep it the same as the sizes the offer box offers."
+      },
+      {
+        "type": "text",
+        "id": "note_prefix",
+        "label": "Text before the inspiration name",
+        "default": "Inspirerad av:"
+      }
+    ]
+  }
 {% endschema %}

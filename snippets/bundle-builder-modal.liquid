@@ -91,8 +91,8 @@
           <template x-for="product in $store.bundleBuilder.availableProducts" :key="product.id">
             <template x-if="($store.bundleBuilder.activeCategory === 'All' || product.collections.split(',').includes($store.bundleBuilder.activeCategory)) &&
          ($store.bundleBuilder.searchText === '' || product.name.toLowerCase().includes($store.bundleBuilder.searchText.toLowerCase()) || (product.inspiration_name && product.inspiration_name.toLowerCase().includes($store.bundleBuilder.searchText.toLowerCase())))">
-              <button
-                @click="$store.bundleBuilder.addRemoveProduct(product)"
+              <div
+                @click="$store.bundleBuilder.addProduct(product)"
                 :class="$store.bundleBuilder.isProductSelected(product.id) ? 'border-[#22613A]' : 'border-gray-200 border'"
                 class="border-[1.5px] border-solid w-full p-2 flex items-center gap-2 justify-between cursor-pointer rounded-xl bg-white">
                 <img
@@ -116,12 +116,27 @@
                 </div>
                 <div class="shrink-0 ml-auto text-center">
                     <div class="text-xs font-semibold text-[#6b7280]" x-text="$store.bundleBuilder.selectedVariant"></div>
-                    <div class="size-8 rounded-full border-[1.5px] border-solid border-[#22613A] flex items-center justify-center text-xl text-[#22613A]" :class="{ 'bg-[#22613A]' : $store.bundleBuilder.isProductSelected(product.id) }">
-                        <span x-show="!$store.bundleBuilder.isProductSelected(product.id)">+</span>
-                        <svg x-show="$store.bundleBuilder.isProductSelected(product.id)" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    <button
+                      type="button"
+                      x-show="!$store.bundleBuilder.isProductSelected(product.id)"
+                      @click.stop="$store.bundleBuilder.addProduct(product)"
+                      aria-label="Lägg till"
+                      class="size-8 p-0 bg-white cursor-pointer rounded-full border-[1.5px] border-solid border-[#22613A] flex items-center justify-center text-xl text-[#22613A]">+</button>
+                    <div x-show="$store.bundleBuilder.isProductSelected(product.id)" class="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        @click.stop="$store.bundleBuilder.decrementProduct(product)"
+                        aria-label="Ta bort en"
+                        class="size-8 p-0 bg-white cursor-pointer rounded-full border-[1.5px] border-solid border-[#22613A] flex items-center justify-center text-xl text-[#22613A]">−</button>
+                      <span class="min-w-[1.25rem] font-bold text-base text-black" x-text="$store.bundleBuilder.productQty(product.id)"></span>
+                      <button
+                        type="button"
+                        @click.stop="$store.bundleBuilder.addProduct(product)"
+                        aria-label="Lägg till"
+                        class="size-8 p-0 cursor-pointer rounded-full border-[1.5px] border-solid border-[#22613A] bg-[#22613A] flex items-center justify-center text-xl text-white">+</button>
                     </div>
                 </div>
-              </button>
+              </div>
             </template>
           </template>
         </div>

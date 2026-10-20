@@ -67,7 +67,7 @@
   , product: product
   , section: section %}
 
-  {% unless product.available %}
+{% unless product.available %}
   {% comment %} Sold out: notice and an in stock alternative instead of add to cart (snippets/sold-out-alternative.liquid) {% endcomment %}
   {% render 'sold-out-alternative'
     , product: product
@@ -90,7 +90,7 @@
         id="product-variant-id"
         value="{{ selected_variant.id }}"
         class="product-variant-id">
-      {% if product.metafields.custom.choose_your_fragrances_options != blank %}
+      {% if product.metafields.custom.bundle_size != blank %}
         {% render 'bundle-mix-dropdown' %}
       {% else %}
         <input
@@ -104,7 +104,7 @@
         value="1"
         class="atc-button shimmer-btn cta_product_from_submit_btn flex gap-2 flex-wrap items-center !mb-0 !py-4 !px-3 rounded-lg button bg-[#22613a] hover:bg-[#368856] transition-colors shadow-xl tracking-normal button--full-width button--primary"
         aria-label="{{ 'products.product.add_to_cart' | t }}"
-        {% if product.metafields.custom.choose_your_fragrances_options != blank %}
+        {% if product.metafields.custom.bundle_size != blank %}
         disabled="disabled"
         {% endif %}
         {%- unless selected_variant.available %}

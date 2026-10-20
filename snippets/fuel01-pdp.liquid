@@ -17,15 +17,15 @@
   Accepts:
   - product: {Object} the product being viewed (required)
   - section: {Object} the hosting section, for the fuel01_pdp block (required;
-    render sites that do not pass it render nothing)
+  render sites that do not pass it render nothing)
 {% endcomment %}
 
-{%- if section != blank and request.locale.iso_code == 'sv' and product.metafields.custom.choose_your_fragrances_options == blank -%}
+{%- if section != blank and request.locale.iso_code == 'sv' and product.metafields.custom.bundle_size == blank -%}
   {%- assign fuel01_pdp_block = section.blocks | where: 'type', 'fuel01_pdp' | first -%}
-  {%- if fuel01_pdp_block -%}
+    {%- if fuel01_pdp_block -%}
     {%- liquid
       comment
-        The collection object's url carries the market's locale prefix, which
+        The collection object's url carries the market' s locale prefix, which
         a hardcoded path would not; the literal stays as the last resort for a
         store where the collection is missing.
       endcomment
@@ -55,8 +55,19 @@
         </span>
         <span class="fuel01-pdp__cta">
           <span class="fuel01-pdp__label">{{- fuel01_pdp_block.settings.cta_label | escape -}}</span>
-          <svg class="fuel01-pdp__arrow" width="8" height="7" viewBox="0 0 8 7" fill="none" aria-hidden="true">
-            <path d="M4.4 0.6 7.3 3.5 4.4 6.4 M7.3 3.5 H0.6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            class="fuel01-pdp__arrow"
+            width="8"
+            height="7"
+            viewBox="0 0 8 7"
+            fill="none"
+            aria-hidden="true">
+            <path
+              d="M4.4 0.6 7.3 3.5 4.4 6.4 M7.3 3.5 H0.6"
+              stroke="currentColor"
+              stroke-width="1.2"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
           </svg>
         </span>
       </a>

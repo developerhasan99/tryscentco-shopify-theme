@@ -68,7 +68,7 @@
   assign fuel09_render = false
 
   if fuel09_layout == 'a' or fuel09_layout == 'b' or fuel09_layout == 'c'
-    if request.locale.iso_code == 'sv' and localization.country.iso_code == 'SE' and product.available and product.variants.size > 1 and product.metafields.custom.choose_your_fragrances_options == blank
+    if request.locale.iso_code == 'sv' and localization.country.iso_code == 'SE' and product.available and product.variants.size > 1 and product.metafields.custom.bundle_size == blank
       assign fuel09_buy_area = section.blocks | where: 'type', 'atc_bundle_builder' | first
       if fuel09_buy_area
         assign fuel09_render = true

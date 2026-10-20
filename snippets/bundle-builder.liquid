@@ -12,7 +12,7 @@
   endfor
   assign bundle_collection_handles = bundle_collection_handles | split: ',' | uniq
 %}
-{% assign product_count = product.metafields.custom.choose_your_fragrances_options %}
+{% assign product_count = product.metafields.custom.bundle_size %}
 {% assign dropdown_ml = product.metafields.custom.select_bundle_dropdown_ml | default: "50" %}
 {% assign bundle_ml = dropdown_ml | append: "ml" %}
 {%- comment -%} Normalised size token ("50", "50ml", "50 ML" -> "50ml"), compared against variant titles normalised the same way {%- endcomment -%}
@@ -246,19 +246,25 @@
           {% endpaginate %}
         {% endfor %}
       ].map(product => [product.id, product])).values()),
-      addRemoveProduct(product) {
-        if (this.selectedProducts.length < {{ product_count }} && !this.isProductSelected(product.id)) {
-          product.variant = product.variants[this.selectedVariant]
-          this.selectedProducts.push(product);
+      // The same product may fill several slots
+      addProduct(product) {
+        if (this.selectedProducts.length >= {{ product_count }}) return;
+        product.variant = product.variants[this.selectedVariant]
+        this.selectedProducts.push(product);
 
-          if (this.selectedProducts.length === {{ product_count }}) {
-            this.showModal = false;
-            // Do auto ATC and redirect to checkout
-            this.doATCandCheckout();
-          }
-        } else {
-          this.removeProduct(this.selectedProducts.findIndex(item => item.id === product.id));
+        if (this.selectedProducts.length === {{ product_count }}) {
+          this.showModal = false;
+          // Do auto ATC and redirect to checkout
+          this.doATCandCheckout();
         }
+      },
+      // Drops the last slot holding this product
+      decrementProduct(product) {
+        const index = this.selectedProducts.findLastIndex(item => item.id === product.id);
+        if (index > -1) this.removeProduct(index);
+      },
+      productQty(productId) {
+        return this.selectedProducts.filter(item => item.id === productId).length;
       },
       removeProduct(index) {
         this.selectedProducts.splice(index, 1);
