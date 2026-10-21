@@ -11,5 +11,27 @@
   "context": {
     "market": "sweden"
   },
-  "current": {}
+  "current": {
+    "product_card_promo_text": "30% RABATT\n30% RABATT\n30% RABATT",
+    "color_schemes": {
+      "scheme-1": {
+        "settings": {}
+      },
+      "scheme-2": {
+        "settings": {}
+      },
+      "scheme-3": {
+        "settings": {}
+      },
+      "scheme-4": {
+        "settings": {}
+      },
+      "scheme-5": {
+        "settings": {}
+      },
+      "scheme-4ecf9bcf-7887-4727-9c21-991f25dd397a": {
+        "settings": {}
+      }
+    }
+  }
 }
