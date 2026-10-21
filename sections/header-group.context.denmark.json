@@ -16,10 +16,11 @@
     "offer_timebar_xLgmJd": {
       "settings": {
         "top_banner_text": "",
-        "prepend_text": "Efterårssalg",
+        "prepend_text": "Halloween-udsalg!",
         "countdown_date": "",
-        "append_text": "Køb 3 få 1 GRATIS",
-        "link": "https://tryscent.co/da-dk/collections/bestseller-singles"
+        "append_text": "30% RABAT PÅ HELE KURVEN",
+        "link": "https://tryscent.co/da-dk/collections/bestseller-singles",
+        "fuel04_line": ""
       },
       "blocks": {
         "payment_icon_6GxdtN": {
