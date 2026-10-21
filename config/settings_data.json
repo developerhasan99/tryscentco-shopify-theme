@@ -575,7 +575,8 @@
   },
   "platform_customizations": {
     "custom_css": [
-      "#snize-product-8303925723206,#snize-ac-product-8303925723206 {display: none !important;}"
+      "#snize-product-8303925723206,#snize-ac-product-8303925723206 {display: none !important;}",
+      ".snize-product-tag-bundle_price_show .snize-add-to-cart-button {display: none;}"
     ]
   }
 }
