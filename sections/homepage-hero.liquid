@@ -19,6 +19,12 @@
       {% endif %}
     }
   }
+
+  {% if section.settings.custom_css != blank %}
+    #{{ section.id }} {
+      {{ section.settings.custom_css }}
+    }
+  {% endif %}
 {%- endstyle -%}
 
 <div id="{{ section.id }}" class="section-{{ section.id }}-padding bg-cover bg-center">
@@ -181,6 +187,16 @@
         "unit": "px",
         "label": "Mobile Padding Bottom",
         "default": 36
+      },
+      {
+        "type": "header",
+        "content": "Advanced"
+      },
+      {
+        "type": "textarea",
+        "id": "custom_css",
+        "label": "Custom CSS",
+        "info": "Scoped to this section. Example: h1 { letter-spacing: 0; }"
       }
     ],
     "presets": [
