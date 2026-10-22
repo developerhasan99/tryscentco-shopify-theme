@@ -41,7 +41,7 @@
       "name": "Homepage Hero"
     },
     "homepage_hero_GDeBtq": {
-      "disabled": true,
+      "disabled": false,
       "settings": {
         "background_image": "shopify://shop_images/MAGYX_Site_Header.webp",
         "mobile_background_image": "shopify://shop_images/MAGYX_Site_Header_Mobile_A.webp",
