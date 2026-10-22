@@ -93,7 +93,7 @@
         "padding_bottom": 80,
         "mobile_padding_top": 36,
         "mobile_padding_bottom": 48,
-        "custom_css": ""
+        "custom_css": "@media (max-width: 767px) {\n .hero__buttons {\n padding-top: 250px;\n}\n}"
       }
     },
     "home_hero_banner_qmaB3G": {
