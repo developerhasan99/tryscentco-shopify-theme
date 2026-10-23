@@ -1,58 +1,232 @@
-{%- capture star_svg -%}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.7l7.1-.6z"/></svg>{%- endcapture -%}
-
 <style>
-.ts-proof-sv{font-family:Inter,Arial,Helvetica,sans-serif;color:#111315;background:#fff;padding:48px 0;overflow:hidden}
-.ts-proof-sv *{box-sizing:border-box;margin:0}
-.ts-proof-sv .container{width:min(860px,calc(100% - 36px));margin-inline:auto}
-.ts-proof-sv .proof-head{text-align:center;max-width:640px;margin:0 auto 30px}
-.ts-proof-sv .stars-lg,.ts-proof-sv .review-stars{display:flex;gap:3px}
-.ts-proof-sv .stars-lg{justify-content:center;margin-bottom:14px}
-.ts-proof-sv .stars-lg span,.ts-proof-sv .review-stars span{display:grid;place-items:center;background:#00b67a}
-.ts-proof-sv .stars-lg span.off,.ts-proof-sv .review-stars span.off{background:#dcdce6}
-.ts-proof-sv .stars-lg span{width:28px;height:28px}
-.ts-proof-sv .review-stars span{width:15px;height:15px}
-.ts-proof-sv svg{fill:#fff;width:76%;height:76%}
-.ts-proof-sv .kicker{font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;color:#00b67a;margin-bottom:10px}
-.ts-proof-sv .section-title{font-size:26px;line-height:1.25;font-weight:800;color:#121212}
-.ts-proof-sv .carousel{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 2px 8px}
-.ts-proof-sv .carousel::-webkit-scrollbar{display:none}
-.ts-proof-sv .review-card{flex:0 0 calc((100% - 32px) / 3);scroll-snap-align:start;display:flex;flex-direction:column;background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:16px 16px 14px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.ts-proof-sv .review-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.ts-proof-sv .review-card h3{margin-bottom:8px;font-size:14px;line-height:1.4;font-weight:700;color:#121212}
-.ts-proof-sv .review-card p{margin-bottom:8px;font-size:13px;line-height:1.6;color:rgba(0,0,0,.62)}
-.ts-proof-sv .review-card p.result-line{font-weight:600;color:#121212;margin-bottom:12px}
-.ts-proof-sv .person{margin-top:auto;font-size:13px;color:#121212}
-.ts-proof-sv .person strong{display:block;font-size:13px}
-.ts-proof-sv .person span{display:block;font-size:11px;line-height:1.35;color:rgba(0,0,0,.55)}
-.ts-proof-sv .nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:18px}
-.ts-proof-sv .arrow{width:40px;height:40px;border-radius:50%;border:1px solid #d6d6d6;background:#fff;color:#121212;font-size:22px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0 0 3px;transition:background .2s,color .2s,border-color .2s}
-.ts-proof-sv .arrow:hover{background:#121212;border-color:#121212;color:#fff}
-.ts-proof-sv .arrow:disabled{opacity:.35;cursor:default;background:#fff;color:#121212;border-color:#d6d6d6}
-.ts-proof-sv .dots{display:flex;gap:0}
-.ts-proof-sv .dot{box-sizing:content-box;width:8px;height:8px;border-radius:50%;border:0;padding:8px 5px;background:#d9d9d9;background-clip:content-box;cursor:pointer}
-.ts-proof-sv .dot.active{background:#00b67a;background-clip:content-box}
-@media(max-width:749px){
-  .ts-proof-sv{padding:32px 0}
-  .ts-proof-sv .container{width:100%}
-  .ts-proof-sv .proof-head{padding:0 18px;margin-bottom:22px}
-  .ts-proof-sv .stars-lg span{width:24px;height:24px}
-  .ts-proof-sv .section-title{font-size:22px}
-  .ts-proof-sv .carousel{gap:12px;padding:4px 18px 8px;scroll-padding-left:18px}
-  .ts-proof-sv .review-card{flex-basis:82%}
-  .ts-proof-sv .arrow{display:none}
-}
-{% if section.settings.custom_css != blank %}
-#{{ section.id }} {
-  {{ section.settings.custom_css }}
-}
-{% endif %}
+  .ts-proof-sv {
+    font-family: Inter
+    , Arial
+    , Helvetica
+    , sans-serif;
+    color: #111315;
+    background: #fff;
+    padding: 48px 0;
+    overflow: hidden
+  }
+  .ts-proof-sv * {
+    box-sizing: border-box;
+    margin: 0
+  }
+  .ts-proof-sv .container {
+    width: min(860px, calc(100% - 36px));
+    margin-inline: auto
+  }
+  .ts-proof-sv .proof-head {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 30px
+  }
+  .ts-proof-sv .stars {
+    display: flex;
+    gap: 3px;
+    color: #FFC106;
+    --size: 15px
+  }
+  .ts-proof-sv .stars svg {
+    width: var(--size);
+    height: var(--size)
+  }
+  .ts-proof-sv .stars svg.off {
+    color: #dcdce6
+  }
+  .ts-proof-sv .stars-lg {
+    --size: 28px;
+    justify-content: center;
+    margin-bottom: 14px
+  }
+  .ts-proof-sv .kicker {
+    font-size: 12px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: #156b32;
+    margin-bottom: 10px
+  }
+  .ts-proof-sv .section-title {
+    font-size: 26px;
+    line-height: 1.25;
+    font-weight: 800;
+    color: #121212
+  }
+  .ts-proof-sv .carousel {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding: 4px 2px 8px
+  }
+  .ts-proof-sv .carousel::-webkit-scrollbar {
+    display: none
+  }
+  .ts-proof-sv .review-card {
+    flex: 0 0 calc((100% - 32px) / 3);
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    padding: 16px 16px 14px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .05)
+  }
+  .ts-proof-sv .review-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px
+  }
+  .ts-proof-sv .review-card h3 {
+    margin-bottom: 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 700;
+    color: #121212
+  }
+  .ts-proof-sv .review-card p {
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(0, 0, 0, .62)
+  }
+  .ts-proof-sv .review-card p.result-line {
+    font-weight: 600;
+    color: #121212;
+    margin-bottom: 12px
+  }
+  .ts-proof-sv .person {
+    margin-top: auto;
+    font-size: 13px;
+    color: #121212
+  }
+  .ts-proof-sv .person strong {
+    display: block;
+    font-size: 13px
+  }
+  .ts-proof-sv .person span {
+    display: block;
+    font-size: 11px;
+    line-height: 1.35;
+    color: rgba(0, 0, 0, .55)
+  }
+  .ts-proof-sv .nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 18px
+  }
+  .ts-proof-sv .arrow {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #d6d6d6;
+    background: #fff;
+    color: #121212;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    padding: 0 0 3px;
+    transition: background 0.2s
+    , color 0.2s
+    , border-color 0.2s
+  }
+  .ts-proof-sv .arrow:hover {
+    background: #121212;
+    border-color: #121212;
+    color: #fff
+  }
+  .ts-proof-sv .arrow:disabled {
+    opacity: .35;
+    cursor: default;
+    background: #fff;
+    color: #121212;
+    border-color: #d6d6d6
+  }
+  .ts-proof-sv .dots {
+    display: flex;
+    gap: 0
+  }
+  .ts-proof-sv .dot {
+    box-sizing: content-box;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 0;
+    padding: 8px 5px;
+    background: #d9d9d9;
+    background-clip: content-box;
+    cursor: pointer
+  }
+  .ts-proof-sv .dot.active {
+    background: #156b32;
+    background-clip: content-box
+  }
+  @media(max-width: 749px) {
+    .ts-proof-sv {
+      padding: 32px 0
+    }
+    .ts-proof-sv .container {
+      width: 100%
+    }
+    .ts-proof-sv .proof-head {
+      padding: 0 18px;
+      margin-bottom: 22px
+    }
+    .ts-proof-sv .stars-lg {
+      --size: 24px
+    }
+    .ts-proof-sv .section-title {
+      font-size: 22px
+    }
+    .ts-proof-sv .carousel {
+      gap: 12px;
+      padding: 4px 18px 8px;
+      scroll-padding-left: 18px
+    }
+    .ts-proof-sv .review-card {
+      flex-basis: 82%
+    }
+    .ts-proof-sv .arrow {
+      display: none
+    }
+  }
 </style>
+
+{%- style -%}
+  {% if section.settings.custom_css != blank %}
+    #{{ section.id }} {
+      {{ section.settings.custom_css }}
+    }
+  {% endif %}
+{%- endstyle -%}
+
+<svg
+  width="0"
+  height="0"
+  style="position:absolute"
+  aria-hidden="true">
+  <symbol id="ts-star-{{ section.id }}" viewBox="0.16 0.895 12 12"><path fill="currentColor" d="M6.3565 0.923034C6.47402 1.00418 6.53134 1.11363 6.59224 1.24026C6.5996 1.25547 6.60696 1.27067 6.61454 1.28634C6.63854 1.33606 6.66232 1.38589 6.68609 1.43573C6.70294 1.4708 6.7198 1.50587 6.73667 1.54094C6.85113 1.77936 6.96333 2.01879 7.07413 2.25893C7.1783 2.48469 7.28429 2.70954 7.39068 2.93426C7.52428 3.21653 7.65682 3.49924 7.78771 3.78277C7.84769 3.91243 7.90841 4.04164 7.97066 4.17023C7.98277 4.19525 7.99487 4.22027 8.00734 4.24605C8.03019 4.29311 8.05315 4.34012 8.07626 4.38705C8.09133 4.41808 8.09133 4.41808 8.10671 4.44974C8.12 4.47679 8.12 4.47679 8.13356 4.5044C8.15239 4.55145 8.15239 4.55145 8.15239 4.62176C8.17944 4.62345 8.17944 4.62345 8.20704 4.62517C8.40597 4.63886 8.60148 4.66386 8.79851 4.69408C8.8315 4.69906 8.86449 4.70403 8.89748 4.70899C8.98611 4.72234 9.07471 4.73584 9.16331 4.74938C9.23757 4.76072 9.31184 4.77199 9.38611 4.78327C9.56133 4.80987 9.73653 4.8366 9.91172 4.86341C10.092 4.89098 10.2723 4.91833 10.4526 4.94556C10.6081 4.96904 10.7635 4.99268 10.9188 5.01644C11.0114 5.0306 11.104 5.04469 11.1965 5.05862C11.2835 5.07171 11.3704 5.085 11.4573 5.09844C11.5042 5.10563 11.5511 5.11263 11.598 5.11962C11.9825 5.1796 11.9825 5.1796 12.0884 5.30292C12.1534 5.39548 12.1649 5.44105 12.1675 5.5534C12.1684 5.57745 12.1693 5.6015 12.1702 5.62628C12.1449 5.81257 11.9761 5.93559 11.8482 6.06024C11.8092 6.09845 11.7702 6.13672 11.7313 6.17505C11.7141 6.19183 11.6969 6.20861 11.6792 6.22589C11.632 6.27457 11.5877 6.32395 11.5434 6.37519C11.4589 6.47256 11.3694 6.56367 11.2776 6.65423C11.2528 6.67892 11.2528 6.67892 11.2275 6.70411C11.1576 6.77365 11.0875 6.84305 11.0175 6.91247C10.966 6.96355 10.9145 7.0147 10.8631 7.06586C10.8475 7.08122 10.832 7.09658 10.8159 7.11241C10.7417 7.18629 10.6701 7.2612 10.6016 7.34051C10.5187 7.43657 10.4304 7.52604 10.3401 7.61517C10.3153 7.63986 10.3153 7.63986 10.29 7.66504C10.2201 7.73459 10.15 7.80399 10.08 7.87341C10.0285 7.92449 9.97702 7.97564 9.92559 8.02679C9.91003 8.04216 9.89447 8.05752 9.87845 8.07335C9.78812 8.16321 9.70284 8.25558 9.62082 8.35311C9.58208 8.3952 9.58208 8.3952 9.53481 8.43324C9.4861 8.47321 9.45238 8.50636 9.41802 8.55926C9.41249 8.61831 9.41249 8.61831 9.42182 8.68298C9.42462 8.70804 9.42742 8.7331 9.43031 8.75892C9.45041 8.90605 9.47341 9.05257 9.4979 9.19902C9.50369 9.23412 9.50947 9.26922 9.51523 9.30433C9.52757 9.37934 9.53998 9.45434 9.55245 9.52934C9.57217 9.64802 9.59171 9.76673 9.61123 9.88544C9.6597 10.1801 9.70841 10.4747 9.75714 10.7693C9.7951 10.9987 9.83299 11.2282 9.87071 11.4577C9.8901 11.5756 9.90961 11.6936 9.92922 11.8115C9.94139 11.8848 9.95345 11.9581 9.96548 12.0315C9.97106 12.0654 9.97669 12.0993 9.98237 12.1332C9.99014 12.1796 9.99773 12.226 10.0053 12.2725C10.0096 12.2984 10.0139 12.3243 10.0183 12.351C10.0388 12.5209 10.0291 12.6364 9.93364 12.778C9.83345 12.8733 9.74227 12.9102 9.60213 12.9071C9.44287 12.8788 9.30023 12.7852 9.16021 12.7077C9.13777 12.6954 9.11533 12.6831 9.09222 12.6704C8.94621 12.59 8.80064 12.509 8.65524 12.4276C8.50068 12.3411 8.34559 12.2556 8.19048 12.1701C8.16203 12.1544 8.13359 12.1387 8.10515 12.1231C8.01934 12.0757 7.93352 12.0284 7.84771 11.9811C7.52179 11.8015 7.19589 11.6219 6.8705 11.4413C6.8303 11.419 6.79006 11.3968 6.74983 11.3745C6.64135 11.3144 6.5332 11.254 6.4269 11.1901C6.40397 11.1764 6.40397 11.1764 6.38057 11.1625C6.34288 11.1398 6.30545 11.1166 6.26806 11.0934C6.19315 11.0611 6.16762 11.0688 6.08989 11.0905C6.04382 11.1118 5.99852 11.1349 5.95385 11.159C5.92739 11.1732 5.90093 11.1874 5.87367 11.2021C5.84515 11.2176 5.81664 11.2332 5.78814 11.2487C5.75853 11.2647 5.72892 11.2807 5.69931 11.2967C5.49568 11.407 5.29371 11.5201 5.09253 11.6348C4.93393 11.7251 4.77403 11.8126 4.61333 11.8991C4.4285 11.9986 4.24498 12.1 4.06255 12.2038C3.85335 12.3228 3.64249 12.4385 3.43054 12.5525C3.27471 12.6365 3.11989 12.722 2.9664 12.8102C2.83224 12.8868 2.72747 12.9133 2.57427 12.8952C2.44952 12.8526 2.37949 12.7748 2.31646 12.6608C2.24337 12.4416 2.33556 12.1472 2.3729 11.9243C2.37869 11.8891 2.38447 11.854 2.39023 11.8189C2.40256 11.7438 2.41497 11.6688 2.42745 11.5938C2.44718 11.4751 2.46672 11.3564 2.48623 11.2377C2.52411 11.0074 2.56218 10.7771 2.60028 10.5468C2.64887 10.253 2.69741 9.95926 2.74571 9.66546C2.76511 9.54751 2.78462 9.42957 2.80422 9.31165C2.81638 9.23837 2.82844 9.16507 2.84048 9.09177C2.84607 9.05785 2.8517 9.02393 2.85737 8.99002C2.86512 8.94366 2.87272 8.89727 2.88031 8.85089C2.88674 8.81201 2.88674 8.81201 2.89331 8.77234C2.90244 8.69951 2.90786 8.63252 2.90239 8.55926C2.86004 8.5071 2.82137 8.46592 2.77202 8.42157C2.74751 8.39875 2.72307 8.37586 2.69869 8.3529C2.6807 8.33599 2.6807 8.33599 2.66234 8.31874C2.62092 8.2778 2.58326 8.23519 2.54548 8.19089C2.46024 8.09279 2.37008 8.00089 2.27764 7.90961C2.26109 7.89315 2.24455 7.87669 2.2275 7.85974C2.17518 7.8077 2.12278 7.75574 2.07036 7.7038C2.0012 7.63526 1.93212 7.56665 1.86309 7.49798C1.84753 7.48262 1.83197 7.46726 1.81595 7.45143C1.72684 7.36279 1.64302 7.2713 1.56091 7.17617C1.49068 7.09699 1.41542 7.02301 1.34014 6.94867C1.32359 6.93221 1.30705 6.91575 1.29 6.8988C1.23768 6.84676 1.18528 6.7948 1.13286 6.74286C1.0637 6.67432 0.994621 6.60571 0.925587 6.53705C0.910031 6.52169 0.894474 6.50632 0.878446 6.4905C0.787674 6.40019 0.701965 6.30703 0.61832 6.2101C0.576067 6.16176 0.531728 6.11631 0.485677 6.07159C0.461408 6.04776 0.461408 6.04776 0.43665 6.02344C0.403304 5.99092 0.369917 5.95846 0.336491 5.92602C0.320464 5.91025 0.304436 5.89448 0.287923 5.87823C0.273502 5.86421 0.259081 5.85018 0.244223 5.83573C0.149027 5.72785 0.150174 5.6261 0.152882 5.48694C0.165779 5.36667 0.219405 5.30845 0.307235 5.23108C0.429399 5.15211 0.581836 5.14667 0.722792 5.12661C0.755378 5.12171 0.787958 5.11677 0.820533 5.1118C0.887773 5.10159 0.955037 5.09156 1.02233 5.08169C1.14263 5.06399 1.26275 5.04512 1.38288 5.02626C1.5295 5.00328 1.6762 4.98078 1.8229 4.95822C1.85443 4.95337 1.88597 4.94851 1.91751 4.94366C2.06502 4.92096 2.21253 4.89828 2.36005 4.87563C2.5287 4.84974 2.69733 4.82377 2.86595 4.79772C2.9979 4.77734 3.12986 4.75704 3.26184 4.7368C3.34007 4.7248 3.41829 4.71277 3.49651 4.70065C3.58305 4.68726 3.66961 4.67401 3.75618 4.66078C3.7817 4.6568 3.80723 4.65282 3.83353 4.64872C3.946 4.63167 4.05386 4.61655 4.16802 4.62176C4.17204 4.60883 4.17606 4.5959 4.1802 4.58257C4.22129 4.45437 4.27075 4.3342 4.32943 4.21316C4.33819 4.19482 4.34696 4.17648 4.35599 4.15758C4.37478 4.1183 4.39362 4.07905 4.41251 4.03982C4.44249 3.97757 4.47232 3.91526 4.50211 3.85293C4.53275 3.78882 4.56339 3.72471 4.59409 3.66062C4.6902 3.45991 4.78527 3.25871 4.87993 3.05731C4.88764 3.04094 4.89534 3.02456 4.90328 3.00769C5.00605 2.78919 5.10804 2.57035 5.20952 2.35126C5.26071 2.24087 5.31198 2.13051 5.36333 2.0202C5.37536 1.99436 5.37536 1.99436 5.38763 1.968C5.44081 1.85383 5.49416 1.73975 5.54768 1.62575C5.56519 1.58839 5.58267 1.55101 5.6001 1.51361C5.84331 0.991966 5.84331 0.991966 5.97271 0.918639C6.10012 0.876169 6.2301 0.878562 6.3565 0.923034Z" /></symbol>
+</svg>
 
 <section id="{{ section.id }}" class="ts-proof-sv">
   <div class="container">
     <div class="proof-head">
-      <div class="stars-lg" role="img" aria-label="5 av 5 stjärnor">
-        {%- for i in (1..5) -%}<span>{{ star_svg }}</span>{%- endfor -%}
+      <div
+        class="stars stars-lg"
+        role="img"
+        aria-label="5 av 5 stjärnor">
+        {%- for i in (1..5) -%}
+          <svg aria-hidden="true"><use href="#ts-star-{{ section.id }}" /></svg>
+        {%- endfor -%}
       </div>
       {% if section.settings.kicker != blank %}
         <div class="kicker">{{ section.settings.kicker }}</div>
@@ -65,8 +239,17 @@
       {% for block in section.blocks %}
         <article class="review-card" {{ block.shopify_attributes }}>
           <div class="review-top">
-            <div class="review-stars" role="img" aria-label="{{ block.settings.rating }} av 5 stjärnor">
-              {%- for i in (1..5) -%}<span{% if i > block.settings.rating %} class="off"{% endif %}>{{ star_svg }}</span>{%- endfor -%}
+            <div
+              class="stars review-stars"
+              role="img"
+              aria-label="{{ block.settings.rating }} av 5 stjärnor">
+              {%- for i in (1..5) -%}
+                <svg
+                  {% if i > block.settings.rating %}
+                  class="off"
+                  {% endif %}
+                  aria-hidden="true"><use href="#ts-star-{{ section.id }}" /></svg>
+              {%- endfor -%}
             </div>
           </div>
           {% if block.settings.title != blank %}
@@ -78,20 +261,31 @@
           {% if block.settings.result_line != blank %}
             <p class="result-line">{{ block.settings.result_line }}</p>
           {% endif %}
-          <div class="person"><strong>{{ block.settings.name }}</strong><span>{{ block.settings.label }}</span></div>
+          <div class="person">
+            <strong>{{ block.settings.name }}</strong>
+            <span>{{ block.settings.label }}</span>
+          </div>
         </article>
       {% endfor %}
     </div>
     <div class="nav">
-      <button type="button" class="arrow" data-ts-prev aria-label="Föregående recension">‹</button>
+      <button
+        type="button"
+        class="arrow"
+        data-ts-prev
+        aria-label="Föregående recension">‹</button>
       <div class="dots" data-ts-dots></div>
-      <button type="button" class="arrow" data-ts-next aria-label="Nästa recension">›</button>
+      <button
+        type="button"
+        class="arrow"
+        data-ts-next
+        aria-label="Nästa recension">›</button>
     </div>
   </div>
 </section>
 
 <script>
-(function(){
+  (function(){
   var roots = document.querySelectorAll('.ts-proof-sv');
   Array.prototype.forEach.call(roots, function(root){
     // Theme editor re-runs this script on section reload; skip already-wired instances
@@ -140,205 +334,205 @@
     window.addEventListener('resize', buildDots);
     buildDots();
   });
-})();
+  })();
 </script>
 
 {% schema %}
-{
-  "name": "Social Proof Reviews",
-  "settings": [
-    {
-      "type": "text",
-      "id": "kicker",
-      "label": "Kicker",
-      "default": "Därför fastnade de för TryScent"
-    },
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Title",
-      "default": "De säger det bättre än vi någonsin skulle kunna."
-    },
-    {
-      "type": "header",
-      "content": "Advanced"
-    },
-    {
-      "type": "textarea",
-      "id": "custom_css",
-      "label": "Custom CSS",
-      "info": "Scoped to this section. Example: .section-title { font-size: 30px; }"
-    }
-  ],
-  "blocks": [
-    {
-      "type": "review",
-      "name": "Review",
-      "settings": [
-        {
-          "type": "range",
-          "id": "rating",
-          "label": "Rating",
-          "min": 1,
-          "max": 5,
-          "step": 1,
-          "default": 5
-        },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Title"
-        },
-        {
-          "type": "textarea",
-          "id": "text",
-          "label": "Text"
-        },
-        {
-          "type": "text",
-          "id": "result_line",
-          "label": "Result Line"
-        },
-        {
-          "type": "text",
-          "id": "name",
-          "label": "Name"
-        },
-        {
-          "type": "text",
-          "id": "label",
-          "label": "Label",
-          "default": "Kundrecension"
-        }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "Social Proof Reviews",
-      "blocks": [
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "title": "Jag har redan fått flera komplimanger efter att ha använt dem.",
-            "text": "Det folk märker först är inte flaskan eller priset, utan hur doften förändrar din utstrålning.",
-            "name": "Elin Lundqvist",
-            "result_line": "Samma komplimanger. Ett bättre pris."
+  {
+    "name": "Social Proof Reviews",
+    "settings": [
+      {
+        "type": "text",
+        "id": "kicker",
+        "label": "Kicker",
+        "default": "Därför fastnade de för TryScent"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "De säger det bättre än vi någonsin skulle kunna."
+      },
+      {
+        "type": "header",
+        "content": "Advanced"
+      },
+      {
+        "type": "textarea",
+        "id": "custom_css",
+        "label": "Custom CSS",
+        "info": "Scoped to this section. Example: .section-title { font-size: 30px; }"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "review",
+        "name": "Review",
+        "settings": [
+          {
+            "type": "range",
+            "id": "rating",
+            "label": "Rating",
+            "min": 1,
+            "max": 5,
+            "step": 1,
+            "default": 5
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "textarea",
+            "id": "text",
+            "label": "Text"
+          },
+          {
+            "type": "text",
+            "id": "result_line",
+            "label": "Result Line"
+          },
+          {
+            "type": "text",
+            "id": "name",
+            "label": "Name"
+          },
+          {
+            "type": "text",
+            "id": "label",
+            "label": "Label",
+            "default": "Kundrecension"
           }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "title": "Den doftar EXAKT som Dior Homme Intense … nästan skrämmande likt.",
-            "text": "Den mörka, krämiga och lyxiga karaktären man förväntar sig fanns där redan från första sprayen.",
-            "name": "Johan Bergström",
-            "result_line": "Den välbekanta doftupplevelsen, utan designerpriset."
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Social Proof Reviews",
+        "blocks": [
+          {
+            "type": "review",
+            "settings": {
+              "rating": 5,
+              "title": "Jag har redan fått flera komplimanger efter att ha använt dem.",
+              "text": "Det folk märker först är inte flaskan eller priset, utan hur doften förändrar din utstrålning.",
+              "name": "Elin Lundqvist",
+              "result_line": "Samma komplimanger. Ett bättre pris."
+            }
+          },
+          {
+            "type": "review",
+            "settings": {
+              "rating": 5,
+              "title": "Den doftar EXAKT som Dior Homme Intense … nästan skrämmande likt.",
+              "text": "Den mörka, krämiga och lyxiga karaktären man förväntar sig fanns där redan från första sprayen.",
+              "name": "Johan Bergström",
+              "result_line": "Den välbekanta doftupplevelsen, utan designerpriset."
+            }
+          },
+          {
+            "type": "review",
+            "settings": {
+              "rating": 4,
+              "title": "Bättre än några av de dyraste parfymerna du kan köpa.",
+              "text": "Doften överträffade förväntningarna och levererade den kvalitet man vanligtvis förknippar med ett betydligt högre pris.",
+              "name": "Moa",
+              "result_line": "Expensive presence. Unexpected price."
+            }
+          },
+          {
+            "type": "review",
+            "settings": {
+              "rating": 5,
+              "title": "Till en början var jag skeptisk …",
+              "text": "Men när jag gjorde min första beställning upptäckte jag att parfymerna är fantastiska och mycket lika originalparfymerna. Dessutom är priset verkligen riktigt bra. Jag kommer definitivt att fortsätta handla från TryScent i framtiden.",
+              "name": "Ahmad Ismail"
+            }
+          },
+          {
+            "type": "review",
+            "settings": {
+              "rating": 5,
+              "title": "Dofter som verkligen luktar som originalet.",
+              "text": "Sitter kvar så länge som det utlovas. Snabba leveranser och låga priser. Kan bara säga köp köp!",
+              "name": "Ingela"
+            }
+          },
+          {
+            "type": "review",
+            "settings": {
+              "rating": 5,
+              "title": "Parfymerna håller länge och väldigt identiska ❤️",
+              "text": "Fick min första beställning som var 6 olika parfymer, nu har jag beställt 8 stycken och ser fram emot när dem kommer.",
+              "name": "Samer Najmadin"
+            }
+          },
+          {
+            "type": "review",
+            "settings": {
+              "rating": 5,
+              "title": "Deras parfymer är som äkta.",
+              "text": "Try Scent gillar jag faktiskt, dom är fantastiskt. Jag har minst 20 flaskor TryScent-parfymer och använder bara dem 😘",
+              "name": "Nermina"
+            }
+          },
+          {
+            "type": "review",
+            "settings": {
+              "rating": 5,
+              "title": "Stämmer bra in på originaldoften 👍",
+              "text": "Dock håller den inte i hela dagen men kommer inte ihåg om originalet gjorde det heller. Har beställt 6 nya dofter och återkommer med betyg på dom 👍",
+              "name": "Dan Lindau"
+            }
+          },
+          {
+            "type": "review",
+            "settings": {
+              "rating": 5,
+              "title": "Väldigt bra service.",
+              "text": "Fick en flaska som läckte lite i kragen, påtalade detta, och utan tvekan skickades en ny flaska samt två överraskningsdofter som kompensation! Mkt tacksam!",
+              "name": "Viktor Matsenius"
+            }
+          },
+          {
+            "type": "review",
+            "settings": {
+              "rating": 5,
+              "title": "Mer tillmötesgående finns nog inte!",
+              "text": "Hörde av mig angående ett problem jag stötte på! Fick prata med nån som hette Eric! De hjälpte mig smidigt och var väldigt serviceminded! Rekommenderar Tryscent.co! Stort tack!",
+              "name": "Tomas Ternemar"
+            }
+          },
+          {
+            "type": "review",
+            "settings": {
+              "rating": 5,
+              "title": "Fantastisk respons.",
+              "text": "Det hade uppstått en liten olycka med en av parfymerna jag beställt och jag mejlade företaget. Jag fick ett snabbt svar från Ed och det löste sig på bästa sätt. Är så nöjd med hur dom hanterade saken.",
+              "name": "Teresa"
+            }
+          },
+          {
+            "type": "review",
+            "settings": {
+              "rating": 4,
+              "title": "439 kr inklusive frakt för 330 ml parfym. Inte illa.",
+              "text": "Väldigt bra pris, 380 kr för 6 styck 50 ml parfymflaskor och fick även med en gratis mysteryflaska i 30 ml.",
+              "name": "Sadek Abduljalil"
+            }
+          },
+          {
+            "type": "review",
+            "settings": {
+              "rating": 5,
+              "title": "Mycket nöjd med hur de doftar.",
+              "text": "Har nu fått mina varor. Det var väl paketerat och fick bra information kring hur det gick med leveransen.",
+              "name": "Christian Edvardsson"
+            }
           }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 4,
-            "title": "Bättre än några av de dyraste parfymerna du kan köpa.",
-            "text": "Doften överträffade förväntningarna och levererade den kvalitet man vanligtvis förknippar med ett betydligt högre pris.",
-            "name": "Moa",
-            "result_line": "Expensive presence. Unexpected price."
-          }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "title": "Till en början var jag skeptisk …",
-            "text": "Men när jag gjorde min första beställning upptäckte jag att parfymerna är fantastiska och mycket lika originalparfymerna. Dessutom är priset verkligen riktigt bra. Jag kommer definitivt att fortsätta handla från TryScent i framtiden.",
-            "name": "Ahmad Ismail"
-          }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "title": "Dofter som verkligen luktar som originalet.",
-            "text": "Sitter kvar så länge som det utlovas. Snabba leveranser och låga priser. Kan bara säga köp köp!",
-            "name": "Ingela"
-          }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "title": "Parfymerna håller länge och väldigt identiska ❤️",
-            "text": "Fick min första beställning som var 6 olika parfymer, nu har jag beställt 8 stycken och ser fram emot när dem kommer.",
-            "name": "Samer Najmadin"
-          }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "title": "Deras parfymer är som äkta.",
-            "text": "Try Scent gillar jag faktiskt, dom är fantastiskt. Jag har minst 20 flaskor TryScent-parfymer och använder bara dem 😘",
-            "name": "Nermina"
-          }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "title": "Stämmer bra in på originaldoften 👍",
-            "text": "Dock håller den inte i hela dagen men kommer inte ihåg om originalet gjorde det heller. Har beställt 6 nya dofter och återkommer med betyg på dom 👍",
-            "name": "Dan Lindau"
-          }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "title": "Väldigt bra service.",
-            "text": "Fick en flaska som läckte lite i kragen, påtalade detta, och utan tvekan skickades en ny flaska samt två överraskningsdofter som kompensation! Mkt tacksam!",
-            "name": "Viktor Matsenius"
-          }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "title": "Mer tillmötesgående finns nog inte!",
-            "text": "Hörde av mig angående ett problem jag stötte på! Fick prata med nån som hette Eric! De hjälpte mig smidigt och var väldigt serviceminded! Rekommenderar Tryscent.co! Stort tack!",
-            "name": "Tomas Ternemar"
-          }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "title": "Fantastisk respons.",
-            "text": "Det hade uppstått en liten olycka med en av parfymerna jag beställt och jag mejlade företaget. Jag fick ett snabbt svar från Ed och det löste sig på bästa sätt. Är så nöjd med hur dom hanterade saken.",
-            "name": "Teresa"
-          }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 4,
-            "title": "439 kr inklusive frakt för 330 ml parfym. Inte illa.",
-            "text": "Väldigt bra pris, 380 kr för 6 styck 50 ml parfymflaskor och fick även med en gratis mysteryflaska i 30 ml.",
-            "name": "Sadek Abduljalil"
-          }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "title": "Mycket nöjd med hur de doftar.",
-            "text": "Har nu fått mina varor. Det var väl paketerat och fick bra information kring hur det gick med leveransen.",
-            "name": "Christian Edvardsson"
-          }
-        }
-      ]
-    }
-  ]
-}
+        ]
+      }
+    ]
+  }
 {% endschema %}
