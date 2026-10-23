@@ -1,13 +1,14 @@
 {%- comment -%}
-  FUEL_06 fragrance finder, homepage band. Sits right after the benefits row
-  and before the Trustpilot block, which is where the design puts it.
+  FUEL_06 fragrance finder, homepage band. Sits right after the benefits row, which is where the design puts it.
 
   The copy is in theme settings (Theme settings > FUEL_06 Fragrance finder),
   shared with the product page dialog that layout/theme.liquid renders, so one
   edit changes both. This section only places the band.
 {%- endcomment -%}
-{% render 'fuel06-finder', mode: 'assets' %}
-{% render 'fuel06-finder', mode: 'home' %}
+{% render 'fuel06-finder'
+  , mode: 'assets' %}
+{% render 'fuel06-finder'
+  , mode: 'home' %}
 
 {% schema %}
   {
