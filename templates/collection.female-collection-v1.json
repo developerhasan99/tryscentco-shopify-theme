@@ -28,14 +28,173 @@
         "padding_bottom": 0
       }
     },
-    "custom_liquid_37D6Ew": {
-      "type": "custom-liquid",
-      "name": "t:sections.custom-liquid.presets.name",
+    "social_proof_reviews_3faaFE": {
+      "type": "social-proof-reviews",
+      "blocks": {
+        "review_HD4ExU": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Jag har redan fått flera komplimanger efter att ha använt dem.",
+            "text": "Det folk märker först är inte flaskan eller priset, utan hur doften förändrar din utstrålning.",
+            "result_line": "Samma komplimanger. Ett bättre pris.",
+            "name": "Elin Lundqvist",
+            "label": "Kundrecension"
+          }
+        },
+        "review_7YFbMJ": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Den doftar EXAKT som Dior Homme Intense … nästan skrämmande likt.",
+            "text": "Den mörka, krämiga och lyxiga karaktären man förväntar sig fanns där redan från första sprayen.",
+            "result_line": "Den välbekanta doftupplevelsen, utan designerpriset.",
+            "name": "Johan Bergström",
+            "label": "Kundrecension"
+          }
+        },
+        "review_wphB8y": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "title": "Bättre än några av de dyraste parfymerna du kan köpa.",
+            "text": "Doften överträffade förväntningarna och levererade den kvalitet man vanligtvis förknippar med ett betydligt högre pris.",
+            "result_line": "Expensive presence. Unexpected price.",
+            "name": "Moa",
+            "label": "Kundrecension"
+          }
+        },
+        "review_b3NXgh": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Till en början var jag skeptisk …",
+            "text": "Men när jag gjorde min första beställning upptäckte jag att parfymerna är fantastiska och mycket lika originalparfymerna. Dessutom är priset verkligen riktigt bra. Jag kommer definitivt att fortsätta handla från TryScent i framtiden.",
+            "result_line": "",
+            "name": "Ahmad Ismail",
+            "label": "Kundrecension"
+          }
+        },
+        "review_GaEieE": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Dofter som verkligen luktar som originalet.",
+            "text": "Sitter kvar så länge som det utlovas. Snabba leveranser och låga priser. Kan bara säga köp köp!",
+            "result_line": "",
+            "name": "Ingela",
+            "label": "Kundrecension"
+          }
+        },
+        "review_pGwBgY": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Parfymerna håller länge och väldigt identiska ❤️",
+            "text": "Fick min första beställning som var 6 olika parfymer, nu har jag beställt 8 stycken och ser fram emot när dem kommer.",
+            "result_line": "",
+            "name": "Samer Najmadin",
+            "label": "Kundrecension"
+          }
+        },
+        "review_HJwXxB": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Deras parfymer är som äkta.",
+            "text": "Try Scent gillar jag faktiskt, dom är fantastiskt. Jag har minst 20 flaskor TryScent-parfymer och använder bara dem 😘",
+            "result_line": "",
+            "name": "Nermina",
+            "label": "Kundrecension"
+          }
+        },
+        "review_rA3Gci": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Stämmer bra in på originaldoften 👍",
+            "text": "Dock håller den inte i hela dagen men kommer inte ihåg om originalet gjorde det heller. Har beställt 6 nya dofter och återkommer med betyg på dom 👍",
+            "result_line": "",
+            "name": "Dan Lindau",
+            "label": "Kundrecension"
+          }
+        },
+        "review_w98JRt": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Väldigt bra service.",
+            "text": "Fick en flaska som läckte lite i kragen, påtalade detta, och utan tvekan skickades en ny flaska samt två överraskningsdofter som kompensation! Mkt tacksam!",
+            "result_line": "",
+            "name": "Viktor Matsenius",
+            "label": "Kundrecension"
+          }
+        },
+        "review_em9FNr": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Mer tillmötesgående finns nog inte!",
+            "text": "Hörde av mig angående ett problem jag stötte på! Fick prata med nån som hette Eric! De hjälpte mig smidigt och var väldigt serviceminded! Rekommenderar Tryscent.co! Stort tack!",
+            "result_line": "",
+            "name": "Tomas Ternemar",
+            "label": "Kundrecension"
+          }
+        },
+        "review_94qebT": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Fantastisk respons.",
+            "text": "Det hade uppstått en liten olycka med en av parfymerna jag beställt och jag mejlade företaget. Jag fick ett snabbt svar från Ed och det löste sig på bästa sätt. Är så nöjd med hur dom hanterade saken.",
+            "result_line": "",
+            "name": "Teresa",
+            "label": "Kundrecension"
+          }
+        },
+        "review_YdLjcC": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "title": "439 kr inklusive frakt för 330 ml parfym. Inte illa.",
+            "text": "Väldigt bra pris, 380 kr för 6 styck 50 ml parfymflaskor och fick även med en gratis mysteryflaska i 30 ml.",
+            "result_line": "",
+            "name": "Sadek Abduljalil",
+            "label": "Kundrecension"
+          }
+        },
+        "review_cXiB4w": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Mycket nöjd med hur de doftar.",
+            "text": "Har nu fått mina varor. Det var väl paketerat och fick bra information kring hur det gick med leveransen.",
+            "result_line": "",
+            "name": "Christian Edvardsson",
+            "label": "Kundrecension"
+          }
+        }
+      },
+      "block_order": [
+        "review_HD4ExU",
+        "review_7YFbMJ",
+        "review_wphB8y",
+        "review_b3NXgh",
+        "review_GaEieE",
+        "review_pGwBgY",
+        "review_HJwXxB",
+        "review_rA3Gci",
+        "review_w98JRt",
+        "review_em9FNr",
+        "review_94qebT",
+        "review_YdLjcC",
+        "review_cXiB4w"
+      ],
+      "name": "Social Proof Reviews",
       "settings": {
-        "custom_liquid": "<!-- TryScent — Social proof (kvinnor) — Custom Liquid paste block.\n     8 recensioner från Trustpilot (se.trustpilot.com/review/tryscent.co), hämtade 19.08.2026.\n     Teman: kvalitet, hållbarhet, likhet med originalet, skepsis som vändes.\n     Ren HTML+CSS, scoped till .ts-proof-sv. Inga Liquid-taggar. -->\n\n<style>\n  .ts-proof-sv{\n    --green:#14843d;\n    --green-dark:#0f6b31;\n    --green-soft:#eaf6ee;\n    --ink:#111315;\n    --muted:#626b74;\n    --line:#e6e8e8;\n    --star:#ffb000;\n    font-family:Inter,Arial,Helvetica,sans-serif;\n    color:var(--ink);\n    background:linear-gradient(180deg,#fff,#f7f8f6);\n    padding:76px 0 53px;\n    overflow:hidden;\n  }\n  .ts-proof-sv *{box-sizing:border-box;margin:0}\n  .ts-proof-sv .container{width:min(1180px,calc(100% - 36px));margin-inline:auto}\n  .ts-proof-sv .proof-head{text-align:center;max-width:760px;margin:0 auto 15px}\n  .ts-proof-sv .kicker{\n    font-size:13px;\n    letter-spacing:.13em;\n    text-transform:uppercase;\n    font-weight:800;\n    color:var(--green);\n    margin-bottom:14px;\n  }\n  .ts-proof-sv .section-title{\n    font-size:clamp(26px,3.3vw,43px);\n    line-height:1.02;\n    letter-spacing:-.045em;\n    margin-bottom:12px;\n    font-weight:700;\n  }\n  .ts-proof-sv .carousel{\n    display:flex;\n    align-items:flex-start;\n    gap:22px;\n    overflow-x:auto;\n    scroll-snap-type:x mandatory;\n    scrollbar-width:none;\n    padding:8px 4px 22px;\n  }\n  .ts-proof-sv .carousel::-webkit-scrollbar{display:none}\n  .ts-proof-sv .review-card{\n    flex:0 0 calc(33.333% - 15px);\n    min-width:330px;\n    scroll-snap-align:start;\n    background:#fff;\n    border:1px solid var(--line);\n    border-radius:20px;\n    padding:26px 26px 13px;\n    box-shadow:0 10px 28px rgba(16,34,22,.06);\n  }\n  .ts-proof-sv .review-top{\n    display:flex;\n    align-items:center;\n    justify-content:space-between;\n    gap:14px;\n    margin-bottom:11px;\n  }\n  .ts-proof-sv .review-stars{color:var(--star);letter-spacing:2px;font-size:19px}\n  .ts-proof-sv .verified{color:var(--muted);font-size:12px;font-weight:700;text-decoration:none}\n  .ts-proof-sv .verified:hover{text-decoration:underline}\n  .ts-proof-sv .tp-dot{color:var(--green)}\n  .ts-proof-sv .review-card h3{\n    font-size:16px;\n    line-height:1.22;\n    letter-spacing:-.035em;\n    margin-bottom:14px;\n    font-weight:700;\n  }\n  .ts-proof-sv .review-card p{\n    color:var(--muted);\n    line-height:1.62;\n    font-size:15px;\n  }\n  .ts-proof-sv .review-card p.result-line{\n    margin:8px 0 12px;\n    padding:15px 16px;\n    border-radius:14px;\n    background:var(--green-soft);\n    color:var(--green-dark);\n    font-weight:800;\n    font-size:14px;\n  }\n  .ts-proof-sv .person{display:flex;align-items:center;gap:12px}\n  .ts-proof-sv .person strong{display:block;font-size:14px}\n  .ts-proof-sv .person span{font-size:11.5px;color:var(--muted);line-height:1.35;display:block}\n  @media (max-width:1024px){\n    .ts-proof-sv .review-card{flex-basis:48%}\n  }\n  @media (max-width:700px){\n    .ts-proof-sv{padding:30px 0 21px}\n    .ts-proof-sv .review-card{min-width:86%;flex-basis:86%}\n  }\n</style>\n\n<section class=\"ts-proof-sv\">\n  <div class=\"container\">\n    <div class=\"proof-head\">\n      <div class=\"kicker\">D&#228;rf&#246;r fastnade de f&#246;r TryScent</div>\n      <h2 class=\"section-title\">De s&#228;ger det b&#228;ttre &#228;n vi n&#229;gonsin skulle kunna.</h2>\n    </div>\n\n    <div class=\"carousel\">\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Jag hade inte stora f&#246;rv&#228;ntningar p&#229; att det h&#228;r faktiskt skulle vara legit.&#8221;</h3>\n        <p>Jag hade en liten tester p&#229; JPG La Belle hemma att j&#228;mf&#246;ra med och blev &#246;verraskad hur pass lika de luktade. Best&#228;llde &#228;ven Lost Cherry dupe, YSL Black Opium dupe, CH Very Good Girl dupe och Acqua Di Gio dupe till min pojkv&#228;n, som ocks&#229; blev positivt &#246;verraskad. Super v&#228;rt det, och jag kommer best&#228;lla d&#228;rifr&#229;n igen.</p>\n        <p class=\"result-line\">J&#228;mf&#246;rd sida vid sida med originalet.</p>\n        <div class=\"person\">\n          <div><strong>Anne Rittwage</strong><span>Verifierad recensent p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Var lite skeptisk n&#228;r jag best&#228;llde.&#8221;</h3>\n        <p>Men efter en v&#228;ldigt snabb leverans s&#229; kunde jag konstatera att parfymerna var otroligt lika orginalen. V&#228;ldigt n&#246;jd!</p>\n        <p class=\"result-line\">Tveksam innan. &#214;vertygad efter.</p>\n        <div class=\"person\">\n          <div><strong>Annelie</strong><span>Verifierad recensent p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Parfymerna h&#229;ller h&#246;g kvalitet, doftar fantastiskt och sitter kvar l&#228;nge p&#229; huden.&#8221;</h3>\n        <p>Jag &#228;r verkligen imponerad av TryScent! Best&#228;llningen var enkel att g&#246;ra, leveransen gick smidigt och produkterna var v&#228;l f&#246;rpackade. Ett prisv&#228;rt alternativ f&#246;r den som vill ha lyxiga dofter utan att betala &#246;verpris. Jag kommer definitivt att handla h&#228;r igen och kan varmt rekommendera TryScent!</p>\n        <p class=\"result-line\">Lyxk&#228;nsla utan lyxpriset.</p>\n        <div class=\"person\">\n          <div><strong>Maria</strong><span>Verifierad recensent p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Jag k&#228;nde doften av mig sj&#228;lv hela tiden.&#8221;</h3>\n        <p>N&#228;r man anv&#228;nder parfym annars brukar doften f&#246;rsvinna ganska snabbt. Fick h&#246;ra av andra att &#8211; ooj vad gott du luktar, vad har du p&#229; dig? Den &#228;r v&#228;ldigt kvalitativ och lyxig. Och jag f&#229;r k&#228;nna mig bekv&#228;m och kvinnlig.</p>\n        <div class=\"person\">\n          <div><strong>Maria</strong><span>Verifierad recensent p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Parfymerna &#228;r otroligt vackra och de doftar exakt lika orginaliskt.&#8221;</h3>\n        <p>Jag k&#246;pte 3 flaskor och jag fick tv&#229; tester gratis.</p>\n        <div class=\"person\">\n          <div><strong>Huda</strong><span>Verifierad recensent p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Parfymerna luktar v&#228;ldigt gott och &#228;r likt de riktiga.&#8221;</h3>\n        <p>En bra hemsida att shoppa p&#229;. H&#229;ller l&#228;nge p&#229; kroppen.</p>\n        <div class=\"person\">\n          <div><strong>Ellen Gustafsson</strong><span>Verifierad recensent p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Lukter som h&#229;ller l&#228;nge och verkligen luktar som orginalet.&#8221;</h3>\n        <p>Alltid snabba leveranser.</p>\n        <p class=\"result-line\">H&#229;ller. Och luktar r&#228;tt.</p>\n        <div class=\"person\">\n          <div><strong>Ingela</strong><span>Verifierad recensent p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n      <article class=\"review-card\">\n        <div class=\"review-top\">\n          <div class=\"review-stars\">&#9733;&#9733;&#9733;&#9733;&#9733;</div>\n          <a class=\"verified\" href=\"https://se.trustpilot.com/review/tryscent.co\" target=\"_blank\" rel=\"noopener\"><span class=\"tp-dot\">&#9679;</span> Trustpilot-recension</a>\n        </div>\n        <h3>&#8221;Alla luktar magiskt gott.&#8221;</h3>\n        <p>Best&#228;llde fyra olika dofter och fick dem plus en femte som g&#229;va. Leveransen gick j&#228;ttefort! S&#229; himla n&#246;jd!</p>\n        <div class=\"person\">\n          <div><strong>Nathalie</strong><span>Verifierad recensent p&#229; Trustpilot</span></div>\n        </div>\n      </article>\n\n    </div>\n  </div>\n</section>",
-        "color_scheme": "",
-        "padding_top": 0,
-        "padding_bottom": 0
+        "kicker": "Därför fastnade de för TryScent",
+        "title": "De säger det bättre än vi någonsin skulle kunna.",
+        "custom_css": ""
       }
     },
     "popular_products_AmFHN4": {
@@ -70,7 +229,17 @@
         "filter_type": "horizontal",
         "enable_sorting": true,
         "padding_top": 36,
-        "padding_bottom": 40
+        "padding_bottom": 40,
+        "fuel04_cards": true,
+        "fuel04_cards_every": 5,
+        "fuel04_card_url": "",
+        "fuel04_card_heading": "Köp fler, spara mer!",
+        "fuel04_card_sub_text": "",
+        "fuel04_card_tier_1_count": "Köp 3",
+        "fuel04_card_tier_1_text": "Välj en 30 ml doft GRATIS",
+        "fuel04_card_tier_2_count": "KÖP 5",
+        "fuel04_card_tier_2_text": "Få en 100 ml Mystery Scent GRATIS",
+        "fuel04_card_cta_text": "LÅS UPP DINA GÅVOR"
       }
     },
     "rich_text_fnCgkL": {
@@ -104,7 +273,7 @@
   "order": [
     "banner",
     "custom_liquid_K7nAnN",
-    "custom_liquid_37D6Ew",
+    "social_proof_reviews_3faaFE",
     "popular_products_AmFHN4",
     "product-grid",
     "rich_text_fnCgkL"
