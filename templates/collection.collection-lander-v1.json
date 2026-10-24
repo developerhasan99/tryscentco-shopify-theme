@@ -21,10 +21,18 @@
     "custom_liquid_K7nAnN": {
       "type": "lander-hero",
       "settings": {
+        "rating_text": "Älskad av 10 000 kunder",
+        "title": "Hitta doften som får dem att tänka på dig.",
+        "category_line": "Toppvalet inom designerinspirerade parfymer.",
+        "expert_line": "Skapade av samma parfymexperter som står bakom några av världens mest välkända dofter.",
+        "microcopy": "Tro oss inte. Testa själv.",
+        "background_color": "#faf9f6",
         "bg_image": "shopify://shop_images/MAGYX_Site_Header.webp",
-        "bg_mobile_image": "shopify://shop_images/TryScent_Days_Mobile.png",
+        "bg_mobile_image": "shopify://shop_images/MAGYX_Site_Header_Mobile_A.webp",
         "mobile_bg_position": "center top",
-        "mobile_bg_zoom": 100
+        "mobile_bg_zoom": 100,
+        "mobile_background": "",
+        "custom_css": ""
       }
     },
     "custom_liquid_YdYRGB": {
