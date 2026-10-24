@@ -11,10 +11,6 @@
     min-height:560px;
     overflow:hidden;
   }
-  .ts-hero-custom .ts-container{
-    width:min(1180px,calc(100% - 36px));
-    margin-inline:auto;
-  }
   .ts-hero-custom .ts-hero-inner{
     min-height:560px;
     display:flex;
@@ -117,7 +113,7 @@
 {%- endstyle -%}
 
 <section id="{{ section.id }}" class="ts-hero-custom">
-  <div class="ts-container">
+  <div class="page-width">
     <div class="ts-hero-inner">
       <div class="ts-hero-copy">
         {% if section.settings.rating_text != blank %}
