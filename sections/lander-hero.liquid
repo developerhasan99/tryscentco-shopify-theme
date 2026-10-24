@@ -1,0 +1,251 @@
+{%- liquid
+  assign mobile_bg_size = 'cover'
+  if section.settings.mobile_bg_zoom > 100
+    assign mobile_bg_size = section.settings.mobile_bg_zoom | append: '% auto'
+  endif
+-%}
+
+{%- style -%}
+  .ts-hero-custom{
+    position:relative;
+    min-height:560px;
+    overflow:hidden;
+  }
+  .ts-hero-custom .ts-container{
+    width:min(1180px,calc(100% - 36px));
+    margin-inline:auto;
+  }
+  .ts-hero-custom .ts-hero-inner{
+    min-height:560px;
+    display:flex;
+    align-items:center;
+    position:relative;
+    z-index:2;
+  }
+  .ts-hero-custom .ts-hero-copy{max-width:640px}
+  .ts-hero-custom .ts-rating-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:#fff;
+    border-radius:999px;
+    padding:10px 18px;
+    margin-bottom:28px;
+    box-shadow:0 4px 18px rgba(0,0,0,.07);
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:#121212;
+  }
+  .ts-hero-custom .ts-stars{color:#ffb000;letter-spacing:2px}
+  .ts-hero-custom h1{
+    margin:0 0 24px;
+    font-size:36px;
+    font-weight:900;
+    line-height:1.12;
+    letter-spacing:-.9px;
+    color:#121212;
+  }
+  .ts-hero-custom .ts-category-line{
+    max-width:670px;
+    margin-bottom:14px;
+    font-size:18px;
+    font-weight:600;
+    letter-spacing:.4px;
+    line-height:1.45;
+    color:#121212;
+  }
+  .ts-hero-custom .ts-expert-line{
+    max-width:620px;
+    margin:0;
+    font-size:16px;
+    line-height:1.7;
+    color:rgba(18,18,18,.62);
+  }
+  .ts-hero-custom .ts-microcopy{
+    margin:12px 0 0;
+    font-size:14px;
+    color:rgba(18,18,18,.5);
+  }
+
+  #{{ section.id }}{
+    background:
+      linear-gradient(90deg,rgba(250,249,246,.92) 0%,rgba(250,249,246,.72) 30%,rgba(250,249,246,.12) 54%,rgba(250,249,246,0) 72%),
+      {% if section.settings.bg_image != blank %}url('{{ section.settings.bg_image | image_url: width: 1920 }}') center right/cover no-repeat,{% endif %}
+      {{ section.settings.background_color }};
+  }
+
+  @media(max-width:700px){
+    .ts-hero-custom{min-height:auto}
+    #{{ section.id }}{
+      background:
+        linear-gradient(180deg,rgba(250,249,246,.6) 0%,rgba(250,249,246,.25) 26%,rgba(250,249,246,0) 44%),
+        {% if section.settings.bg_mobile_image != blank %}url('{{ section.settings.bg_mobile_image | image_url: width: 1100 }}') {{ section.settings.mobile_bg_position }}/{{ mobile_bg_size }} no-repeat,{% endif %}
+        {% if section.settings.mobile_background != blank %}{{ section.settings.mobile_background }}{% else %}{{ section.settings.background_color }}{% endif %};
+    }
+    .ts-hero-custom .ts-hero-inner{
+      min-height:auto;
+      display:block;
+      padding-top:40px;
+      padding-bottom:380px;
+    }
+    .ts-hero-custom .ts-hero-copy{
+      max-width:100%;
+      text-align:center;
+    }
+    .ts-hero-custom .ts-rating-pill{margin-bottom:22px}
+    .ts-hero-custom h1{
+      font-size:30px;
+      margin-bottom:18px;
+    }
+    .ts-hero-custom .ts-category-line,
+    .ts-hero-custom .ts-expert-line{
+      margin-inline:auto;
+    }
+    .ts-hero-custom .ts-microcopy{
+      color:rgba(18,18,18,.8);
+      font-weight:600;
+    }
+  }
+
+  {% if section.settings.custom_css != blank %}
+    #{{ section.id }} {
+      {{ section.settings.custom_css }}
+    }
+  {% endif %}
+{%- endstyle -%}
+
+<section id="{{ section.id }}" class="ts-hero-custom">
+  <div class="ts-container">
+    <div class="ts-hero-inner">
+      <div class="ts-hero-copy">
+        {% if section.settings.rating_text != blank %}
+          <div class="ts-rating-pill">
+            <span class="ts-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <span>{{ section.settings.rating_text }}</span>
+          </div>
+        {% endif %}
+
+        {% if section.settings.title != blank %}
+          <h1>{{ section.settings.title }}</h1>
+        {% endif %}
+
+        {% if section.settings.category_line != blank %}
+          <div class="ts-category-line">{{ section.settings.category_line }}</div>
+        {% endif %}
+
+        {% if section.settings.expert_line != blank %}
+          <p class="ts-expert-line">{{ section.settings.expert_line }}</p>
+        {% endif %}
+
+        {% if section.settings.microcopy != blank %}
+          <p class="ts-microcopy">{{ section.settings.microcopy }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Lander Hero",
+    "settings": [
+      {
+        "type": "text",
+        "id": "rating_text",
+        "label": "Rating Text",
+        "default": "Älskad av 10 000 kunder"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Hitta doften som får dem att tänka på dig."
+      },
+      {
+        "type": "text",
+        "id": "category_line",
+        "label": "Category Line",
+        "default": "Toppvalet inom designerinspirerade parfymer."
+      },
+      {
+        "type": "text",
+        "id": "expert_line",
+        "label": "Expert Line",
+        "default": "Skapade av samma parfymexperter som står bakom några av världens mest välkända dofter."
+      },
+      {
+        "type": "text",
+        "id": "microcopy",
+        "label": "Microcopy",
+        "default": "Tro oss inte. Testa själv."
+      },
+      {
+        "type": "header",
+        "content": "Background"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background Color",
+        "default": "#faf9f6"
+      },
+      {
+        "type": "image_picker",
+        "id": "bg_image",
+        "label": "Background Image"
+      },
+      {
+        "type": "image_picker",
+        "id": "bg_mobile_image",
+        "label": "Background Mobile Image"
+      },
+      {
+        "type": "select",
+        "id": "mobile_bg_position",
+        "label": "Mobile Image Position",
+        "options": [
+          { "value": "center top", "label": "Center top" },
+          { "value": "center center", "label": "Center" },
+          { "value": "center bottom", "label": "Center bottom" },
+          { "value": "right bottom", "label": "Right bottom" },
+          { "value": "left bottom", "label": "Left bottom" }
+        ],
+        "default": "center top"
+      },
+      {
+        "type": "range",
+        "id": "mobile_bg_zoom",
+        "label": "Mobile Image Zoom",
+        "info": "100% fills the section. Higher values set the image width relative to the section.",
+        "min": 100,
+        "max": 300,
+        "step": 10,
+        "unit": "%",
+        "default": 100
+      },
+      {
+        "type": "color_background",
+        "id": "mobile_background",
+        "label": "Mobile Background Fill",
+        "info": "Shown behind the mobile image. Leave empty to use Background Color."
+      },
+      {
+        "type": "header",
+        "content": "Advanced"
+      },
+      {
+        "type": "textarea",
+        "id": "custom_css",
+        "label": "Custom CSS",
+        "info": "Scoped to this section. Example: h1 { font-size: 40px; }"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Lander Hero"
+      }
+    ]
+  }
+{% endschema %}
