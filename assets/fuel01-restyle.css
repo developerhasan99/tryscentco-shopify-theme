@@ -198,9 +198,9 @@ html.ab-f01-v1 .fuel01--summary,
  * ------------------------------------------------------------------ */
 
 /* The product title, replaced by the variant heading sitting above it. */
-html.ab-f01-v1 .product__info-container:has(.fuel01--heading) .product__title {
+/* html.ab-f01-v1 .product__info-container:has(.fuel01--heading) .product__title {
   display: none !important;
-}
+} */
 
 /* The fixed "Du sparar 670 kr idag" badge, which is the last thing inside
    the price block. The computed summary says the same thing with the real
