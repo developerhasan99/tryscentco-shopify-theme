@@ -1,7 +1,7 @@
 {%- liquid
   assign st = section.settings
   assign grid_pool = st.grid_collection | default: collections['best-sellers']
-  assign variant_ml = '100ml'
+  assign variant_ml = '50ml'
 
   assign b_total = st.bundle_total | plus: 0
   assign b_discount_qty = st.bundle_discount_qty | plus: 0
@@ -278,7 +278,7 @@
           <template x-if="p.compareAt > p.price">
             <s x-text="money(p.compareAt)"></s>
           </template>
-          <span class="sbb-card__size">100 ml</span>
+          <span class="sbb-card__size">50 ml</span>
         </p>
         <button
           type="button"
@@ -693,7 +693,7 @@
         "type": "collection",
         "id": "grid_collection",
         "label": "Scent grid collection",
-        "info": "Defaults to best-sellers. Only 100ml variants are shown."
+        "info": "Defaults to best-sellers. Only 50ml variants are shown."
       },
       {
         "type": "header",
