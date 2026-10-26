@@ -404,7 +404,7 @@
                           {%- assign discount_percent = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round -%}
                         {%- endif -%}
                         <span class="inline-block bg-red-600 text-white text-sm font-bold px-3 py-1">
-                          {{ discount_percent }}% Off
+                          {{ discount_percent }}% rabatt
                         </span>
                       {% endif %}
                       {% if product.tags contains 'bestseller' %}
