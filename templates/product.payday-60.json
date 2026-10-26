@@ -380,6 +380,8 @@
         "price_label": "Nu:",
         "per_bottle_label": "Endast [original_price] [price] per flaska",
         "savings_label": "Spara [amount] idag",
+        "badge_shipping_text": "",
+        "badge_guarantee_text": "60 dagars pengarna tillbaka-garanti",
         "search_placeholder": "Hitta din parfym",
         "cta_label": "Lägg till",
         "empty_text": "Inga dofter matchar din sökning.",
