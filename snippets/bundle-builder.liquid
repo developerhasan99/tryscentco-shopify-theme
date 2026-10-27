@@ -137,13 +137,25 @@
   ></p>
 </div>
 
-<div class="!my-6">
-  <p class="my-0 text-center text-sm font-semibold tracking-normal">
-    Levereras till
-    <span class="shipping_location">{{ localization.country.name }}</span>
-    inom 5 arbetsdagar. Inga tullavgifter.
-  </p>
+<div>
+  <img
+    class="max-w-full mx-auto mt-8 block [filter:grayscale(1)]"
+    src="{{ 'payment-badge.png' | asset_url }}"
+    alt="Payment methods"
+    width="100%"
+    height="auto"
+    loading="lazy">
 </div>
+
+{% unless product.template_suffix == 'cro-deck' %}
+  <div class="!my-6">
+    <p class="my-0 text-center font-semibold tracking-normal">
+      Levereras till
+      <span class="shipping_location">{{ localization.country.name }}</span>
+      inom 5 arbetsdagar.
+    </p>
+  </div>
+{% endunless %}
 
 <script>
   document.addEventListener('alpine:init', function() {
