@@ -174,6 +174,7 @@
         },
         "collapsible_tab_tUEYBx": {
           "type": "collapsible_tab",
+          "disabled": true,
           "settings": {
             "heading": "Varför är era parfymer så billiga?",
             "icon": "perfume",
@@ -186,12 +187,13 @@
           "settings": {
             "heading": "Är det äkta parfym?",
             "icon": "perfume",
-            "content": "<p><strong>Våra dofter är långt ifrån vanligt parfymerat vatten.</strong></p><p>Hos Try Scent erbjuder vi högkvalitativ <strong>Eau de Parfum (EDP) </strong>med en parfymoljekoncentration på <strong>19–21%</strong>.<br/>Det ger en doft som håller länge, känns tydligt och får mer djup på huden.</p><p>Till skillnad från lätta body sprays eller enklare doftvatten är våra kompositioner skapade för att sitta kvar i många timmar, ofta ända till nästa dag.</p><p><em>Du får en intensiv och elegant  doftupplevelse till en bråkdel av priset<br/>jämfört med lyxmärken</em></p>",
+            "content": "<p>Våra dofter går långt utöver enkelt parfymerat vatten. På Try Scent erbjuder vi högkvalitativ Eau de Parfum (EDP) med en parfymoljakoncentration på 19–21 %, vilket garanterar en långvarig doft, utmärkt projektion och djup.</p><p>Till skillnad från lätta kroppssprayer eller parfymerade vatten är våra kompositioner gjorda för att sitta kvar på din hud i många timmar – ofta till och med nästa dag. Du kan njuta av en intensiv, förfinad doftupplevelse till en bråkdel av priset för lyxmärken.</p>",
             "page": ""
           }
         },
         "collapsible_tab_pCrhqV": {
           "type": "collapsible_tab",
+          "disabled": true,
           "settings": {
             "heading": "Våraparfymer är framtagna för att hålla länge.",
             "icon": "perfume",
@@ -214,12 +216,13 @@
           "settings": {
             "heading": "Vadbetyder 19–21% parfymolja?",
             "icon": "perfume",
-            "content": "<p>Procenten visar hur stor del av doften som består av rena parfymoljor.</p><p>Hos Try Scent innehåller våra  arfymer <strong>19–21% parfymolja</strong>, vilket innebär att de ligger i den övre delen av <strong>Eau<br/>de Parfum (EDP)</strong>, en av de mest intensiva dofttyperna för dagligt bruk.</p><p>✔️<strong>Eau de Parfum-kvalitet</strong><br/><br/>Med 19–21% parfymolja får du entydligare, djupare och mer långvarig doft änlättare alternativ.</p><p>✔️<strong>Lång hållbarhet</strong><br/><br/>Den höga koncentrationen gör att doften sitter kvar på huden i många timmar,ofta ända till nästa dag.</p><p>✔️<strong>Bättre projektion och mer djup</strong><br/><br/>Doften utvecklas i lager och behåller sin karaktär längre, i stället för att<br/>försvinna snabbt efter applicering.</p><p><strong>Som jämförelse:</strong></p><p><strong>Eau de Toilette:</strong> oftast cirka 5–15% parfymolja.<br/><br/><strong>Eau de Parfum:</strong> oftast cirka 15–25% parfymolja.<br/><br/><strong>Parfum/Extrait:</strong> ofta 25% eller mer, men<br/>vanligtvis till ett betydligt högre pris.</p><p><strong>Kort sagt:</strong><br/><br/>Med 19–21% får du en intensiv, långvarig och högkvalitativ doftupplevelse, perfekt för dig som vill ha känslan och prestandan av en designerdoft till ett mer rimligt pris.</p>",
+            "content": "<p>Procentandelen anger koncentrationen av rena doftoljor i produkten. I vårt fall betyder 19-21 % parfymkoncentration:</p><p>✔️ Den klassificeras som Eau de Parfum (EDP) — en av de mest intensiva parfymtyperna som finns för dagligt bruk.</p><p>✔️ Högt innehåll av doftoljor säkerställer utmärkt hållbarhet — doften håller sig märkbar på huden i många timmar, ofta till nästa dag.</p><p>✔️ Stark projektion och djup — doften vecklas ut i lager och bibehåller en rik, bestående karaktär. Som jämförelse: 5-15 % doftoljor. 15-25 %, så våra parfymer ligger i den övre delen av denna kategori. 25 %, men är ofta mycket dyrare. Kort sagt: Med 19-21 % får du en intensiv, långvarig och högkvalitativ doftupplevelse — perfekt för alla som vill ha designerliknande prestanda till ett överkomligt pris.</p>",
             "page": ""
           }
         },
         "collapsible_tab_F64PJg": {
           "type": "collapsible_tab",
+          "disabled": true,
           "settings": {
             "heading": "Hur ärparfymerna uppbyggda? (Ingredienser)",
             "icon": "perfume",
@@ -230,9 +233,9 @@
         "collapsible_tab_ydfzCq": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "Ansvarsfriskrivning",
+            "heading": "ANSVARSFRISKRIVNING FÖR JÄMFÖRANDE REKLAM",
             "icon": "star",
-            "content": "<p>Alla doftreferenser är endast avsedda som vägledning och ska under inga<br/>omständigheter förväxlas med originalprodukter från kända designer-, high street- eller niche-varumärken. Namn, varumärken och upphovsrätter, oavsett om de nämns eller inte, tillhör sina respektive tillverkare och/eller designers.</p><p>Våra dofter är endast inspirerade av andra doftprofiler och är inte identiska med någon annan parfym eller originaldoft.</p><p>TryScents parfymer ska inte förväxlas med originalprodukter och vi har ingen<br/>koppling till tillverkarna bakom dessa designer- eller niche-varumärken.</p><p>Alla varumärken, oavsett om de nämns eller inte, tillhör sina respektive ägare. Vi är inte godkända, sponsrade, underhållna av, direkt kopplade till<br/>eller på annat sätt anslutna till någon varumärkesinnehavare som kan refereras till, direkt eller indirekt.</p><p>Användningen av produktnamn sker endast i identifierings- och referenssyfte och innebär inte någon koppling, association eller anknytning till respektive varumärkesinnehavare.</p>",
+            "content": "<p>Observera att produkter som nämns på vår webbplats endast är en vägledning och under inga omständigheter ska förväxlas med faktiska butiker, designers eller nischmärken. Namn och upphovsrätt, använda eller oanvända, tillhör respektive tillverkare och/eller designers. Dessa är helt enkelt inspirationer och är inte \"identiska\" med någon annan doft eller original.</p><p>Tryscent-parfymer ska inte förväxlas med original och vi har ingen anknytning till tillverkarna av dessa namnlösa designermärken. Alla \"varumärken\", använda eller oanvända, tillhör sina respektive ägare. Vi är inte godkända av, direkt anslutna till, underhållna, auktoriserade eller sponsrade av någon varumärkesinnehavare som refereras till eller inte refereras till häri.</p><p>Användningen av något produktnamn är endast i identifierings- och referenssyfte och innebär inte någon koppling till varumärkesinnehavaren.</p>",
             "page": ""
           }
         },
