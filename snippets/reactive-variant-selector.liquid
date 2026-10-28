@@ -63,10 +63,6 @@
   {% endif %}
 {% endif %}
 
-{% render 'fuel01-pdp'
-  , product: product
-  , section: section %}
-
 {% unless product.available %}
   {% comment %} Sold out: notice and an in stock alternative instead of add to cart (snippets/sold-out-alternative.liquid) {% endcomment %}
   {% render 'sold-out-alternative'
