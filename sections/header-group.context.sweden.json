@@ -27,7 +27,7 @@
       "settings": {},
       "blocks": {
         "menu_item_ValjSpara": {
-          "disabled": false,
+          "disabled": true,
           "settings": {
             "label": "Välj & spara",
             "url": "shopify://collections/bundle-save"
