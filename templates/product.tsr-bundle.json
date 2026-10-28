@@ -38,7 +38,6 @@
         },
         "subscribfy_block_product_page_vip_widget_yWfexG": {
           "type": "shopify://apps/subscribfy/blocks/block-product-page-Vip-widget/92b2aa79-0e8b-44a2-8415-48904e56b61e",
-          "disabled": true,
           "settings": {
             "join_title": "10 % rabatt med Tryscent+",
             "join_you_save_label": "Köp mer, spara mer • Månatlig butikskredit • Tidig tillgång till släpp • Gratis parfymer",
