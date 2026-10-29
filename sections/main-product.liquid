@@ -258,15 +258,15 @@
               {%- when 'magic_perfume_atc' -%}
                 {% render 'magic-perfume-atc' %}
               {%- when 'fuel01_heading' -%}
-                <div class="fuel01 fuel01--heading" style="display: none;" {{ block.shopify_attributes }}>
+                <div class="fuel01 fuel01--heading" {{ block.shopify_attributes }}>
                   {% render 'fuel01-bundle', product: product, block: block, mode: 'heading', with_assets: true %}
                 </div>
               {%- when 'fuel01_steps' -%}
-                <div class="fuel01 fuel01--steps" style="display: none;" {{ block.shopify_attributes }}>
+                <div class="fuel01 fuel01--steps" {{ block.shopify_attributes }}>
                   {% render 'fuel01-bundle', product: product, block: block, mode: 'steps' %}
                 </div>
               {%- when 'fuel01_summary' -%}
-                <div class="fuel01 fuel01--summary" style="display: none;" {{ block.shopify_attributes }}>
+                <div class="fuel01 fuel01--summary" {{ block.shopify_attributes }}>
                   {% render 'fuel01-bundle', product: product, block: block, mode: 'summary' %}
                 </div>
               {%- when 'shipping_text' -%}

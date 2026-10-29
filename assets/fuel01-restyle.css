@@ -1,31 +1,14 @@
 /*
- * FUEL_01 bundle builder variant.
- *
- * Everything the variant adds ships hidden. A class on the html element,
- * ab-f01-v1, turns it on. The theme editor shows the new blocks as well, so a
- * strategist can find and configure them, but the editor does not get the
- * restyle of the existing builder: the editor should keep showing the control
- * look of the parts that already ship.
- *
- * Control, meaning any page without ab-f01-v1, gets nothing from this file
- * except the display:none that hides the variant's own blocks.
+ * Bundle builder product page: the heading, steps and summary blocks and the
+ * restyle of the builder itself. Permanent since 2026-09-30, the winner of the
+ * bundle test. Loaded by snippets/fuel01-bundle.liquid on the bundle products.
  */
-
-.fuel01 {
-  display: none !important;
-}
-
-html.ab-f01-v1 .fuel01,
-.shopify-design-mode .fuel01 {
-  display: block !important;
-}
 
 /* ------------------------------------------------------------------ *
  * Variant heading
  * ------------------------------------------------------------------ */
 
-html.ab-f01-v1 .fuel01--heading,
-.shopify-design-mode .fuel01--heading {
+.fuel01--heading {
   margin-bottom: 12px;
 }
 
@@ -61,8 +44,7 @@ html.ab-f01-v1 .fuel01--heading,
  * snippets/builder-v3.liquid: a track, a fill, a line of text under it.
  * ------------------------------------------------------------------ */
 
-html.ab-f01-v1 .fuel01--steps,
-.shopify-design-mode .fuel01--steps {
+.fuel01--steps {
   margin: 16px 0;
 }
 
@@ -111,8 +93,7 @@ html.ab-f01-v1 .fuel01--steps,
  * there is nothing to keep in step here by hand.
  * ------------------------------------------------------------------ */
 
-html.ab-f01-v1 .fuel01--summary,
-.shopify-design-mode .fuel01--summary {
+.fuel01--summary {
   margin: 16px 0;
 }
 
@@ -198,25 +179,25 @@ html.ab-f01-v1 .fuel01--summary,
  * ------------------------------------------------------------------ */
 
 /* The product title, replaced by the variant heading sitting above it. */
-/* html.ab-f01-v1 .product__info-container:has(.fuel01--heading) .product__title {
+.product__info-container:has(.fuel01--heading) .product__title {
   display: none !important;
-} */
+}
 
 /* The fixed "Du sparar 670 kr idag" badge, which is the last thing inside
    the price block. The computed summary says the same thing with the real
    number, so the badge comes out of the variant. Control keeps it exactly
    as it is today. */
-html.ab-f01-v1 .product__info-container:has(.fuel01--summary) .bundle-price-pdp > div:last-child {
+.product__info-container:has(.fuel01--summary) .bundle-price-pdp > div:last-child {
   display: none !important;
 }
 
 /* The list of bottle slots. */
-html.ab-f01-v1 .product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 {
+.product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 {
   gap: 12px;
 }
 
 /* One slot. */
-html.ab-f01-v1 .product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 > div {
+.product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 > div {
   gap: 12px;
   padding: 12px;
   border-width: 1px;
@@ -225,19 +206,19 @@ html.ab-f01-v1 .product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-
   background: #ffffff;
 }
 
-html.ab-f01-v1 .product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 > div:hover {
+.product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 > div:hover {
   border-color: #729e87;
 }
 
 /* A slot with a bottle already in it. The builder marks these with a class
    that is already important, so this one has to be important as well. */
-html.ab-f01-v1 .product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 > div[class~="!border-[#22613A]"] {
+.product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 > div[class~="!border-[#22613A]"] {
   border-color: #729e87 !important;
   background: #fafdf9;
 }
 
 /* The number on the slot. */
-html.ab-f01-v1 .product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 > div > div:first-child {
+.product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 > div > div:first-child {
   width: 28px;
   height: 28px;
   border-radius: 999px;
@@ -247,7 +228,6 @@ html.ab-f01-v1 .product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-
   font-weight: 600;
 }
 
-html.ab-f01-v1
   .product__info-container:has(.fuel01)
   .grid.grid-cols-1.gap-2.mb-4
   > div[class~="!border-[#22613A]"]
@@ -257,23 +237,23 @@ html.ab-f01-v1
 }
 
 /* The empty half of a slot: bottle drawing, "pick a scent", chevron. */
-html.ab-f01-v1 .product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 > div > div:nth-child(2) > svg rect {
+.product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 > div > div:nth-child(2) > svg rect {
   fill: #f6f5f2;
 }
 
-html.ab-f01-v1 .product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 > div > div:nth-child(2) > svg path {
+.product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 > div > div:nth-child(2) > svg path {
   fill: #bebdba;
   stroke: #bebdba;
 }
 
-html.ab-f01-v1 .product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 > div > div:nth-child(2) > div {
+.product__info-container:has(.fuel01) .grid.grid-cols-1.gap-2.mb-4 > div > div:nth-child(2) > div {
   font-size: 16px;
   font-weight: 600;
   color: #000000;
 }
 
 /* The buy button under the slots. */
-html.ab-f01-v1 .product__info-container:has(.fuel01) button[class*="bg-[#22613a]"] {
+.product__info-container:has(.fuel01) button[class*="bg-[#22613a]"] {
   justify-content: center;
   padding: 16px 20px !important;
   border-radius: 8px;
@@ -283,6 +263,6 @@ html.ab-f01-v1 .product__info-container:has(.fuel01) button[class*="bg-[#22613a]
   line-height: 1.25;
 }
 
-html.ab-f01-v1 .product__info-container:has(.fuel01) button[class*="bg-[#22613a]"]:hover {
+.product__info-container:has(.fuel01) button[class*="bg-[#22613a]"]:hover {
   background-color: #0e5427;
 }
