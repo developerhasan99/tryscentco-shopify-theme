@@ -5,43 +5,9 @@
 {%- endcomment -%}
 {%- if request.page_type != 'cart' or 1 -%}
   {%- assign exm_plan_settings = shop.metafields.exison.exison_plan_settings -%}
-  {%- assign exm_widget_cart_page = shop.metafields.exison.exison_widget_cart_page -%}
-  {%- assign exm_widget_cart_page_member = shop.metafields.exison.exison_widget_cart_page_member -%}
 
   {%- assign customer_subscription1 = customer.metafields.exison.customer_subscription1 -%}
   {%- assign customer_subscription2 = customer.metafields.exison.customer_subscription2 -%}
-
-  {% assign VIP_discount_applyed = 0 %}
-  {% assign exm_yousave = 0 %}
-  {%- assign exm_tier_vip_variant = exm_plan_settings.product_variant_id | append: '' -%}
-  {%- assign exm_tier_qty = 0 -%}
-  {%- for exm_tier_item in cart.items -%}
-    {%- assign exm_tier_item_variant = exm_tier_item.variant.id | append: '' -%}
-    {%- unless exm_tier_item_variant == exm_tier_vip_variant -%}
-      {%- assign exm_tier_qty = exm_tier_qty | plus: exm_tier_item.quantity -%}
-    {%- endunless -%}
-  {%- endfor -%}
-  {%- assign exm_tier_value = 10 -%}
-  {%- if exm_tier_qty >= 6 -%}
-    {%- assign exm_tier_value = 30 -%}
-  {%- elsif exm_tier_qty >= 3 -%}
-    {%- assign exm_tier_value = 25 -%}
-  {%- endif -%}
-
-
-  {%- comment -%}
-    Trial price advertised in the disclaimer. Comes from the plan's ft_price (the app's trial fee),
-    converted for the market. Note the Shopify selling plan currently discounts the first order by
-    100%, so checkout charges nothing for month one.
-  {%- endcomment -%}
-  {%- assign exm_first_term_price = '' -%}
-  {%- if exm_plan_settings.ft == '1' and exm_plan_settings.ft_price != blank -%}
-    {%- assign exm_ft_price_value = exm_plan_settings.ft_price | times: 1.0 -%}
-    {%- if exm_ft_price_value > 0 -%}
-      {%- capture exm_first_term_price -%}{% render 'subscribfy-credit-converted', amount: exm_plan_settings.ft_price %}{%- endcapture -%}
-      {%- assign exm_first_term_price = exm_first_term_price | strip -%}
-    {%- endif -%}
-  {%- endif -%}
 
   {%- for item in cart.items -%}
     {%- if item.product.variants[0].id == exm_plan_settings.product_variant_id -%}
@@ -53,29 +19,6 @@
       {%- assign type2-cart-qty = item.quantity -%}
     {%- endif -%}
   {%- endfor -%}
-
-  {%- assign discount1_amount_value = shop.metafields.exison.exison_plan_settings.dv | times: 1.0 -%}
-  {%- assign exm_free_shipping = shop.metafields.exison.exison_plan_settings.fs -%}
-  {%- if shop.metafields.exison.exison_plan_settings.ds == '1' -%}
-    {%- assign discount1_amount_value = 0 -%}
-    {%- assign exm_free_shipping = 0 -%}
-    {%- assign exm_nr_items = cart.item_count | minus: type1-cart-qty | minus: type2-cart-qty -%}
-    {%- assign exm_subtotal = cart.items_subtotal_price | divided_by: 100 | times: 1.0 -%}
-    {%- for rule in shop.metafields.exison.exison_plan_settings.ds_info.rules -%}
-      {%- if shop.metafields.exison.exison_plan_settings.ds_info.discount_rule_type == 'items' -%}
-        {%- if exm_nr_items >= rule.ds_cart_amount -%}
-          {%- assign discount1_amount_value = rule.ds_value | times: 1.0 -%}
-          {%- assign exm_free_shipping = rule.ds_free_shipping -%}
-        {%- endif -%}
-      {%- endif -%}
-      {%- if shop.metafields.exison.exison_plan_settings.ds_info.discount_rule_type == 'amount' -%}
-        {%- if exm_subtotal >= rule.ds_cart_amount %}
-          {%- assign discount1_amount_value = rule.ds_value | times: 1.0 -%}
-          {%- assign exm_free_shipping = rule.ds_free_shipping -%}
-        {%- endif -%}
-      {%- endif -%}
-    {%- endfor -%}
-  {%- endif -%}
 
   {%- if exm_plan_settings.plan_id > 0 -%}
     {%- assign exm_header_font_medium = settings.type_header_font_family | font_modify: 'weight', '500' -%}
@@ -96,40 +39,6 @@
         data-exison-type2-cart="{{data-exison-type2-cart}}"
         data-qty="{{type2-cart-qty}}"
       ></div>
-
-      <!-- Progress widget -->
-      {% if shop.metafields.exison.exison_plan_settings.ds == '1' and exm_widget_cart_page.enable_progress_bar == 1 %}
-        {% assign exm_progress_step = -1 | times: 1.0 %}
-        {% assign exm_steps_size = shop.metafields.exison.exison_plan_settings.ds_info.rules.size | minus: 1.0 %}
-        {% assign last_active_index = -1 %}
-
-        {% assign discount_amount = 0.0 %}
-
-        {% for rule in shop.metafields.exison.exison_plan_settings.ds_info.rules %}
-          {% if shop.metafields.exison.exison_plan_settings.ds_info.discount_rule_type == 'items' %}
-            {% if exm_nr_items >= rule.ds_cart_amount %}
-              {% assign exm_progress_step = exm_progress_step | plus: 1 %}
-              {% assign last_active_index = forloop.index0 %}
-              {% assign discount_amount = rule.ds_value %}
-            {% endif %}
-          {% elsif shop.metafields.exison.exison_plan_settings.ds_info.discount_rule_type == 'amount' %}
-            {% if exm_subtotal >= rule.ds_cart_amount %}
-              {% assign exm_progress_step = exm_progress_step | plus: 1 %}
-              {% assign last_active_index = forloop.index0 %}
-              {% assign discount_amount = rule.ds_value %}
-            {% endif %}
-          {% endif %}
-        {% endfor %}
-
-        {% assign exm_progress_step_percent = exm_progress_step | divided_by: exm_steps_size | times: 100 %}
-
-        {% assign next_index = last_active_index | plus: 1 %}
-        {% if next_index < shop.metafields.exison.exison_plan_settings.ds_info.rules.size %}
-          {% assign next_discount_value = shop.metafields.exison.exison_plan_settings.ds_info.rules[next_index].ds_value %}
-        {% endif %}
-      {% endif %}
-
-      <!-- END Progress widget -->
 
       {%- if customer_subscription1.status == 'ACTIVE' or customer_subscription2.status == 'ACTIVE' -%}
         <div class="exison-widget__Container" id="cartExisonWidgetContainer" style="display:block;">
@@ -155,131 +64,198 @@
             </div>
           </div>
         </div>
-      {%- else -%}
-        {%- if exm_plan_settings.status == '1' or request.design_mode -%}
-          <div class="exison-pick-the-way">Välj hur du handlar</div>
-          <div class="exison-widget__Container" id="cartExisonWidgetContainer" style="display:block;">
-            <div id="cartExisonWidget" class="exison-widget">
-              <div class="exmWidgetBackground">
-                <div class="exmWidgetBackground-col"></div>
-                <div class="exmWidgetBackground-col-member"></div>
-                <div class="exmWidgetBackground-col-non_member"></div>
-              </div>
+      {%- endif -%}
 
-              <div class="norow" style="position: absolute; left: -99999px;">
-                <div class="col col-title"></div>
-                <fieldset>
-                  <label id="setExison" class="{% if data-exison-type1-cart != blank %}exm_active{% endif %}">
-                    <span class="checkmarkPoint"></span>
-                    <span class="title Text--bold"> Tryscent+</span>
-                    <span class="bg"></span>
-                  </label>
-                  <label id="setNoExison" class="{% if data-exison-type1-cart == blank %}exm_active{% endif %}">
-                    <span class="checkmarkPoint"></span>
-                    <span class="title Text--bold">Vanligt pris</span>
-                    <span class="bg"></span>
-                  </label>
-                </fieldset>
-              </div>
-              <div class="exm-row rowOne">
-                <div class="col col-title exm-rowOne-title">
-                  <span class="exm-rowOne-title__inner">
-                    <span class="exm-rowOne-brand">Tryscent+</span>
-                    <span class="exm-rowOne-sub">VIP-medlemskap</span>
-                  </span>
-                </div>
-                <div
-                  id=""
-                  class="col col-member  {% if data-exison-type1-cart != blank %} exm_active {% endif %}"
-                >
-                  <span class="topRowLAbel">
-                    <span class="checkmark"></span>
-                    Gå med i VIP
-                  </span>
-                </div>
-                <div
-                  id=""
-                  class="col col-non_member  {% if data-exison-type1-cart == blank %} exm_active {% endif %}"
-                >
-                  <span class="topRowLAbel">
-                    <span class="checkmark"></span>
-                    Gäst
-                  </span>
-                </div>
-              </div>
+      {%- liquid
+        assign exm_vip_variant_id = exm_plan_settings.product_variant_id
+        assign exm_vip_variant_key = exm_vip_variant_id | append: ''
+        assign exm_plan2_variant_key = shop.metafields.exison.exison_plan_settings2.product_variant_id | append: ''
 
-              <div class="exm-row">
-                <div class="col col-title">Köp mer, spara mer</div>
-                <div class="col col-member  {% if data-exison-type1-cart != blank %} exm_active {% endif %}">
-                  Upp till 30 %
-                </div>
-                <div class="col col-non_member  {% if data-exison-type1-cart == blank %} exm_active {% endif %}">
-                  <span class="xmark-exm" />
-                </div>
-              </div>
+        assign exm_is_member = false
+        if customer_subscription1.status == 'ACTIVE' or customer_subscription2.status == 'ACTIVE'
+          assign exm_is_member = true
+        endif
 
-              <div class="exm-row">
-                <div class="col col-title">Månatlig butikskredit</div>
-                <div class="col col-member  {% if data-exison-type1-cart != blank %} exm_active {% endif %}">
-                  {% render 'subscribfy-price-converted', price: shop.metafields.exison.exison_plan_settings.product_price %}
-                </div>
-                <div class="col col-non_member  {% if data-exison-type1-cart == blank %} exm_active {% endif %}">
-                  <span class="xmark-exm" />
-                </div>
-              </div>
+        assign exm_goods_qty = 0
+        assign exm_has_other_subscription = false
 
-              <div class="exm-row">
-                <div class="col col-title">Tidig tillgång till släpp</div>
-                <div class="col col-member {% if data-exison-type1-cart != blank %} exm_active {% endif %}">
-                  <span class="checkmark-exm" />
-                </div>
-                <div class="col col-non_member  {% if data-exison-type1-cart == blank %} exm_active {% endif %}">
-                  <span class="xmark-exm" />
-                </div>
-              </div>
+        for item in cart.items
+          assign exm_item_key = item.variant.id | append: ''
+          if exm_item_key == exm_vip_variant_key or exm_item_key == exm_plan2_variant_key
+            continue
+          endif
+          if item.selling_plan_allocation.selling_plan.id
+            assign exm_has_other_subscription = true
+          endif
+          assign exm_goods_qty = exm_goods_qty | plus: item.quantity
+        endfor
 
-              <div class="exm-row">
-                <div class="col col-title">Alltid fri frakt</div>
-                <div class="col col-member {% if data-exison-type1-cart != blank %} exm_active {% endif %}">
-                  <span class="checkmark-exm" />
-                </div>
-                <div class="col col-non_member  {% if data-exison-type1-cart == blank %} exm_active {% endif %}">
-                  <span class="xmark-exm" />
-                </div>
-              </div>
+        assign exm_tier = 10
+        if exm_goods_qty >= 6
+          assign exm_tier = 30
+        elsif exm_goods_qty >= 3
+          assign exm_tier = 25
+        endif
 
-              <div class="exm-row rowEnd">
-                <div class="col col-title">Du sparar:</div>
-                <div class="col col-member {% if data-exison-type1-cart != blank %} exm_active {% endif %}">
-                  <div class="rectangle-white one--">{{ exm_tier_value }}%</div>
-                </div>
-                <div class="col col-non_member  {% if data-exison-type1-cart == blank %} exm_active {% endif %}">
-                  <div class="rectangle-white two--">0%</div>
-                </div>
-              </div>
-            </div>
+        assign exm_show_choice = false
+        if exm_plan_settings.status == '1' and exm_vip_variant_id != blank and exm_is_member == false and exm_goods_qty > 0 and exm_has_other_subscription == false
+          assign exm_show_choice = true
+        endif
 
-            <div
-              id="sub-widget-text"
-              class="{% if data-exison-type1-cart == blank %}not_displayed{% endif %}"
-            >
-              <div class="exm-disclaimer">
-                Genom att välja {{ exm_plan_settings.tier_name }} VIP tecknar du ett löpande medlemskap för <b>{% render 'subscribfy-price-converted', price: shop.metafields.exison.exison_plan_settings.product_price %}/månad</b>{% if exm_first_term_price != blank %} (Första provmånaden <b>{{ exm_first_term_price }}</b>){% endif %}.
-              </div>
-            </div>
+        assign exm_proxy_id = 'checkoutExison'
+        if exm_is_member
+          assign exm_proxy_id = 'checkoutMemberExison'
+        endif
 
-            <div class="exm-widget-links">
-              <a href="{{ pages['membership'].url | default: '/pages/membership' }}"> Läs mer om Tryscent+-medlemskapet</a>
-              <a href="/account/login">
-                <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M4.96582 4.80978C4.96582 4.22267 5.19905 3.65961 5.61419 3.24447C6.02934 2.82933 6.5924 2.5961 7.1795 2.5961C7.7666 2.5961 8.32966 2.82933 8.7448 3.24447C9.15995 3.65961 9.39318 4.22267 9.39318 4.80978C9.39318 5.39688 9.15995 5.95994 8.7448 6.37508C8.32966 6.79022 7.7666 7.02345 7.1795 7.02345C6.5924 7.02345 6.02934 6.79022 5.61419 6.37508C5.19905 5.95994 4.96582 5.39688 4.96582 4.80978ZM4.96582 8.13029C4.23195 8.13029 3.52812 8.42182 3.00919 8.94075C2.49026 9.45968 2.19873 10.1635 2.19873 10.8974C2.19873 11.3377 2.37365 11.76 2.68501 12.0714C2.99637 12.3827 3.41866 12.5576 3.85899 12.5576H10.5C10.9403 12.5576 11.3626 12.3827 11.674 12.0714C11.9853 11.76 12.1603 11.3377 12.1603 10.8974C12.1603 10.1635 11.8687 9.45968 11.3498 8.94075C10.8309 8.42182 10.1271 8.13029 9.39318 8.13029H4.96582Z" fill="#0f172a"/>
-                </svg>
-                Logga in
-              </a>
-            </div>
-          </div>
+        assign exm_checkout_url = routes.root_url | append: '/checkout' | replace: '//', '/'
+      -%}
+
+      {%- capture exm_monthly_price -%}
+        {%- render 'subscribfy-price-converted', price: exm_plan_settings.product_price -%}
+      {%- endcapture -%}
+      {%- assign exm_monthly_price = exm_monthly_price | strip -%}
+
+      {%- assign exm_trial_price = '' -%}
+      {%- if exm_plan_settings.ft == '1' and exm_plan_settings.ft_price != blank -%}
+        {%- assign exm_ft_value = exm_plan_settings.ft_price | times: 1.0 -%}
+        {%- if exm_ft_value > 0 -%}
+          {%- capture exm_trial_price -%}
+            {%- render 'subscribfy-credit-converted', amount: exm_plan_settings.ft_price -%}
+          {%- endcapture -%}
+          {%- assign exm_trial_price = exm_trial_price | strip -%}
         {%- endif -%}
       {%- endif -%}
+
+      {%- assign exm_trial_fallback = '20,95 kr' -%}
+      {%- if cart.currency.iso_code == 'EUR' -%}
+        {%- assign exm_trial_fallback = '1,95 €' -%}
+      {%- endif -%}
+
+      <div
+        class="exm-cta"
+        data-exm-cta-block
+        data-exm-vip-variant="{{ exm_vip_variant_id }}"
+        data-exm-vip-plan="{{ exm_plan_settings.plan_id }}"
+      >
+        <a
+          class="exm-cta__btn exm-cta__btn--guest"
+          href="{{ exm_checkout_url }}"
+          data-exm-cta="{% if exm_show_choice %}guest{% else %}plain{% endif %}"
+        >
+          <span class="exm-cta__label">
+            {%- if exm_show_choice -%}
+              Gästkassa
+            {%- else -%}
+              {{ 'sections.cart.checkout' | t }}
+            {%- endif -%}
+          </span>
+          <span class="exm-cta__pay">
+            <img
+              src="{{ 'Klarna_Payment_Badge.svg' | asset_url }}"
+              alt="Klarna"
+              width="46"
+              height="19"
+              loading="lazy">
+            <svg class="exm-cta__pay-swish" width="69" height="24" viewBox="0 0 69 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Swish">
+              <rect width="68.2012" height="23.9997" rx="6" fill="white"/>
+              <path d="M60.8006 7.99925C60.8006 7.79098 60.8388 7.59584 60.9155 7.41364C60.992 7.23143 61.096 7.07251 61.2273 6.93687C61.359 6.80107 61.5158 6.69221 61.689 6.61637C61.8655 6.53819 62.055 6.4992 62.2574 6.4992C62.4626 6.4992 62.6549 6.53819 62.834 6.61637C63.0093 6.69177 63.1682 6.80064 63.3018 6.93687C63.4346 7.07251 63.5392 7.23143 63.6159 7.41364C63.6925 7.59584 63.7308 7.79108 63.7308 7.99925C63.7308 8.20752 63.6925 8.40276 63.6159 8.58497C63.5392 8.76718 63.4346 8.9261 63.3019 9.06162C63.1683 9.1979 63.0094 9.3068 62.8341 9.38223C62.6549 9.46031 62.4627 9.4994 62.2575 9.4994C62.055 9.4994 61.8656 9.46041 61.689 9.38223C61.5158 9.30637 61.359 9.19747 61.2273 9.06162C61.096 8.9261 60.992 8.76718 60.9155 8.58497C60.8388 8.40276 60.8006 8.20752 60.8006 7.99925ZM61.1001 7.99925C61.1001 8.17192 61.1295 8.33217 61.1884 8.48011C61.2442 8.62337 61.3271 8.75454 61.4325 8.86649C61.5367 8.97617 61.6615 9.06415 61.7998 9.12534C61.9408 9.18843 62.0933 9.21993 62.2574 9.21993C62.4243 9.21993 62.5789 9.18843 62.7211 9.12534C62.8607 9.06422 62.9869 8.97627 63.0925 8.86649C63.1993 8.75477 63.2836 8.6236 63.3409 8.48011C63.4011 8.33217 63.4312 8.17192 63.4312 7.99925C63.4312 7.82668 63.4011 7.66643 63.3409 7.51839C63.2836 7.37494 63.1993 7.24381 63.0926 7.13211C62.987 7.02229 62.8608 6.93431 62.7212 6.87316C62.5789 6.81017 62.4243 6.77867 62.2575 6.77867C62.0934 6.77867 61.9408 6.81017 61.7999 6.87316C61.6616 6.93437 61.5367 7.02238 61.4325 7.13211C61.3271 7.244 61.2442 7.37515 61.1884 7.51839C61.1295 7.66643 61.1001 7.82668 61.1001 7.99925ZM61.7567 7.35403C61.7567 7.26364 61.8019 7.2184 61.8922 7.2184H62.3559C62.5036 7.2184 62.6213 7.26087 62.7088 7.34582C62.7964 7.43077 62.8402 7.54588 62.8402 7.69105C62.8402 7.75128 62.8313 7.80473 62.8135 7.85131C62.7973 7.89499 62.7745 7.93591 62.7458 7.97257C62.7185 8.00684 62.6883 8.03485 62.6555 8.05681C62.6226 8.07876 62.5898 8.09374 62.557 8.10195V8.11016C62.5598 8.11303 62.5639 8.11847 62.5693 8.12667C62.5763 8.13454 62.5818 8.14357 62.5857 8.15335C62.5913 8.16566 62.5995 8.18002 62.6103 8.19654L62.8237 8.61164C62.8484 8.65822 62.8539 8.69587 62.8402 8.7247C62.8265 8.75343 62.7964 8.76779 62.7499 8.76779H62.7006C62.6241 8.76779 62.5707 8.73496 62.5406 8.6692L62.3025 8.16781H62.0481V8.63626C62.0481 8.72398 62.0057 8.76779 61.9209 8.76779H61.884C61.7991 8.76779 61.7567 8.72398 61.7567 8.63626V7.35403ZM62.2943 7.95411C62.3738 7.95411 62.4353 7.93082 62.479 7.88424C62.5228 7.83766 62.5447 7.77323 62.5447 7.69105C62.5447 7.61154 62.5228 7.54998 62.479 7.50607C62.4353 7.46227 62.3751 7.44041 62.2984 7.44041H62.0481V7.95411H62.2943ZM50.3314 8.93666C50.7954 8.93666 51.1888 8.99586 51.5118 9.11426C51.8347 9.23275 52.0871 9.34202 52.2691 9.44225C52.4237 9.52433 52.5147 9.63359 52.542 9.77025C52.5693 9.90691 52.5466 10.0526 52.4738 10.2075L52.3374 10.4534C52.2555 10.6175 52.1508 10.7131 52.0234 10.7404C51.8962 10.7678 51.746 10.745 51.5731 10.6721C51.4185 10.5992 51.232 10.5241 51.0137 10.4467C50.7954 10.3692 50.5407 10.3305 50.2495 10.3305C49.9492 10.3305 49.7173 10.3897 49.5535 10.5081C49.3898 10.6266 49.3079 10.7951 49.3079 11.0137C49.3079 11.205 49.3921 11.36 49.5603 11.4784C49.7287 11.5968 49.9425 11.7016 50.2017 11.7927C50.461 11.8837 50.7385 11.9817 51.0342 12.0864C51.3258 12.1893 51.605 12.3245 51.8666 12.4896C52.1229 12.6508 52.3416 12.8651 52.5079 13.1181C52.6761 13.3733 52.7604 13.6967 52.7604 14.0884C52.7604 14.3982 52.699 14.6828 52.5761 14.9425C52.4533 15.2021 52.2759 15.4276 52.0439 15.6189C51.812 15.8102 51.5322 15.9605 51.2047 16.0699C50.8772 16.1792 50.5133 16.2339 50.1131 16.2339C49.549 16.2339 49.0737 16.1518 48.687 15.9878C48.3004 15.8239 48.0025 15.6691 47.7932 15.5233C47.6386 15.4322 47.5521 15.3183 47.534 15.1816C47.5158 15.045 47.5567 14.8992 47.6568 14.7444L47.8205 14.4984C47.9206 14.3527 48.0321 14.2706 48.1549 14.2524C48.2777 14.2342 48.4255 14.2706 48.5984 14.3617C48.7621 14.4528 48.9736 14.5553 49.2329 14.6692C49.4922 14.7831 49.7993 14.84 50.154 14.84C50.4542 14.84 50.6907 14.7762 50.8636 14.6487C51.0365 14.5211 51.1228 14.3481 51.1228 14.1294C51.1228 13.9381 51.0387 13.7855 50.8705 13.6716C50.7021 13.5578 50.4883 13.453 50.229 13.3573C49.9515 13.2549 49.6741 13.1524 49.3967 13.0498C49.1056 12.9428 48.8265 12.8054 48.5642 12.6399C48.3079 12.4788 48.0891 12.2644 47.9229 12.0113C47.7546 11.7562 47.6705 11.4283 47.6705 11.0275C47.6705 10.6903 47.7409 10.3897 47.8819 10.1255C48.0194 9.86532 48.2156 9.64072 48.4551 9.46954C48.6961 9.29646 48.9782 9.16442 49.3012 9.07332C49.624 8.98222 49.9675 8.93666 50.3314 8.93666ZM30.0474 8.93666C30.5114 8.93666 30.9049 8.99586 31.2279 9.11426C31.5507 9.23275 31.8032 9.34202 31.9852 9.44225C32.1398 9.52433 32.2308 9.63359 32.2581 9.77025C32.2854 9.90691 32.2626 10.0526 32.1899 10.2075L32.0534 10.4534C31.9716 10.6175 31.8669 10.7131 31.7395 10.7404C31.6122 10.7678 31.4621 10.745 31.2892 10.6721C31.1346 10.5992 30.9481 10.5241 30.7298 10.4467C30.5114 10.3692 30.2567 10.3305 29.9655 10.3305C29.6653 10.3305 29.4334 10.3897 29.2696 10.5081C29.1059 10.6266 29.024 10.7951 29.024 11.0137C29.024 11.205 29.1081 11.36 29.2764 11.4784C29.4448 11.5968 29.6586 11.7016 29.9178 11.7927C30.1771 11.8837 30.4546 11.9817 30.7502 12.0864C31.0419 12.1893 31.3211 12.3245 31.5826 12.4896C31.839 12.6508 32.0577 12.8651 32.224 13.1181C32.3922 13.3733 32.4763 13.6967 32.4763 14.0884C32.4763 14.3982 32.415 14.6828 32.2922 14.9425C32.1694 15.2021 31.992 15.4276 31.76 15.6189C31.5281 15.8102 31.2483 15.9605 30.9208 16.0699C30.5933 16.1792 30.2293 16.2339 29.8292 16.2339C29.2651 16.2339 28.7898 16.1518 28.4031 15.9878C28.0164 15.8239 27.7186 15.6691 27.5093 15.5233C27.3547 15.4322 27.2682 15.3183 27.25 15.1816C27.2319 15.045 27.2728 14.8992 27.3728 14.7444L27.5366 14.4984C27.6366 14.3527 27.7481 14.2706 27.8709 14.2524C27.9937 14.2342 28.1416 14.2706 28.3145 14.3617C28.4782 14.4528 28.6897 14.5553 28.9489 14.6692C29.2083 14.7831 29.5152 14.84 29.87 14.84C30.1703 14.84 30.4068 14.7762 30.5797 14.6487C30.7525 14.5211 30.8389 14.3481 30.8389 14.1294C30.8389 13.9381 30.7548 13.7855 30.5865 13.6716C30.4182 13.5578 30.2044 13.453 29.9451 13.3573C29.6859 13.2617 29.4083 13.1592 29.1127 13.0498C28.8216 12.9428 28.5426 12.8054 28.2803 12.6399C28.0239 12.4788 27.8052 12.2644 27.639 12.0113C27.4707 11.7562 27.3865 11.4283 27.3865 11.0275C27.3865 10.6903 27.457 10.3897 27.598 10.1255C27.7355 9.86533 27.9317 9.64073 28.1711 9.46954C28.4122 9.29646 28.6943 9.16442 29.0171 9.07332C29.3401 8.98222 29.6836 8.93666 30.0474 8.93666ZM54.9293 6.36768C55.3114 6.36768 55.5025 6.55902 55.5025 6.94159V9.7566C55.5025 9.84771 55.5002 9.92743 55.4957 9.99575C55.4911 10.0641 55.4844 10.1256 55.4751 10.1802C55.4668 10.2345 55.4623 10.2893 55.4616 10.3443H55.4889C55.5708 10.1802 55.6867 10.0139 55.8368 9.84545C55.9869 9.67689 56.1643 9.52433 56.369 9.38767C56.5737 9.25102 56.8057 9.14175 57.065 9.05967C57.3242 8.9777 57.604 8.93677 57.9042 8.93677C58.6774 8.93677 59.2756 9.14627 59.6986 9.56537C60.1217 9.98437 60.3331 10.6585 60.3331 11.5878V15.496C60.3331 15.8787 60.1421 16.07 59.76 16.07H59.1732C58.7911 16.07 58.6001 15.8787 58.6001 15.496V11.9431C58.6001 11.5149 58.5272 11.171 58.3818 10.9113C58.2362 10.6517 57.9451 10.5219 57.5085 10.5219C57.2082 10.5219 56.933 10.5812 56.6829 10.6996C56.4327 10.818 56.2212 10.9796 56.0483 11.1846C55.8755 11.3896 55.7413 11.6334 55.6458 11.9157C55.5503 12.1982 55.5025 12.5034 55.5025 12.8313V15.496C55.5025 15.8787 55.3114 16.07 54.9293 16.07H54.3425C53.9605 16.07 53.7695 15.8787 53.7695 15.496V6.94159C53.7695 6.55891 53.9605 6.36768 54.3426 6.36768H54.9293ZM45.8628 9.10071C46.2358 9.10071 46.4223 9.29205 46.4223 9.67463V15.496C46.4223 15.8787 46.2358 16.07 45.8628 16.07H45.2624C44.8894 16.07 44.7029 15.8787 44.7029 15.496V9.67473C44.7029 9.29205 44.8894 9.10071 45.2624 9.10071H45.8628ZM34.2844 9.10071C34.6301 9.10071 34.8347 9.26928 34.8984 9.6063L36.0174 13.6785C36.0356 13.7788 36.0515 13.8699 36.0651 13.9518C36.0788 14.0339 36.0947 14.1113 36.1129 14.1842C36.1311 14.2662 36.1447 14.3436 36.1539 14.4165H36.1812C36.1903 14.3436 36.2039 14.2662 36.2221 14.1842C36.2403 14.1114 36.2562 14.0339 36.2698 13.9518C36.2835 13.8699 36.304 13.7788 36.3313 13.6785L37.5048 9.6063C37.5685 9.27841 37.7778 9.11436 38.1325 9.11436H38.651C38.9877 9.11436 39.1969 9.27841 39.2788 9.6063L40.4387 13.6785C40.466 13.7788 40.4865 13.8699 40.5001 13.9518C40.5138 14.0339 40.5297 14.1113 40.5478 14.1842C40.5661 14.2662 40.5796 14.3436 40.5889 14.4165H40.6161C40.6261 14.3385 40.6398 14.261 40.6571 14.1842C40.6752 14.1114 40.6912 14.0339 40.7048 13.9518C40.7184 13.8699 40.7389 13.7788 40.7661 13.6785L41.8715 9.6063C41.9534 9.26928 42.1626 9.10071 42.4992 9.10071H43.127C43.3363 9.10071 43.4817 9.15991 43.5636 9.27841C43.6455 9.3968 43.6591 9.55162 43.6046 9.74296L41.8169 15.5917C41.7259 15.9106 41.5122 16.07 41.1756 16.07H40.2613C39.9155 16.07 39.7018 15.906 39.62 15.5781L38.5692 12.0934C38.5422 12.0034 38.5194 11.9122 38.5009 11.8201C38.4847 11.7377 38.4665 11.6556 38.4464 11.5741C38.4291 11.4973 38.4155 11.4198 38.4054 11.3418H38.3781C38.3589 11.419 38.3407 11.4964 38.3236 11.5741C38.3054 11.6469 38.2871 11.729 38.269 11.8201C38.2505 11.9122 38.2278 12.0034 38.2008 12.0934L37.15 15.5781C37.0681 15.906 36.8589 16.07 36.5223 16.07H35.5808C35.2532 16.07 35.044 15.9106 34.953 15.5917L33.1517 9.74296C33.0971 9.55162 33.1131 9.3968 33.1995 9.27841C33.2859 9.15991 33.4292 9.10071 33.6294 9.10071H34.2844Z" fill="#4A4A49"/>
+              <path d="M9.60107 20.1405C13.2247 21.8736 17.6971 21.016 20.3988 17.7967C23.6012 13.981 23.1039 8.29259 19.2879 5.09131L16.7511 8.11397C19.7323 10.6149 20.1209 15.0591 17.6191 18.0401C15.624 20.4168 12.3394 21.2106 9.60107 20.1405Z" fill-rule="evenodd" clip-rule="evenodd" fill="url(#exm-swish-a)"/>
+              <path d="M9.60107 20.1414C13.2247 21.8745 17.6971 21.0168 20.3988 17.7976C20.7243 17.41 21.0168 16.9959 21.2733 16.5595C21.7 13.9082 20.7617 11.1057 18.5546 9.25404C18.0078 8.79467 17.4012 8.41158 16.7515 8.11523C19.7324 10.6162 20.1207 15.06 17.619 18.0408C15.6241 20.4178 12.3397 21.2114 9.60107 20.1414Z" fill-rule="evenodd" clip-rule="evenodd" fill="url(#exm-swish-b)"/>
+              <path d="M17.379 3.85864C13.7553 2.1257 9.28309 2.9834 6.58124 6.20263C3.37883 10.0184 3.87622 15.7068 7.69215 18.908L10.229 15.8854C7.24781 13.3844 6.85917 8.94029 9.36106 5.95928C11.3559 3.58225 14.6404 2.78867 17.3789 3.85874" fill-rule="evenodd" clip-rule="evenodd" fill="url(#exm-swish-c)"/>
+              <path d="M17.379 3.85864C13.7553 2.1257 9.2831 2.9834 6.58125 6.20263C6.25574 6.59021 5.96322 7.00432 5.70673 7.44065C5.28003 10.092 6.21837 12.8944 8.4255 14.7462C8.9723 15.2055 9.57886 15.5886 10.2286 15.885C7.24781 13.384 6.85939 8.94019 9.36107 5.95928C11.3559 3.58225 14.6404 2.78867 17.3789 3.85874" fill-rule="evenodd" clip-rule="evenodd" fill="url(#exm-swish-d)"/>
+              <defs>
+                <linearGradient id="exm-swish-a" x1="20.0332" y1="14.59" x2="16.2009" y2="6.95575" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#EF2131"/>
+                  <stop offset="1" stop-color="#FECF2C"/>
+                </linearGradient>
+                <linearGradient id="exm-swish-b" x1="16.5255" y1="8.11512" x2="9.80749" y2="19.7452" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#FBC52C"/>
+                  <stop offset="0.264" stop-color="#F87130"/>
+                  <stop offset="0.561" stop-color="#EF52E2"/>
+                  <stop offset="1" stop-color="#661EEC"/>
+                </linearGradient>
+                <linearGradient id="exm-swish-c" x1="7.12558" y1="9.51357" x2="10.7986" y2="16.9838" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#78F6D8"/>
+                  <stop offset="0.266" stop-color="#77D1F6"/>
+                  <stop offset="0.554" stop-color="#70A4F3"/>
+                  <stop offset="1" stop-color="#661EEC"/>
+                </linearGradient>
+                <linearGradient id="exm-swish-d" x1="10.6027" y1="15.885" x2="17.2685" y2="4.29474" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#536EED"/>
+                  <stop offset="0.247" stop-color="#54C3EC"/>
+                  <stop offset="0.564" stop-color="#64D769"/>
+                  <stop offset="1" stop-color="#FECF2C"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </span>
+        </a>
+
+        {%- if exm_show_choice -%}
+          <div class="exm-cta__or"><span>eller</span></div>
+
+          <div class="exm-cta__vip">
+            <span class="exm-cta__badge">{{ shop.name }}+ &middot; {{ exm_tier }} % rabatt idag</span>
+
+            <button type="button" class="exm-cta__btn exm-cta__btn--vip" data-exm-cta="vip">
+              Gå med i VIP
+            </button>
+          </div>
+
+          <ul class="exm-cta__perks">
+            <li>
+              <span class="exm-cta__perk-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                  <path d="M12.5153 20.2653L4 11.75V13.4896C4 13.9506 4.18266 14.3942 4.51318 14.716L11.2889 21.4917C11.9673 22.1702 13.072 22.1702 13.7504 21.4917L19.1518 16.0903C19.8303 15.4118 19.8303 14.3072 19.1518 13.6288L12.5153 20.2653Z" fill="currentColor"/>
+                  <path d="M11.2889 17.1431C11.6281 17.4824 12.0717 17.6563 12.5153 17.6563C12.9589 17.6563 13.4025 17.4824 13.7417 17.1431L19.1431 11.7417C19.8216 11.0633 19.8216 9.95863 19.1431 9.28019L12.3674 2.50448C12.0456 2.18266 11.602 2 11.141 2H5.73959C4.78282 2 4 2.78282 4 3.73959V9.14102C4 9.60201 4.18266 10.0456 4.51318 10.3674L11.2889 17.1431ZM5.73959 3.73959H11.141L17.9167 10.5153L12.5153 15.9167L5.73959 9.14102V3.73959Z" fill="currentColor"/>
+                  <path d="M7.69662 6.78777C8.29709 6.78777 8.78386 6.30099 8.78386 5.70053C8.78386 5.10006 8.29709 4.61328 7.69662 4.61328C7.09615 4.61328 6.60938 5.10006 6.60938 5.70053C6.60938 6.30099 7.09615 6.78777 7.69662 6.78777Z" fill="currentColor"/>
+                </svg>
+              </span>
+              Upp till 30 % rabatt
+            </li>
+            <li>
+              <span class="exm-cta__perk-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                  <path d="M17.414 10.4179C18 9.83191 18 8.88991 18 7.00391C18 5.11791 18 4.17591 17.414 3.58991C16.828 3.00391 15.886 3.00391 14 3.00391H10C8.114 3.00391 7.172 3.00391 6.586 3.58991C6 4.17591 6 5.11791 6 7.00391C6 8.88991 6 9.83191 6.586 10.4179C7.172 11.0039 8.114 11.0039 10 11.0039H14C15.886 11.0039 16.828 11.0039 17.414 10.4179ZM13 7.00391C13 7.26912 12.8946 7.52348 12.7071 7.71101C12.5196 7.89855 12.2652 8.00391 12 8.00391C11.7348 8.00391 11.4804 7.89855 11.2929 7.71101C11.1054 7.52348 11 7.26912 11 7.00391C11 6.73869 11.1054 6.48434 11.2929 6.2968C11.4804 6.10926 11.7348 6.00391 12 6.00391C12.2652 6.00391 12.5196 6.10926 12.7071 6.2968C12.8946 6.48434 13 6.73869 13 7.00391Z" stroke-width="1.5" stroke="currentColor"/>
+                  <path d="M18 6.00391C17.2044 6.00391 16.4413 5.68784 15.8787 5.12523C15.3161 4.56262 15 3.79956 15 3.00391M18 8.00391C17.2044 8.00391 16.4413 8.31998 15.8787 8.88259C15.3161 9.44519 15 10.2083 15 11.0039M6 6.00391C6.79565 6.00391 7.55871 5.68784 8.12132 5.12523C8.68393 4.56262 9 3.79956 9 3.00391M6 8.00391C6.79565 8.00391 7.55871 8.31998 8.12132 8.88259C8.68393 9.44519 9 10.2083 9 11.0039M4 21.3919H6.26C7.27 21.3919 8.293 21.4979 9.276 21.6999C11.0311 22.0594 12.8367 22.0993 14.606 21.8179M13.676 18.5209C13.796 18.5069 13.911 18.4912 14.021 18.4739C14.932 18.3289 15.697 17.8409 16.397 17.3119L18.205 15.9469C18.5277 15.7127 18.9163 15.5866 19.315 15.5866C19.7137 15.5866 20.1023 15.7127 20.425 15.9469C20.998 16.3799 21.174 17.0929 20.811 17.6749C20.388 18.3529 19.792 19.2199 19.22 19.7499M13.676 18.5209L13.566 18.5329M13.676 18.5209C13.836 18.4775 13.9828 18.3951 14.103 18.2809C14.2539 18.1507 14.3772 17.9915 14.4655 17.8128C14.5538 17.6341 14.6054 17.4395 14.6171 17.2405C14.6289 17.0416 14.6006 16.8422 14.5339 16.6544C14.4672 16.4665 14.3636 16.294 14.229 16.1469C14.0987 16.0022 13.9469 15.8785 13.779 15.7799C10.982 14.1109 6.629 15.3819 4 17.2469M13.676 18.5209C13.6399 18.529 13.603 18.533 13.566 18.5329M13.566 18.5329C12.9629 18.5933 12.3554 18.5947 11.752 18.5369" stroke-width="1.5" stroke-linecap="round" stroke="currentColor"/>
+                </svg>
+              </span>
+              {{ exm_monthly_price }} kredit/mån
+            </li>
+            <li>
+              <span class="exm-cta__perk-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                  <path d="M17 20.9961C16.1667 20.9961 15.4583 20.7044 14.875 20.1211C14.2917 19.5378 14 18.8294 14 17.9961C14 17.1628 14.2917 16.4544 14.875 15.8711C15.4583 15.2878 16.1667 14.9961 17 14.9961C17.8333 14.9961 18.5417 15.2878 19.125 15.8711C19.7083 16.4544 20 17.1628 20 17.9961C20 18.8294 19.7083 19.5378 19.125 20.1211C18.5417 20.7044 17.8333 20.9961 17 20.9961ZM16.25 13.9961V11.9961H17.75V13.9961H16.25ZM16.25 23.9961V21.9961H17.75V23.9961H16.25ZM20.375 15.6711L19.3 14.6211L20.725 13.1961L21.775 14.2711L20.375 15.6711ZM13.275 22.7711L12.225 21.7211L13.65 20.2961L14.7 21.3461L13.275 22.7711ZM21 18.7461V17.2461H23V18.7461H21ZM11 18.7461V17.2461H13V18.7461H11ZM20.725 22.7711L19.325 21.3461L20.375 20.2961L21.8 21.6961L20.725 22.7711ZM13.625 15.6961L12.225 14.2711L13.275 13.2211L14.7 14.6211L13.625 15.6961ZM5 21.9961C4.45 21.9961 3.97933 21.8004 3.588 21.4091C3.19667 21.0178 3.00067 20.5468 3 19.9961V5.99609C3 5.44609 3.196 4.97543 3.588 4.58409C3.98 4.19276 4.45067 3.99676 5 3.99609H6V1.99609H8V3.99609H16V1.99609H18V3.99609H19C19.55 3.99609 20.021 4.19209 20.413 4.58409C20.805 4.97609 21.0007 5.44676 21 5.99609V9.99609H5V19.9961H9V21.9961H5ZM5 7.99609H19V5.99609H5V7.99609Z" fill="currentColor"/>
+                </svg>
+              </span>
+              Tidig tillgång
+            </li>
+          </ul>
+
+          <p class="exm-cta__terms">
+            {%- if exm_trial_price != blank -%}
+              Testa för {{ exm_trial_price }} &middot; sedan {{ exm_monthly_price }}/mån.
+            {%- else -%}
+              Testa för {{ exm_trial_fallback }} &middot; sedan {{ exm_monthly_price }}/mån.
+            {%- endif %}
+            <a href="{{ pages['membership'].url | default: '/pages/membership' }}">Villkor gäller.</a>
+          </p>
+
+          <p class="exm-cta__methods">Endast kort, Apple Pay eller Google Pay</p>
+        {%- endif -%}
+
+        <button
+          type="button"
+          id="{{ exm_proxy_id }}"
+          name="{{ exm_proxy_id }}"
+          class="exm-cta__proxy"
+          data-exm-cta-proxy
+          tabindex="-1"
+          aria-hidden="true"
+        ></button>
+
+        <p class="exm-cta__error" data-exm-cta-error role="alert"></p>
+      </div>
     </div>
   {%- endif -%}
 {%- endif -%}

@@ -3177,7 +3177,7 @@
         "recurring_totals_with_initial_order_shipping_discount": "Första betalning %{total_price_with_discount}, sedan %{recurring_total}",
         "recurring_totals_with_policies": {
           "first_cycles": {
-            "one": "Första betalning %{total_price}",
+            "one": "Första betalning 20,95 kr",
             "other": "Första %{count} betalningar %{total_price} var och en"
           },
           "following_cycles": ", då %{total_price} varje %{interval}"

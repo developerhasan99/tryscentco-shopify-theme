@@ -405,6 +405,34 @@ document.addEventListener('DOMContentLoaded', exm_inject_vip_info_icon);
 document.addEventListener('subscribfy:VariantChanged', exm_inject_vip_info_icon);
 exm_inject_vip_info_icon();
 
+var EXM_PP_TITLE_PREFIX = 'Upp till 30 %';
+
+function exm_update_pp_title() {
+  document.querySelectorAll('.exm-pp-purchase-vip-item, .exm-pp-active-member-item').forEach(function(item){
+    const title = item.querySelector('.atc_btn_main_label');
+
+    if (!title) {
+      return;
+    }
+
+    title.childNodes.forEach(function(node){
+      if (node.nodeType !== 3) {
+        return;
+      }
+
+      const next = node.nodeValue.replace(/^(\s*)\d+\s*%/, '$1' + EXM_PP_TITLE_PREFIX);
+
+      if (next !== node.nodeValue) {
+        node.nodeValue = next;
+      }
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', exm_update_pp_title);
+document.addEventListener('subscribfy:VariantChanged', exm_update_pp_title);
+exm_update_pp_title();
+
 document.addEventListener('click', function(e){
   if (!e.target.closest('.exm-info-button')) {
     return;
@@ -845,6 +873,282 @@ if (window.location.href.includes('apps/subscribfy-api')) {
   });
 })();
 
+const EXM_CTA_ERROR_TEXT = 'Något gick fel. Försök igen.';
+
+function exm_cta_checkout_url() {
+  const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+
+  return root.replace(/\/$/, '') + '/checkout';
+}
+
+function exm_cta_target(block) {
+  const drawer = block.closest('cart-drawer');
+
+  if (drawer) {
+    return drawer.querySelector('.cart__ctas');
+  }
+
+  const candidates = document.querySelectorAll('.cart__ctas');
+
+  for (let i = 0; i < candidates.length; i++) {
+    if (!candidates[i].closest('cart-drawer')) {
+      return candidates[i];
+    }
+  }
+
+  return null;
+}
+
+let exm_cta_busy = false;
+let exm_cta_busy_timer = null;
+
+function exm_cta_set_busy(busy) {
+  exm_cta_busy = busy;
+
+  clearTimeout(exm_cta_busy_timer);
+
+  document.querySelectorAll('[data-exm-cta-block]').forEach(function(block){
+    block.classList.toggle('exm-cta--busy', busy);
+  });
+
+  if (busy) {
+    exm_cta_busy_timer = setTimeout(function(){
+      exm_cta_set_busy(false);
+    }, 10000);
+  }
+}
+
+function exm_cta_mount() {
+  document.querySelectorAll('[data-exm-cta-block]').forEach(function(block){
+    const target = exm_cta_target(block);
+
+    if (!target) {
+      return;
+    }
+
+    target.querySelectorAll('[data-exm-cta-block]').forEach(function(stale){
+      if (stale !== block) {
+        stale.remove();
+      }
+    });
+
+    if (block.parentElement !== target) {
+      target.appendChild(block);
+    }
+
+    target.querySelectorAll('[name="checkout"]').forEach(function(native){
+      if (!native.closest('[data-exm-cta-block]')) {
+        native.classList.add('exm-cta-replaced');
+      }
+    });
+
+    block.classList.add('is-mounted');
+    block.classList.toggle('exm-cta--busy', exm_cta_busy);
+  });
+}
+
+let exm_cta_mount_timer = null;
+
+function exm_cta_mount_soon() {
+  clearTimeout(exm_cta_mount_timer);
+  exm_cta_mount_timer = setTimeout(exm_cta_mount, 50);
+}
+
+function exm_cta_watch(selector) {
+  const node = document.querySelector(selector);
+
+  if (!node) {
+    return;
+  }
+
+  new MutationObserver(exm_cta_mount_soon).observe(node, { childList: true, subtree: true });
+}
+
+exm_cta_mount();
+
+document.addEventListener('DOMContentLoaded', function(){
+  exm_cta_mount();
+
+  exm_cta_watch('cart-drawer');
+  exm_cta_watch('#main-cart-items');
+  exm_cta_watch('#main-cart-footer');
+
+  if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+    subscribe(PUB_SUB_EVENTS.cartUpdate, exm_cta_mount_soon);
+  }
+});
+
+function exm_cta_fail(error) {
+  console.error('Subscribfy: checkout buttons', error);
+
+  exm_cta_set_busy(false);
+
+  document.querySelectorAll('[data-exm-cta-error]').forEach(function(message){
+    message.textContent = EXM_CTA_ERROR_TEXT;
+  });
+}
+
+let exm_cta_fallback_timer = null;
+
+function exm_cta_proxy() {
+  const proxies = document.querySelectorAll('[data-exm-cta-block] [data-exm-cta-proxy]');
+
+  for (let i = 0; i < proxies.length; i++) {
+    if (proxies[i].isConnected) {
+      return proxies[i];
+    }
+  }
+
+  return null;
+}
+
+function exm_cta_proceed() {
+  const proxy = exm_cta_proxy();
+
+  if (proxy && window.jQuery && window.exmData) {
+    proxy.click();
+
+    exm_cta_fallback_timer = setTimeout(function(){
+      window.location = exm_cta_checkout_url();
+    }, 8000);
+
+    return;
+  }
+
+  window.location = exm_cta_checkout_url();
+}
+
+function exm_cta_cancel_fallback() {
+  clearTimeout(exm_cta_fallback_timer);
+
+  exm_cta_fallback_timer = null;
+}
+
+function exm_cta_reset() {
+  exm_cta_cancel_fallback();
+  exm_cta_set_busy(false);
+
+  document.querySelectorAll('[data-exm-cta-error]').forEach(function(message){
+    message.textContent = '';
+  });
+
+  document.querySelectorAll('.exm_cart__checkout-button').forEach(function(button){
+    button.disabled = false;
+  });
+}
+
+window.addEventListener('pagehide', exm_cta_cancel_fallback);
+
+window.addEventListener('pageshow', function(e){
+  const navigation = window.performance && window.performance.navigation;
+  const restored = e.persisted || (navigation && navigation.type === 2);
+
+  if (!restored) {
+    return;
+  }
+
+  exm_cta_reset();
+  exm_cta_mount();
+});
+
+function exm_cta_post(url, body) {
+  return fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  }).then(function(response){
+    if (!response.ok) {
+      throw new Error(url + ' responded ' + response.status);
+    }
+
+    return response.json();
+  });
+}
+
+function exm_cta_handle(block, mode) {
+  const variantId = Number(block.getAttribute('data-exm-vip-variant') || 0);
+  const planId = Number(block.getAttribute('data-exm-vip-plan') || 0);
+
+  if (!variantId) {
+    exm_cta_proceed();
+
+    return;
+  }
+
+  const cartUrl = (window.routes && window.routes.cart_url) || '/cart';
+
+  fetch(cartUrl + '.js')
+    .then(function(response){ return response.json(); })
+    .then(function(cart){
+      const line = (cart.items || []).find(function(item){
+        return Number(item.variant_id) === variantId;
+      });
+
+      if (mode === 'vip') {
+        if (line) {
+          return null;
+        }
+
+        const item = { id: variantId, quantity: 1 };
+
+        if (planId) {
+          item.selling_plan = planId;
+        }
+
+        exm_eraseCookie('exmcart');
+
+        return exm_cta_post(window.routes.cart_add_url + '.js', { items: [item] });
+      }
+
+      if (!line) {
+        return null;
+      }
+
+      exm_setCookie('exmcart', 'PAYG', 720);
+
+      return exm_cta_post(window.routes.cart_change_url + '.js', { id: line.key, quantity: 0 });
+    })
+    .then(function(){
+      exm_cta_proceed();
+    })
+    .catch(function(error){
+      exm_cta_fail(error);
+    });
+}
+
+document.addEventListener('click', function(e){
+  const trigger = e.target.closest('[data-exm-cta]');
+
+  if (!trigger) {
+    return;
+  }
+
+  const block = trigger.closest('[data-exm-cta-block]');
+
+  if (!block) {
+    return;
+  }
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  if (exm_cta_busy) {
+    return;
+  }
+
+  const mode = trigger.getAttribute('data-exm-cta');
+
+  exm_cta_set_busy(true);
+
+  if (mode !== 'guest' && mode !== 'vip') {
+    exm_cta_proceed();
+
+    return;
+  }
+
+  exm_cta_handle(block, mode);
+}, true);
+
 function exm_setCookie(name, value, hours) {
   var expires = "";
   if (hours) {
@@ -885,6 +1189,11 @@ function exm_eraseCookie(name) {
     {%- capture exm_popup_first_month -%}{% render 'subscribfy-credit-converted', amount: exm_plan_settings.ft_price %}{%- endcapture -%}
     {%- assign exm_popup_first_month = exm_popup_first_month | strip -%}
   {%- endif -%}
+{%- endif -%}
+
+{%- assign exm_popup_trial_fallback = '20,95 kr' -%}
+{%- if cart.currency.iso_code == 'EUR' -%}
+  {%- assign exm_popup_trial_fallback = '1,95 €' -%}
 {%- endif -%}
 
 {%- comment -%}
@@ -929,7 +1238,7 @@ function exm_eraseCookie(name) {
               {%- if exm_popup_first_month != blank -%}
                 Endast <b>{{ exm_popup_first_month }}</b> för första månaden, sedan <b>{{ exm_popup_price }}</b> per månad som blir till butikskredit.
               {%- else -%}
-                Din första månad är <b>gratis</b>, sedan <b>{{ exm_popup_price }}</b> per månad som blir till butikskredit.
+                Endast <b>{{ exm_popup_trial_fallback }}</b> för första månaden, sedan <b>{{ exm_popup_price }}</b> per månad som blir till butikskredit.
               {%- endif -%}
             </div>
 
@@ -988,12 +1297,7 @@ function exm_eraseCookie(name) {
 
               <div class="exm-plan-item">
                 <svg class="exm-plan-item-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 0.90625C6.61553 0.90625 5.26216 1.31679 4.11101 2.08596C2.95987 2.85513 2.06266 3.94838 1.53285 5.22747C1.00303 6.50655 0.86441 7.91402 1.13451 9.27188C1.4046 10.6298 2.07129 11.877 3.05026 12.856C4.02922 13.835 5.2765 14.5017 6.63437 14.7717C7.99224 15.0418 9.39971 14.9032 10.6788 14.3734C11.9579 13.8436 13.0511 12.9464 13.8203 11.7952C14.5895 10.6441 15 9.29072 15 7.90625C15 6.04974 14.2625 4.26926 12.9498 2.9565C11.637 1.64375 9.85652 0.90625 8 0.90625ZM7 10.7013L4.5 8.20125L5.295 7.40625L7 9.11125L10.705 5.40625L11.503 6.19925L7 10.7013Z" fill="#424242"/></svg>
-                <div class="exm-plan-item-description">Prioriterad frakt + VIP-support</div>
-              </div>
-
-              <div class="exm-plan-item">
-                <svg class="exm-plan-item-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 0.90625C6.61553 0.90625 5.26216 1.31679 4.11101 2.08596C2.95987 2.85513 2.06266 3.94838 1.53285 5.22747C1.00303 6.50655 0.86441 7.91402 1.13451 9.27188C1.4046 10.6298 2.07129 11.877 3.05026 12.856C4.02922 13.835 5.2765 14.5017 6.63437 14.7717C7.99224 15.0418 9.39971 14.9032 10.6788 14.3734C11.9579 13.8436 13.0511 12.9464 13.8203 11.7952C14.5895 10.6441 15 9.29072 15 7.90625C15 6.04974 14.2625 4.26926 12.9498 2.9565C11.637 1.64375 9.85652 0.90625 8 0.90625ZM7 10.7013L4.5 8.20125L5.295 7.40625L7 9.11125L10.705 5.40625L11.503 6.19925L7 10.7013Z" fill="#424242"/></svg>
-                <div class="exm-plan-item-description">Personlig parfym var tredje månad</div>
+                <div class="exm-plan-item-description">VIP-support</div>
               </div>
             </div>
 
@@ -1001,7 +1305,7 @@ function exm_eraseCookie(name) {
               {%- if exm_popup_first_month != blank -%}
                 Välj &rsquo;Gå med i VIP&rsquo; i varukorgen för att bli medlem för endast {{ exm_popup_first_month }}. Du kan pausa eller avsluta när som helst.
               {%- else -%}
-                Välj &rsquo;Gå med i VIP&rsquo; i varukorgen för att bli medlem med första månaden gratis. Du kan pausa eller avsluta när som helst.
+                Välj &rsquo;Gå med i VIP&rsquo; i varukorgen för att bli medlem för endast {{ exm_popup_trial_fallback }}. Du kan pausa eller avsluta när som helst.
               {%- endif -%}
             </div>
 

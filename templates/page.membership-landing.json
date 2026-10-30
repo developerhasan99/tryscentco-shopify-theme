@@ -28,7 +28,7 @@
           "type": "step",
           "settings": {
             "title": "Gå med",
-            "description": "Välj ”Gå med i VIP” i varukorgen för att aktivera dina förmåner. Din första månad kostar bara 1,95 €."
+            "description": "Välj ”Gå med i VIP” i varukorgen för att aktivera dina förmåner. Din första månad kostar bara 20,95 kr."
           }
         },
         "step_save": {
@@ -63,7 +63,7 @@
           "type": "perk",
           "settings": {
             "icon": "credit",
-            "title": "14,99 € i månatlig butikskredit",
+            "title": "160 kr i månatlig butikskredit",
             "description": "Din månadsavgift kommer tillbaka till dig som butikskredit. Använd den på vad du vill."
           }
         },
@@ -75,28 +75,12 @@
             "description": "Handla varje ny doft innan den släpps till allmänheten. Första valet, varje gång."
           }
         },
-        "perk_shipping": {
-          "type": "perk",
-          "settings": {
-            "icon": "shipping",
-            "title": "Fri prioriterad frakt",
-            "description": "Gratis för medlemmar. Din order skickas först, varje gång."
-          }
-        },
         "perk_support": {
           "type": "perk",
           "settings": {
             "icon": "support",
             "title": "VIP-kundtjänst",
             "description": "Hoppa över kön. Riktiga människor, riktiga doftråd, snabbt."
-          }
-        },
-        "perk_perfume": {
-          "type": "perk",
-          "settings": {
-            "icon": "gift",
-            "title": "Personlig parfym var tredje månad",
-            "description": "Arbeta personligen med en mästerparfymör för att skapa en doft som bara är din, levererad hem till dig var tredje månad."
           }
         },
         "cmp_discount": {
@@ -110,7 +94,7 @@
         "cmp_credit": {
           "type": "comparison_row",
           "settings": {
-            "label": "14,99 € i månatlig butikskredit",
+            "label": "160 kr i månatlig butikskredit",
             "member_has": true,
             "guest_has": false
           }
@@ -126,15 +110,7 @@
         "cmp_shipping": {
           "type": "comparison_row",
           "settings": {
-            "label": "Prioriterad frakt + VIP-support",
-            "member_has": true,
-            "guest_has": false
-          }
-        },
-        "cmp_perfume": {
-          "type": "comparison_row",
-          "settings": {
-            "label": "Personliga parfymgåvor",
+            "label": "VIP-support",
             "member_has": true,
             "guest_has": false
           }
@@ -149,33 +125,30 @@
         "tier_3",
         "perk_credit",
         "perk_drops",
-        "perk_shipping",
         "perk_support",
-        "perk_perfume",
         "cmp_discount",
         "cmp_credit",
         "cmp_drops",
-        "cmp_shipping",
-        "cmp_perfume"
+        "cmp_shipping"
       ],
       "settings": {
         "hero_brand": "Tryscent+",
         "hero_subtitle": "VIP-medlemskap",
         "hero_heading": "Dofta fantastiskt för mindre, varje månad.",
-        "hero_body": "<p>Ett medlemskap som belönar dig. Förvandla din månadsavgift på 14,99 € till butikskredit och få upp till 30 % rabatt på alla dina ordrar.</p>",
-        "hero_cta_primary_text": "Starta för 1,95 €",
+        "hero_body": "<p>Ett medlemskap som belönar dig. Förvandla din månadsavgift på 160 kr till butikskredit och få upp till 30 % rabatt på alla dina ordrar.</p>",
+        "hero_cta_primary_text": "Starta för 20,95 kr",
         "hero_cta_secondary_text": "LOGGA IN",
         "hero_cta_secondary_link": "",
-        "hero_fine_print": "Första månaden 1,95 € · Pausa eller avsluta när som helst",
+        "hero_fine_print": "Första månaden 20,95 kr · Pausa eller avsluta när som helst",
         "how_eyebrow": "Så fungerar det",
         "how_title": "",
-        "how_fine_print": "Endast 1,95 € första månaden, därefter 14,99 €. Du kan pausa eller avsluta när som helst.",
-        "how_cta_text": "STARTA FÖR 1,95 €",
+        "how_fine_print": "Endast 20,95 kr första månaden, därefter 160 kr. Du kan pausa eller avsluta när som helst.",
+        "how_cta_text": "STARTA FÖR 20,95 kr",
         "perks_eyebrow": "Det här ingår",
         "perks_title": "Exklusiva förmåner,",
         "perks_title_accent": "varje månad.",
         "tiers_title": "Köp mer, spara mer",
-        "tiers_subtitle_prefix": "Up To",
+        "tiers_subtitle_prefix": "Upp till",
         "comparison_eyebrow": "Medlem vs. gäst",
         "comparison_title": "Se vad du",
         "comparison_member_label": "Tryscent+",
@@ -201,7 +174,7 @@
           "type": "faq",
           "settings": {
             "question": "Har Tryscent+ en månadsavgift?",
-            "answer": "<p>Din första månad kostar 1,95 €. Därefter är det fasta 14,99 € per månad — och varje betalning kommer tillbaka till dig som butikskredit att använda på valfri order.</p>"
+            "answer": "<p>Din första månad kostar 20,95 kr. Därefter är det fasta 160 kr per månad, och varje betalning kommer tillbaka till dig som butikskredit att använda på valfri order.</p>"
           }
         },
         "faq_duration": {
@@ -215,14 +188,14 @@
           "type": "faq",
           "settings": {
             "question": "När dras betalningen?",
-            "answer": "<p>Du debiteras 1,95 € när du går med. Därefter dras 14,99 € samma datum månaden efter och sedan varje månad så länge ditt medlemskap är aktivt.</p>"
+            "answer": "<p>Du debiteras 20,95 kr när du går med. Därefter dras 160 kr samma datum månaden efter och sedan varje månad så länge ditt medlemskap är aktivt.</p>"
           }
         },
         "faq_trial_credit": {
           "type": "faq",
           "settings": {
             "question": "Får jag butikskredit för min första månad?",
-            "answer": "<p>Nej. Introduktionsmånaden på 1,95 € omvandlas inte till kredit. Butikskrediten börjar med din första hela månad på 14,99 €.</p>"
+            "answer": "<p>Nej. Introduktionsmånaden på 20,95 kr omvandlas inte till kredit. Butikskrediten börjar med din första hela månad på 160 kr.</p>"
           }
         },
         "faq_use_credit": {
@@ -259,8 +232,8 @@
       ],
       "settings": {
         "banner_title": "Gå med i Tryscent+ på vår bekostnad.",
-        "banner_text": "<p>Din första månad kostar bara 1,95 €. Få upp till 30 % rabatt på alla dina ordrar och se hur förmånerna växer varje månad.</p>",
-        "banner_button_text": "STARTA FÖR 1,95 €",
+        "banner_text": "<p>Din första månad kostar bara 20,95 kr. Få upp till 30 % rabatt på alla dina ordrar och se hur förmånerna växer varje månad.</p>",
+        "banner_button_text": "STARTA FÖR 20,95 kr",
         "banner_disclaimer": "Pausa eller avsluta när som helst",
         "member_banner_title": "Du är med, Tryscent+-medlem.",
         "member_banner_text": "<p>Hantera, pausa eller avsluta ditt medlemskap när som helst från ditt konto.</p>",

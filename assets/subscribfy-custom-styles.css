@@ -1187,3 +1187,218 @@
   visibility: hidden;
 }
 
+
+/* ==========================================================================
+   Cart checkout buttons
+   ========================================================================== */
+.exm-cta {
+  display: none;
+  position: relative;
+  text-align: center;
+}
+
+.exm-cta.is-mounted {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.exm-cta-replaced,
+.exm_subtotal_summary {
+  display: none !important;
+}
+
+.exm-cta--busy {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.exm-cta__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  width: 100%;
+  min-height: 4.8rem;
+  padding: 1.2rem 1.6rem;
+  border: 0;
+  border-radius: 0.6rem;
+  font-family: inherit;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.exm-cta__btn--guest {
+  background-color: #226139;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.exm-cta__btn--guest:hover {
+  background-color: #1b4d2d;
+  color: #ffffff;
+}
+
+.exm-cta__btn--vip {
+  background-color: #0f172a;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+}
+
+.exm-cta__btn--vip:hover {
+  background-color: #1e293b;
+}
+
+.exm-cta__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.exm-cta__pay {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.exm-cta__pay img,
+.exm-cta__pay svg {
+  display: block;
+  height: 1.9rem;
+  width: auto;
+}
+
+.exm-cta__or {
+  position: relative;
+  margin: 0.4rem 0;
+  color: #6b7280;
+  font-size: 1.3rem;
+}
+
+.exm-cta__or::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #e5e7eb;
+}
+
+.exm-cta__or span {
+  position: relative;
+  padding: 0 1.2rem;
+  background-color: #ffffff;
+}
+
+.exm-cta__vip {
+  position: relative;
+  padding-top: 1rem;
+}
+
+.exm-cta__badge {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translate(-50%);
+  z-index: 1;
+  padding: 0.3rem 1rem;
+  border-radius: 4px;
+  background-color: #424242;
+  color: #ffefb1;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.exm-cta__perks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem 0.8rem;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.exm-cta__perks li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  color: #111827;
+  line-height: 1.25;
+  font-size: 11px;
+  text-align: center;
+  text-wrap: balance;
+  font-weight: 700;
+}
+
+.exm-cta__perk-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: #424242;
+}
+
+.exm-cta__perk-icon svg {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+}
+
+.exm-cta__terms,
+.exm-cta__methods {
+  margin: 0;
+  color: black;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.exm-cta__terms a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.exm-cta__proxy {
+  position: absolute;
+  left: -99999px;
+  width: 1px !important;
+  height: 1px;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.exm-cta__error {
+  margin: 0;
+  color: #b3261e;
+  font-size: 1.3rem;
+}
+
+.exm-cta__error:empty {
+  display: none;
+}
+
+@media screen and (max-width: 420px) {
+  .exm-cta__btn {
+    font-size: 1.5rem;
+  }
+
+  .exm-cta__perks li {
+    font-size: 10px;
+  }
+
+  .exm-cta__pay img,
+  .exm-cta__pay svg {
+    height: 1.7rem;
+  }
+}

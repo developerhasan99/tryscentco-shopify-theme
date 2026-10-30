@@ -46,8 +46,8 @@
             class="hf-mlp__hero-img hf-mlp__hero-img--default"
             src="{{ 'membership-banner.jpg' | asset_url }}"
             alt="{{ section.settings.hero_heading | escape }}"
-            width="1080"
-            height="1080"
+            width="750"
+            height="1333"
             loading="eager"
           >
         {%- endif -%}
@@ -201,8 +201,8 @@
             class="hf-mlp__how-img"
             src="{{ 'membership-how-it-works.png' | asset_url }}"
             alt="{{ section.settings.how_eyebrow | escape }}"
-            width="1024"
-            height="1024"
+            width="600"
+            height="600"
             loading="lazy"
           >
         {%- endif -%}
@@ -283,13 +283,13 @@
     { "type": "text", "id": "hero_cta_primary_text", "label": "Primary button text", "default": "GÅ MED I TRYSCENT+" },
     { "type": "text", "id": "hero_cta_secondary_text", "label": "Secondary button text", "info": "Hidden for logged-in customers.", "default": "LOGGA IN" },
     { "type": "url", "id": "hero_cta_secondary_link", "label": "Secondary button link", "info": "Defaults to the account login page." },
-    { "type": "text", "id": "hero_fine_print", "label": "Fine print", "default": "Första månaden 1,95 € · Pausa eller avsluta när som helst" },
+    { "type": "text", "id": "hero_fine_print", "label": "Fine print", "default": "Första månaden 20,95 kr · Pausa eller avsluta när som helst" },
 
     { "type": "header", "content": "How it works" },
     { "type": "text", "id": "how_eyebrow", "label": "Eyebrow", "default": "Så fungerar det" },
     { "type": "text", "id": "how_title", "label": "Title", "default": "Tre enkla steg." },
-    { "type": "text", "id": "how_fine_print", "label": "Fine print", "default": "Endast 1,95 € första månaden, därefter 14,99 €. Du kan pausa eller avsluta när som helst." },
-    { "type": "text", "id": "how_cta_text", "label": "Button text", "default": "STARTA FÖR 1,95 €" },
+    { "type": "text", "id": "how_fine_print", "label": "Fine print", "default": "Endast 20,95 kr första månaden, därefter 160 kr. Du kan pausa eller avsluta när som helst." },
+    { "type": "text", "id": "how_cta_text", "label": "Button text", "default": "STARTA FÖR 20,95 kr" },
     { "type": "image_picker", "id": "how_image", "label": "Image", "info": "Falls back to the built-in Tryscent bottle photo." },
 
     { "type": "header", "content": "Perks" },
@@ -390,21 +390,18 @@
       "category": "Custom",
       "blocks": [
         { "type": "step", "settings": { "title": "Shop", "description": "Add any fragrance you like to your cart: a single 30 ml or a full wardrobe of scents." } },
-        { "type": "step", "settings": { "title": "Join", "description": "Select “Join VIP” at cart to switch on your perks. Your first month is only 1,95 €." } },
+        { "type": "step", "settings": { "title": "Join", "description": "Select “Join VIP” at cart to switch on your perks. Your first month is only 20,95 kr." } },
         { "type": "step", "settings": { "title": "Save", "description": "Save up to 30% on your order. Welcome to Tryscent+ VIP!" } },
         { "type": "discount_tier", "settings": { "label": "Buy 1–2 items", "value": 10 } },
         { "type": "discount_tier", "settings": { "label": "Buy 3–5 items", "value": 25 } },
         { "type": "discount_tier", "settings": { "label": "Buy 6+ items", "value": 30 } },
         { "type": "perk", "settings": { "icon": "credit", "title": "Monthly Store Credit", "description": "Your monthly fee comes straight back to you as store credit. Spend it on anything." } },
         { "type": "perk", "settings": { "icon": "calendar", "title": "Early Access To New Drops", "description": "Shop every new scent before it's available to the public. First pick, every time." } },
-        { "type": "perk", "settings": { "icon": "shipping", "title": "Free Priority Shipping", "description": "Free for members. Your order ships first, every time." } },
         { "type": "perk", "settings": { "icon": "support", "title": "VIP Customer Support", "description": "Skip the queue. Real people, real scent advice, fast." } },
-        { "type": "perk", "settings": { "icon": "gift", "title": "Personalized Perfume Every 3 Months", "description": "Work one-on-one with a master perfumer to craft a fragrance that's yours alone, delivered to your door every 3 months." } },
         { "type": "comparison_row", "settings": { "label": "Save up to 30% every order", "member_has": true, "guest_has": false } },
-        { "type": "comparison_row", "settings": { "label": "14,99 € of monthly store credit", "member_has": true, "guest_has": false } },
+        { "type": "comparison_row", "settings": { "label": "160 kr of monthly store credit", "member_has": true, "guest_has": false } },
         { "type": "comparison_row", "settings": { "label": "Early access to new drops", "member_has": true, "guest_has": false } },
-        { "type": "comparison_row", "settings": { "label": "Priority shipping + VIP support", "member_has": true, "guest_has": false } },
-        { "type": "comparison_row", "settings": { "label": "Personalized perfume gifts", "member_has": true, "guest_has": false } }
+        { "type": "comparison_row", "settings": { "label": "VIP support", "member_has": true, "guest_has": false } }
       ]
     }
   ]
@@ -580,12 +577,10 @@
   height: auto;
 }
 
-/* The mock sizes the hero photo at 350x293. Hold that ratio for the built-in
-   default so it scales with the column; a merchant-picked image keeps its own
-   ratio. */
 .hf-mlp__hero-img--default {
-  aspect-ratio: 350 / 293;
+  aspect-ratio: 350 / 320;
   object-fit: cover;
+  object-position: top;
   border-radius: 12px;
 }
 

@@ -2318,6 +2318,7 @@
         "recurring_totals_with_initial_order_shipping_discount": "Ensimmäinen maksu %{total_price_with_discount}, sitten %{recurring_total}",
         "recurring_totals_with_policies": {
           "first_cycles": {
+            "one": "Ensimmäinen maksu 1.90 €",
             "other": "Ensimmäiset %{count} maksua %{total_price} kukin"
           },
           "following_cycles": ", sitten %{total_price} joka %{interval}"

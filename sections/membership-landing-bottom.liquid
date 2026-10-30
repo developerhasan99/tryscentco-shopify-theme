@@ -42,11 +42,11 @@
           }}
         {%- else -%}
           <img
-            class="hf-mlp-bottom__banner-img"
-            src="{{ 'membership-join.png' | asset_url }}"
+            class="hf-mlp-bottom__banner-img hf-mlp-bottom__banner-img--default"
+            src="{{ 'membership-join.jpg' | asset_url }}"
             alt=""
-            width="1024"
-            height="1024"
+            width="1920"
+            height="1080"
             loading="lazy"
           >
         {%- endif -%}
@@ -133,9 +133,9 @@
       "type": "richtext",
       "id": "banner_text",
       "label": "Body",
-      "default": "<p>Din första månad kostar bara 1,95 €. Få upp till 30 % rabatt på alla dina ordrar och se hur förmånerna växer varje månad.</p>"
+      "default": "<p>Din första månad kostar bara 20,95 kr. Få upp till 30 % rabatt på alla dina ordrar och se hur förmånerna växer varje månad.</p>"
     },
-    { "type": "text", "id": "banner_button_text", "label": "Button text", "default": "STARTA FÖR 1,95 €" },
+    { "type": "text", "id": "banner_button_text", "label": "Button text", "default": "STARTA FÖR 20,95 kr" },
     { "type": "text", "id": "banner_disclaimer", "label": "Disclaimer (under button)", "default": "Pausa eller avsluta när som helst" },
 
     { "type": "header", "content": "CTA banner — active member overrides" },
@@ -181,10 +181,10 @@
       "category": "Custom",
       "blocks": [
         { "type": "faq", "settings": { "question": "How do I join Tryscent+?", "answer": "<p>Use any join button on this page, or select Join VIP in your cart before you check out.</p>" } },
-        { "type": "faq", "settings": { "question": "Does Tryscent+ have a monthly fee?", "answer": "<p>Your first month is 1,95 €. After that it's a flat 14,99 € a month — and every payment comes back to you as store credit you can spend on any order.</p>" } },
+        { "type": "faq", "settings": { "question": "Does Tryscent+ have a monthly fee?", "answer": "<p>Your first month is 20,95 kr. After that it's a flat 160 kr a month and every payment comes back to you as store credit you can spend on any order.</p>" } },
         { "type": "faq", "settings": { "question": "How long do I have to keep my membership?", "answer": "<p>No minimum commitment. Pause or cancel anytime.</p>" } },
-        { "type": "faq", "settings": { "question": "When do I get charged?", "answer": "<p>You're charged 1,95 € when you join. Billing then continues at 14,99 € on the same date the following month and repeats monthly while your membership is active.</p>" } },
-        { "type": "faq", "settings": { "question": "Do I get store credit for my first month?", "answer": "<p>No. The 1,95 € introductory month isn't converted into credit. Store credit starts with your first full month at 14,99 €.</p>" } },
+        { "type": "faq", "settings": { "question": "When do I get charged?", "answer": "<p>You're charged 20,95 kr when you join. Billing then continues at 160 kr on the same date the following month and repeats monthly while your membership is active.</p>" } },
+        { "type": "faq", "settings": { "question": "Do I get store credit for my first month?", "answer": "<p>No. The 20,95 kr introductory month isn't converted into credit. Store credit starts with your first full month at 160 kr.</p>" } },
         { "type": "faq", "settings": { "question": "How can I use my store credit?", "answer": "<p>Apply it at checkout. You choose how much of your available credit goes toward the order.</p>" } },
         { "type": "faq", "settings": { "question": "Does the member discount stack?", "answer": "<p>It stacks with site-wide promotions, but not with member-exclusive sales.</p>" } },
         { "type": "faq", "settings": { "question": "How can I cancel or pause my membership?", "answer": "<p>From your account, go to Manage Membership and choose Pause or Cancel.</p>" } }
@@ -300,6 +300,12 @@
   border-radius: 8px;
 }
 
+.hf-mlp-bottom__banner-img--default {
+  aspect-ratio: 8 / 9;
+  object-fit: cover;
+  object-position: right;
+}
+
 .hf-mlp-bottom__banner-title {
   font-size: 40px;
   line-height: 1.25;
@@ -390,7 +396,7 @@
 }
 
 .hf-mlp-bottom__faq-answer {
-  padding: 0 30px 20px;
+  padding: 0 0px 20px;
   font-size: 13.5px;
   line-height: 1.6;
   color: var(--hf-muted);
