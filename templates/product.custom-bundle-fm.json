@@ -49,6 +49,7 @@
         },
         "fuel01_summary": {
           "type": "fuel01_summary",
+          "disabled": true,
           "settings": {
             "total_label": "Ord. totalpris ([count] × [size] ml)",
             "discount_label": "Paketrabatt",
@@ -62,6 +63,7 @@
         },
         "money_back_MmgCRx": {
           "type": "money_back",
+          "disabled": true,
           "settings": {
             "title": "Prova i 60 dagar, riskfritt.",
             "text": "Färre än 0,5 % av köparna använder vår pengarna-tillbaka-garanti."
