@@ -1,0 +1,1202 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "pm_bundle_save": {
+      "type": "pm-bundle-save",
+      "blocks": {
+        "b1": {
+          "type": "benefit",
+          "settings": {
+            "icon": "drop",
+            "text": "20% parfymolja (Eau de Parfum)"
+          }
+        },
+        "b2": {
+          "type": "benefit",
+          "settings": {
+            "icon": "clock",
+            "text": "Håller 12+ timmar på huden"
+          }
+        },
+        "b3": {
+          "type": "benefit",
+          "settings": {
+            "icon": "leaf",
+            "text": "Inga hårda kemikalier"
+          }
+        },
+        "t3": {
+          "type": "tier",
+          "settings": {
+            "bottles": 3,
+            "max_bottles": 3,
+            "label": "3 flaskor",
+            "tag": "Dag, kväll och helg",
+            "preselected": false
+          }
+        },
+        "t4": {
+          "type": "tier",
+          "settings": {
+            "bottles": 4,
+            "max_bottles": 4,
+            "label": "4 flaskor",
+            "tag": "En för varje tillfälle",
+            "preselected": false
+          }
+        },
+        "t5": {
+          "type": "tier",
+          "settings": {
+            "bottles": 5,
+            "max_bottles": 5,
+            "label": "5 flaskor",
+            "tag": "En för varje vardag",
+            "preselected": false
+          }
+        },
+        "t6": {
+          "type": "tier",
+          "settings": {
+            "bottles": 6,
+            "max_bottles": 20,
+            "label": "6+ flaskor",
+            "tag": "Mest populär",
+            "preselected": true
+          }
+        },
+        "l_men": {
+          "type": "line",
+          "settings": {
+            "group": "men",
+            "label": "Herr",
+            "preselected": false
+          }
+        },
+        "l_women": {
+          "type": "line",
+          "settings": {
+            "group": "women",
+            "label": "Dam",
+            "preselected": false
+          }
+        },
+        "l_unisex": {
+          "type": "line",
+          "settings": {
+            "group": "unisex",
+            "label": "Unisex",
+            "preselected": false
+          }
+        },
+        "mr1": {
+          "type": "mini_review",
+          "settings": {
+            "quote": "Jag är såååå nöjd med allt, dofterna är fantastiska och väldigt lika originalen. De håller riktigt länge!",
+            "name": "Lena A.",
+            "verified": true
+          }
+        },
+        "mr2": {
+          "type": "mini_review",
+          "settings": {
+            "quote": "Jag har köpt parfym till både mig själv och min fru och de luktar riktigt gott. Precis som de dofter de är inspirerade av. Rekommenderas.",
+            "name": "Mattias E.",
+            "verified": true
+          }
+        },
+        "mr3": {
+          "type": "mini_review",
+          "settings": {
+            "quote": "Doften överraskade mig verkligen, den är helt enastående! Jag älskar den, och förpackningen är också väldigt elegant.",
+            "name": "Silvana R.",
+            "verified": true
+          }
+        },
+        "mf1": {
+          "type": "mini_faq",
+          "settings": {
+            "question": "Hur länge håller doften?",
+            "answer": "<p>Över 12 timmar för de flesta. Hur länge den sitter beror på din hud, så spraya på huden och inte på kläderna.</p>"
+          }
+        },
+        "mf2": {
+          "type": "mini_faq",
+          "settings": {
+            "question": "Kan jag blanda olika dofter?",
+            "answer": "<p>Ja. Välj vilka dofter du vill, i vilken kombination du vill. Samma doft kan du lägga till flera gånger.</p>"
+          }
+        },
+        "mf3": {
+          "type": "mini_faq",
+          "settings": {
+            "question": "Vad händer om doften inte passar mig?",
+            "answer": "<p>Du har 60 dagars pengarna-tillbaka-garanti. Är doften inte rätt för dig skickar du tillbaka beställningen.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "t3",
+        "t4",
+        "t5",
+        "t6",
+        "l_men",
+        "l_women",
+        "l_unisex",
+        "mr1",
+        "mr2",
+        "mr3",
+        "mf1",
+        "mf2",
+        "mf3"
+      ],
+      "settings": {
+        "bundle_handle": "bundle-and-save",
+        "bottle_size": "50ml",
+        "pricing_mode": "bundle_product",
+        "bottle_property": "Bottle",
+        "color_scheme": "scheme-1",
+        "show_rating": true,
+        "rating_text": "Över 10 000 verifierade doftälskare",
+        "headline": "Köp fler, <em>spara mer</em>",
+        "subheading": "Sätt ihop ditt eget paket med favoritdofter och spara upp till [max]%",
+        "show_timer": true,
+        "timer_label": "Erbjudandet går ut om",
+        "timer_eyebrow": "Black Month · upp till [max]% rabatt · bara idag",
+        "timer_title": "Rea i 24 timmar",
+        "timer_hrs_label": "tim",
+        "timer_mins_label": "min",
+        "timer_secs_label": "sek",
+        "tiers_heading": "Välj storlek på paketet",
+        "saving_badge": "-[pct]%",
+        "per_bottle_text": "[price] / flaska",
+        "stack_text": "Bara [price] per extra flaska",
+        "scents_heading": "Välj dina [n] dofter",
+        "counter_text": "[x] av [n] valda",
+        "max_text": "Paketet är fullt: [max] flaskor",
+        "search_placeholder": "Sök på märke, tillfälle eller doftfamilj",
+        "lines_heading": "Filtrera dofter",
+        "all_label": "Alla",
+        "search_empty": "Inga dofter matchar din sökning",
+        "search_clear": "Rensa sökning",
+        "empty_text": "Inga dofter i den här gruppen.",
+        "add_label": "Lägg till",
+        "inspired_prefix": "Inspirerad av",
+        "badge_bestseller": "Bästsäljare",
+        "badge_new": "Nyhet",
+        "scroll_hint": "Scrolla för att se fler dofter",
+        "cta_empty": "Välj dina dofter",
+        "cta_more": "Välj [n] till för att fylla ditt paket",
+        "cta_label": "Lägg i varukorgen",
+        "cta_adding": "Lägger i varukorgen...",
+        "error_text": "Något gick fel. Försök igen.",
+        "show_payment_icons": true,
+        "review_interval": 5,
+        "verified_label": "Verifierat köp",
+        "guarantee_heading": "Prova i 60 dagar, riskfritt.",
+        "guarantee_text": "<p>60 dagars pengarna-tillbaka-garanti. Är doften inte rätt för dig skickar du tillbaka beställningen.</p>"
+      }
+    },
+    "pm_bs_benefits": {
+      "type": "pm-bs-benefits",
+      "settings": {
+        "color_scheme": "scheme-5",
+        "heading": "En doft som <em>stannar hos dig</em> hela dagen",
+        "cta_label": "Sätt ihop ditt paket",
+        "ticker_color_scheme": "scheme-3",
+        "ticker_separator": "•",
+        "ticker_speed": 30,
+        "ticker_label": "Därför väljer kunderna oss",
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "g1": {
+          "type": "benefit",
+          "settings": {
+            "icon": "drop",
+            "title": "20% parfymolja",
+            "text": "Eau de Parfum-koncentration, för en doft som märks."
+          }
+        },
+        "g2": {
+          "type": "benefit",
+          "settings": {
+            "icon": "clock",
+            "title": "Håller 12+ timmar",
+            "text": "Hur länge den sitter beror på din hud."
+          }
+        },
+        "g3": {
+          "type": "benefit",
+          "settings": {
+            "icon": "leaf",
+            "title": "Inga hårda kemikalier",
+            "text": "Ingen stickande spritlukt."
+          }
+        },
+        "g4": {
+          "type": "benefit",
+          "settings": {
+            "icon": "shield",
+            "title": "60 dagars garanti",
+            "text": "Inte din doft? Pengarna tillbaka inom 60 dagar."
+          }
+        },
+        "g5": {
+          "type": "ticker_item",
+          "settings": {
+            "text": "Håller 12+ timmar"
+          }
+        },
+        "g6": {
+          "type": "ticker_item",
+          "settings": {
+            "text": "20% parfymolja"
+          }
+        },
+        "g7": {
+          "type": "ticker_item",
+          "settings": {
+            "text": "Eau de Parfum"
+          }
+        },
+        "g8": {
+          "type": "ticker_item",
+          "settings": {
+            "text": "60 dagars pengarna-tillbaka-garanti"
+          }
+        },
+        "g9": {
+          "type": "ticker_item",
+          "settings": {
+            "text": "Skickas inom 24 timmar"
+          }
+        },
+        "p1": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/mgx_real_067_smile.jpg"
+          }
+        },
+        "p2": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/mgx_real_252_desk.jpg"
+          }
+        },
+        "p3": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.55_AM.jpg"
+          }
+        },
+        "p4": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/mgx_real_461_hand.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "g1",
+        "g2",
+        "g3",
+        "g4",
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "g5",
+        "g6",
+        "g7",
+        "g8",
+        "g9"
+      ]
+    },
+    "pm_bs_strength_tabs": {
+      "type": "pm-bs-strength-tabs",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "kicker": "Koncentration",
+        "title": "Därför spelar koncentrationen roll",
+        "subtitle": "Eau de Toilette innehåller mycket mindre doftolja än Eau de Parfum. Våra dofter har 20%.",
+        "default_tab": 3,
+        "row_strength_label": "Styrka",
+        "row_longevity_label": "Hållbarhet",
+        "row_oil_label": "Doftolja",
+        "row_summary_label": "Det här får du",
+        "footnote": "Typiska koncentrationer per parfymtyp. Hur länge doften sitter beror på din hud.",
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "t1": {
+          "type": "tab",
+          "settings": {
+            "label": "Eau de Toilette",
+            "sublabel": "De flesta märken",
+            "is_ours": false,
+            "oil": "5-15% doftolja",
+            "summary": "Betydligt mindre doftolja än en Eau de Parfum.",
+            "strength": "Lätt",
+            "longevity": "Oftast 4-6 timmar"
+          }
+        },
+        "t2": {
+          "type": "tab",
+          "settings": {
+            "label": "MagyX",
+            "sublabel": "Våra parfymer, Eau de Parfum",
+            "is_ours": true,
+            "strength": "Tydlig utan att ta över",
+            "longevity": "Över 12 timmar",
+            "oil": "20% parfymolja",
+            "summary": "20% parfymolja i varje flaska. Du betalar för doften, inte för namnet."
+          }
+        },
+        "t_edp": {
+          "type": "tab",
+          "settings": {
+            "label": "Eau de Parfum",
+            "sublabel": "De flesta märken",
+            "is_ours": false,
+            "strength": "Måttlig",
+            "longevity": "Oftast 6-8 timmar",
+            "oil": "15-25% doftolja",
+            "summary": "Mer doftolja än en Eau de Toilette, men du betalar fortfarande för märkesnamnet."
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t_edp",
+        "t2"
+      ]
+    },
+    "pm_bs_vs_split": {
+      "type": "pm-bs-vs-split",
+      "settings": {
+        "image": "shopify://shop_images/Magyx_Website_01.webp",
+        "color_scheme": "scheme-5",
+        "title": "Mer än <em>en vanlig dupe</em>",
+        "subtitle": "Jämför med andra märken som säljer inspirerade dofter.",
+        "brand": "MagyX",
+        "dupe_title": "Andra märken",
+        "their_title": "Designerparfymer",
+        "btn_text": "Sätt ihop ditt paket",
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "v1": {
+          "type": "our_point",
+          "settings": {
+            "icon": "drop",
+            "text": "20% parfymolja"
+          }
+        },
+        "v2": {
+          "type": "our_point",
+          "settings": {
+            "icon": "clock",
+            "text": "Över 12 timmar på huden"
+          }
+        },
+        "v3": {
+          "type": "our_point",
+          "settings": {
+            "icon": "leaf",
+            "text": "Inga hårda kemikalier"
+          }
+        },
+        "v4": {
+          "type": "our_point",
+          "settings": {
+            "icon": "truck",
+            "text": "Skickas inom 24 timmar"
+          }
+        },
+        "v5": {
+          "type": "our_point",
+          "settings": {
+            "icon": "shuffle",
+            "text": "Blanda fritt i ett paket"
+          }
+        },
+        "v6": {
+          "type": "our_point",
+          "settings": {
+            "icon": "shield",
+            "text": "60 dagars pengarna-tillbaka-garanti"
+          }
+        },
+        "v7": {
+          "type": "dupe_point",
+          "settings": {
+            "text": "Ofta Eau de Toilette med 15% doftolja eller mindre"
+          }
+        },
+        "v8": {
+          "type": "dupe_point",
+          "settings": {
+            "text": "Märks i 3-4 timmar"
+          }
+        },
+        "v9": {
+          "type": "dupe_point",
+          "settings": {
+            "text": "Innehållet redovisas sällan"
+          }
+        },
+        "v10": {
+          "type": "dupe_point",
+          "settings": {
+            "text": "Lång leveranstid"
+          }
+        },
+        "v11": {
+          "type": "dupe_point",
+          "settings": {
+            "text": "Kort eller ingen returrätt"
+          }
+        }
+      },
+      "block_order": [
+        "v1",
+        "v2",
+        "v3",
+        "v4",
+        "v5",
+        "v6",
+        "v7",
+        "v8",
+        "v9",
+        "v10",
+        "v11"
+      ]
+    },
+    "pm_bs_review_carousel": {
+      "type": "pm-bs-review-carousel",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "heading": "Doften som blir märkt",
+        "subheading": "Kunderna om vad som hände efter första sprayen",
+        "rating_text": "Över 10 000 verifierade doftälskare",
+        "verified_text": "Verifierat köp",
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "r_1": {
+          "type": "review",
+          "settings": {
+            "quote": "Parfymer av riktigt bra kvalitet till lågt pris!! Jag kommer absolut att beställa mer. Jag sprayade en gång på armen bara för att testa och kunde känna doften i flera timmar!!!! Riktigt bra service. Rekommenderar!!",
+            "author": "Julia P.",
+            "rating": 5,
+            "verified": true,
+            "image": "shopify://shop_images/mgx_real_461_raised.jpg"
+          }
+        },
+        "r_2": {
+          "type": "review",
+          "settings": {
+            "quote": "Ärligt talat blev jag förvånad över hur bra den här är. Kvaliteten är imponerande, doften sitter i flera timmar och den ligger otroligt nära originalet. Hade ingen sagt något hade jag aldrig märkt skillnad. Det som gör det ännu bättre är priset. Att få så här bra parfym utan att betala för lyxmärket känns helt rimligt. Klart värt det, och jag kommer att beställa igen.",
+            "author": "Luciana R.",
+            "rating": 5,
+            "verified": true,
+            "image": "shopify://shop_images/mgx_real_067_flatlay.jpg"
+          }
+        },
+        "r_3": {
+          "type": "review",
+          "settings": {
+            "quote": "Jag beställde två parfymer och är riktigt imponerad. Dofterna är väldigt lika originalen och kvaliteten överträffade mina förväntningar. Dessutom var servicen snabb och proffsig. Jag är jättenöjd med köpet och kan varmt rekommendera er till andra. Tack för en fantastisk upplevelse.",
+            "author": "Amran T.",
+            "rating": 5,
+            "verified": true,
+            "image": "shopify://shop_images/mgx_real_211_pair.jpg"
+          }
+        },
+        "r_4": {
+          "type": "review",
+          "settings": {
+            "quote": "Min dejt trodde på allvar att det var Tom Ford. Den håller dessutom kanske en timme eller två längre, vilket är otroligt, särskilt för det här priset.",
+            "author": "Nick D.",
+            "rating": 5,
+            "verified": true,
+            "image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.37_AM.jpg"
+          }
+        },
+        "r_5": {
+          "type": "review",
+          "settings": {
+            "quote": "Jag har använt Acqua di Giò i flera år och den här fångar exakt samma fräscha havskänsla. Krispig citrus, salta marina toner och en träig botten, ärligt talat kan jag inte känna någon skillnad. Bäst av allt? Priset. Nu kan jag äntligen spraya hur mycket jag vill utan att oroa mig.",
+            "author": "Michael D.",
+            "rating": 5,
+            "verified": true,
+            "image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.33.40_AM.jpg"
+          }
+        },
+        "r_6": {
+          "type": "review",
+          "settings": {
+            "quote": "Det här är andra gången jag beställer! Bra parfymer som luktar gott och håller länge. Min favorit är körsbärsparfymen, den luktar supergott!",
+            "author": "Tina H.",
+            "rating": 5,
+            "verified": true,
+            "image": "shopify://shop_images/mgx_real_260_presenting.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "r_1",
+        "r_2",
+        "r_3",
+        "r_4",
+        "r_5",
+        "r_6"
+      ]
+    },
+    "pm_bs_compare_table": {
+      "type": "pm-bs-compare-table",
+      "settings": {
+        "ours_image": "shopify://shop_images/Magyx_Website_07.webp",
+        "color_scheme": "scheme-1",
+        "kicker": "Jämförelse",
+        "title": "Därför väljer folk <em>MagyX</em>",
+        "ours_sub": "MagyX",
+        "theirs_label": "Designerparfymer",
+        "btn_text": "Sätt ihop ditt paket",
+        "guarantee": "60 dagars pengarna-tillbaka-garanti",
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "c1": {
+          "type": "row",
+          "settings": {
+            "label": "Pris",
+            "ours": "Du betalar för doften, inte för reklamen",
+            "theirs": "Du betalar för märkesnamnet"
+          }
+        },
+        "c2": {
+          "type": "row",
+          "settings": {
+            "label": "Doftolja",
+            "ours": "20% parfymolja",
+            "theirs": "Beror på märke och parfymtyp"
+          }
+        },
+        "c5": {
+          "type": "row",
+          "settings": {
+            "label": "Hållbarhet",
+            "ours": "Över 12 timmar på huden",
+            "theirs": "Oftast 4-6 timmar"
+          }
+        },
+        "c6": {
+          "type": "row",
+          "settings": {
+            "label": "Garanti",
+            "ours": "60 dagars pengarna-tillbaka-garanti",
+            "theirs": "Sällan retur efter öppnad flaska"
+          }
+        }
+      },
+      "block_order": [
+        "c2",
+        "c5",
+        "c6",
+        "c1"
+      ]
+    },
+    "pm_bs_faq": {
+      "type": "pm-bs-faq",
+      "settings": {
+        "color_scheme": "scheme-5",
+        "title": "Vanliga frågor",
+        "closing_text": "<p>Har du en annan fråga? <a href=\"/policies/contact-information\">Skriv till oss</a>.</p>",
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "Vad är en inspirerad doft?",
+            "answer": "<p>En doft med samma noter och samma doftfamilj som en känd parfym. Det är inte originalet.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "Hur mycket doftolja innehåller parfymerna?",
+            "answer": "<p>20% parfymolja, samma nivå som en Eau de Parfum. Doften märks tydligt och sitter länge utan att ta över.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "Hur länge håller doften?",
+            "answer": "<p>Över 12 timmar för de flesta. Hur länge den sitter beror på din hud, så spraya på huden och inte på kläderna.</p>"
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "Kan jag blanda olika dofter i paketet?",
+            "answer": "<p>Ja. Välj vilka dofter du vill, i vilken kombination du vill, och samma doft flera gånger. Priset beror bara på hur många flaskor paketet har.</p>"
+          }
+        },
+        "q5": {
+          "type": "question",
+          "settings": {
+            "question": "Var tillverkas parfymerna?",
+            "answer": "<p>I EU.</p>"
+          }
+        },
+        "q6": {
+          "type": "question",
+          "settings": {
+            "question": "Varför är era dofter så billiga?",
+            "answer": "<p>Vi lägger pengarna på doften. Inga lyxflaskor, inga dyra förpackningar, inga butikshyror och inga dyra influencersamarbeten. Så kan du dofta lyx utan att det kostar skjortan.</p>"
+          }
+        },
+        "q7": {
+          "type": "question",
+          "settings": {
+            "question": "När får jag min beställning?",
+            "answer": "<p>Vi skickar inom 24 timmar. Leveranstid och fraktalternativ ser du i kassan.</p>"
+          }
+        },
+        "q8": {
+          "type": "question",
+          "settings": {
+            "question": "Vad händer om doften inte passar mig?",
+            "answer": "<p>Du har 60 dagars pengarna-tillbaka-garanti. Är doften inte rätt för dig skickar du tillbaka beställningen.</p>"
+          }
+        },
+        "q9": {
+          "type": "question",
+          "settings": {
+            "question": "Är det här originalparfymer från kända märken?",
+            "answer": "<p>Nej. Det är dofter inspirerade av kända kompositioner. MagyX har ingen koppling till märkena som nämns och rekommenderas inte av dem.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8",
+        "q9"
+      ]
+    },
+    "pm_bs_ugc_grid": {
+      "type": "pm-bs-ugc-grid",
+      "blocks": {
+        "video_1": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/b58364a24e90479d995c8cc6dc96a73b/b58364a24e90479d995c8cc6dc96a73b.SD-480p-1.5Mbps-92843392.mp4?v=0",
+            "poster_url": "https://tryscent.co/cdn/shop/files/preview_images/b58364a24e90479d995c8cc6dc96a73b.thumbnail.0000000000.jpg?v=1787894772&width=600",
+            "product": "magic-perfume-no-469w"
+          }
+        },
+        "video_2": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/f5fcc4ff10f64169ae5095bfe2f58bcc/f5fcc4ff10f64169ae5095bfe2f58bcc.SD-480p-1.5Mbps-92843390.mp4?v=0",
+            "poster_url": "https://tryscent.co/cdn/shop/files/preview_images/f5fcc4ff10f64169ae5095bfe2f58bcc.thumbnail.0000000000.jpg?v=1787894759&width=600",
+            "product": "magic-perfume-no-360m"
+          }
+        },
+        "video_3": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/5a878e22b12744d19421b651e8d4a241/5a878e22b12744d19421b651e8d4a241.SD-480p-1.5Mbps-93044584.mp4?v=0",
+            "poster_url": "https://tryscent.co/cdn/shop/files/preview_images/5a878e22b12744d19421b651e8d4a241.thumbnail.0000000000.jpg?v=1788153261&width=600",
+            "product": "034w-yves-saint-laurent-libre-ersatz"
+          }
+        },
+        "video_4": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/818572396d674cd5910b24ef0fe6a1a3/818572396d674cd5910b24ef0fe6a1a3.SD-480p-1.5Mbps-92843389.mp4?v=0",
+            "poster_url": "https://tryscent.co/cdn/shop/files/preview_images/818572396d674cd5910b24ef0fe6a1a3.thumbnail.0000000000.jpg?v=1787894737&width=600",
+            "product": "saffron-rose-amber-50-ml-1-7-fl-oz"
+          }
+        },
+        "video_5": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/baa8d6ccc21d4d4683ac5ee1a7ac4100/baa8d6ccc21d4d4683ac5ee1a7ac4100.SD-480p-1.5Mbps-93044583.mp4?v=0",
+            "poster_url": "https://tryscent.co/cdn/shop/files/preview_images/baa8d6ccc21d4d4683ac5ee1a7ac4100.thumbnail.0000000000.jpg?v=1788153263&width=600",
+            "product": "white-florals-amber-50-ml-1-7-fl-oz"
+          }
+        }
+      },
+      "block_order": [
+        "video_1",
+        "video_2",
+        "video_3",
+        "video_4",
+        "video_5"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "rating_text": "Över 10 000 verifierade doftälskare",
+        "heading": "Doften som får folk att vända sig om",
+        "subheading": "Från diskreta blickar till komplimanger",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "massive_review_section": {
+      "type": "pm-bs-massive-review",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "background_color": "#ffffff",
+        "heading": "Älskad av över 10 000 doftälskare",
+        "review_text": "Över 10 000 verifierade doftälskare",
+        "verified_text": "Verifierad köpare",
+        "initial_count": 26,
+        "columns_desktop": "3",
+        "columns_mobile": "1",
+        "button_text": "Visa fler recensioner",
+        "loading_text": "Laddar recensioner...",
+        "padding_top": 72,
+        "padding_bottom": 72
+      },
+      "blocks": {
+        "review_sv_01": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Ärligt talat blev jag förvånad över hur bra den här är. Kvaliteten är imponerande, doften sitter i flera timmar och den ligger otroligt nära originalet. Hade ingen sagt något hade jag aldrig märkt skillnad. Det som gör det ännu bättre är priset. Att få så här bra parfym utan att betala för lyxmärket känns helt rimligt. Klart värt det, och jag kommer att beställa igen.\"</p>",
+            "author": "Luciana R.",
+            "date": "för 7 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_02": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Blev positivt överraskad av kvaliteten på dofterna. De håller mycket längre än jag trodde och flaskorna är snygga också. Jag har redan fått flera komplimanger när jag haft dem på mig. Beställningen gick smidigt och jag är jättenöjd med köpet. Jag kommer absolut att testa fler dofter framöver!\"</p>",
+            "author": "Alina M.",
+            "date": "för 4 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_03": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag köpte och testade Jean Paul Gaultier-doften. Jag är otroligt imponerad!! Doften är helt klockren och den håller hela dagen. Jag har 55 olika originaldofter i min samling, men ingen av dem kan mäta sig med den här. Wow.\"</p>",
+            "author": "Steen J.",
+            "date": "för 6 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_04": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag blev förvånad över hur länge parfymerna håller, det hade jag inte väntat mig för det priset. Jag tar på mig den på morgonen och när jag drar av mig skjortan på kvällen känner jag fortfarande doften. Rekommenderas om du letar efter alternativ till lyxparfymer.\"</p>",
+            "author": "Maria F.",
+            "date": "för 5 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_05": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Blev riktigt förvånad över hur bra parfymen är, och den håller bra. Jag har handlat två gånger hittills och kommer tillbaka när förrådet tar slut 😀\"</p>",
+            "author": "Pernille O.",
+            "date": "för 5 månader sedan",
+            "rating": 4,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_06": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Kvaliteten på doften överraskade mig positivt. Den luktar väldigt likt lyxparfymer men kostar mycket mindre. Den håller länge och känns elegant, jag tycker verkligen om att använda den varje dag. Ett riktigt bra alternativ om du älskar exklusiva dofter men inte vill betala de höga priserna.\"</p>",
+            "author": "Tetiana H.",
+            "date": "för 7 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_07": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag har använt Acqua di Giò i flera år och den här fångar exakt samma fräscha havskänsla. Krispig citrus, salta marina toner och en träig botten, ärligt talat kan jag inte känna någon skillnad. Bäst av allt? Priset. Nu kan jag äntligen spraya hur mycket jag vill utan att oroa mig.\"</p>",
+            "author": "Michael D.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_08": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag blev faktiskt riktigt överraskad av hur bra den här parfymen är. Doften är välbalanserad, mjuk och långvarig utan att bli för stark. Den har en ren och elegant känsla som funkar både till vardags och till finare tillfällen. Jag märkte också att den utvecklas fint efter ett tag, vilket gör den ännu roligare att ha på sig. Allt som allt är jag jättenöjd och rekommenderar den gärna till alla som letar efter något unikt och av hög kvalitet.\"</p>",
+            "author": "Zein H.",
+            "date": "för 7 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_09": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Min dejt trodde på allvar att det var Tom Ford. Den håller dessutom kanske en timme eller två längre, vilket är otroligt, särskilt för det här priset.\"</p>",
+            "author": "Nick D.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_10": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Håller längre än jag trodde. Den sitter i stabila 6 till 7 timmar på mig, vilket är bättre än originalet för min del. Den märks lagom mycket, varken för stark eller för svag.\"</p>",
+            "author": "Peter S.",
+            "date": "för 1 år sedan",
+            "rating": 4,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_11": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag älskade verkligen min doft! Jag testade den som är inspirerad av YSL Libre, och jag gillade den faktiskt mycket mer än originalet från YSL!\"</p>",
+            "author": "A'Miracle F.",
+            "date": "för 9 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_12": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Ett riktigt fynd! Har du jämfört med Imagination sida vid sida är det knappt någon skillnad, och alla andra säger bara ”fan vad gott du luktar”. Önskar att jag hade hittat den här tidigare!!!\"</p>",
+            "author": "Eric M.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_13": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag är såååå nöjd med allt, dofterna är fantastiska och väldigt lika originalen. De håller riktigt länge!\"</p>",
+            "author": "Lena A.",
+            "date": "för 4 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_14": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag letade efter en viss parfym och fick hjälp att hitta den. Den var precis vad jag ville ha och sitter i över 12 timmar! Jag får bara komplimanger. Tack!\"</p>",
+            "author": "Rozhin D.",
+            "date": "för 2 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_15": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Lite räcker långt. Första gången sprayade jag alldeles för mycket, den här är stark! Nu kör jag max två sprut och den håller hela dagen. Kanel och amber gör den mysig men ändå vuxen.\"</p>",
+            "author": "Kevin O.",
+            "date": "för 1 år sedan",
+            "rating": 4,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_16": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag har älskat Black Opium i flera år och den här är faktiskt nästan identisk. Älskar de varma tonerna av vanilj och kaffe. Den är mysig men känns ändå sofistikerad.\"</p>",
+            "author": "Emily C.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_17": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag har köpt parfym till både mig själv och min fru och de luktar riktigt gott. Precis som de dofter de är inspirerade av. Rekommenderas.\"</p>",
+            "author": "Mattias E.",
+            "date": "för 2 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_18": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Den luktar exakt som originalet. Rosen känns fräsch och naturlig, och hållbarheten är fantastisk, lätt över 12 timmar.\"</p>",
+            "author": "Kiara B.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_19": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Underbart och ärligt företag. REKOMMENDERAS 10/10, riktigt fina parfymer som luktar precis som originalet, och verkligen ärliga priser. Har beställt två gånger.\"</p>",
+            "author": "Ayham A.",
+            "date": "för 2 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_20": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Ett bra val för oudälskare. Gillar du djupa, träiga dofter med kryddighet och värme så träffar den här rätt. Inte exakt som Alexandria II, men ett riktigt bra alternativ.\"</p>",
+            "author": "Jason C.",
+            "date": "för 1 år sedan",
+            "rating": 4,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_21": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Parfymer av riktigt bra kvalitet till lågt pris!! Jag kommer absolut att beställa mer. Jag sprayade en gång på armen bara för att testa och kunde känna doften i flera timmar!!!! Riktigt bra service. Rekommenderar!!\"</p>",
+            "author": "Julia P.",
+            "date": "för 3 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_22": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Luktar otroligt likt originalet, L'Immensité från Louis Vuitton. Fräsch citrus och ingefära blandas perfekt med diskreta örttoner. Rekommenderas varmt.\"</p>",
+            "author": "John M.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_23": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Inte bara för män. Jag är tjej och var orolig att den skulle vara för maskulin, men den är faktiskt perfekt. Ambern mjukar upp lädret och kanelen gör den intressant.\"</p>",
+            "author": "Priya S.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_24": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag har handlat flera gånger och är supernöjd! Bra kvalitet, tillverkad så att man vet vad den innehåller, och doften håller i många timmar!\"</p>",
+            "author": "René V.",
+            "date": "för 4 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_25": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Det är den jag tar på mig de kvällar jag stannar hemma och bara vill skämma bort mig själv. Värmen och sötman gör den så mysig.\"</p>",
+            "author": "Emily S.",
+            "date": "för 1 år sedan",
+            "rating": 4,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_26": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag beställde två parfymer och är riktigt imponerad. Dofterna är väldigt lika originalen och kvaliteten överträffade mina förväntningar. Dessutom var servicen snabb och proffsig. Jag är jättenöjd med köpet och kan varmt rekommendera er till andra. Tack för en fantastisk upplevelse.\"</p>",
+            "author": "Amran T.",
+            "date": "för 3 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_27": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag har haft L'Eau d'Issey tidigare och den här träffar helt rätt. De träiga tonerna och citrusen sitter perfekt, och den håller lika länge.\"</p>",
+            "author": "Brian O.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_28": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Det här är andra gången jag beställer! Bra parfymer som luktar gott och håller länge. Min favorit är körsbärsparfymen, den luktar supergott!\"</p>",
+            "author": "Tina H.",
+            "date": "för 2 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_29": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Klockrent. Är det här ens lagligt? Så nära originalet man kan komma. Doften håller länge och det svider knappt i plånboken att beställa. Rekommenderas varmt! 👍🏻\"</p>",
+            "author": "Håcan A.",
+            "date": "för 6 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_30": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag jobbar sena kvällar och behövde något att fräscha upp mig med innan jag går ut. Den här gör susen: ren, inte påträngande och den håller.\"</p>",
+            "author": "Malik J.",
+            "date": "för 1 år sedan",
+            "rating": 4,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_31": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Älskar parfymerna, de luktar som originalen och håller länge 😍 Jag har beställt 10 parfymer och älskar alla.\"</p>",
+            "author": "Christina T.",
+            "date": "för 4 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_32": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Blev faktiskt förvånad över hur lyxigt den här luktar. Den håller längre än de flesta designerdofter jag testat, och jag har sparat massor av pengar.\"</p>",
+            "author": "Adam G.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_33": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Parfymerna är riktigt bra! Det är nästan ingen skillnad mot originalen och jag är faktiskt jättenöjd med köpet. Bra pris.\"</p>",
+            "author": "Rimuska B.",
+            "date": "för 2 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_34": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Till skillnad från en del andra alternativ luktar den här inte billigt eller kemiskt. Jag gillar blandningen och den sitter kvar länge i kläderna.\"</p>",
+            "author": "Claire H.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_35": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Doften överraskade mig verkligen, den är helt enastående! Jag älskar den, och förpackningen är också väldigt elegant.\"</p>",
+            "author": "Silvana R.",
+            "date": "för 6 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_36": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag älskade den här parfymen, doften är otrolig och den sitter i länge. Ärligt talat är det ett smart val till ett lågt pris, jag köper den absolut igen. Jag blev helt förtjust 😍❤️\"</p>",
+            "author": "Daniela B.",
+            "date": "för 7 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        }
+      },
+      "block_order": [
+        "review_sv_01",
+        "review_sv_02",
+        "review_sv_03",
+        "review_sv_04",
+        "review_sv_05",
+        "review_sv_06",
+        "review_sv_07",
+        "review_sv_08",
+        "review_sv_09",
+        "review_sv_10",
+        "review_sv_11",
+        "review_sv_12",
+        "review_sv_13",
+        "review_sv_14",
+        "review_sv_15",
+        "review_sv_16",
+        "review_sv_17",
+        "review_sv_18",
+        "review_sv_19",
+        "review_sv_20",
+        "review_sv_21",
+        "review_sv_22",
+        "review_sv_23",
+        "review_sv_24",
+        "review_sv_25",
+        "review_sv_26",
+        "review_sv_27",
+        "review_sv_28",
+        "review_sv_29",
+        "review_sv_30",
+        "review_sv_31",
+        "review_sv_32",
+        "review_sv_33",
+        "review_sv_34",
+        "review_sv_35",
+        "review_sv_36"
+      ]
+    }
+  },
+  "order": [
+    "pm_bundle_save",
+    "pm_bs_ugc_grid",
+    "pm_bs_benefits",
+    "pm_bs_strength_tabs",
+    "pm_bs_vs_split",
+    "pm_bs_review_carousel",
+    "pm_bs_compare_table",
+    "pm_bs_faq",
+    "massive_review_section"
+  ]
+}
