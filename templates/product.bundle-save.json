@@ -211,7 +211,7 @@
     "pm_bs_benefits": {
       "type": "pm-bs-benefits",
       "settings": {
-        "color_scheme": "scheme-5",
+        "color_scheme": "scheme-2",
         "heading": "En doft som <em>stannar hos dig</em> hela dagen",
         "cta_label": "Sätt ihop ditt paket",
         "ticker_color_scheme": "scheme-3",
@@ -389,7 +389,7 @@
       "type": "pm-bs-vs-split",
       "settings": {
         "image": "shopify://shop_images/Magyx_Website_01.webp",
-        "color_scheme": "scheme-5",
+        "color_scheme": "scheme-2",
         "title": "Mer än <em>en vanlig dupe</em>",
         "subtitle": "Jämför med andra märken som säljer inspirerade dofter.",
         "brand": "MagyX",
@@ -627,7 +627,7 @@
     "pm_bs_faq": {
       "type": "pm-bs-faq",
       "settings": {
-        "color_scheme": "scheme-5",
+        "color_scheme": "scheme-2",
         "title": "Vanliga frågor",
         "closing_text": "<p>Har du en annan fråga? <a href=\"/policies/contact-information\">Skriv till oss</a>.</p>",
         "padding_top": 80,
