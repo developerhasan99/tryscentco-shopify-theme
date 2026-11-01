@@ -391,6 +391,12 @@
         "padding_bottom": 36
       },
       "blocks": {
+        "scent_notes": {
+          "type": "scent_notes",
+          "settings": {
+            "heading": "Så Doftar Den"
+          }
+        },
         "collapsible_row_1": {
           "type": "collapsible_row",
           "settings": {
@@ -442,6 +448,7 @@
         }
       },
       "block_order": [
+        "scent_notes",
         "collapsible_row_1",
         "collapsible_row_2",
         "collapsible_row_3",
