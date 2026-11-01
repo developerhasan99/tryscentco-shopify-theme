@@ -39,9 +39,12 @@
           </div>
           <div class="pm-faq__rows">
             {%- for block in section.blocks -%}
+              {%- if block.type == 'scent_notes' and product == blank -%}
+                {%- continue -%}
+              {%- endif -%}
               <div class="accordion" {{ block.shopify_attributes }}>
                 <details
-                  id="Details-{{ block.id }}-{{ section.id }}"
+                  id="{% if block.type == 'scent_notes' %}expanded-notes{% else %}Details-{{ block.id }}-{{ section.id }}{% endif %}"
                   {% if section.settings.open_first_collapsible_row and forloop.first %}
                     open
                   {% endif %}
@@ -57,7 +60,11 @@
                     role="region"
                     aria-labelledby="Summary-{{ block.id }}-{{ section.id }}"
                   >
-                    {{ block.settings.row_content }}
+                    {%- if block.type == 'scent_notes' -%}
+                      {% render 'fmx-scent-notes-panel', product: product %}
+                    {%- else -%}
+                      {{ block.settings.row_content }}
+                    {%- endif -%}
                   </div>
                 </details>
               </div>
@@ -161,6 +168,23 @@
           "type": "richtext",
           "id": "row_content",
           "label": "Answer"
+        }
+      ]
+    },
+    {
+      "type": "scent_notes",
+      "name": "Scent notes",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Title",
+          "default": "Så Doftar Den"
+        },
+        {
+          "type": "paragraph",
+          "content": "Notes, ingredients and badges from the product's metafields (same as the product page fold). Product pages only."
         }
       ]
     }

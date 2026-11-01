@@ -590,6 +590,32 @@
   }
 }
 
+/* TryScent colours around the buy button (live tsr-bundle page, measured 01.11):
+   "Mest Populär" red, "Bäst värde" + chosen size green, add-to-cart green */
+.premium .pm-size__flag--popular {
+  border-color: #c8202f;
+  background: #c8202f;
+}
+
+.premium .pm-size__flag--value {
+  border-color: #22613a;
+  background: #22613a;
+}
+
+.premium .pm-size.is-selected {
+  border-color: #22613a;
+}
+
+.premium .pm-btn.pm-atc {
+  border-color: #146b32;
+  background: #146b32;
+}
+
+.premium .pm-btn.pm-atc:hover {
+  border-color: #17803d;
+  background: #17803d;
+}
+
 /* 3. Subtotal + add to cart (FM pm-subtotal / pm-atc): "Delsumma 547,96 kr 289,99 kr" above the ink button */
 .premium .product-form.fmx-product-form {
   margin: 0;

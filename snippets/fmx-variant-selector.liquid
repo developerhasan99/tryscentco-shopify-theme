@@ -48,10 +48,10 @@
         data-compare-price="{{ variant.compare_at_price | money }}">
         <span class="pm-size__title">{{ variant.title }}</span>
         {% if variant.title contains '50' %}
-          <span class="pm-size__flag">Mest Populär</span>
+          <span class="pm-size__flag pm-size__flag--popular">Mest Populär</span>
         {% endif %}
         {% if variant.title contains '100' %}
-          <span class="pm-size__flag">Bäst värde</span>
+          <span class="pm-size__flag pm-size__flag--value">Bäst värde</span>
         {% endif %}
         {% if variant_ml > 0 %}
           <span class="pm-size__meta price-per-ml">{{ price_per_ml | money }} / ml</span>
