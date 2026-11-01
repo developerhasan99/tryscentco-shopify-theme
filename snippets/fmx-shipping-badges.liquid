@@ -1,0 +1,118 @@
+{%- comment -%}
+  fmx-shipping-badges: copy of snippets/shipping-badges.liquid from the tryscent.co magyx.co-look
+  theme (tryscent-co-shopify-theme@main) for the FM product page test. Rendered by
+  snippets/fmx-variant-selector.liquid under the payment icons.
+
+  Badges under the add-to-cart: one row of three equal tiles, delivery time, carrier, 60-day
+  money-back guarantee, for every visitor. Copy from what tryscent.co already tells shoppers:
+  - delivery: "Levereras till <land> inom 5 arbetsdagar", the line this row replaces in the buy box;
+  - carrier: PostNord (assets/fmx-logo-postnord.svg, PostNord wordmark from Wikimedia Commons);
+  - guarantee: "60 dagars pengarna-tillbaka-garanti", with the Pine seal
+    (assets/fmx-guarantee-badge-accent.png).
+  Assets are fmx-* copies (byte-identical) so the test template does not depend on files that
+  are not on the live theme.
+
+  Text per market below (localization.country: SE, DK, NO, FI). Write Swedish for every market:
+  Weglot translates the Swedish page for /da-dk /fi-fi /no-no. Each tile text is one element, so
+  Weglot sees one sentence per tile.
+
+  Renders nothing for a product that ships nothing.
+
+  Accepts (optional):
+  - delivery_text: replaces the delivery tile's text
+  - guarantee_text: replaces the guarantee tile's text
+
+  Usage:
+  {% render 'fmx-shipping-badges', product: product %}
+{%- endcomment -%}
+{%- liquid
+  # Delivery tile: the exact sentence the live buy box shows, country in <span class="shipping_location">,
+  # full stop included. Weglot keys a translation on the whole sentence with its inner tags, and it
+  # already has this one for every market. Change a word here and DK/NO/FI fall back to Swedish
+  # until the new sentence is translated in Weglot.
+  assign badge_country = localization.country.name
+  assign badge_delivery_head = 'Levereras till <span class="shipping_location">' | append: badge_country | append: '</span>'
+  assign badge_delivery = badge_delivery_head | append: ' inom 5 arbetsdagar.'
+  assign badge_carrier = 'Snabb leverans med PostNord'
+  assign badge_guarantee = '60 dagars pengarna-tillbaka-garanti'
+
+  # Per market; change a branch to give one market its own text. Norway, outside the EU, also gets
+  # "Inga tullavgifter.", the customs line the bundle pages showed (same sentence as there).
+  case localization.country.iso_code
+    when 'SE'
+      assign badge_delivery = badge_delivery_head | append: ' inom 5 arbetsdagar.'
+      assign badge_carrier = 'Snabb leverans med PostNord'
+    when 'DK'
+      assign badge_delivery = badge_delivery_head | append: ' inom 5 arbetsdagar.'
+      assign badge_carrier = 'Snabb leverans med PostNord'
+    when 'NO'
+      assign badge_delivery = badge_delivery_head | append: ' inom 5 arbetsdagar. Inga tullavgifter.'
+      assign badge_carrier = 'Snabb leverans med PostNord'
+    when 'FI'
+      assign badge_delivery = badge_delivery_head | append: ' inom 5 arbetsdagar.'
+      assign badge_carrier = 'Snabb leverans med PostNord'
+  endcase
+
+  if delivery_text != blank
+    assign badge_delivery = delivery_text
+  endif
+  if guarantee_text != blank
+    assign badge_guarantee = guarantee_text
+  endif
+
+  assign badge_ships = true
+  if product != blank and product.selected_or_first_available_variant.requires_shipping == false
+    assign badge_ships = false
+  endif
+-%}
+{%- if badge_ships -%}
+  <style>
+    .fmx-shipping-badges { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); margin: 24px 0; color: var(--pm-ink, #232323); }
+    .fmx-shipping-badges__item { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 4px 6px; text-align: center; }
+    .fmx-shipping-badges__item + .fmx-shipping-badges__item { border-left: 1px solid var(--pm-line, #e7e7e7); }
+    .fmx-shipping-badges__media { display: flex; align-items: center; justify-content: center; width: 100%; height: 28px; }
+    .fmx-shipping-badges__icon { display: block; width: 28px; height: 28px; }
+    .fmx-shipping-badges__icon svg { display: block; width: 100%; height: 100%; fill: currentColor; }
+    .fmx-shipping-badges__logo { display: block; width: auto; height: 28px; }
+    .fmx-shipping-badges__carrier { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 104px; height: 20px; }
+    .fmx-shipping-badges__carrier img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .fmx-shipping-badges__text { font-size: 12px; line-height: 1.3; font-weight: 600; letter-spacing: 0; overflow-wrap: anywhere; }
+    /* A Weglot translation can be one long compound (Finnish "rahanpalautustakuu") wider than the
+       tile on a phone. anywhere, not break-word: the text box is centred in the tile and sized to
+       its content, and break-word would leave it as wide as the long word. The Finnish page also
+       hyphenates (Weglot sets <html lang>). Danish and Norwegian do not. */
+    html[lang|="fi"] .fmx-shipping-badges__text { -webkit-hyphens: auto; hyphens: auto; }
+    @media (min-width: 750px) {
+      .fmx-shipping-badges__item { padding: 4px 10px; }
+      .fmx-shipping-badges__text { font-size: 13px; }
+    }
+  </style>
+  <div class="fmx-shipping-badges">
+    <div class="fmx-shipping-badges__item">
+      <span class="fmx-shipping-badges__media">
+        <span class="fmx-shipping-badges__icon" aria-hidden="true">{{ 'fmx-icon-truck.svg' | inline_asset_content }}</span>
+      </span>
+      <span class="fmx-shipping-badges__text">{{ badge_delivery }}</span>
+    </div>
+    <div class="fmx-shipping-badges__item">
+      <span class="fmx-shipping-badges__media">
+        <span class="fmx-shipping-badges__carrier">
+          <img src="{{ 'fmx-logo-postnord.svg' | asset_url }}" alt="PostNord" width="104" height="20" loading="lazy">
+        </span>
+      </span>
+      <span class="fmx-shipping-badges__text">{{ badge_carrier }}</span>
+    </div>
+    <div class="fmx-shipping-badges__item">
+      <span class="fmx-shipping-badges__media">
+        <img
+          class="fmx-shipping-badges__logo"
+          src="{{ 'fmx-guarantee-badge-accent.png' | asset_url }}"
+          alt=""
+          width="28"
+          height="28"
+          loading="lazy">
+      </span>
+      <span class="fmx-shipping-badges__text">{{ badge_guarantee }}</span>
+    </div>
+  </div>
+{%- endif -%}

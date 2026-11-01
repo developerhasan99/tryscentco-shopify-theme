@@ -1,0 +1,34 @@
+{%- comment -%}
+  pm-bs-live-head: what the FM redesign layout gives the Bundle & Save page, for when the page runs on a theme
+  without it (the live tryscent.co theme, where product.bundle-save is a stand-alone funnel page).
+  Detection: the redesign has the theme setting pm_color_line; the live theme does not. On the redesign this
+  snippet outputs nothing, so the cascade there stays exactly as the layout builds it.
+
+  Loads: FM tokens + base utilities (pm-base.css, pm-sections.css, pm-card.css; every rule is scoped to .premium,
+  tokens are --pm-* variables only), the money formatter (pm-base.js + the shop's money formats), and the Figtree
+  weights the page uses (500 / 600 / 800; the live layout loads only regular + bold).
+  The .premium scope comes from each page section's schema class (shopify-section wrapper).
+
+  Usage (first line of sections/pm-bundle-save.liquid):
+  {% render 'pm-bs-live-head' %}
+{%- endcomment -%}
+{%- if settings.pm_color_line == blank -%}
+  {%- liquid
+    assign pm_live_500 = settings.type_body_font | font_modify: 'weight', '500'
+    assign pm_live_600 = settings.type_body_font | font_modify: 'weight', '600'
+    assign pm_live_800 = settings.type_body_font | font_modify: 'weight', '800'
+  -%}
+  {%- style -%}
+    {%- if pm_live_500 %}{{ pm_live_500 | font_face: font_display: 'swap' }}{% endif -%}
+    {%- if pm_live_600 %}{{ pm_live_600 | font_face: font_display: 'swap' }}{% endif -%}
+    {%- if pm_live_800 %}{{ pm_live_800 | font_face: font_display: 'swap' }}{% endif -%}
+  {%- endstyle -%}
+  {{ 'pm-base.css' | asset_url | stylesheet_tag }}
+  {{ 'pm-sections.css' | asset_url | stylesheet_tag }}
+  {{ 'pm-card.css' | asset_url | stylesheet_tag }}
+  <script>
+    window.pmMoneyFormat = window.pmMoneyFormat || {{ shop.money_format | json }};
+    window.pmMoneyWithCurrencyFormat = window.pmMoneyWithCurrencyFormat || {{ shop.money_with_currency_format | json }};
+  </script>
+  <script src="{{ 'pm-base.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}

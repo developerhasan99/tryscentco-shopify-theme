@@ -1,0 +1,1846 @@
+{%- comment -%}
+  pm-bundle-save: "Bundle & Save" buy box (gallery left, box right from 990px, stacked below).
+  Port of magyx.whop.site/products/bundle-and-save by way of the tryscent.eu section (419ab66).
+  Prices come from the bundle product's variants ("2 flaskor", "6 Bottles"..., mapped by the leading number); a count
+  without a variant is not sold (tryscent.co sells 2 / 4 / 6 / 8-20, like Whop). Scent rows from the collection
+  setting, filtered by search and the gender pills. Picks live in the Alpine component `pmBundleSave` below.
+  Weglot (DK / FI / NO) only translates text that is in the page HTML, so no shopper-facing text is built in JS:
+  every message is rendered here, one element per text part, numbers in their own element, and switched by x-show.
+  Cart: mode bundle_product = one line (bundle variant for k bottles + "Bottle n" properties + _bundle_items),
+  mode per_line = one line per scent (prices then need an automatic discount in admin).
+  Bundle product: picker setting, else the handle setting, else the page's own product when this template is
+  assigned to it. Missing product = notice in the theme editor only, nothing for customers.
+{%- endcomment -%}
+{%- render 'pm-bs-live-head' -%}
+{%- liquid
+  assign st = section.settings
+
+  assign pm_bp = st.bundle_product
+  if pm_bp == blank and st.bundle_handle != blank
+    assign pm_bp_handle = st.bundle_handle | strip
+    assign pm_bp = all_products[pm_bp_handle]
+  endif
+  if pm_bp == blank and product != blank and product.template_suffix == 'bundle-save'
+    assign pm_bp = product
+  endif
+
+  assign pm_coll = st.collection
+  if pm_coll == blank
+    assign pm_coll = collections['bestseller-singles']
+  endif
+  if pm_coll == blank
+    assign pm_coll = collections.all
+  endif
+
+  assign pm_size = st.bottle_size | strip | downcase | remove: ' '
+
+  assign pm_single_cents = st.single_price | default: '0' | times: 100 | round
+  # Per-bottle "was" price from the 1-bottle variant's compare-at (converted by Markets); the setting is only a fallback
+  for v in pm_bp.variants
+    assign vn = v.option1 | default: v.title | split: ' ' | first | plus: 0
+    if vn == 1 and v.compare_at_price > v.price
+      assign pm_single_cents = v.compare_at_price
+      break
+    endif
+  endfor
+
+  # Variant map: leading number of option1 ("3 Bottles" -> 3) -> id / price / compare-at
+  assign pm_vmax = 0
+  assign pm_sep = ''
+  capture pm_variants_json
+    for v in pm_bp.variants
+      assign vn = v.option1 | default: v.title | split: ' ' | first | plus: 0
+      if vn < 1
+        continue
+      endif
+      if vn > pm_vmax
+        assign pm_vmax = vn
+      endif
+      assign v_compare = vn | times: pm_single_cents
+      if v.compare_at_price > v.price
+        assign v_compare = v.compare_at_price
+      endif
+      echo pm_sep
+      echo '"' | append: vn | append: '":{"id":' | append: v.id | append: ',"price":' | append: v.price | append: ',"compare":' | append: v_compare | append: ',"available":' | append: v.available | append: '}'
+      assign pm_sep = ','
+    endfor
+  endcapture
+
+  # Tiers (block order), preselected index, overall cap
+  assign pm_tier_start = -1
+  assign pm_tier_count = 0
+  assign pm_cap_max = 0
+  assign pm_best_pct = 0
+  assign pm_sep = ''
+  capture pm_tiers_json
+    for block in section.blocks
+      if block.type != 'tier'
+        continue
+      endif
+      assign t_bottles = block.settings.bottles | plus: 0
+      assign t_cap = block.settings.max_bottles | plus: 0
+      if t_cap < t_bottles
+        assign t_cap = t_bottles
+      endif
+      if pm_vmax > 0 and t_cap > pm_vmax
+        assign t_cap = pm_vmax
+      endif
+      if t_cap > pm_cap_max
+        assign pm_cap_max = t_cap
+      endif
+      if block.settings.preselected and pm_tier_start == -1
+        assign pm_tier_start = pm_tier_count
+      endif
+      echo pm_sep
+      echo '{"bottles":' | append: t_bottles | append: ',"cap":' | append: t_cap | append: '}'
+      assign pm_sep = ','
+      assign pm_tier_count = pm_tier_count | plus: 1
+    endfor
+  endcapture
+  if pm_tier_start == -1
+    assign pm_tier_start = 0
+  endif
+  assign pm_max_total = pm_cap_max
+  if pm_vmax > 0 and pm_max_total > pm_vmax
+    assign pm_max_total = pm_vmax
+  endif
+
+  # Best saving over all variants, for the [max] token in the subheading and the timer eyebrow
+  for v in pm_bp.variants
+    assign vn = v.option1 | default: v.title | split: ' ' | first | plus: 0
+    if vn < 1
+      continue
+    endif
+    assign v_compare = vn | times: pm_single_cents
+    if v.compare_at_price > v.price
+      assign v_compare = v.compare_at_price
+    endif
+    if v_compare > v.price
+      assign v_pct = v_compare | minus: v.price | times: 100.0 | divided_by: v_compare | round
+      if v_pct > pm_best_pct
+        assign pm_best_pct = v_pct
+      endif
+    endif
+  endfor
+
+  # Start values for server-rendered text (the component takes over after init)
+  assign pm_start_target = 0
+  assign pm_i = 0
+  for block in section.blocks
+    if block.type != 'tier'
+      continue
+    endif
+    if pm_i == pm_tier_start
+      assign pm_start_target = block.settings.bottles | plus: 0
+    endif
+    assign pm_i = pm_i | plus: 1
+  endfor
+-%}
+
+{%- comment -%}
+  Gender groups (filter pills + label on each row), read from the store tags:
+  unisex tag, or both women and men tags = unisex; Woman / Women / Für Frauen / fuer-frauen / FÜR FRAUEN / Frauen =
+  women; Man / Men / Für Männer / fuer-maenner / FÜR MÄNNER = men.
+  Untagged scents get no group: they show under "all" only (no guessed label). Labels come from the filter blocks.
+{%- endcomment -%}
+{%- liquid
+  assign pm_group_map = '#'
+  for block in section.blocks
+    if block.type == 'line'
+      assign pm_group_map = pm_group_map | append: block.settings.group | append: '=|' | append: block.settings.label | append: '#'
+    endif
+  endfor
+-%}
+{%- assign pm_line_list = '' -%}
+{%- assign pm_row_count = 0 -%}
+{%- capture pm_rows -%}
+  {%- paginate pm_coll.products by 250 -%}
+    {%- for p in pm_coll.products -%}
+      {%- liquid
+        assign skip = false
+        comment
+          Single-size products (mystery box, gift sets) are not scents for a bundle: every scent here has size variants
+        endcomment
+        if p.available == false or p.id == pm_bp.id or p.tags contains 'bundle' or p.has_only_default_variant
+          assign skip = true
+        endif
+        assign v = blank
+        unless skip
+          if pm_size != blank
+            for pv in p.variants
+              assign pv_size = pv.title | downcase | remove: ' '
+              assign pv_head = pv_size | slice: 0, pm_size.size
+              if pv.available and pv_head == pm_size
+                assign v = pv
+                break
+              endif
+            endfor
+          else
+            assign v = p.selected_or_first_available_variant
+          endif
+          if v == blank or v.available == false
+            assign skip = true
+          endif
+        endunless
+      -%}
+      {%- unless skip -%}
+        {%- liquid
+          assign p_w = false
+          if p.tags contains 'Woman' or p.tags contains 'Women' or p.tags contains 'woman' or p.tags contains 'women' or p.tags contains 'Für Frauen' or p.tags contains 'fuer-frauen' or p.tags contains 'FÜR FRAUEN' or p.tags contains 'Frauen'
+            assign p_w = true
+          endif
+          assign p_m = false
+          if p.tags contains 'Man' or p.tags contains 'Men' or p.tags contains 'man' or p.tags contains 'men' or p.tags contains 'Für Männer' or p.tags contains 'fuer-maenner' or p.tags contains 'FÜR MÄNNER'
+            assign p_m = true
+          endif
+          assign p_line = ''
+          if p.tags contains 'unisex' or p.tags contains 'Unisex' or p.tags contains 'UNISEX'
+            assign p_line = 'unisex'
+          elsif p_w and p_m
+            assign p_line = 'unisex'
+          elsif p_w
+            assign p_line = 'women'
+          elsif p_m
+            assign p_line = 'men'
+          endif
+          assign pm_line_list = pm_line_list | append: '#' | append: p_line | append: '#'
+          assign pm_row_count = pm_row_count | plus: 1
+
+          assign p_gender = ''
+          if p_line != blank
+            assign g_token = '#' | append: p_line | append: '=|'
+            if pm_group_map contains g_token
+              assign p_gender = pm_group_map | split: g_token | last | split: '#' | first | strip
+            endif
+          endif
+
+          # Badge as on Whop: a "badge:<text>" tag wins, then the bestseller tag, then new / new-arrival
+          assign p_badge = ''
+          assign p_badge_kind = ''
+          for t in p.tags
+            assign t_low = t | downcase | strip
+            assign t_head6 = t_low | slice: 0, 6
+            if t_head6 == 'badge:'
+              assign p_badge = t | strip | slice: 6, 60 | strip
+              break
+            endif
+          endfor
+          if p_badge == blank
+            for t in p.tags
+              assign t_low = t | downcase | strip
+              if t_low == 'bestseller' and st.badge_bestseller != blank
+                assign p_badge = st.badge_bestseller
+                assign p_badge_kind = 'best'
+                break
+              endif
+            endfor
+          endif
+          if p_badge == blank
+            for t in p.tags
+              assign t_low = t | downcase | strip
+              if t_low == 'new' or t_low == 'new-arrival'
+                if st.badge_new != blank
+                  assign p_badge = st.badge_new
+                  assign p_badge_kind = 'new'
+                endif
+                break
+              endif
+            endfor
+          endif
+
+          # Designer twin: custom.inspiration -> inspiration metaobject (name, image). custom.inspired_by is a
+          # plain text field on tryscent.co (fallback for the one product that has it)
+          assign p_insp_obj = p.metafields.custom.inspiration.value
+          assign p_insp = p_insp_obj.name | default: p.metafields.custom.inspired_by.value | default: '' | strip
+          assign p_insp_img = p_insp_obj.image.value
+
+          # occasion is a single-line text field here; a comma list still splits into chips
+          assign p_occasions = p.metafields.custom.occasion.value | append: '' | split: ','
+
+          assign p_title = p.title | escape
+          # Unescaped copy for filters that escape on their own (t interpolation, image_tag alt)
+          assign p_title_raw = p.title
+
+          # Cart line text, as on Whop: "<title> Inspired by <designer> - 50ml"
+          assign p_cart_name = p.title
+          if p_insp != blank
+            assign p_cart_name = p_cart_name | append: ' Inspired by ' | append: p_insp
+          endif
+          if pm_size != blank
+            assign p_cart_name = p_cart_name | append: ' - ' | append: pm_size
+          endif
+
+          # Search text: title, designer, brand, occasion, scent family, gender label
+          assign p_search = p.title | append: ' ' | append: p_insp | append: ' ' | append: p.metafields.custom.brand.value | append: ' ' | append: p.metafields.custom.occasion.value | append: ' ' | append: p.metafields.custom.fragrance_family.value | append: ' ' | append: p_gender | downcase | strip_newlines
+        -%}
+        <div
+          class="pm-bs-row"
+          role="listitem"
+          data-pm-bs-row
+          data-vid="{{ v.id }}"
+          data-title="{{ p_cart_name | escape }}"
+          data-line="{{ p_line | escape }}"
+          data-search="{{ p_search | escape }}"
+          x-show="rowOk('{{ v.id }}')"
+          :class="{ 'is-picked': qty({{ v.id }}) > 0 }"
+        >
+          <div class="pm-bs-row__side">
+            <div class="pm-bs-row__media">
+              {%- if p.featured_image != blank -%}
+                {{ p.featured_image | image_url: width: 280 | image_tag: width: 140, height: 140, widths: '140, 280', sizes: '72px', loading: 'lazy', alt: p_title_raw, class: 'pm-bs-row__img' }}
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'pm-bs-row__img' }}
+              {%- endif -%}
+            </div>
+            {%- if p_gender != blank -%}
+              <span class="pm-bs-row__for">{{ p_gender | escape }}</span>
+            {%- endif -%}
+          </div>
+          <div class="pm-bs-row__body">
+            <p class="pm-bs-row__title">{{ p_title }}</p>
+            {%- if p_insp != blank -%}
+              <div class="pm-bs-row__insp pm-dmeta">
+                {%- if p_insp_img != blank -%}
+                  <span class="pm-dthumb" aria-hidden="true">
+                    {{- p_insp_img | image_url: width: 96 | image_tag: width: 48, height: 48, loading: 'lazy', alt: '', class: 'pm-dthumb__img' -}}
+                  </span>
+                {%- endif -%}
+                <div class="pm-dmeta__text"><div class="pm-bs-inline"><div>{{ st.inspired_prefix | escape }}</div> <div><strong>{{ p_insp | escape }}</strong></div></div></div>
+              </div>
+            {%- endif -%}
+            {%- if p_occasions.size > 0 -%}
+              <ul class="pm-bs-row__tags" role="list">
+                {%- for o in p_occasions -%}
+                  {%- assign o_text = o | strip -%}
+                  {%- if o_text != blank -%}<li class="pm-bs-row__tag">{{ o_text | escape }}</li>{%- endif -%}
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </div>
+          <div class="pm-bs-row__actions">
+            {%- if p_badge != blank -%}
+              <span class="pm-bs-row__badge{% if p_badge_kind != blank %} pm-bs-row__badge--{{ p_badge_kind }}{% endif %}">{{ p_badge | escape }}</span>
+            {%- endif -%}
+            <button
+              type="button"
+              class="pm-btn pm-btn--primary pm-btn--mini pm-bs-add"
+              x-show="qty({{ v.id }}) === 0"
+              :disabled="atMax"
+              @click="add({{ v.id }})"
+              aria-label="Lägg till {{ p_title_raw | escape }}"
+            >
+              {{ st.add_label | escape }}
+            </button>
+            <div class="pm-bs-step" x-show="qty({{ v.id }}) > 0" x-cloak>
+              <button type="button" class="pm-bs-step__btn" @click="remove({{ v.id }})" aria-label="Ta bort {{ p_title_raw | escape }}">
+                {%- render 'pm-icon', icon: 'minus', size: 14, stroke: 2 -%}
+              </button>
+              <span class="pm-bs-step__qty" x-text="qty({{ v.id }})">0</span>
+              <button type="button" class="pm-bs-step__btn" @click="add({{ v.id }})" :disabled="atMax" aria-label="Lägg till {{ p_title_raw | escape }}">
+                {%- render 'pm-icon', icon: 'plus', size: 14, stroke: 2 -%}
+              </button>
+            </div>
+          </div>
+        </div>
+      {%- endunless -%}
+    {%- endfor -%}
+  {%- endpaginate -%}
+{%- endcapture -%}
+
+{%- liquid
+  # Gender filter cards: config + per-group row counts
+  assign pm_line_start = -1
+  assign pm_line_idx = 0
+  assign pm_sep = ''
+  capture pm_lines_json
+    for block in section.blocks
+      if block.type != 'line'
+        continue
+      endif
+      assign l_tag = block.settings.group
+      assign l_token = '#' | append: l_tag | append: '#'
+      assign l_rest = pm_line_list | remove: l_token
+      assign l_count = pm_line_list.size | minus: l_rest.size | divided_by: l_token.size
+      if block.settings.preselected and pm_line_start == -1
+        assign pm_line_start = pm_line_idx
+      endif
+      assign l_tag_json = l_tag | json
+      echo pm_sep
+      echo '{"tag":' | append: l_tag_json | append: ',"count":' | append: l_count | append: '}'
+      assign pm_sep = ','
+      assign pm_line_idx = pm_line_idx | plus: 1
+    endfor
+  endcapture
+-%}
+
+{{ 'pm-s-bundle-save.css' | asset_url | stylesheet_tag }}
+
+{%- if pm_bp == blank -%}
+  {%- if request.design_mode -%}
+    <div class="pm-bs pm-bs--missing color-{{ st.color_scheme }} gradient">
+      <div class="pm-container">
+        <p class="pm-bs-notice">
+          No bundle product. Pick one in the section settings or create a product with the handle "{{ st.bundle_handle | default: 'bundle-and-save' | escape }}" and variants "2 flaskor", "4 flaskor" and so on. Shoppers don't see this section until the product exists.
+        </p>
+      </div>
+    </div>
+  {%- endif -%}
+{%- else -%}
+<section
+  id="PmBundleSave-{{ section.id }}"
+  class="pm-bs color-{{ st.color_scheme }} gradient"
+  x-data="pmBundleSave"
+  data-section-id="{{ section.id }}"
+>
+  <script type="application/json" data-pm-bs-config>
+    {
+      "tiers": [{{ pm_tiers_json }}],
+      "tierStart": {{ pm_tier_start }},
+      "lines": [{{ pm_lines_json }}],
+      "lineStart": {{ pm_line_start }},
+      "rowCount": {{ pm_row_count }},
+      "variants": { {{ pm_variants_json }} },
+      "maxTotal": {{ pm_max_total }},
+      "mode": {{ st.pricing_mode | json }},
+      "timerOn": {{ st.show_timer }},
+      "reviewMs": {{ st.review_interval | default: 5 | times: 1000 }},
+      "text": {
+        "bottle": {{ st.bottle_property | json }}
+      }
+    }
+  </script>
+
+  <div class="pm-container pm-bs__grid">
+    {%- comment -%} 1. Gallery: the bundle product's media, scroll-snap track + thumbnails {%- endcomment -%}
+    <div class="pm-bs__media">
+      <div class="pm-bs-gallery">
+        <div class="pm-bs-gallery__viewport">
+          <div class="pm-bs-gallery__track" x-ref="track" @scroll.passive="onTrack()">
+            {%- assign pm_media_count = 0 -%}
+            {%- for media in pm_bp.media -%}
+              {%- if media.preview_image == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign pm_media_count = pm_media_count | plus: 1 -%}
+              {%- assign pm_alt = media.alt | default: pm_bp.title -%}
+              <div class="pm-bs-gallery__slide">
+                {%- if forloop.first -%}
+                  {{ media.preview_image | image_url: width: 1400 | image_tag: widths: '375, 550, 750, 1100, 1400', sizes: '(min-width: 990px) 50vw, 100vw', fetchpriority: 'high', loading: 'eager', alt: pm_alt, class: 'pm-bs-gallery__img' }}
+                {%- else -%}
+                  {{ media.preview_image | image_url: width: 1400 | image_tag: widths: '375, 550, 750, 1100, 1400', sizes: '(min-width: 990px) 50vw, 100vw', loading: 'lazy', alt: pm_alt, class: 'pm-bs-gallery__img' }}
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+            {%- if pm_media_count == 0 -%}
+              <div class="pm-bs-gallery__slide">{{ 'product-1' | placeholder_svg_tag: 'pm-bs-gallery__img' }}</div>
+            {%- endif -%}
+          </div>
+          {%- if pm_media_count > 1 -%}
+            <button type="button" class="pm-bs-gallery__arrow pm-bs-gallery__arrow--prev" @click="goTo(media - 1)" :disabled="media === 0" aria-label="Föregående">
+              {%- render 'pm-icon', icon: 'chevron-right', size: 16 -%}
+            </button>
+            <button type="button" class="pm-bs-gallery__arrow pm-bs-gallery__arrow--next" @click="goTo(media + 1)" :disabled="media === {{ pm_media_count | minus: 1 }}" aria-label="Nästa">
+              {%- render 'pm-icon', icon: 'chevron-right', size: 16 -%}
+            </button>
+          {%- endif -%}
+        </div>
+        {%- if pm_media_count > 1 -%}
+          <div class="pm-bs-gallery__thumbs">
+            {%- assign pm_mi = 0 -%}
+            {%- for media in pm_bp.media -%}
+              {%- if media.preview_image == blank -%}{%- continue -%}{%- endif -%}
+              <button
+                type="button"
+                class="pm-bs-gallery__thumb{% if pm_mi == 0 %} is-active{% endif %}"
+                :class="{ 'is-active': media === {{ pm_mi }} }"
+                @click="goTo({{ pm_mi }})"
+                aria-label="{{ pm_bp.title | escape }} {{ pm_mi | plus: 1 }}"
+              >
+                {{ media.preview_image | image_url: width: 160 | image_tag: width: 80, height: 80, loading: 'lazy', alt: '' }}
+              </button>
+              {%- assign pm_mi = pm_mi | plus: 1 -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="pm-bs__box" id="pm-bs-box">
+      {%- comment -%} 2. Rating, headline, subheading, benefits {%- endcomment -%}
+      <div class="pm-bs-intro">
+        {%- if st.show_rating and st.rating_text != blank -%}
+          <div class="pm-bs-rating">
+            {%- render 'pm-stars', rating: 5, size: 14 -%}
+            {%- if st.rating_link != blank -%}
+              <a class="pm-bs-rating__link" href="{{ st.rating_link }}">{{ st.rating_text | escape }}</a>
+            {%- else -%}
+              <span class="pm-bs-rating__label">{{ st.rating_text | escape }}</span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+        {%- if st.headline != blank -%}
+          <h1 class="pm-bs-headline">{{ st.headline }}</h1>
+        {%- endif -%}
+        {%- if st.subheading != blank -%}
+          <p class="pm-bs-sub">{{ st.subheading | replace: '[max]', pm_best_pct }}</p>
+        {%- endif -%}
+        <ul class="pm-bs-benefits">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'benefit' and block.settings.text != blank -%}
+              <li class="pm-bs-benefits__item" {{ block.shopify_attributes }}>
+                {%- render 'pm-icon', icon: block.settings.icon, size: 20, stroke: 1.5, class: 'pm-bs-benefits__icon' -%}
+                <span>{{ block.settings.text | escape }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      {%- comment -%} 3. Countdown: off by default on tryscent.eu (no forced urgency); only for a real, dated offer {%- endcomment -%}
+      {%- if st.show_timer -%}
+        <div class="pm-bs-timer" role="timer"{% if st.timer_label != blank %} aria-label="{{ st.timer_label | escape }}"{% endif %}>
+          <div class="pm-bs-timer__text">
+            {%- if st.timer_eyebrow != blank -%}
+              {%- liquid
+                comment
+                  The part before the first "·" is the lead phrase: bold, sale red, on its own line (Whop look).
+                  The next phrase starts the second line, so it gets no "·"; later phrases do.
+                endcomment
+                assign pm_eyebrow = st.timer_eyebrow | replace: '[max]', pm_best_pct | escape | split: '·'
+              -%}
+              <p class="pm-bs-timer__eyebrow">
+                {%- for seg in pm_eyebrow -%}
+                  {%- assign seg_text = seg | strip -%}
+                  {%- if forloop.first -%}
+                    <span class="pm-bs-timer__seg pm-bs-timer__sale">{{ seg_text }}</span>
+                  {%- elsif forloop.index == 2 -%}
+                    {{ ' ' }}<span class="pm-bs-timer__seg">{{ seg_text }}</span>
+                  {%- else -%}
+                    {{ ' ' }}<span class="pm-bs-timer__seg">· {{ seg_text }}</span>
+                  {%- endif -%}
+                {%- endfor -%}
+              </p>
+            {%- endif -%}
+            <p class="pm-bs-timer__title">{{ st.timer_title | escape }}</p>
+          </div>
+          <div class="pm-bs-timer__clock" aria-live="off">
+            <div class="pm-bs-timer__unit">
+              <span class="pm-bs-timer__num" x-text="clock.h">00</span>
+              <span class="pm-bs-timer__lbl">{{ st.timer_hrs_label | escape }}</span>
+            </div>
+            <div class="pm-bs-timer__unit">
+              <span class="pm-bs-timer__num" x-text="clock.m">00</span>
+              <span class="pm-bs-timer__lbl">{{ st.timer_mins_label | escape }}</span>
+            </div>
+            <div class="pm-bs-timer__unit">
+              <span class="pm-bs-timer__num" x-text="clock.s">00</span>
+              <span class="pm-bs-timer__lbl">{{ st.timer_secs_label | escape }}</span>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} 4. Tier cards {%- endcomment -%}
+      {%- if pm_tier_count > 0 -%}
+        <div class="pm-bs-group">
+          {%- if st.tiers_heading != blank -%}
+            <h2 class="pm-bs-h">{{ st.tiers_heading | escape }}</h2>
+          {%- endif -%}
+          <div class="pm-bs-tiers">
+            {%- assign ti = 0 -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type != 'tier' -%}{%- continue -%}{%- endif -%}
+              {%- liquid
+                assign t_bottles = block.settings.bottles | plus: 0
+                assign t_max = block.settings.max_bottles | plus: 0
+                assign t_price = 0
+                assign t_max_price = 0
+                assign t_max_n = 0
+                assign t_compare = t_bottles | times: pm_single_cents
+                for v in pm_bp.variants
+                  assign vn = v.option1 | default: v.title | split: ' ' | first | plus: 0
+                  if vn == t_bottles
+                    assign t_price = v.price
+                    if v.compare_at_price > v.price
+                      assign t_compare = v.compare_at_price
+                    endif
+                  elsif vn > t_bottles and vn <= t_max and vn > t_max_n
+                    assign t_max_n = vn
+                    assign t_max_price = v.price
+                  endif
+                endfor
+                assign t_each = ''
+                if t_price > 0 and t_bottles > 0 and st.per_bottle_text != blank
+                  assign t_each_money = t_price | times: 1.0 | divided_by: t_bottles | divided_by: 100 | round | times: 100 | money_without_trailing_zeros
+                  assign t_each = st.per_bottle_text | replace: '[price]', t_each_money
+                endif
+                assign t_stack = ''
+                if t_max_price > t_price and t_price > 0 and st.stack_text != blank
+                  assign t_extra_money = t_max_price | minus: t_price
+                  assign t_extra_n = t_max_n | minus: t_bottles
+                  assign t_extra_money = t_extra_money | times: 1.0 | divided_by: t_extra_n | divided_by: 100 | round | times: 100 | money_without_trailing_zeros
+                  assign t_stack = st.stack_text | replace: '[price]', t_extra_money
+                endif
+                assign t_badge = block.settings.badge_override | strip
+                if t_badge == blank and t_price > 0 and t_compare > t_price and st.saving_badge != blank
+                  assign t_pct = t_compare | minus: t_price | times: 100.0 | divided_by: t_compare | round
+                  assign t_badge = st.saving_badge | replace: '[pct]', t_pct
+                endif
+              -%}
+              <button
+                type="button"
+                class="pm-bs-tier{% if ti == pm_tier_start %} is-selected{% endif %}"
+                :class="{ 'is-selected': tierIndex === {{ ti }} }"
+                aria-pressed="{% if ti == pm_tier_start %}true{% else %}false{% endif %}"
+                :aria-pressed="tierIndex === {{ ti }} ? 'true' : 'false'"
+                @click="selectTier({{ ti }})"
+                {{ block.shopify_attributes }}
+              >
+                {%- if t_badge != blank -%}
+                  <span class="pm-bs-tier__badge">{{ t_badge | escape }}</span>
+                {%- endif -%}
+                <span class="pm-bs-tier__check" aria-hidden="true">{%- render 'pm-icon', icon: 'check', size: 12, stroke: 2.5 -%}</span>
+                <span class="pm-bs-tier__label">{{ block.settings.label | escape }}</span>
+                {%- if block.settings.tag != blank -%}
+                  <span class="pm-bs-tier__tag">{{ block.settings.tag | escape }}</span>
+                {%- endif -%}
+                <span class="pm-bs-tier__prices">
+                  {%- if t_price > 0 -%}
+                    <span
+                      class="pm-bs-tier__price"
+                      {% if t_max_n > t_bottles %}x-text="liveTier({{ ti }}) ? money(liveTier({{ ti }}).price) : {{ t_price | money_without_trailing_zeros | json | escape }}"{% endif %}
+                    >{{ t_price | money_without_trailing_zeros }}</span>
+                  {%- endif -%}
+                  {%- if t_compare > t_price -%}
+                    <s
+                      class="pm-bs-tier__compare"
+                      {% if t_max_n > t_bottles %}x-text="liveTier({{ ti }}) ? money(liveTier({{ ti }}).compare) : {{ t_compare | money_without_trailing_zeros | json | escape }}"{% endif %}
+                    >{{ t_compare | money_without_trailing_zeros }}</s>
+                  {%- endif -%}
+                </span>
+                {%- if t_each != blank -%}
+                  <span class="pm-bs-tier__each">{{ t_each | escape }}</span>
+                {%- endif -%}
+                {%- if t_stack != blank -%}
+                  <span class="pm-bs-tier__stack">{{ t_stack | escape }}</span>
+                {%- endif -%}
+              </button>
+              {%- assign ti = ti | plus: 1 -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} 5. Scent picker: heading + counter, progress, search, gender pills, rows (as on Whop) {%- endcomment -%}
+      <div class="pm-bs-group pm-bs-scents">
+        <div class="pm-bs-scents__head">
+          <div class="pm-bs-h" role="heading" aria-level="2">
+            {%- render 'pm-bs-text', text: st.scents_heading, t1: '[n]', x1: 'shownTotal', v1: pm_start_target -%}
+          </div>
+          <div class="pm-bs-scents__count" aria-live="polite">
+            {%- render 'pm-bs-text', text: st.counter_text, t1: '[x]', x1: 'picks.length', v1: 0, t2: '[n]', x2: 'shownTotal', v2: pm_start_target -%}
+          </div>
+        </div>
+        <div class="pm-bs-progress" aria-hidden="true">
+          <span class="pm-bs-progress__bar" :style="{ width: percent + '%' }"></span>
+        </div>
+        {%- if st.max_text != blank -%}
+          <div class="pm-bs-hint" x-show="atMax && picks.length > 0" x-cloak>
+            {%- render 'pm-bs-text', text: st.max_text, t1: '[max]', x1: 'maxTotal', v1: pm_max_total -%}
+          </div>
+        {%- endif -%}
+
+        <div class="pm-bs-find">
+          <label class="pm-bs-search">
+            {%- render 'pm-icon', icon: 'search', size: 16, stroke: 1.75, class: 'pm-bs-search__icon' -%}
+            <input
+              type="search"
+              class="pm-bs-search__input"
+              x-model.debounce.150ms="query"
+              placeholder="{{ st.search_placeholder | escape }}"
+              aria-label="{{ st.search_placeholder | escape }}"
+              autocomplete="off"
+            >
+          </label>
+          {%- if pm_line_idx > 0 -%}
+            <div class="pm-bs-pills" role="group"{% if st.lines_heading != blank %} aria-label="{{ st.lines_heading | escape }}"{% endif %}>
+              <button
+                type="button"
+                class="pm-bs-pill{% if pm_line_start == -1 %} is-selected{% endif %}"
+                :class="{ 'is-selected': lineIndex === -1 }"
+                :aria-pressed="lineIndex === -1 ? 'true' : 'false'"
+                @click="lineIndex = -1"
+              >{{ st.all_label | escape }}</button>
+              {%- assign li = 0 -%}
+              {%- for block in section.blocks -%}
+                {%- if block.type != 'line' -%}{%- continue -%}{%- endif -%}
+                <button
+                  type="button"
+                  class="pm-bs-pill{% if li == pm_line_start %} is-selected{% endif %}"
+                  :class="{ 'is-selected': lineIndex === {{ li }} }"
+                  :aria-pressed="lineIndex === {{ li }} ? 'true' : 'false'"
+                  @click="lineIndex = {{ li }}"
+                  {{ block.shopify_attributes }}
+                >{{ block.settings.label | escape }}</button>
+                {%- assign li = li | plus: 1 -%}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="pm-bs-list" x-ref="list" @scroll.passive="checkScroll()" role="list">
+          {{ pm_rows }}
+        </div>
+        <div class="pm-bs-empty" x-show="visibleRows === 0" x-cloak>
+          <p x-show="query.trim() !== ''">{{ st.search_empty | escape }}</p>
+          <p x-show="query.trim() === ''">{{ st.empty_text | escape }}</p>
+          <button type="button" class="pm-bs-empty__clear" x-show="query.trim() !== '' || lineIndex !== -1" @click="clearSearch()">{{ st.search_clear | escape }}</button>
+        </div>
+        {%- if st.scroll_hint != blank -%}
+          <p class="pm-bs-scroll" x-show="!scrollEnd" aria-hidden="true">
+            {{ st.scroll_hint | escape }}
+            {%- render 'pm-icon', icon: 'chevron-down', size: 12, stroke: 2 -%}
+          </p>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} 6. CTA: every state rendered here (Weglot), the component only switches them {%- endcomment -%}
+      <div class="pm-bs-cta">
+        <button
+          type="button"
+          class="pm-btn pm-btn--primary pm-bs-cta__btn"
+          disabled
+          :disabled="!canAdd"
+          :aria-busy="adding ? 'true' : 'false'"
+          @click="addToCart()"
+          {% if pm_bp != blank %}data-bundle-product-id="{{ pm_bp.id }}"{% endif %}
+        >
+          <div class="pm-bs-cta__state" x-show="ctaState === 'empty'">{{ st.cta_empty | escape }}</div>
+          <div class="pm-bs-cta__state" x-show="ctaState === 'more'" x-cloak>
+            {%- render 'pm-bs-text', text: st.cta_more, t1: '[n]', x1: 'need', v1: pm_start_target -%}
+          </div>
+          <div class="pm-bs-cta__state" x-show="ctaState === 'ready'" x-cloak>
+            <div class="pm-bs-t">{{ st.cta_label | escape }}</div>
+            <div class="pm-bs-t" aria-hidden="true">&nbsp;·&nbsp;</div>
+            <div class="pm-bs-t pm-bs-t--num" x-text="bundleVariant ? money(bundleVariant.price) : ''"></div>
+          </div>
+          <div class="pm-bs-cta__state" x-show="ctaState === 'adding'" x-cloak>{{ st.cta_adding | escape }}</div>
+        </button>
+        <p class="pm-bs-error" role="alert" x-show="error" x-cloak>{{ st.error_text | escape }}</p>
+      </div>
+
+      {%- comment -%}
+        8. Payment icons + badge row: the same pair the single-scent product page shows under its buy button
+        (snippets/fmx-payment-icons: Swish / MobilePay / Vipps, Klarna, cards, wallets per market;
+        snippets/fmx-shipping-badges: delivery, PostNord, 60-day guarantee). Not shop.enabled_payment_types,
+        which lists Shopify Payments methods (ACH, Amazon, Amex, Discover) instead of what the Nordic checkout offers.
+      {%- endcomment -%}
+      {%- if st.show_payment_icons -%}
+        <div class="pm-bs-trust">
+          {% render 'fmx-payment-icons' %}
+          {% render 'fmx-shipping-badges', product: product %}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} 9. Mini review slider {%- endcomment -%}
+      {%- assign pm_rev_count = 0 -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'mini_review' and block.settings.quote != blank -%}
+          {%- assign pm_rev_count = pm_rev_count | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if pm_rev_count > 0 -%}
+        <div class="pm-bs-reviews" @mouseenter="revPaused = true" @mouseleave="revPaused = false" @focusin="revPaused = true" @focusout="revPaused = false">
+          <div class="pm-bs-reviews__stack">
+            {%- assign ri = 0 -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type != 'mini_review' or block.settings.quote == blank -%}{%- continue -%}{%- endif -%}
+              <figure
+                class="pm-bs-review{% if ri == 0 %} is-active{% endif %}"
+                :class="{ 'is-active': rev === {{ ri }} }"
+                :aria-hidden="rev === {{ ri }} ? 'false' : 'true'"
+                {{ block.shopify_attributes }}
+              >
+                {%- if block.settings.image != blank -%}
+                  {{ block.settings.image | image_url: width: 160 | image_tag: width: 64, height: 64, loading: 'lazy', alt: block.settings.name, class: 'pm-bs-review__img' }}
+                {%- endif -%}
+                <div class="pm-bs-review__body">
+                  {%- render 'pm-stars', rating: 5, size: 12, class: 'pm-bs-review__stars' -%}
+                  <blockquote class="pm-bs-review__quote">{{ block.settings.quote | escape }}</blockquote>
+                  <figcaption class="pm-bs-review__by">
+                    {%- if block.settings.verified -%}
+                      {%- render 'pm-icon', icon: 'check-circle', size: 14, stroke: 1.75 -%}
+                    {%- endif -%}
+                    <span class="pm-bs-review__name">{{ block.settings.name | escape }}</span>
+                    {%- if block.settings.verified -%}
+                      <span class="pm-bs-review__verified">{{ st.verified_label | escape }}</span>
+                    {%- endif -%}
+                  </figcaption>
+                </div>
+              </figure>
+              {%- assign ri = ri | plus: 1 -%}
+            {%- endfor -%}
+          </div>
+          {%- if pm_rev_count > 1 -%}
+            <div class="pm-bs-dots">
+              {%- for i in (1..pm_rev_count) -%}
+                {%- assign di = forloop.index0 -%}
+                <button
+                  type="button"
+                  class="pm-bs-dot{% if di == 0 %} is-active{% endif %}"
+                  :class="{ 'is-active': rev === {{ di }} }"
+                  @click="rev = {{ di }}"
+                  aria-label="{{ forloop.index }} / {{ pm_rev_count }}"
+                ></button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} 10. Mini FAQ {%- endcomment -%}
+      {%- capture pm_faq -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'mini_faq' and block.settings.question != blank -%}
+            <details {{ block.shopify_attributes }}>
+              <summary>{{ block.settings.question | escape }}</summary>
+              <div class="accordion__content rte">{{ block.settings.answer }}</div>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- if pm_faq != blank -%}
+        <div class="pm-accordion pm-bs-faq">{{ pm_faq }}</div>
+      {%- endif -%}
+
+      {%- comment -%} 11. Guarantee {%- endcomment -%}
+      {%- if st.guarantee_heading != blank or st.guarantee_text != blank -%}
+        <div class="pm-bs-guarantee">
+          {%- if st.guarantee_heading != blank -%}
+            <p class="pm-bs-guarantee__title">
+              {%- render 'pm-icon', icon: 'shield', size: 20, stroke: 1.5 -%}
+              <span>{{ st.guarantee_heading | escape }}</span>
+            </p>
+          {%- endif -%}
+          {%- if st.guarantee_text != blank -%}
+            <div class="pm-bs-guarantee__text rte">{{ st.guarantee_text }}</div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+<script>
+  (function () {
+    function register() {
+      if (window.__pmBundleSaveRegistered) return;
+      window.__pmBundleSaveRegistered = true;
+      window.Alpine.data('pmBundleSave', function () {
+        return {
+          cfg: null,
+          tierIndex: 0,
+          lineIndex: -1,
+          picks: [],
+          names: {},
+          rowLines: {},
+          rowSearch: {},
+          rowIds: [],
+          query: '',
+          adding: false,
+          error: '',
+          scrollEnd: false,
+          media: 0,
+          rev: 0,
+          revCount: 0,
+          revPaused: false,
+          clock: { h: '00', m: '00', s: '00' },
+
+          init: function () {
+            var self = this;
+            var node = this.$el.querySelector('[data-pm-bs-config]');
+            try {
+              this.cfg = JSON.parse(node ? node.textContent : '{}');
+            } catch (e) {
+              this.cfg = {};
+            }
+            this.cfg.tiers = this.cfg.tiers || [];
+            this.cfg.lines = this.cfg.lines || [];
+            this.cfg.variants = this.cfg.variants || {};
+            this.cfg.text = this.cfg.text || {};
+            this.tierIndex = Math.min(Math.max(this.cfg.tierStart || 0, 0), Math.max(this.cfg.tiers.length - 1, 0));
+            this.lineIndex = typeof this.cfg.lineStart === 'number' ? this.cfg.lineStart : -1;
+
+            this.$el.querySelectorAll('[data-pm-bs-row]').forEach(function (row) {
+              self.names[row.dataset.vid] = row.dataset.title;
+              self.rowLines[row.dataset.vid] = row.dataset.line || '';
+              self.rowSearch[row.dataset.vid] = row.dataset.search || '';
+              self.rowIds.push(row.dataset.vid);
+            });
+            this.revCount = this.$el.querySelectorAll('.pm-bs-review').length;
+
+            if (this.cfg.timerOn) this.startTimer();
+            if (this.revCount > 1) this.startReviews();
+            var toTop = function () {
+              if (self.$refs.list) self.$refs.list.scrollTop = 0;
+              self.$nextTick(function () { self.checkScroll(); });
+            };
+            this.$watch('lineIndex', toTop);
+            this.$watch('query', toTop);
+            this.$nextTick(function () { self.checkScroll(); });
+          },
+
+          /* Tiers */
+          get tier() { return this.cfg.tiers[this.tierIndex] || { bottles: 1, cap: 1 }; },
+          get target() { return this.tier.bottles; },
+          get cap() { return this.tier.cap; },
+          get maxTotal() { return this.cfg.maxTotal || 0; },
+          get atMax() { return this.picks.length >= this.maxTotal; },
+          liveTier: function (i) {
+            if (this.tierIndex !== i) return null;
+            var t = this.cfg.tiers[i];
+            var n = this.picks.length;
+            if (!t || n <= t.bottles || n > t.cap) return null;
+            return this.cfg.variants[String(n)] || null;
+          },
+          selectTier: function (i) {
+            this.tierIndex = i;
+            if (this.picks.length > this.cap) this.picks = this.picks.slice(0, this.cap);
+            this.error = '';
+          },
+          bumpTier: function () {
+            var count = this.picks.length;
+            if (count <= this.cap) return;
+            var best = -1;
+            this.cfg.tiers.forEach(function (t, i) {
+              if (t.cap < count) return;
+              if (best === -1) { best = i; return; }
+              var b = this.cfg.tiers[best];
+              if (t.cap < b.cap || (t.cap === b.cap && t.bottles < b.bottles)) best = i;
+            }, this);
+            if (best !== -1) this.tierIndex = best;
+          },
+
+          /* Gender pills + search (Whop: brand, occasion, scent family; every word must match) */
+          lineOk: function (line) {
+            if (this.lineIndex < 0) return true;
+            var l = this.cfg.lines[this.lineIndex];
+            return !l || (l.tag || '') === line;
+          },
+          get terms() {
+            return String(this.query || '').toLowerCase().trim().split(/\s+/).filter(Boolean);
+          },
+          searchOk: function (vid) {
+            var hay = this.rowSearch[vid] || '';
+            return this.terms.every(function (t) { return hay.indexOf(t) > -1; });
+          },
+          rowOk: function (vid) {
+            var key = String(vid);
+            return this.lineOk(this.rowLines[key] || '') && this.searchOk(key);
+          },
+          get visibleRows() {
+            return this.rowIds.filter(function (vid) { return this.rowOk(vid); }, this).length;
+          },
+          clearSearch: function () {
+            this.query = '';
+            this.lineIndex = -1;
+          },
+
+          /* Picks */
+          qty: function (vid) {
+            var key = String(vid);
+            return this.picks.filter(function (p) { return p === key; }).length;
+          },
+          add: function (vid) {
+            if (this.atMax) return;
+            this.picks.push(String(vid));
+            this.bumpTier();
+            this.error = '';
+          },
+          remove: function (vid) {
+            var i = this.picks.lastIndexOf(String(vid));
+            if (i > -1) this.picks.splice(i, 1);
+            this.error = '';
+          },
+          get shownTotal() { return Math.max(this.target, this.picks.length); },
+          get percent() {
+            return this.shownTotal ? Math.min(100, Math.round((this.picks.length / this.shownTotal) * 100)) : 0;
+          },
+          /* Price + CTA. A count without an available variant is not sold (Whop: 1 / 3 / 5 / 7), so the button asks
+             for the bottles up to the next count that sells, never below the selected card */
+          get bundleVariant() { return this.cfg.variants[String(this.picks.length)] || null; },
+          nextSellable: function (n) {
+            for (var k = n; k <= this.maxTotal; k++) {
+              var v = this.cfg.variants[String(k)];
+              if (v && v.available) return k;
+            }
+            return null;
+          },
+          get need() {
+            var n = this.picks.length;
+            if (this.cfg.mode === 'per_line') return Math.max(0, this.target - n);
+            var k = this.nextSellable(Math.max(this.target, n, 1));
+            return k ? k - n : 0;
+          },
+          get canAdd() {
+            if (this.adding || this.picks.length === 0 || this.need > 0) return false;
+            if (this.cfg.mode === 'per_line') return true;
+            return !!(this.bundleVariant && this.bundleVariant.available);
+          },
+          get ctaState() {
+            if (this.adding) return 'adding';
+            if (this.picks.length === 0) return 'empty';
+            if (this.need > 0) return 'more';
+            return this.canAdd ? 'ready' : 'empty';
+          },
+          money: function (cents) {
+            var out = typeof window.pmMoney === 'function'
+              ? window.pmMoney(cents)
+              : (Math.round(Number(cents) || 0) / 100).toFixed(2) + ' kr';
+            return out.replace(/[.,]00(?=\D*$)/, '');
+          },
+          addToCart: function () {
+            if (!this.canAdd) return;
+            var self = this;
+            var items;
+            if (this.cfg.mode === 'per_line') {
+              var counts = {};
+              var order = [];
+              this.picks.forEach(function (vid) {
+                if (!counts[vid]) { counts[vid] = 0; order.push(vid); }
+                counts[vid] += 1;
+              });
+              items = order.map(function (vid) { return { id: Number(vid), quantity: counts[vid] }; });
+            } else {
+              var props = {};
+              var label = this.cfg.text.bottle || 'Bottle';
+              this.picks.forEach(function (vid, i) { props[label + ' ' + (i + 1)] = self.names[vid] || vid; });
+              props._bundle_items = this.picks.join(',');
+              items = [{ id: this.bundleVariant.id, quantity: 1, properties: props }];
+            }
+
+            /*
+              Add, then show the drawer from a fresh section render. On the live theme the add.js reply sometimes never
+              reaches this code (apps wrap window.fetch) although the line is in the cart, and rendering the drawer from
+              the add reply left the app-adjusted total wrong. So: wait for the reply at most 5 s; if it does not come,
+              check /cart.js for this bundle; then GET the drawer sections (server totals) and open it; publish the
+              cart update last, with the real cart.
+            */
+            var cart = document.querySelector('cart-drawer');
+            var root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+            var marker = items.length === 1 && items[0].properties ? items[0].properties._bundle_items : null;
+            var TIMEOUT = {};
+            var within = function (p, ms) {
+              return Promise.race([p, new Promise(function (r) { setTimeout(function () { r(TIMEOUT); }, ms); })]);
+            };
+            if (cart && typeof cart.setActiveElement === 'function') cart.setActiveElement(document.activeElement);
+
+            this.adding = true;
+            this.error = '';
+            /* Last safety net: some live page loads never get any cart reply back; after 8 s go to the cart page,
+               which loads fresh and shows the bundle (it is in the cart even when the reply is lost). */
+            var done = false;
+            var hardStop = setTimeout(function () {
+              if (!done) window.location.href = (window.routes && window.routes.cart_url) || root + 'cart';
+            }, 8000);
+            var add = fetch(root + 'cart/add.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+              body: JSON.stringify({ items: items })
+            }).then(function (res) {
+              return res.json().catch(function () { return {}; }).then(function (data) {
+                if (!res.ok || data.status) {
+                  var err = new Error(data.description || data.message || 'cart');
+                  err.data = data;
+                  throw err;
+                }
+                return data;
+              });
+            });
+            within(add, 5000)
+              .then(function (result) {
+                if (result !== TIMEOUT) return;
+                /* No reply in time: the add counts if the bundle line is in the cart now */
+                return fetch(root + 'cart.js', { headers: { Accept: 'application/json' } })
+                  .then(function (r) { return r.json(); })
+                  .then(function (c) {
+                    var found = (c.items || []).some(function (it) {
+                      return marker ? it.properties && it.properties._bundle_items === marker : items.some(function (x) { return x.id === it.variant_id; });
+                    });
+                    if (!found) throw new Error('cart add timed out');
+                  });
+              })
+              .then(function () {
+                if (!cart || typeof cart.renderContents !== 'function' || typeof cart.getSectionsToRender !== 'function') {
+                  window.location.href = (window.routes && window.routes.cart_url) || root + 'cart';
+                  return;
+                }
+                var ids = cart.getSectionsToRender().map(function (s) { return s.id; });
+                return fetch(window.location.pathname + '?sections=' + ids.join(','))
+                  .then(function (r) { return r.json(); })
+                  .then(function (sections) {
+                    done = true;
+                    clearTimeout(hardStop);
+                    cart.renderContents({ sections: sections });
+                    if (cart.classList.contains('is-empty')) cart.classList.remove('is-empty');
+                    if (typeof publish === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+                      return fetch(root + 'cart.js', { headers: { Accept: 'application/json' } })
+                        .then(function (r) { return r.json(); })
+                        .then(function (c) { publish(PUB_SUB_EVENTS.cartUpdate, { source: 'pm-bundle-save', cartData: c }); })
+                        .catch(function () {});
+                    }
+                  });
+              })
+              .catch(function (err) {
+                done = true;
+                clearTimeout(hardStop);
+                /* The message itself is the error text rendered in the section (Weglot); keep Shopify's for the console */
+                var d = (err && err.data) || {};
+                if (window.console) console.warn('pm-bundle-save cart/add', d.description || d.message || err);
+                self.error = 'cart';
+              })
+              .finally(function () { self.adding = false; });
+          },
+
+          /* Gallery */
+          onTrack: function () {
+            var t = this.$refs.track;
+            if (!t || !t.clientWidth) return;
+            this.media = Math.round(t.scrollLeft / t.clientWidth);
+          },
+          goTo: function (i) {
+            var t = this.$refs.track;
+            if (!t) return;
+            var n = t.children.length;
+            var idx = Math.max(0, Math.min(n - 1, i));
+            this.media = idx;
+            t.scrollTo({ left: idx * t.clientWidth, behavior: 'smooth' });
+          },
+
+          /* Scroll hint */
+          checkScroll: function () {
+            var l = this.$refs.list;
+            if (!l) return;
+            this.scrollEnd = l.scrollTop + l.clientHeight >= l.scrollHeight - 8;
+          },
+
+          /* Countdown to the visitor's local midnight, like the top bar and Whop */
+          startTimer: function () {
+            var self = this;
+            var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+            var tick = function () {
+              var now = new Date();
+              var end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+              var s = Math.max(0, Math.floor((end - now) / 1000));
+              self.clock = { h: pad(Math.floor(s / 3600)), m: pad(Math.floor((s % 3600) / 60)), s: pad(s % 60) };
+            };
+            tick();
+            clearInterval(this._timerId);
+            this._timerId = setInterval(tick, 1000);
+          },
+
+          /* Alpine calls this when the theme editor re-renders the section */
+          destroy: function () {
+            clearInterval(this._timerId);
+            clearInterval(this._revId);
+          },
+
+          /* Reviews */
+          startReviews: function () {
+            var self = this;
+            var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduce) return;
+            clearInterval(this._revId);
+            this._revId = setInterval(function () {
+              if (self.revPaused || document.hidden) return;
+              self.rev = (self.rev + 1) % self.revCount;
+            }, this.cfg.reviewMs || 5000);
+          }
+        };
+      });
+    }
+
+    if (window.Alpine) {
+      register();
+    } else {
+      document.addEventListener('alpine:init', register);
+    }
+
+    /* Theme editor: a freshly added or re-rendered section can reach Alpine before the
+       component is registered, so re-init its tree once the section has loaded */
+    if (!window.pmBundleSaveEditorHook) {
+      window.pmBundleSaveEditorHook = true;
+      document.addEventListener('shopify:section:load', function (e) {
+        var el = e.target && e.target.querySelector('[x-data="pmBundleSave"]');
+        if (!el || !window.Alpine) return;
+        register();
+        if (window.Alpine.destroyTree) window.Alpine.destroyTree(el);
+        window.Alpine.initTree(el);
+      });
+    }
+
+    /* Load Alpine once if no other section on the page brought it (other Alpine sections load it with a defer tag) */
+    function ensureAlpine() {
+      if (window.Alpine || document.querySelector('script[data-pm-alpine]')) return;
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js';
+      s.defer = true;
+      s.setAttribute('data-pm-alpine', '');
+      document.head.appendChild(s);
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', ensureAlpine);
+    } else {
+      ensureAlpine();
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Bundle & Save",
+  "tag": "div",
+  "class": "section-pm-bundle-save premium",
+  "settings": [
+    {
+      "type": "text",
+      "id": "bundle_handle",
+      "label": "Bundle product handle",
+      "default": "bundle-and-save",
+      "info": "Used when \"Bundle product\" is empty. Variants \"2 flaskor\", \"4 flaskor\"... (or \"2 Bottles\"...): the leading number is the bottle count. A count without a variant is not sold."
+    },
+    {
+      "type": "product",
+      "id": "bundle_product",
+      "label": "Bundle product",
+      "info": "Empty = the product with the handle above, else this page's own product (template bundle-save)."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Scent collection",
+      "info": "Empty = bestseller-singles. Skipped: products tagged \"bundle\", sold out and single-size products (mystery box)."
+    },
+    {
+      "type": "text",
+      "id": "bottle_size",
+      "label": "Bottle size in the bundle",
+      "default": "50ml",
+      "info": "The scent variant whose name starts with this value goes into the bundle (50ml, 50 ml and 50ML match). Scents without it are not listed. Empty = first available variant."
+    },
+    {
+      "type": "select",
+      "id": "pricing_mode",
+      "label": "Cart mode",
+      "options": [
+        {
+          "value": "bundle_product",
+          "label": "One bundle line (bundle variant price)"
+        },
+        {
+          "value": "per_line",
+          "label": "One line per scent"
+        }
+      ],
+      "default": "bundle_product",
+      "info": "\"One line per scent\" adds scents at their own prices: an automatic discount in admin must then make the bundle price."
+    },
+    {
+      "type": "text",
+      "id": "single_price",
+      "label": "Single bottle price for struck prices",
+      "info": "Only when a bundle variant has no compare-at price. Empty = no struck price."
+    },
+    {
+      "type": "text",
+      "id": "bottle_property",
+      "label": "Cart line label per scent",
+      "default": "Bottle",
+      "info": "Line item property name: \"Bottle 1\", \"Bottle 2\"... Keep \"Bottle\", order handling reads it."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Intro"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show rating line",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating text",
+      "default": "Över 10 000 verifierade doftälskare",
+      "info": "Shown next to 5 stars. No average number."
+    },
+    {
+      "type": "url",
+      "id": "rating_link",
+      "label": "Rating link"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Köp fler, <em>spara mer</em>",
+      "info": "Italic text shows grey as an accent."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Sätt ihop ditt eget paket med favoritdofter och spara upp till [max]%",
+      "info": "[max] = the biggest saving over the bundle variants."
+    },
+    {
+      "type": "header",
+      "content": "Countdown"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_timer",
+      "label": "Show countdown",
+      "default": true,
+      "info": "Counts down to the visitor's local midnight, like the top bar."
+    },
+    {
+      "type": "text",
+      "id": "timer_label",
+      "label": "Countdown name",
+      "default": "Erbjudandet går ut om",
+      "info": "Read by screen readers, not shown."
+    },
+    {
+      "type": "text",
+      "id": "timer_eyebrow",
+      "label": "Eyebrow",
+      "default": "Black Month · upp till [max]% rabatt · bara idag",
+      "info": "[max] = the biggest saving over the bundle variants. The part before the first \"·\" is bold."
+    },
+    {
+      "type": "text",
+      "id": "timer_title",
+      "label": "Title",
+      "default": "Rea i 24 timmar"
+    },
+    {
+      "type": "text",
+      "id": "timer_hrs_label",
+      "label": "Hours label",
+      "default": "tim"
+    },
+    {
+      "type": "text",
+      "id": "timer_mins_label",
+      "label": "Minutes label",
+      "default": "min"
+    },
+    {
+      "type": "text",
+      "id": "timer_secs_label",
+      "label": "Seconds label",
+      "default": "sek"
+    },
+    {
+      "type": "header",
+      "content": "Bundle size"
+    },
+    {
+      "type": "text",
+      "id": "tiers_heading",
+      "label": "Bundle size heading",
+      "default": "Välj storlek på paketet"
+    },
+    {
+      "type": "text",
+      "id": "saving_badge",
+      "label": "Saving badge",
+      "default": "-[pct]%",
+      "info": "[pct] = the variant's saving against its compare-at price. Empty = no badge."
+    },
+    {
+      "type": "text",
+      "id": "per_bottle_text",
+      "label": "Price per bottle",
+      "default": "[price] / flaska",
+      "info": "[price] = card price divided by bottles. Empty hides the line."
+    },
+    {
+      "type": "text",
+      "id": "stack_text",
+      "label": "Extra bottle note (8+ card)",
+      "default": "Bara [price] per extra flaska",
+      "info": "On cards whose maximum is above their bottle count. [price] = price of each extra bottle."
+    },
+    {
+      "type": "header",
+      "content": "Scent picker"
+    },
+    {
+      "type": "text",
+      "id": "scents_heading",
+      "label": "Heading",
+      "default": "Välj dina [n] dofter",
+      "info": "[n] = bottles in the selected bundle."
+    },
+    {
+      "type": "text",
+      "id": "counter_text",
+      "label": "Counter",
+      "default": "[x] av [n] valda"
+    },
+    {
+      "type": "text",
+      "id": "max_text",
+      "label": "Hint: bundle full",
+      "default": "Paketet är fullt: [max] flaskor",
+      "info": "[max] = the most bottles a bundle can have."
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Sök på märke, tillfälle eller doftfamilj"
+    },
+    {
+      "type": "text",
+      "id": "lines_heading",
+      "label": "Filter name",
+      "default": "Filtrera dofter",
+      "info": "Read by screen readers, not shown."
+    },
+    {
+      "type": "text",
+      "id": "all_label",
+      "label": "Filter: all",
+      "default": "Alla"
+    },
+    {
+      "type": "text",
+      "id": "search_empty",
+      "label": "No search results",
+      "default": "Inga dofter matchar din sökning"
+    },
+    {
+      "type": "text",
+      "id": "search_clear",
+      "label": "Clear search",
+      "default": "Rensa sökning"
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Empty filter text",
+      "default": "Inga dofter i den här gruppen."
+    },
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "Add button",
+      "default": "Lägg till"
+    },
+    {
+      "type": "text",
+      "id": "inspired_prefix",
+      "label": "Inspiration prefix",
+      "default": "Inspirerad av",
+      "info": "Before the designer name (field custom.inspiration). Chips come from the field occasion."
+    },
+    {
+      "type": "text",
+      "id": "badge_bestseller",
+      "label": "Badge: bestseller tag",
+      "default": "Bästsäljare",
+      "info": "Products tagged \"bestseller\". A \"badge:<text>\" tag wins over it. Empty = off."
+    },
+    {
+      "type": "text",
+      "id": "badge_new",
+      "label": "Badge: new tag",
+      "default": "Nyhet",
+      "info": "Products tagged \"new\" or \"new-arrival\". Empty = off."
+    },
+    {
+      "type": "text",
+      "id": "scroll_hint",
+      "label": "Scroll hint",
+      "default": "Scrolla för att se fler dofter"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "cta_empty",
+      "label": "Text, nothing picked",
+      "default": "Välj dina dofter"
+    },
+    {
+      "type": "text",
+      "id": "cta_more",
+      "label": "Text, bottles missing",
+      "default": "Välj [n] till för att fylla ditt paket",
+      "info": "[n] = bottles still needed for the selected bundle (or the next size that is sold)."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button text",
+      "default": "Lägg i varukorgen",
+      "info": "Followed by the bundle price for the picked number of bottles."
+    },
+    {
+      "type": "text",
+      "id": "cta_adding",
+      "label": "Loading text",
+      "default": "Lägger i varukorgen..."
+    },
+    {
+      "type": "text",
+      "id": "error_text",
+      "label": "Error text",
+      "default": "Något gick fel. Försök igen."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Reviews"
+    },
+    {
+      "type": "range",
+      "id": "review_interval",
+      "label": "Auto-rotate",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "verified_label",
+      "label": "Verified label",
+      "default": "Verifierat köp"
+    },
+    {
+      "type": "header",
+      "content": "Guarantee"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_heading",
+      "label": "Heading",
+      "default": "60 dagars pengarna-tillbaka-garanti"
+    },
+    {
+      "type": "richtext",
+      "id": "guarantee_text",
+      "label": "Text",
+      "default": "<p>Prova i 60 dagar, riskfritt. Är doften inte rätt för dig skickar du tillbaka beställningen.</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "drop",
+              "label": "Drop"
+            },
+            {
+              "value": "clock",
+              "label": "Clock"
+            },
+            {
+              "value": "sparkle",
+              "label": "Sparkle"
+            },
+            {
+              "value": "leaf",
+              "label": "Leaf"
+            },
+            {
+              "value": "shield",
+              "label": "Shield"
+            },
+            {
+              "value": "check-circle",
+              "label": "Check"
+            },
+            {
+              "value": "heart",
+              "label": "Heart"
+            },
+            {
+              "value": "star",
+              "label": "Star"
+            },
+            {
+              "value": "truck",
+              "label": "Truck"
+            },
+            {
+              "value": "return",
+              "label": "Return"
+            }
+          ],
+          "default": "drop"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "20% parfymolja (Eau de Parfum)"
+        }
+      ]
+    },
+    {
+      "type": "tier",
+      "name": "Bundle size",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "range",
+          "id": "bottles",
+          "label": "Bottles",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "default": 2,
+          "info": "Price comes from the bundle variant with this many bottles."
+        },
+        {
+          "type": "range",
+          "id": "max_bottles",
+          "label": "Most bottles on this card",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "default": 2,
+          "info": "For an \"8+\" card set the highest count. Values below Bottles are ignored."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "2 flaskor"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Caption",
+          "default": "Dag och kväll"
+        },
+        {
+          "type": "text",
+          "id": "badge_override",
+          "label": "Badge",
+          "info": "Empty = saving in % from the variant's compare-at price (format in section settings)."
+        },
+        {
+          "type": "checkbox",
+          "id": "preselected",
+          "label": "Selected at start",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "name": "Filter pill",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "select",
+          "id": "group",
+          "label": "Group",
+          "options": [
+            {
+              "value": "men",
+              "label": "Men"
+            },
+            {
+              "value": "women",
+              "label": "Women"
+            },
+            {
+              "value": "unisex",
+              "label": "Unisex"
+            }
+          ],
+          "default": "men",
+          "info": "From product tags: Man / Für Männer / fuer-maenner = men, Woman / Für Frauen / fuer-frauen = women, unisex (or both) = unisex. Untagged scents show under \"all\" only."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Herr"
+        },
+        {
+          "type": "checkbox",
+          "id": "preselected",
+          "label": "Selected at start",
+          "default": false,
+          "info": "Nothing selected = all scents."
+        }
+      ]
+    },
+    {
+      "type": "mini_review",
+      "name": "Review",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "info": "Real reviews only. Empty = not shown."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo",
+          "info": "Must match the name (and the gender in the quote)."
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Verified purchase",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "mini_faq",
+      "name": "Question",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Hur länge håller doften?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Över 12 timmar för de flesta. Hur länge den sitter beror på din hud, så spraya på huden och inte på kläderna.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bundle & Save",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "drop",
+            "text": "20% parfymolja (Eau de Parfum)"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "clock",
+            "text": "Håller 12+ timmar på huden"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "leaf",
+            "text": "Inga hårda kemikalier"
+          }
+        },
+        {
+          "type": "tier",
+          "settings": {
+            "bottles": 2,
+            "max_bottles": 2,
+            "label": "2 flaskor",
+            "tag": "Dag och kväll"
+          }
+        },
+        {
+          "type": "tier",
+          "settings": {
+            "bottles": 4,
+            "max_bottles": 4,
+            "label": "4 flaskor",
+            "tag": "En för varje tillfälle"
+          }
+        },
+        {
+          "type": "tier",
+          "settings": {
+            "bottles": 6,
+            "max_bottles": 6,
+            "label": "6 flaskor",
+            "tag": "Mest populär",
+            "preselected": true
+          }
+        },
+        {
+          "type": "tier",
+          "settings": {
+            "bottles": 8,
+            "max_bottles": 20,
+            "label": "8+ flaskor",
+            "tag": "För samlaren"
+          }
+        },
+        {
+          "type": "line",
+          "settings": {
+            "group": "men",
+            "label": "Herr"
+          }
+        },
+        {
+          "type": "line",
+          "settings": {
+            "group": "women",
+            "label": "Dam"
+          }
+        },
+        {
+          "type": "line",
+          "settings": {
+            "group": "unisex",
+            "label": "Unisex"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

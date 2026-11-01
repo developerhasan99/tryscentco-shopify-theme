@@ -1,0 +1,365 @@
+/* fmx-s-image-and-text.css (WP-C2): EU split (#cleanLabel).
+   375: image full bleed 375x420 (cover), then a surface panel with 32/20 padding, text centred.
+   750+: two halves inside the page gutters, image covers its half, panel padding 40 (60 from 990), min-height 560 from 990,
+   content column max 440, text left. Heading / text sizes come from the block settings as CSS variables.
+   Card layout (setting layout = card, class pm-split--card): one rounded card inside the page gutters, image on top
+   (radius 8 8 0 0, 1:0.92) and a surface panel under it (28/24, centred), stacked up to 989 (card max 600 from 750);
+   from 990 one 8px container, 50/50 columns, image fills its half, panel 56, min-height 440. Fixed card typography. */
+.premium .pm-split {
+  box-sizing: border-box;
+}
+
+.premium .pm-split__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: var(--page-width);
+  margin: 0 auto;
+}
+
+.premium .pm-split__media {
+  position: relative;
+  margin: 0;
+  background: var(--pm-surface);
+  overflow: hidden;
+}
+
+.premium .pm-split__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 375 / 420;
+  object-fit: cover;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.premium .pm-split--rounded .pm-split__media,
+.premium .pm-split--rounded .pm-split__img {
+  border-radius: var(--pm-radius-md);
+}
+
+.premium .pm-split--image-under-heading .pm-split__media:not(.pm-split__media--inline) {
+  display: none;
+}
+
+.premium .pm-split__media--inline {
+  margin: 0 -20px;
+}
+
+.premium .pm-split--rounded .pm-split__media--inline {
+  margin: 0;
+}
+
+.premium .pm-split__panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: var(--pm-split-align, center);
+  box-sizing: border-box;
+  padding: 32px 20px;
+  background: var(--pm-surface);
+  color: var(--pm-ink);
+  text-align: center;
+}
+
+.premium .pm-split__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pm-split-blocks-gap, 24px);
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.premium .pm-split__eyebrow {
+  margin: 0;
+}
+
+.premium .pm-split__heading {
+  margin: 0;
+  font-size: var(--pm-split-heading-size, var(--pm-fs-title));
+  line-height: 1.25;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--pm-ink);
+}
+
+.premium .pm-split__text {
+  font-size: var(--pm-split-text-size, var(--pm-fs-body-lg));
+  line-height: 1.6;
+  color: var(--pm-ink);
+}
+
+.premium .pm-split__rte p {
+  margin: 0 0 1em;
+}
+
+.premium .pm-split__rte p:last-child {
+  margin-bottom: 0;
+}
+
+.premium .pm-split__rte ul,
+.premium .pm-split__rte ol {
+  margin: 0 0 1em;
+  padding-left: 20px;
+  text-align: left;
+}
+
+.premium .pm-split__rte--desktop {
+  display: none;
+}
+
+.premium .pm-split__rte--mobile {
+  display: block;
+}
+
+.premium .pm-split__cta {
+  display: flex;
+  justify-content: center;
+}
+
+.premium .pm-split__point {
+  display: flex;
+  gap: 16px;
+  text-align: left;
+}
+
+.premium .pm-split__point-icon {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: grayscale(1);
+}
+
+.premium .pm-split__point-body {
+  min-width: 0;
+}
+
+.premium .pm-split__point-heading {
+  margin: 0 0 8px;
+}
+
+@media (min-width: 750px) {
+  .premium .pm-split__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-left: var(--pm-gutter);
+    padding-right: var(--pm-gutter);
+  }
+
+  .premium .pm-split--image-under-heading .pm-split__media:not(.pm-split__media--inline) {
+    display: block;
+  }
+
+  .premium .pm-split__media--inline {
+    display: none;
+  }
+
+  .premium .pm-split__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .premium .pm-split--image-second .pm-split__media {
+    order: 2;
+  }
+
+  .premium .pm-split__panel {
+    padding: 40px;
+    text-align: left;
+  }
+
+  .premium .pm-split__rte--desktop {
+    display: block;
+  }
+
+  .premium .pm-split__rte--mobile {
+    display: none;
+  }
+
+  .premium .pm-split__cta {
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 990px) {
+  .premium .pm-split__grid > * {
+    min-height: 560px;
+  }
+
+  .premium .pm-split__panel {
+    padding: 60px;
+  }
+}
+
+/* Card layout */
+.premium .pm-split--card .pm-split__grid {
+  width: calc(100% - 2 * var(--pm-gutter));
+  max-width: calc(var(--page-width) - 2 * var(--pm-gutter));
+  margin: 0 auto;
+  padding: 0;
+  border-radius: var(--pm-radius-md);
+  overflow: hidden;
+  background: var(--pm-surface);
+}
+
+.premium .pm-split--card .pm-split__media {
+  border-radius: var(--pm-radius-md) var(--pm-radius-md) 0 0;
+}
+
+.premium .pm-split--card .pm-split__img {
+  aspect-ratio: 25 / 23;
+  border-radius: var(--pm-radius-md) var(--pm-radius-md) 0 0;
+}
+
+.premium .pm-split--card .pm-split__panel {
+  padding: 28px 24px;
+  border-radius: 0 0 var(--pm-radius-md) var(--pm-radius-md);
+  text-align: center;
+}
+
+.premium .pm-split--card .pm-split__panel:only-child {
+  grid-column: 1 / -1;
+  border-radius: var(--pm-radius-md);
+}
+
+.premium .pm-split--card .pm-split__content {
+  gap: 0;
+  max-width: 440px;
+}
+
+.premium .pm-split--card .pm-split__content > * {
+  margin-top: 12px;
+}
+
+.premium .pm-split--card .pm-split__eyebrow {
+  color: var(--pm-ink);
+}
+
+.premium .pm-split--card .pm-split__heading {
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pm-ink);
+}
+
+.premium .pm-split--card .pm-split__text {
+  width: 100%;
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 13px;
+  line-height: 21px;
+  color: var(--pm-ink);
+}
+
+.premium .pm-split--card .pm-split__cta {
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.premium .pm-split--card .pm-split__content > :first-child {
+  margin-top: 0;
+}
+
+.premium .pm-split--card .pm-split__btn {
+  width: 100%;
+  min-height: 44px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background: var(--pm-black);
+  border-color: var(--pm-black);
+}
+
+@media (min-width: 750px) {
+  .premium .pm-split--card .pm-split__grid {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 600px;
+  }
+
+  .premium .pm-split--card.pm-split--image-second .pm-split__media {
+    order: 0;
+  }
+
+  .premium .pm-split--card .pm-split__img {
+    position: static;
+    height: auto;
+    aspect-ratio: 25 / 23;
+  }
+
+  .premium .pm-split--card .pm-split__panel {
+    padding: 36px 40px;
+    text-align: center;
+  }
+
+  .premium .pm-split--card .pm-split__cta {
+    justify-content: center;
+  }
+}
+
+@media (min-width: 990px) {
+  .premium .pm-split--card .pm-split__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: calc(var(--page-width) - 2 * var(--pm-gutter));
+  }
+
+  .premium .pm-split--card .pm-split__grid > * {
+    min-height: 440px;
+  }
+
+  .premium .pm-split--card .pm-split__media,
+  .premium .pm-split--card .pm-split__img {
+    border-radius: var(--pm-radius-md) 0 0 var(--pm-radius-md);
+  }
+
+  .premium .pm-split--card .pm-split__img {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .premium .pm-split--card .pm-split__panel {
+    padding: 56px;
+    border-radius: 0 var(--pm-radius-md) var(--pm-radius-md) 0;
+  }
+
+  .premium .pm-split--card.pm-split--image-second .pm-split__media {
+    order: 2;
+  }
+
+  .premium .pm-split--card.pm-split--image-second .pm-split__media,
+  .premium .pm-split--card.pm-split--image-second .pm-split__img {
+    border-radius: 0 var(--pm-radius-md) var(--pm-radius-md) 0;
+  }
+
+  .premium .pm-split--card.pm-split--image-second .pm-split__panel {
+    border-radius: var(--pm-radius-md) 0 0 var(--pm-radius-md);
+  }
+
+  .premium .pm-split--card .pm-split__panel:only-child {
+    border-radius: var(--pm-radius-md);
+  }
+
+  .premium .pm-split--card .pm-split__heading {
+    font-size: 22px;
+    line-height: 30px;
+  }
+
+  .premium .pm-split--card .pm-split__text {
+    max-width: 440px;
+    font-size: 15px;
+    line-height: 24px;
+  }
+
+  .premium .pm-split--card .pm-split__btn {
+    max-width: 320px;
+  }
+}

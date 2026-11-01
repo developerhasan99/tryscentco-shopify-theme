@@ -1,0 +1,105 @@
+{%- comment -%}
+  fmx (FM bundle page test): copy of sections/feature-highlights.liquid in FM's look (Figtree, ink titles,
+  muted text, hairlines). Same blocks and settings as the live section.
+{%- endcomment -%}
+{{ 'fmx-base.css' | asset_url | stylesheet_tag }}
+{{ 'fmx-sections.css' | asset_url | stylesheet_tag }}
+{%- style -%}
+  .fmx-perks--{{ section.id }} { padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px; padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px; }
+  @media screen and (min-width: 750px) {
+    .fmx-perks--{{ section.id }} { padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; }
+  }
+{%- endstyle -%}
+<div class="premium">
+  <div class="fmx-perks fmx-perks--{{ section.id }}">
+    <div class="page-width">
+      <ul class="fmx-perks__grid" role="list" style="--fmx-perks-cols: {{ section.blocks.size | at_most: 4 | at_least: 1 }};">
+        {%- for block in section.blocks -%}
+          <li class="fmx-perks__item" {{ block.shopify_attributes }}>
+            {%- if block.settings.perk_image != blank -%}
+              {{ block.settings.perk_image | image_url: width: 80 | image_tag: class: 'fmx-perks__icon', width: 40, height: 40, loading: 'lazy', alt: '' }}
+            {%- endif -%}
+            <h3 class="fmx-perks__title">{{ block.settings.perk_title }}</h3>
+            <p class="fmx-perks__text">{{ block.settings.perk_content }}</p>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</div>
+<style>
+  .premium .fmx-perks { border-top: 1px solid var(--pm-line); border-bottom: 1px solid var(--pm-line); background: var(--pm-white); color: var(--pm-ink); }
+  .premium .fmx-perks__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 16px; margin: 0; padding: 0; list-style: none; }
+  .premium .fmx-perks__item { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 0; text-align: center; }
+  .premium .fmx-perks__icon { display: block; width: 32px; height: 32px; object-fit: contain; filter: grayscale(1) brightness(0.3); }
+  .premium .fmx-perks__title { margin: 4px 0 0; font-size: 14px; line-height: 20px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--pm-ink); }
+  .premium .fmx-perks__text { margin: 0; max-width: 260px; font-size: 13px; line-height: 20px; color: var(--pm-muted); }
+  @media screen and (min-width: 750px) {
+    /* Fewer than 4 perks: one column each, the row kept to 4-perk column widths and centred */
+    .premium .fmx-perks__grid { grid-template-columns: repeat(var(--fmx-perks-cols, 4), minmax(0, 1fr)); gap: 32px; max-width: calc(var(--fmx-perks-cols, 4) * 25% + (var(--fmx-perks-cols, 4) - 4) * 8px); margin-inline: auto; }
+    .premium .fmx-perks__icon { width: 40px; height: 40px; }
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "FM feature row",
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background Color",
+        "default": "#fcfbf9"
+      }, {
+        "type": "header",
+        "content": "t:sections.all.padding.section_padding_heading"
+      }, {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_top",
+        "default": 36
+      }, {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_bottom",
+        "default": 36
+      }
+    ],
+    "blocks": [
+      {
+        "type": "perks",
+        "name": "Perks",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "perk_image",
+            "label": "Perk Image"
+          }, {
+            "type": "text",
+            "id": "perk_title",
+            "label": "Perk Title",
+            "default": "Perk Title"
+          }, {
+            "type": "text",
+            "id": "perk_content",
+            "label": "Perk Content",
+            "default": "Perk Content"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Feature Highlights"
+      }
+    ]
+  }
+{% endschema %}

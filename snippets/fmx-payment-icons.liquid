@@ -1,0 +1,55 @@
+{%- comment -%}
+  fmx-payment-icons: copy of snippets/mgx-payment-icons.liquid from the tryscent.co magyx.co-look
+  theme (tryscent-co-shopify-theme@main) for the FM product page test. Rendered by
+  snippets/fmx-variant-selector.liquid under the buy button.
+
+  Payment methods row: Shopify's own full-colour icons, one line, per market. A fixed list per
+  market, not shop.enabled_payment_types: that one lists only Shopify Payments methods and changes
+  with the shopper's market. The lists are what each market's checkout offers (confirmed by Adrian
+  22.10.2026, Swish and Vipps live at checkout). No SEPA, no Amex / Diners / Discover / Amazon.
+
+  To change a market: edit its list below (Shopify payment icon names, comma separated, in the
+  order shown). Names used here: swish, mobilepay, vipps, klarna, visa, master, apple_pay,
+  google_pay, paypal. An icon Shopify cannot draw is left out instead of printing an error.
+  Countries outside SE / DK / FI / NO get the Swedish list.
+
+  Styles are inline below (the live theme has no magyx-brand.css). Root font-size is 10px, so px.
+
+  Usage:
+  {% render 'fmx-payment-icons' %}
+{%- endcomment -%}
+{%- liquid
+  assign fmx_pay_se = 'swish,klarna,visa,master,apple_pay,google_pay,paypal'
+  assign fmx_pay_dk = 'mobilepay,klarna,visa,master,apple_pay,google_pay,paypal'
+  assign fmx_pay_fi = 'mobilepay,klarna,visa,master,apple_pay,google_pay,paypal'
+  assign fmx_pay_no = 'vipps,klarna,visa,master,apple_pay,google_pay,paypal'
+
+  case localization.country.iso_code
+    when 'DK'
+      assign fmx_pay_list = fmx_pay_dk
+    when 'FI'
+      assign fmx_pay_list = fmx_pay_fi
+    when 'NO'
+      assign fmx_pay_list = fmx_pay_no
+    else
+      assign fmx_pay_list = fmx_pay_se
+  endcase
+  assign fmx_pay_types = fmx_pay_list | split: ','
+-%}
+<style>
+  .fmx-pay-icons { display: flex; justify-content: center; gap: 6px; max-width: 400px; margin: 32px auto 0; padding: 0; list-style: none; }
+  .fmx-pay-icons > li { flex: 0 1 38px; min-width: 0; margin: 0; }
+  .fmx-pay-icons__icon { display: block; width: 100%; height: auto; }
+</style>
+<ul class="fmx-pay-icons" role="list" aria-label="Betalningsmetoder">
+  {%- for type in fmx_pay_types -%}
+    {%- capture fmx_pay_icon -%}{{ type | strip | payment_type_svg_tag: class: 'fmx-pay-icons__icon' }}{%- endcapture -%}
+    {%- comment -%}
+      data-wg-notranslate: each icon carries its brand name as SVG <title> ("Visa"), and Weglot read
+      that as the Swedish verb ("Vis", "Vise", "Näytä" for screen readers on /da-dk /no-no /fi-fi).
+    {%- endcomment -%}
+    {%- if fmx_pay_icon contains '<svg' -%}
+      <li data-wg-notranslate>{{ fmx_pay_icon }}</li>
+    {%- endif -%}
+  {%- endfor -%}
+</ul>

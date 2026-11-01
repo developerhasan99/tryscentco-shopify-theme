@@ -1,0 +1,309 @@
+{% liquid
+  assign product_form_id = 'product-form-' | append: section.id
+
+  assign selected_variant = product.selected_or_first_available_variant
+
+  for variant in product.variants
+    assign variant_title_down = variant.title | downcase
+
+    if variant_title_down contains '100' and variant.available == product.available
+      assign selected_variant = variant
+      break
+    endif
+  endfor
+%}
+
+{% if product.variants.size > 1 and product.available %}
+  {% comment %} Variant Selector {% endcomment %}
+  <div class="pm-size-head">
+    <h2 class="pm-eyebrow pm-size-head__label" id="fmx-size-label-{{ section.id }}">Välj storlek</h2>
+    <span class="pm-size-head__hint">100 ml - vald av 8 av 10 kunder</span>
+  </div>
+
+  <div class="pm-sizes" id="variant-selector" role="group" aria-labelledby="fmx-size-label-{{ section.id }}">
+    {% for variant in product.variants %}
+      {% liquid
+        assign variant_ml = 0
+        if variant.title contains '100'
+          assign variant_ml = 100
+        elsif variant.title contains '50'
+          assign variant_ml = 50
+        elsif variant.title contains '30'
+          assign variant_ml = 30
+        endif
+
+        if variant_ml > 0
+          assign price_per_ml = variant.price | times: 1.0 | divided_by: variant_ml
+        endif
+      %}
+      <button
+        type="button"
+        class="variant-button pm-size{% if variant.id == selected_variant.id %} is-selected{% endif %}"
+        aria-pressed="{% if variant.id == selected_variant.id %}true{% else %}false{% endif %}"
+        data-variant-id="{{ variant.id }}"
+        data-variant-ml="{{ variant_ml }}"
+        data-variant-title="{{ variant.title }}"
+        data-original-price="{{ variant.price | money }}"
+        data-afterpay-price="{{ variant.price |  divided_by: 4 |  money }}"
+        data-compare-price="{{ variant.compare_at_price | money }}">
+        <span class="pm-size__title">{{ variant.title }}</span>
+        {% if variant.title contains '50' %}
+          <span class="pm-size__flag">Mest Populär</span>
+        {% endif %}
+        {% if variant.title contains '100' %}
+          <span class="pm-size__flag">Bäst värde</span>
+        {% endif %}
+        {% if variant_ml > 0 %}
+          <span class="pm-size__meta price-per-ml">{{ price_per_ml | money }} / ml</span>
+        {% endif %}
+      </button>
+    {% endfor %}
+  </div>
+  {% if product.tags contains 'variant_note' %}
+    <div id="variantSuggestion" class="mb-4 text-black text-lg"></div>
+  {% endif %}
+{% endif %}
+
+{% unless product.available %}
+  {% comment %} Sold out: notice and an in stock alternative instead of add to cart (snippets/sold-out-alternative.liquid) {% endcomment %}
+  {% render 'sold-out-alternative'
+    , product: product
+    , section: section %}
+  {% else %}
+  {% comment %} Add to cart form {% endcomment %}
+  <product-form
+    class="product-form fmx-product-form"
+    data-hide-errors="{{ gift_card_recipient_feature_active }}"
+    data-section-id="{{ section.id }}">
+    {%- form 'product'
+      , product
+      , id: product_form_id
+      , class: 'form'
+      , novalidate: 'novalidate'
+      , data-type: 'add-to-cart-form' -%}
+      <input
+        type="hidden"
+        name="id"
+        id="product-variant-id"
+        value="{{ selected_variant.id }}"
+        class="product-variant-id">
+      {% if product.metafields.custom.bundle_size != blank %}
+        {% render 'bundle-mix-dropdown' %}
+      {% else %}
+        <input
+          type="hidden"
+          name="properties[Inspired By]"
+          value="{{ product.metafields.custom.nuta }}" />
+      {% endif %}
+      <div class="pm-subtotal">
+        <span>Delsumma</span>
+        <span
+          class="fmx-subtotal__price"
+          id="product-price"
+          role="status"
+          {{ block.shopify_attributes }}>
+          {%- if selected_variant.compare_at_price > selected_variant.price -%}
+            <span class="compare-price pm-subtotal__compare">{{ selected_variant.compare_at_price | money }}</span>
+          {%- endif -%}
+          <span class="current-price pm-subtotal__value">{{ selected_variant.price | money }}</span>
+        </span>
+      </div>
+      <button
+        type="submit"
+        name="add"
+        value="1"
+        class="atc-button cta_product_from_submit_btn button button--full-width button--primary pm-btn pm-btn--primary pm-atc"
+        aria-label="{{ 'products.product.add_to_cart' | t }}"
+        {% if product.metafields.custom.bundle_size != blank %}
+        disabled="disabled"
+        {% endif %}
+        {%- unless selected_variant.available %}
+        disabled="disabled"
+        data-sold-out{% endunless %}>
+        <span class="fmx-atc__label">
+          {% if selected_variant.available %}
+            {{ 'products.product.add_to_cart' | t }}
+          {% else %}
+            {{ 'products.product.sold_out' | t }}{% endif %}
+        </span>
+        {%- render 'loading-spinner' -%}
+      </button>
+      <div
+        class="product-form__error-message-wrapper fmx-atc__error"
+        role="alert"
+        hidden>
+        <span class="svg-wrapper">
+          {{- 'icon-error.svg' | inline_asset_content -}}
+        </span>
+        <span class="product-form__error-message"></span>
+      </div>
+    {%- endform -%}
+  </product-form>{% endunless %}
+
+{%- comment -%} FUEL_06 product page entry (2026-09-30), see snippets/fuel06-pdp-link.liquid. {%- endcomment -%}
+{%- render 'fuel06-pdp-link' -%}
+
+{%- comment -%}
+  fmx (FM product page test): the grayscale payment-badge.png and the plain "Levereras till ... inom 5
+  arbetsdagar." line of the live snippets/reactive-variant-selector.liquid are replaced here by the
+  payment icons in colour per market (snippets/fmx-payment-icons.liquid) and the badge row: delivery
+  time, PostNord, 60-day money-back guarantee (snippets/fmx-shipping-badges.liquid), as in
+  tryscent-co-shopify-theme@main. The badge row carries the same delivery sentence. Everything else in
+  this file is byte-identical to the live reactive-variant-selector.liquid.
+{%- endcomment -%}
+{% render 'fmx-payment-icons' %}
+
+{% unless product.template_suffix == 'cro-deck' %}
+  {% render 'fmx-shipping-badges', product: product %}
+{% endunless %}
+
+<script>
+  (function() {
+    // Variant data object
+    const variantsData = {
+      {% for variant in product.variants %}
+        "{{ variant.id }}": {
+          title: "{{ variant.title }}",
+          originalPrice: "{{ variant.price | money }}",
+          compareAtPrice: "{{ variant.compare_at_price | money }}",
+          hasComparePrice: {% if variant.compare_at_price > variant.price %}true{% else %}false{% endif %},
+          nextVariant: "{{ variant.metafields.custom.next_variant | default: '' }}",
+          priceDifference: "{{ variant.metafields.custom.price_difference.value | money | default: '' }}",
+          afterpayPrice: "{{ variant.price |  divided_by: 4 |  money }}",
+          available: {{ variant.available }}
+        }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    };
+
+    // State
+    let selectedVariantId = "{{ selected_variant.id }}";
+
+    // DOM elements
+    const variantButtons = document.querySelectorAll('.variant-button');
+    const variantIdInput = document.getElementById('product-variant-id');
+    const priceContainer = document.getElementById('product-price');
+    // Sold out products render no size selector or price (see the sold out notice above)
+    if (!priceContainer) return;
+    const comparePriceSpan = priceContainer.querySelector('.compare-price');
+    const currentPriceSpan = priceContainer.querySelector('.current-price');
+    const variantSuggestion = document.getElementById('variantSuggestion');
+    const afterpayPriceEl = document.getElementById('afterpay_price');
+
+    // Update variant selection
+    function updateVariant(variantId) {
+      selectedVariantId = variantId;
+      const variantData = variantsData[variantId];
+
+      // Update hidden input (absent when the whole product is sold out)
+      if (variantIdInput) variantIdInput.value = variantId;
+
+      // A sold out size can't be added; the label and lock follow the selected size
+      const atcButton = document.querySelector('.atc-button');
+      if (atcButton && variantIdInput) {
+        // Only lift a lock this added, never the bundle one (choose_your_fragrances_options).
+        if (!variantData.available || atcButton.hasAttribute('data-sold-out')) atcButton.disabled = !variantData.available;
+        atcButton.toggleAttribute('data-sold-out', !variantData.available);
+        atcButton.querySelector('span').textContent = variantData.available
+          ? window.variantStrings.addToCart
+          : window.variantStrings.soldOut;
+      }
+
+      // Update button styles (FM: .is-selected on the chosen size card)
+      variantButtons.forEach(button => {
+        const selected = button.dataset.variantId === variantId;
+        button.classList.toggle('is-selected', selected);
+        button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      });
+
+      // Update price display
+      if (variantData.hasComparePrice) {
+        if (!comparePriceSpan) {
+          const newCompareSpan = document.createElement('span');
+          newCompareSpan.className = 'compare-price pm-subtotal__compare';
+          priceContainer.insertBefore(newCompareSpan, currentPriceSpan);
+        }
+        const compareSpan = priceContainer.querySelector('.compare-price');
+        compareSpan.innerHTML = variantData.compareAtPrice;
+        compareSpan.style.display = '';
+      } else {
+        if (comparePriceSpan) {
+          comparePriceSpan.style.display = 'none';
+        }
+      }
+
+      currentPriceSpan.innerHTML = variantData.originalPrice;
+      
+      // update afterpay price
+      if (afterpayPriceEl) {
+        afterpayPriceEl.innerHTML = variantData.afterpayPrice;
+      }
+
+       // Update all other current-price elements in the page
+      const allCurrentPriceElements = document.querySelectorAll('.current-price');
+      allCurrentPriceElements.forEach(element => {
+        // Skip the main price container element that we already updated
+        if (element !== currentPriceSpan && element.textContent.trim() !== '') {
+          element.innerHTML = variantData.originalPrice;
+        }
+      });
+
+      if(variantSuggestion && typeof variantSuggestion !== 'undefined') {
+        if(variantData.title !== "100ML") {
+          if(variantData.title === '50ML') {
+            variantSuggestion.innerHTML = `You're <strong>${variantData.priceDifference}</strong> away from the best value size.`;
+          } else {
+            variantSuggestion.innerHTML = `Upgrade to ${variantData.nextVariant} for <strong>${variantData.priceDifference}</strong> more!`;
+          }
+        } else {
+          variantSuggestion.innerHTML = 'Congratulations! You have the best deal!';
+        }
+      }
+    }
+
+    // Add click event listeners to variant buttons
+    variantButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const variantId = this.dataset.variantId;
+        updateVariant(variantId);
+      });
+    });
+  })();
+</script>
+
+<script>
+  (() => {
+    if (document.documentElement.dataset.pricePerMlSync) return;
+    document.documentElement.dataset.pricePerMlSync = '1';
+
+    const testPrices = () => {
+      const groups = window.absolutely?.testGroups;
+      const tests = window.absolutelyConfig?.priceTests;
+      if (!groups || !tests) return null;
+      const prices = new Map();
+      for (const test of tests) {
+        const group = (test.groups || []).find(item => item.id === groups[test.id]);
+        for (const variant of group?.variants || []) prices.set(String(variant.variantId), Number(variant.price));
+      }
+      return prices;
+    };
+
+    const sync = () => {
+      const prices = testPrices();
+      if (!prices?.size) return;
+      for (const button of document.querySelectorAll('.variant-button[data-variant-ml]')) {
+        const price = prices.get(button.dataset.variantId);
+        const ml = Number(button.dataset.variantMl);
+        const label = button.querySelector('.price-per-ml');
+        if (!price || !ml || !label) continue;
+        label.textContent = label.textContent.replace(/[\d.,]+/, (price / ml).toFixed(2).replace('.', ','));
+      }
+    };
+
+    // The price test app rewrites the printed prices after load and on every size change
+    // without firing an event, so the per ml figures follow the main price element.
+    const mainPrice = document.getElementById('product-price');
+    if (mainPrice) new MutationObserver(sync).observe(mainPrice, { childList: true, characterData: true, subtree: true });
+    sync();
+    window.addEventListener('load', sync);
+  })();
+</script>

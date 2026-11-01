@@ -1,0 +1,1456 @@
+/* fmx-pdp.css: FM editorial product page hero for the FM product page test on tryscent.co
+   (sections/fmx-main-product.liquid, template product.tsr-bundle-fm).
+   Source: FM theme assets/pm-pdp.css (trymagyx-shopify-theme@premium-redesign), only the parts the
+   ported blocks use: container + sticky buy box (1), editorial gallery (2), rating row, badges,
+   title, inspired-by tile with designer price, claim lines (3), designer price line.
+   Left out: size selector, bundle tiers, quantity breaker, ATC, trust row, story card, accordions,
+   bonus-scent modal, floating ATC (the buy box keeps the live tryscent.co blocks).
+   Differences: Dawn's block rhythm reset (.product__info-container > * + * { margin: 0 }) is left out
+   so the live blocks keep their spacing; the designer price is Liquid money in <s class="fmx-designer-price">
+   (custom.original_retail_price) instead of FM's <pm-designer-price> element.
+   Rules: every selector starts with .premium; no importance overrides; mobile-first.
+   Tokens and shared utilities come from assets/fmx-base.css. */
+
+/* 1. Container: full-bleed grid, buy box column centred at 600 max ------------------------------ */
+.premium .pm-pdp {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.premium .pm-pdp .product.grid {
+  display: block;
+  margin: 0;
+  gap: 0;
+}
+
+.premium .pm-pdp .product .grid__item {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  flex: none;
+}
+
+.premium .pm-pdp .product .product__media-wrapper,
+.premium .pm-pdp .product .product__info-wrapper {
+  padding: 0;
+  margin: 0;
+}
+
+.premium .pm-pdp .product__info-container {
+  position: static;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--pm-buybox);
+  margin: 0 auto;
+  padding: 24px 20px 0;
+}
+
+.premium .pm-pdp .product__view-details {
+  display: none;
+}
+
+@media (min-width: 990px) {
+  /* Thomson Carter proportions: contained 1268px row, gallery 732 : buy box 488, 48px gap.
+     Cells stretch to the row (default) so the sticky buy box has room to travel inside its wrapper. */
+  .premium .pm-pdp {
+    box-sizing: border-box;
+    max-width: calc(1268px + 80px);
+    margin: 0 auto;
+    padding: 32px 40px 0;
+  }
+
+  .premium .pm-pdp .product.grid {
+    display: grid;
+    grid-template-columns: minmax(0, 732fr) minmax(0, 488fr);
+    column-gap: 48px;
+    align-items: stretch;
+  }
+
+  .premium .pm-pdp .product__info-container {
+    position: sticky;
+    top: var(--pm-sticky-top, calc(var(--header-height, 64px) + 16px));
+    z-index: 2;
+    max-width: none;
+    padding: 0;
+  }
+}
+
+/* 2. Gallery (editorial) ---------------------------------------------------------------------- */
+.premium .pm-pdp .pm-gallery {
+  position: relative;
+  width: 100%;
+}
+
+.premium .pm-pdp .pm-gallery__row {
+  position: relative;
+}
+
+.premium .pm-pdp .pm-gallery .swiper {
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.premium .pm-pdp .pm-gallery .productSwiperImage {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--pm-surface);
+}
+
+.premium .pm-pdp .pm-gallery .swiper-button-prev,
+.premium .pm-pdp .pm-gallery .swiper-button-next {
+  display: none;
+}
+
+/* "Scent match" tag: white badge, 2px radius, 12px inset (16 from 990) */
+.premium .pm-pdp .pm-gallery__tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 3;
+  border-radius: 2px;
+  box-shadow: var(--pm-shadow-sm);
+  cursor: default;
+}
+
+/* Below 990: thumbnails in a column right of the main image (Thomson Carter pattern), 52px squares,
+   4px gaps, 8px from the image and the screen edge. */
+@media (max-width: 989px) {
+  .premium .pm-pdp .pm-gallery:has(.pm-gallery__thumbs .productThumbnail) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 52px;
+    column-gap: 8px;
+    padding-right: 8px;
+  }
+}
+
+.premium .pm-pdp .pm-gallery__side {
+  position: relative;
+  min-height: 0;
+}
+
+.premium .pm-pdp .pm-gallery__thumbs {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.premium .pm-pdp .pm-gallery__thumbs .swiper-wrapper {
+  align-items: flex-start;
+}
+
+.premium .pm-pdp .pm-gallery__thumbs .productThumbnail {
+  box-sizing: border-box;
+  flex: none;
+  width: 52px;
+  height: 52px;
+  max-width: none;
+  object-fit: cover;
+  border: 1px solid transparent;
+  border-radius: 0;
+  background: var(--pm-surface);
+  opacity: 1;
+  cursor: pointer;
+}
+
+.premium .pm-pdp .pm-gallery__thumbs .productThumbnail.swiper-slide-thumb-active {
+  border-color: var(--pm-ink);
+}
+
+@media (min-width: 990px) {
+  .premium .pm-pdp .pm-gallery__tag {
+    top: 16px;
+    left: 16px;
+  }
+
+  /* Thomson Carter desktop gallery: one square image, counter + arrows bar, 98px thumbnail row */
+  .premium .pm-pdp .pm-gallery__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+  }
+
+  .premium .pm-pdp .pm-gallery__side {
+    margin-top: 16px;
+  }
+
+  .premium .pm-pdp .pm-gallery__thumbs {
+    position: static;
+  }
+
+  .premium .pm-pdp .pm-gallery__thumbs .productThumbnail {
+    width: 98px;
+    height: 98px;
+  }
+}
+
+@media (max-width: 989px) {
+  .premium .pm-pdp .pm-gallery__bar {
+    display: none;
+  }
+}
+
+.premium .pm-pdp .pm-gallery__count {
+  font-size: 14px;
+  color: var(--pm-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.premium .pm-pdp .pm-gallery__arrows {
+  display: flex;
+  gap: 8px;
+}
+
+.premium .pm-pdp .pm-gallery__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--pm-ink);
+  cursor: pointer;
+}
+
+.premium .pm-pdp .pm-gallery__arrow.swiper-button-disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* The live gallery also hosts the Pair Scent desktop slot (fuel03-pair-scent v2d, shown by an A/B
+   class); below 990 the gallery is a 2-column grid, so the slot spans both columns. */
+.premium .pm-pdp .pm-gallery > [class*="fuel03-pair-scent"] {
+  grid-column: 1 / -1;
+}
+
+/* 3. Buy box: rating row, badges, title, subtitle, benefits, quick links ---------------------- */
+.premium .pm-pdp .pm-rating {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 0;
+}
+
+.premium .pm-pdp .pm-rating__eyebrow {
+  font-size: var(--pm-fs-eyebrow);
+  line-height: var(--pm-lh-eyebrow);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pm-muted);
+}
+
+/* "★★★★★ Excellent 4.9 | 10,000+ reviews": own line above the eyebrow below 990, right of it from 990 */
+.premium .pm-pdp .pm-rating__score {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--pm-ink);
+}
+
+.premium .pm-pdp .pm-rating__score .pm-stars {
+  color: var(--pm-ink);
+}
+
+.premium .pm-pdp .pm-rating__sep {
+  color: var(--pm-muted);
+}
+
+@media (max-width: 989px) {
+  .premium .pm-pdp .pm-rating {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .premium .pm-pdp .pm-rating__score {
+    order: -1;
+  }
+}
+
+.premium .pm-pdp .pm-rating__link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.premium .pm-pdp .pm-rating__link:hover {
+  color: var(--pm-ink);
+}
+
+/* No eyebrow (bundle pages): the rating line stands alone, left-aligned, 14px */
+.premium .pm-pdp .pm-rating.pm-rating--solo {
+  justify-content: flex-start;
+}
+
+.premium .pm-pdp .pm-rating.pm-rating--solo .pm-rating__score {
+  margin-left: 0;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.premium .pm-pdp .pm-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 0;
+}
+
+.premium .pm-pdp .pm-titlebox {
+  margin: 6px 0 0;
+}
+
+.premium .pm-pdp .pm-titlebox .pm-h1 {
+  margin: 0;
+}
+
+.premium .pm-pdp .pm-subtitle {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pm-ink);
+}
+
+/* Inspired by + designer bottle: 56px white tile with the original bottle, label over the designer name */
+.premium .pm-pdp .pm-inspired {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 0;
+}
+
+.premium .pm-pdp .pm-inspired__media {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  padding: 4px;
+  border: 1px solid var(--pm-line, rgba(0, 0, 0, 0.1));
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.premium .pm-pdp .pm-inspired__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.premium .pm-pdp .pm-inspired__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.premium .pm-pdp .pm-inspired__label {
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground), 0.6);
+}
+
+.premium .pm-pdp .pm-inspired__name {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 600;
+  color: var(--pm-ink);
+}
+
+/* Designer price under the designer name (custom.original_retail_price, struck through) */
+.premium .pm-pdp .pm-inspired__designer {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 2px 0 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: rgba(var(--color-foreground), 0.6);
+}
+
+.premium .pm-pdp .pm-inspired__designer .fmx-designer-price {
+  font-weight: 600;
+  color: var(--pm-ink);
+}
+
+.premium .pm-pdp .pm-inspired__solo {
+  margin: 4px 0 0;
+}
+
+.premium .pm-pdp .pm-benefits {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+}
+
+/* Claim lines (magyx.co pattern): filled check, semibold text, 8px apart */
+.premium .pm-pdp .pm-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.premium .pm-pdp .pm-benefits__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 22px;
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+  color: var(--pm-ink);
+}
+
+.premium .pm-pdp .pm-benefits__icon {
+  flex: none;
+  color: var(--pm-ink);
+}
+
+/* Vertical rhythm note: the spec's 1440 steps (20 / 32 / 28 / 32) put the ATC at y=956 on a 900px viewport
+   because three tier cards sit above it; the 375 steps are used at every width so the ATC stays in the first fold. */
+@media (min-width: 990px) {
+  .premium .pm-pdp .pm-rating__score {
+    margin-left: auto;
+  }
+
+  .premium .pm-pdp .pm-titlebox {
+    margin-top: 4px;
+  }
+
+  .premium .pm-pdp .pm-subtitle {
+    font-size: 14px;
+    line-height: 22px;
+  }
+}
+
+/* Designer price block (main-product "designer_price") */
+.premium .pm-designer-line {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--pm-muted);
+}
+
+.premium .pm-designer-line .fmx-designer-price {
+  color: var(--pm-muted);
+}
+
+/* ==== FM buy box for the tryscent.co buying blocks ===============================================
+   The blocks keep tryscent.co's function (Tryscent+ membership, size selector, add to cart, bundle
+   upsell); the look is FM's (assets/pm-pdp.css on federicomahora.co, sections 4 and 6).
+   - fmx-variant-selector / fmx-shipping-badges / fmx-payment-icons / tsr_block carry FM classes in
+     their markup (pm-size, pm-btn pm-atc, pm-tier__save, fmx-offer);
+   - the Tryscent+ app block (Subscribfy) and the "Inte din doft?" link are styled from outside.
+   Gate for rules outside .premium: body:has(.fmx-pdp-scope), so they only apply on this template. */
+
+/* 1. Short description under the claim lines (FM pm-sdesc) --------------------------------------- */
+.premium .pm-pdp .pm-sdesc {
+  margin: 16px 0 0;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--pm-muted);
+}
+
+/* 2. Size selector (FM section 4, verbatim) -------------------------------------------------------- */
+.premium .pm-size-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 28px 0 0;
+}
+
+.premium .pm-size-head__label {
+  margin: 0;
+  color: var(--pm-ink);
+}
+
+.premium .pm-size-head__hint {
+  font-size: 12px;
+  line-height: 16px;
+  text-align: right;
+  color: var(--pm-muted);
+}
+
+.premium .pm-sizes {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 0;
+}
+
+.premium .pm-size {
+  position: relative;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 64px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-white);
+  color: var(--pm-ink);
+  font-family: inherit;
+  text-align: center;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color var(--pm-dur) var(--pm-ease), box-shadow var(--pm-dur) var(--pm-ease);
+}
+
+.premium .pm-size:hover,
+.premium .pm-size.is-selected {
+  border-color: var(--pm-black);
+  box-shadow: var(--pm-shadow-sm);
+}
+
+.premium .pm-size:focus-visible {
+  outline: 2px solid var(--pm-ink);
+  outline-offset: 2px;
+}
+
+.premium .pm-size__title {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 800;
+}
+
+.premium .pm-size__meta {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--pm-muted);
+}
+
+.premium .pm-size__flag {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  padding: 3px 6px;
+  border: 1px solid var(--pm-ink);
+  border-radius: 2px;
+  background: var(--pm-ink);
+  color: var(--pm-white);
+  font-size: var(--pm-fs-badge);
+  line-height: 12px;
+  font-weight: 500;
+  letter-spacing: 0.125em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (min-width: 990px) {
+  .premium .pm-sizes {
+    gap: 12px;
+  }
+}
+
+/* 3. Subtotal + add to cart (FM pm-subtotal / pm-atc): "Delsumma 547,96 kr 289,99 kr" above the ink button */
+.premium .product-form.fmx-product-form {
+  margin: 0;
+}
+
+.premium .pm-subtotal {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 24px 0 0;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  color: var(--pm-ink);
+}
+
+.premium .pm-subtotal .fmx-subtotal__price {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.premium .pm-subtotal__compare {
+  font-weight: 400;
+  color: var(--pm-muted);
+  text-decoration: line-through;
+}
+
+.premium .pm-subtotal__value {
+  color: var(--pm-ink);
+}
+
+.premium .pm-btn.pm-atc {
+  width: 100%;
+  min-height: 52px;
+  margin: 12px 0 0;
+  padding: 12px 24px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.premium .pm-atc::after {
+  content: none;
+}
+
+.premium .pm-atc:focus-visible,
+.premium .pm-atc:focus {
+  box-shadow: none;
+  outline: 2px solid var(--pm-ink);
+  outline-offset: 2px;
+}
+
+.premium .pm-atc:focus:not(:focus-visible) {
+  outline: 0;
+}
+
+.premium .pm-atc:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.premium .pm-atc .loading__spinner .path {
+  stroke: var(--pm-white);
+}
+
+.premium .fmx-atc__error {
+  margin: 12px 0 0;
+  color: var(--pm-error);
+}
+
+/* 4. Tryscent+ (Subscribfy app block): FM option row, 1px hairline, 4px radius, ink checkbox ------ */
+.premium .exm-pp-vip-wrapper .exm-pp-vip-item,
+.premium .exm-pp-vip-wrapper .exm-pp-active-member-item {
+  margin: 0;
+  padding: 14px;
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-white);
+  transition: border-color var(--pm-dur) var(--pm-ease), box-shadow var(--pm-dur) var(--pm-ease);
+}
+
+.premium .exm-pp-vip-wrapper .exm-pp-vip-item:hover {
+  border-color: var(--pm-muted);
+}
+
+.premium .exm-pp-vip-wrapper .exm-pp-vip-item:has(input:checked) {
+  border-color: var(--pm-black);
+  box-shadow: var(--pm-shadow-sm);
+}
+
+.premium .exm-pp-vip-wrapper .exm-pp__option__slider__helper {
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--pm-ink);
+  border-radius: 2px;
+  background: var(--pm-white);
+}
+
+.premium .exm-pp-vip-wrapper input:checked ~ .exm-pp__option__slider__helper {
+  background: var(--pm-ink);
+}
+
+.premium .exm-pp-vip-wrapper .exm-pp-member-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--pm-radius-sm);
+}
+
+.premium .exm-pp-vip-wrapper .atc_btn_main_label {
+  color: var(--pm-ink);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+}
+
+.premium .exm-pp-vip-wrapper .exm-info-button {
+  color: var(--pm-muted);
+}
+
+.premium .exm-pp-vip-wrapper .exm_vip_info_wrapper,
+.premium .exm-pp-vip-wrapper .exm_vip_info_wrapper p {
+  color: var(--pm-muted);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+/* 5. "Inte din doft?" finder link: 13px ink text link, small ink icon ----------------------------- */
+.premium .fuel06-pdp-link {
+  margin-top: 16px;
+  color: var(--pm-ink);
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.premium .fuel06-pdp-link em {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.premium .fuel06-pdp-link .fuel06-pdp-link__icon {
+  background-color: var(--pm-ink);
+}
+
+.premium .fuel06-pdp-link:focus-visible {
+  outline-color: var(--pm-ink);
+}
+
+/* 6. Bundle upsell (tsr_block, markup fmx-offer): FM card, hairline, 4px radius, ink Save pill ---- */
+.premium .fmx-offer {
+  display: flex;
+  align-items: stretch;
+  margin: 24px 0;
+  overflow: hidden;
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-white);
+  box-shadow: var(--pm-shadow-sm);
+  color: var(--pm-ink);
+  text-decoration: none;
+  transition: border-color var(--pm-dur) var(--pm-ease);
+}
+
+.premium .fmx-offer:hover {
+  border-color: var(--pm-black);
+}
+
+.premium .fmx-offer__media {
+  display: flex;
+  flex: none;
+  align-items: center;
+  width: 40%;
+  max-width: 220px;
+  background: var(--pm-surface);
+}
+
+.premium .fmx-offer__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.premium .fmx-offer__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 16px;
+}
+
+.premium .fmx-offer__save {
+  align-self: flex-start;
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: var(--pm-ink);
+  color: var(--pm-white);
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.premium .fmx-offer__title {
+  margin: 8px 0 4px;
+  color: var(--pm-ink);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.premium .fmx-offer__text {
+  margin: 0;
+  color: var(--pm-muted);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+}
+
+.premium .fmx-offer__text strong {
+  color: var(--pm-ink);
+  font-weight: 700;
+}
+
+/* 7. Leftover tryscent.co green / red utilities in the other buy box blocks (hidden A/B blocks) ---- */
+.premium .product__info-container .text-gray-500 {
+  color: var(--pm-muted);
+}
+
+.premium .product__info-container .text-green-600,
+.premium .product__info-container .text-green-700 {
+  color: var(--pm-ink);
+}
+
+.premium .product__info-container .bg-green-100 {
+  background-color: var(--pm-surface);
+}
+
+.premium .product__info-container .border-green-600,
+.premium .product__info-container .hover\:border-green-600:hover {
+  border-color: var(--pm-ink);
+}
+
+.premium .product__info-container .bg-red-600 {
+  background-color: var(--pm-black);
+}
+
+.premium .product__info-container .text-slate-900 {
+  color: var(--pm-ink);
+}
+
+.premium .product__info-container .text-slate-600 {
+  color: var(--pm-muted);
+}
+
+/* 7b. Badge row (fmx-shipping-badges, tryscent.co tiles): PostNord logo and guarantee seal in dark grey */
+.premium .fmx-shipping-badges .fmx-shipping-badges__logo,
+.premium .fmx-shipping-badges .fmx-shipping-badges__carrier img {
+  filter: grayscale(1) brightness(0.3);
+}
+
+/* 8. Outside .premium: floating add to cart bar on this template (FM sticky bar button) ------------ */
+body:has(.fmx-pdp-scope) #floatingAtc button.shimmer-btn {
+  background-color: #232323;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.125em;
+  text-transform: uppercase;
+}
+
+body:has(.fmx-pdp-scope) #floatingAtc button.shimmer-btn:hover {
+  background-color: #000000;
+}
+
+@media (max-width: 749px) {
+  body:has(.fmx-pdp-scope) #floatingAtc button.shimmer-btn {
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+}
+
+/* ==== FM bundle page (templates/product.custom-bundle-fm.json) =====================================
+   The tryscent.co bundle builder in FM's look. Function untouched: fuel01 heading / steps / summary keep
+   their live markup (restyled here over assets/fuel01-restyle.css), the builder and the picker modal are
+   fmx copies (snippets/fmx-bundle-builder*.liquid) with FM classes. */
+
+/* B1. Variant heading = page title (FM title: uppercase, heavy), subheading muted --------------------- */
+.premium .fuel01.fuel01--heading {
+  margin: 8px 0 0;
+}
+
+.premium .fuel01 .fuel01-heading__title {
+  margin: 0;
+  font-size: var(--pm-fs-h1);
+  line-height: var(--pm-lh-h1);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--pm-ink);
+}
+
+.premium .fuel01 .fuel01-heading__sub {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--pm-muted);
+}
+
+/* B2. Made in the EU: small hairline tag ---------------------------------------------------------- */
+.premium .fmx-eu {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 1px solid var(--pm-line);
+  border-radius: 2px;
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pm-ink);
+}
+
+.premium .fmx-eu .fmx-eu__flag {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--pm-radius-pill);
+  object-fit: cover;
+}
+
+/* B3. Short description + "Läs mer" (FM pm-sdesc + FULL DESCRIPTION link) -------------------------- */
+.premium .fmx-bdesc .pm-sdesc {
+  margin: 0;
+}
+
+.premium .fmx-readmore {
+  display: inline-block;
+  margin: 10px 0 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pm-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.premium .fmx-readmore:hover {
+  color: var(--pm-muted);
+}
+
+/* B4. Bundle price: struck compare, price, ink discount tag, per-bottle line -------------------------- */
+.premium .fmx-bprice {
+  margin: 8px 0 0;
+}
+
+.premium .fmx-bprice .fmx-bprice__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.premium .fmx-bprice .fmx-bprice__compare {
+  font-size: 15px;
+  line-height: 20px;
+  color: var(--pm-muted);
+  text-decoration: line-through;
+}
+
+.premium .fmx-bprice .fmx-bprice__price {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 700;
+  color: var(--pm-ink);
+}
+
+.premium .fmx-bprice .fmx-bprice__badge {
+  align-self: center;
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: var(--pm-ink);
+  color: var(--pm-white);
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.premium .fmx-bprice .fmx-bprice__per {
+  margin: 2px 0 0;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  color: var(--pm-ink);
+}
+
+/* B5. Steps bar: thin ink progress line, small label ----------------------------------------------- */
+.premium .fuel01.fuel01--steps {
+  margin: 24px 0 12px;
+}
+
+.premium .fuel01 .fuel01-steps__track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--pm-line);
+}
+
+.premium .fuel01 .fuel01-steps__track > .fuel01-steps__fill {
+  min-width: 4px;
+  border-radius: 2px;
+  background: var(--pm-ink);
+}
+
+.premium .fuel01 .fuel01-steps__label {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+  color: var(--pm-ink);
+}
+
+.premium .fuel01 .fuel01-steps__dot {
+  color: var(--pm-muted);
+}
+
+/* B6. Bottle slots: FM option rows (hairline, 4px radius, ink when filled) -------------------------- */
+.premium .fmx-upgrade {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--pm-ink);
+}
+
+.premium .fmx-upgrade .fmx-upgrade__link {
+  font-weight: 600;
+  color: var(--pm-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.premium .fmx-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.premium .fmx-slot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 12px;
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-white);
+  cursor: pointer;
+  transition: border-color var(--pm-dur) var(--pm-ease), box-shadow var(--pm-dur) var(--pm-ease);
+}
+
+.premium .fmx-slot:hover {
+  border-color: var(--pm-muted);
+}
+
+.premium .fmx-slot.is-filled {
+  border-color: var(--pm-black);
+  box-shadow: var(--pm-shadow-sm);
+}
+
+.premium .fmx-slot .fmx-slot__num {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 2px;
+  background: var(--pm-ink);
+  color: var(--pm-white);
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+/* Empty-slot bottle icon (snippets/perfume-icon.liquid draws it in tryscent.co green): grey field, ink lines */
+.premium .fmx-slot svg [fill="#EBF4EF"] {
+  fill: var(--pm-surface);
+}
+
+.premium .fmx-slot svg [fill="#226139"] {
+  fill: var(--pm-ink);
+}
+
+.premium .fmx-slot svg [stroke="#226139"] {
+  stroke: var(--pm-ink);
+}
+
+.premium .fmx-slot .fmx-slot__remove svg {
+  color: var(--pm-ink);
+}
+
+.premium .fmx-slot .fmx-slot__empty {
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--pm-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.premium .fmx-slot .fmx-slot__chevron {
+  display: flex;
+  margin-left: auto;
+  color: var(--pm-ink);
+}
+
+.premium .fmx-slot .fmx-slot__img {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 2px;
+  object-fit: cover;
+}
+
+.premium .fmx-slot .fmx-slot__name {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 700;
+  color: var(--pm-ink);
+}
+
+.premium .fmx-slot .fmx-slot__meta {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--pm-muted);
+}
+
+.premium .fmx-slot .fmx-slot__remove {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-left: auto;
+  padding: 0;
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-white);
+  color: var(--pm-ink);
+  cursor: pointer;
+}
+
+.premium .fmx-slot .fmx-slot__remove:hover {
+  border-color: var(--pm-ink);
+}
+
+/* B7. Builder button: FM ink button; FM outline while bottles are missing ------------------------- */
+.premium .pm-btn.pm-atc.fmx-bb-atc {
+  margin: 16px 0 0;
+}
+
+.premium .pm-btn.pm-atc.fmx-bb-atc.is-incomplete {
+  border-color: var(--pm-ink);
+  background: var(--pm-white);
+  color: var(--pm-ink);
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+.premium .pm-btn.pm-atc.fmx-bb-atc.is-incomplete::before {
+  content: none;
+}
+
+.premium .fmx-bb-atc .current-price {
+  text-transform: none;
+  letter-spacing: 0.04em;
+}
+
+.premium .fmx-bb-atc .loading__spinner .path {
+  stroke: currentColor;
+}
+
+/* B8. Price summary: grey FM panel, ink amounts, outlined savings line ------------------------------ */
+.premium .fuel01.fuel01--summary {
+  margin: 24px 0 0;
+}
+
+.premium .fuel01 .fuel01-summary {
+  padding: 16px;
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-surface);
+}
+
+.premium .fuel01 .fuel01-summary__row {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: var(--pm-ink);
+}
+
+.premium .fuel01 .fuel01-summary__row--discount .fuel01-summary__value {
+  color: var(--pm-ink);
+}
+
+.premium .fuel01 .fuel01-summary__row--total {
+  padding-top: 12px;
+  border-top: 1px solid var(--pm-line);
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 700;
+}
+
+.premium .fuel01 .fuel01-summary__pill {
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  border: 1px solid var(--pm-ink);
+  border-radius: 2px;
+  background: var(--pm-white);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--pm-ink);
+}
+
+/* B9. Guarantee line + UGC videos ------------------------------------------------------------------ */
+.premium .fmx-guarantee {
+  margin: 24px 0 0;
+}
+
+.premium .fmx-guarantee .fmx-guarantee__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.premium .fmx-guarantee .fmx-guarantee__img {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  filter: grayscale(1) brightness(0.3);
+}
+
+.premium .fmx-guarantee .fmx-guarantee__text {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--pm-muted);
+}
+
+.premium .fmx-guarantee .fmx-guarantee__text strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pm-ink);
+}
+
+.premium .cta_videos video {
+  border-radius: var(--pm-radius-sm);
+  box-shadow: none;
+}
+
+/* B10. Accordion rows: one hairline list (each block is its own wrapper) ---------------------------- */
+.premium .product__info-container > .fmx-acc {
+  margin-top: 32px;
+}
+
+.premium .product__info-container > .fmx-acc + .fmx-acc {
+  margin-top: 0;
+}
+
+.premium .fmx-acc + .fmx-acc > details {
+  border-top: 0;
+}
+
+.premium .fmx-acc .pm-accordion__title {
+  margin: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+}
+
+/* B11. Picker modal (fmx-bundle-builder-modal) ------------------------------------------------------ */
+.premium .fmx-bb-modal {
+  border-radius: var(--pm-radius-sm) var(--pm-radius-sm) 0 0;
+  color: var(--pm-ink);
+  font-family: var(--fmx-font-body, var(--font-body-family)), sans-serif;
+}
+
+.premium .fmx-bb-modal .fmx-bb-close {
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-pill);
+  background: var(--pm-white);
+  color: var(--pm-ink);
+}
+
+.premium .fmx-bb-modal .fmx-bb-close:hover {
+  border-color: var(--pm-ink);
+}
+
+.premium .fmx-bb-modal .fmx-bb-head {
+  border-bottom: 1px solid var(--pm-line);
+}
+
+.premium .fmx-bb-modal .fmx-bb-title {
+  margin: 0;
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--pm-ink);
+}
+
+.premium .fmx-bb-modal .fmx-bb-sub {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 18px;
+  text-align: center;
+  color: var(--pm-muted);
+}
+
+.premium .fmx-bb-modal .fmx-bb-chip {
+  padding: 6px 12px;
+  border: 1px solid var(--pm-line);
+  border-radius: 2px;
+  background: var(--pm-white);
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pm-ink);
+  cursor: pointer;
+}
+
+.premium .fmx-bb-modal .fmx-bb-chip:hover {
+  border-color: var(--pm-ink);
+}
+
+.premium .fmx-bb-modal .fmx-bb-chip.is-active {
+  border-color: var(--pm-ink);
+  background: var(--pm-ink);
+  color: var(--pm-white);
+}
+
+.premium .fmx-bb-modal .fmx-bb-search {
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-white);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--pm-ink);
+}
+
+.premium .fmx-bb-modal .fmx-bb-search:focus {
+  border-color: var(--pm-ink);
+  outline: none;
+  box-shadow: none;
+}
+
+.premium .fmx-bb-modal .fmx-bb-item {
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-white);
+}
+
+.premium .fmx-bb-modal .fmx-bb-item.is-selected {
+  border-color: var(--pm-black);
+  box-shadow: var(--pm-shadow-sm);
+}
+
+.premium .fmx-bb-modal .fmx-bb-item__img {
+  border-radius: 2px;
+  object-fit: cover;
+}
+
+.premium .fmx-bb-modal .fmx-bb-item__name {
+  margin: 0;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--pm-ink);
+}
+
+.premium .fmx-bb-modal .fmx-bb-item__label,
+.premium .fmx-bb-modal .fmx-bb-item__size {
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--pm-muted);
+}
+
+.premium .fmx-bb-modal .fmx-bb-item__size {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.premium .fmx-bb-modal .fmx-bb-qty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--pm-ink);
+  border-radius: var(--pm-radius-pill);
+  background: var(--pm-white);
+  font-family: inherit;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--pm-ink);
+  cursor: pointer;
+}
+
+.premium .fmx-bb-modal .fmx-bb-qty--fill {
+  background: var(--pm-ink);
+  color: var(--pm-white);
+}
+
+.premium .fmx-bb-modal .fmx-bb-qty__n {
+  min-width: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--pm-ink);
+}
+
+.premium .fmx-bb-modal .fmx-bb-spinner {
+  color: var(--pm-line);
+  fill: var(--pm-ink);
+}
+
+@media screen and (min-width: 750px) {
+  .premium .fmx-bb-modal {
+    border-radius: var(--pm-radius-sm);
+  }
+}

@@ -1,0 +1,237 @@
+{{ 'pm-s-bs-faq.css' | asset_url | stylesheet_tag }}
+{%- style -%}
+  .premium .pm-bs-faq--{{ section.id }} {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .premium .pm-bs-faq--{{ section.id }} {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+{%- liquid
+  assign questions = section.blocks | where: 'type', 'question'
+  assign half = questions.size | plus: 1 | divided_by: 2
+-%}
+<div
+  id="{{ section.id }}"
+  class="pm-bs-faq pm-bs-faq--{{ section.id }} color-{{ section.settings.color_scheme }} gradient"
+  data-pm-bs-faq>
+  <div class="page-width">
+    {%- if section.settings.title != blank -%}
+      <h2 class="pm-h2 pm-bs-faq__title">{{ section.settings.title }}</h2>
+    {%- endif -%}
+
+    <div class="pm-bs-faq__cols">
+      <div class="pm-bs-faq__col">
+        {%- for block in questions -%}
+          {%- if forloop.index <= half -%}
+            <div class="pm-bs-faq__item" {{ block.shopify_attributes }}>
+              <h3 class="pm-bs-faq__q">
+                <button
+                  type="button"
+                  class="pm-bs-faq__btn"
+                  id="pm-bs-faq-btn-{{ block.id }}"
+                  aria-expanded="false"
+                  aria-controls="pm-bs-faq-panel-{{ block.id }}">
+                  <span class="pm-bs-faq__q-text">{{ block.settings.question }}</span>
+                  <span class="pm-bs-faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div
+                class="pm-bs-faq__panel"
+                id="pm-bs-faq-panel-{{ block.id }}"
+                role="region"
+                aria-labelledby="pm-bs-faq-btn-{{ block.id }}">
+                <div class="pm-bs-faq__panel-inner">
+                  <div class="pm-bs-faq__a">{{ block.settings.answer }}</div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      <div class="pm-bs-faq__col">
+        {%- for block in questions -%}
+          {%- if forloop.index > half -%}
+            <div class="pm-bs-faq__item" {{ block.shopify_attributes }}>
+              <h3 class="pm-bs-faq__q">
+                <button
+                  type="button"
+                  class="pm-bs-faq__btn"
+                  id="pm-bs-faq-btn-{{ block.id }}"
+                  aria-expanded="false"
+                  aria-controls="pm-bs-faq-panel-{{ block.id }}">
+                  <span class="pm-bs-faq__q-text">{{ block.settings.question }}</span>
+                  <span class="pm-bs-faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div
+                class="pm-bs-faq__panel"
+                id="pm-bs-faq-panel-{{ block.id }}"
+                role="region"
+                aria-labelledby="pm-bs-faq-btn-{{ block.id }}">
+                <div class="pm-bs-faq__panel-inner">
+                  <div class="pm-bs-faq__a">{{ block.settings.answer }}</div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- if section.settings.closing_text != blank -%}
+      <div class="pm-bs-faq__closing">{{ section.settings.closing_text }}</div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  (function () {
+    function initFaq(root) {
+      if (!root || root.dataset.started === '1') return;
+      root.dataset.started = '1';
+      root.classList.add('is-js');
+
+      function setOpen(item, open) {
+        var btn = item.querySelector('.pm-bs-faq__btn');
+        if (!btn) return;
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        item.classList.toggle('is-open', open);
+      }
+
+      root.querySelectorAll('.pm-bs-faq__item').forEach(function (item) {
+        var btn = item.querySelector('.pm-bs-faq__btn');
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+          setOpen(item, btn.getAttribute('aria-expanded') !== 'true');
+        });
+      });
+
+      root.addEventListener('shopify:block:select', function (e) {
+        var item = e.target && e.target.closest ? e.target.closest('.pm-bs-faq__item') : null;
+        if (item) setOpen(item, true);
+      });
+      root.addEventListener('shopify:block:deselect', function (e) {
+        var item = e.target && e.target.closest ? e.target.closest('.pm-bs-faq__item') : null;
+        if (item) setOpen(item, false);
+      });
+    }
+
+    function scan(scope) {
+      (scope || document).querySelectorAll('[data-pm-bs-faq]').forEach(initFaq);
+    }
+
+    scan(document);
+    if (!window.pmBsFaqBound) {
+      window.pmBsFaqBound = true;
+      document.addEventListener('shopify:section:load', function (e) {
+        scan(e.target);
+      });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Bundle: FAQ",
+  "tag": "section",
+  "class": "premium",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-5"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Vanliga frågor"
+    },
+    {
+      "type": "richtext",
+      "id": "closing_text",
+      "label": "Text below the questions",
+      "default": "<p>Har du en annan fråga? <a href=\"/policies/contact-information\">Skriv till oss</a>.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Hur länge håller doften?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Över 12 timmar. Hållbarheten varierar med din hud. Applicera parfymen på huden, inte på kläderna.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bundle: FAQ",
+      "blocks": [
+        {
+          "type": "question",
+          "settings": {
+            "question": "Hur länge håller doften?",
+            "answer": "<p>Över 12 timmar. Hållbarheten varierar med din hud. Applicera parfymen på huden, inte på kläderna.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Kan jag kombinera olika dofter?",
+            "answer": "<p>Ja. Du väljer fritt bland dofterna i listan, i valfri kombination. Samma doft kan läggas till flera gånger.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Vad händer om doften inte passar mig?",
+            "answer": "<p>Du har 60 dagars pengarna-tillbaka-garanti. Passar inte doften dig kan du returnera ordern.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

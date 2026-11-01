@@ -1,0 +1,159 @@
+/* pm-s-bs-ugc-grid.css: customer video carousel on the Bundle & Save page (sections/pm-bs-ugc-grid.liquid).
+   Swiper (slidesPerView auto) from assets/fuel05-ugc.js; tile widths as the homepage row:
+   375: 175px tiles, 8px gap, swipe only. 750: 220px, 12px gap. 990: 265px, round arrows on the sides
+   (same look as the pm-bs review carousels). Tiles 9:16, radius from the pm tokens.
+   Head matches the other pm-bs sections (centred, stars line, h2, muted sub). */
+.premium .pm-bsug {
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.premium .pm-bsug__head {
+  max-width: var(--pm-measure);
+  margin: 0 auto var(--pm-heading-gap);
+  text-align: center;
+}
+
+.premium .pm-bsug__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  color: var(--pm-ink);
+}
+
+.premium .pm-bsug__heading {
+  margin: 0;
+}
+
+.premium .pm-bsug__sub {
+  margin: 8px 0 0;
+}
+
+.premium .pm-bsug__stage {
+  position: relative;
+}
+
+/* The tile's own width rules are scoped to the homepage / PDP rows; here it sizes as a Swiper slide */
+.premium .pm-bsug .fuel05-ugc__tile {
+  width: 175px;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  border-radius: var(--pm-radius-sm);
+  container-type: inline-size;
+}
+
+.premium .pm-bsug .pm-bsug__arrow {
+  display: none;
+}
+
+.premium .pm-bsug__empty {
+  padding: 40px 0;
+  text-align: center;
+}
+
+@media screen and (min-width: 750px) {
+  .premium .pm-bsug .fuel05-ugc__tile {
+    width: 220px;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .premium .pm-bsug .fuel05-ugc__tile {
+    width: 265px;
+  }
+
+  .premium .pm-bsug .pm-bsug__arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0;
+    padding: 0;
+    border: 1px solid var(--pm-line);
+    border-radius: var(--pm-radius-pill);
+    background: var(--pm-white);
+    color: var(--pm-ink);
+    cursor: pointer;
+    transition: opacity var(--pm-dur) var(--pm-ease), background-color var(--pm-dur) var(--pm-ease);
+  }
+
+  .premium .pm-bsug .pm-bsug__arrow--prev {
+    left: -20px;
+  }
+
+  .premium .pm-bsug .pm-bsug__arrow--next {
+    right: -20px;
+  }
+
+  .premium .pm-bsug .pm-bsug__arrow--prev .pm-icon {
+    transform: rotate(180deg);
+  }
+
+  .premium .pm-bsug .pm-bsug__arrow:hover {
+    background: var(--pm-surface);
+  }
+
+  .premium .pm-bsug .pm-bsug__arrow:focus-visible {
+    outline: 2px solid var(--pm-ink);
+    outline-offset: 2px;
+  }
+
+  /* Swiper marks the end it can't move past; hide that arrow as the other pm-bs carousels do */
+  .premium .pm-bsug .pm-bsug__arrow.swiper-button-disabled {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Every tile fits (wide screen): no arrows at all */
+  .premium .pm-bsug .pm-bsug__arrow.swiper-button-lock {
+    display: none;
+  }
+}
+
+/* Compact product pill for tiles narrower than the homepage card (265px) */
+@container (max-width: 260px) {
+  .premium .pm-bsug .fuel05-ugc__pill {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    gap: 8px;
+    padding: 8px;
+    align-items: center;
+  }
+
+  .premium .pm-bsug .fuel05-ugc__pill-thumb {
+    width: 40px;
+    height: 40px;
+  }
+
+  .premium .pm-bsug .fuel05-ugc__pill-title {
+    font-size: 12px;
+    letter-spacing: 0;
+  }
+
+  .premium .pm-bsug .fuel05-ugc__pill-price {
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  .premium .pm-bsug .fuel05-ugc__pill-add {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premium .pm-bsug .pm-bsug__arrow {
+    transition: none;
+  }
+}
+
+/* Pill "+" box in ink (the live fuel05-ugc.css still draws it green) */
+.premium .pm-bsug .fuel05-ugc__pill-add {
+  border-color: var(--pm-ink);
+}

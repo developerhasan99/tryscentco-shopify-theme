@@ -1,0 +1,1121 @@
+/* fmx-payday.css: FM (federicomahora.co Bundle & Save) look for the payday bundle builder test
+   (sections/fmx-scent-bundle-builder-single.liquid, template product.payday-60-fm).
+   Loaded after the live scent-bundle-builder.css / scent-bundle-builder-single.css and fmx-base.css;
+   every rule is scoped to .premium.fmx-payday, so the live builder (template product.payday-60) is untouched.
+   Palette: ink #232323, hairline #e7e7e7, surface #f6f6f6, sale red only on discount labels.
+   No importance overrides: the two live !important rules (.sbb-counter size, mobile summary padding) stay. */
+
+/* 1. Page: white, FM ink ----------------------------------------------------------------------- */
+.premium.fmx-payday {
+  background: var(--pm-white);
+  color: var(--pm-ink);
+}
+
+/* 2. Gallery (live snippet product-media-gallery): green perk tiles, badge and thumbnail frame in ink */
+.premium.fmx-payday .sbb-gallery .doftmatch-tooltip {
+  border-radius: 2px;
+  background: var(--pm-ink);
+  font-weight: 600;
+}
+
+.premium.fmx-payday .sbb-gallery [class*="bg-[#EBF4EF]"] {
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-surface);
+}
+
+.premium.fmx-payday .sbb-gallery [class*="text-[#226139]"] {
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-gallery svg [fill="#226139"] {
+  fill: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-gallery svg [stroke="#226139"] {
+  stroke: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-gallery svg [fill="#FFC106"] {
+  fill: var(--pm-gold);
+}
+
+.premium.fmx-payday .sbb-gallery .productSwiperImage {
+  border-radius: var(--pm-radius-md);
+}
+
+.premium.fmx-payday .sbb-gallery .productThumbnail {
+  border-width: 1px;
+  border-color: var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+}
+
+.premium.fmx-payday .sbb-gallery .productThumbnail.swiper-slide-thumb-active {
+  border-color: var(--pm-ink);
+}
+
+/* 3. Heading block: red offer tag, heavy uppercase headline with a sale-red accent (FM "WEAR MORE. SAVE MORE.") */
+.premium.fmx-payday .sbb-content .sbb-head {
+  text-align: left;
+}
+
+.premium.fmx-payday .sbb-content .sbb-head__badge {
+  margin-bottom: 14px;
+  padding: 5px 8px;
+  border-radius: 2px;
+  background: var(--pm-sale);
+  font-size: 11px;
+  line-height: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.premium.fmx-payday .sbb-content .sbb-head__title {
+  margin: 0 0 12px;
+  font-family: var(--fmx-font-heading), sans-serif;
+  font-size: clamp(26px, calc(26px + 12 * (100vw - 375px) / 1065), 38px);
+  line-height: 1.1;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-content .sbb-head__title-accent {
+  color: var(--pm-sale);
+}
+
+.premium.fmx-payday .sbb-content .sbb-head__sub {
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-content .sbb-head__sub strong {
+  color: var(--pm-ink);
+}
+
+/* 4. Builder: no outer card, FM flat column */
+.premium.fmx-payday .sbb-content .sbb-builder {
+  gap: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+/* 5. Slots: FM tier cards (white, hairline, 4px radius; ink frame when filled; free slots on the grey surface) */
+.premium.fmx-payday .sbb-slots {
+  gap: 10px;
+}
+
+.premium.fmx-payday .sbb-slot {
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-white);
+  transition: border-color var(--pm-dur) var(--pm-ease), box-shadow var(--pm-dur) var(--pm-ease);
+}
+
+.premium.fmx-payday .sbb-slot:hover {
+  border-color: var(--pm-muted);
+}
+
+.premium.fmx-payday .sbb-slot.sbb-slot--free {
+  border-color: var(--pm-line);
+  background: var(--pm-surface);
+}
+
+.premium.fmx-payday .sbb-slot.sbb-slot--filled {
+  border-color: var(--pm-ink);
+  box-shadow: 0 0 0 0.5px var(--pm-ink);
+  background: var(--pm-white);
+}
+
+.premium.fmx-payday .sbb-slot .sbb-slot__badge {
+  border-radius: 2px;
+  background: var(--pm-ink);
+  color: var(--pm-white);
+}
+
+.premium.fmx-payday .sbb-slot .sbb-slot__bottle {
+  fill: var(--pm-surface);
+  stroke: #bdbdbd;
+}
+
+.premium.fmx-payday .sbb-slot--free .sbb-slot__bottle {
+  fill: var(--pm-white);
+  stroke: var(--pm-muted);
+}
+
+.premium.fmx-payday .sbb-slot .sbb-slot__pick img {
+  border-radius: 2px;
+}
+
+.premium.fmx-payday .sbb-slot .sbb-slot__x {
+  border: 1px solid var(--pm-line);
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-slot .sbb-slot__label {
+  font-weight: 500;
+  color: var(--pm-muted);
+}
+
+.premium.fmx-payday .sbb-slot .sbb-slot__label--name {
+  font-weight: 700;
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-slot .sbb-slot__price {
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-slot .sbb-slot__price s {
+  font-weight: 400;
+  color: var(--pm-muted);
+}
+
+.premium.fmx-payday .sbb-slot .sbb-slot__price-free {
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--pm-sale);
+}
+
+/* 5b. Compact: all slots in one row (one column per slot, any bundle size), small number, bottle and price */
+.premium.fmx-payday .sbb-builder .sbb-slots {
+  display: grid;
+  grid-template-columns: none;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.premium.fmx-payday .sbb-slots .sbb-slot {
+  justify-content: flex-start;
+  gap: 6px;
+  min-height: 0;
+  padding: 28px 4px 10px;
+}
+
+.premium.fmx-payday .sbb-slots .sbb-slot__badge {
+  top: 5px;
+  left: 5px;
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+}
+
+.premium.fmx-payday .sbb-slots .sbb-slot__x {
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+}
+
+.premium.fmx-payday .sbb-slots .sbb-slot__bottle {
+  width: 26px;
+  height: 50px;
+}
+
+.premium.fmx-payday .sbb-slots .sbb-slot__pick img {
+  width: 100%;
+  max-width: 64px;
+  height: auto;
+}
+
+.premium.fmx-payday .sbb-slots .sbb-slot__label,
+.premium.fmx-payday .sbb-slots .sbb-slot__price {
+  margin: 0;
+  font-size: 11px;
+  line-height: 14px;
+}
+
+@media screen and (max-width: 640px) {
+  .premium.fmx-payday .sbb-builder .sbb-slots {
+    gap: 5px;
+  }
+
+  .premium.fmx-payday .sbb-slots .sbb-slot {
+    gap: 4px;
+    padding: 24px 2px 8px;
+  }
+
+  .premium.fmx-payday .sbb-slots .sbb-slot__badge {
+    top: 4px;
+    left: 4px;
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+  }
+
+  .premium.fmx-payday .sbb-slots .sbb-slot__bottle {
+    width: 20px;
+    height: 39px;
+  }
+
+  .premium.fmx-payday .sbb-slots .sbb-slot__label,
+  .premium.fmx-payday .sbb-slots .sbb-slot__price {
+    font-size: 10px;
+    line-height: 13px;
+  }
+}
+
+/* 6. Progress: thin ink line, small muted copy */
+.premium.fmx-payday .sbb-progress .sbb-progress__track {
+  height: 3px;
+  border-radius: 0;
+  background: var(--pm-line);
+}
+
+.premium.fmx-payday .sbb-progress .sbb-progress__fill {
+  border-radius: 0;
+  background: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-progress .sbb-progress__copy {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--pm-ink);
+}
+
+/* 7. Countdown: FM deal panel (ink band, white number boxes) */
+.premium.fmx-payday .sbb-content .bb-timer {
+  padding: 14px 18px;
+  border: 0;
+  border-radius: var(--pm-radius-md);
+  background: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-content .bb-timer__label {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pm-white);
+}
+
+.premium.fmx-payday .sbb-content .bb-timer__unit b {
+  display: block;
+  min-width: 40px;
+  padding: 6px 4px;
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-white);
+  text-align: center;
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-content .bb-timer__unit small {
+  margin-top: 4px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pm-on-dark-muted);
+}
+
+.premium.fmx-payday .sbb-content .bb-timer__sep {
+  display: none;
+}
+
+/* 8. Price summary: FM grey panel, ink amounts, sale red only on the discount */
+.premium.fmx-payday .sbb-content .sbb-summary {
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-surface);
+}
+
+.premium.fmx-payday .sbb-content .sbb-summary__original,
+.premium.fmx-payday .sbb-content .sbb-summary__original s {
+  font-size: 14px;
+  color: var(--pm-muted);
+}
+
+.premium.fmx-payday .sbb-content .sbb-summary__now-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-content .sbb-summary__now-price {
+  font-family: var(--fmx-font-heading), sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-content .sbb-summary__now-percent {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--pm-sale);
+}
+
+.premium.fmx-payday .sbb-content .sbb-summary__per-bottle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-content .sbb-summary__per-bottle s {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--pm-muted);
+}
+
+.premium.fmx-payday .sbb-content .sbb-summary__savings {
+  padding: 6px 12px;
+  border: 1px solid var(--pm-ink);
+  border-radius: 2px;
+  background: var(--pm-white);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pm-ink);
+}
+
+/* 9. Buttons: FM ink button (uppercase, tracked, 2px radius); FM grey while bottles are missing */
+.premium.fmx-payday .sbb-summary__cta,
+.premium.fmx-payday .sbb-sticky__buy .sbb-sticky__cta {
+  min-height: 52px;
+  border: 1px solid var(--pm-black);
+  border-radius: 2px;
+  background: var(--pm-ink);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pm-white);
+  transition: background-color var(--pm-dur) var(--pm-ease);
+}
+
+.premium.fmx-payday .sbb-summary__cta:hover:not(:disabled),
+.premium.fmx-payday .sbb-sticky__buy .sbb-sticky__cta:hover:not(:disabled) {
+  background: var(--pm-black);
+}
+
+.premium.fmx-payday .sbb-summary__cta:disabled,
+.premium.fmx-payday .sbb-sticky__buy .sbb-sticky__cta:disabled {
+  border-color: #8c8c8c;
+  background: #8c8c8c;
+  opacity: 1;
+}
+
+/* 10. Guarantee badge: hairline tag, ink */
+.premium.fmx-payday .sbb-badges .sbb-badge {
+  border: 1px solid var(--pm-line);
+  border-radius: 2px;
+  background: var(--pm-white);
+  font-weight: 600;
+  color: var(--pm-ink);
+}
+
+/* 10b. Under the buy button: FM product page payment icons + badge row (delivery, PostNord, guarantee);
+   logo and seal in dark grey as on the FM product page (fmx-pdp.css 7b) */
+.premium.fmx-payday .fmx-payday-trust .fmx-pay-icons {
+  margin: 16px auto 0;
+}
+
+.premium.fmx-payday .fmx-payday-trust .fmx-shipping-badges {
+  margin: 20px 0 0;
+}
+
+.premium.fmx-payday .fmx-shipping-badges .fmx-shipping-badges__logo,
+.premium.fmx-payday .fmx-shipping-badges .fmx-shipping-badges__carrier img {
+  filter: grayscale(1) brightness(0.3);
+}
+
+/* 11. Filter bar + search: magicperfume.co collection filter (assets/mgx-filters.css + collection-search.css
+   on magicperfume.co theme t/67), values mapped to FM tokens. From 990px: centred pill dropdowns; below:
+   one "Filtrera och sortera" pill + full-screen drawer. Search pill underneath (460px from 750). */
+/* x-cloak needs one class more than the component rules below (drawer display:flex) */
+.premium.fmx-payday .sbb [x-cloak] {
+  display: none;
+}
+
+html.fmx-fc-lock,
+html.fmx-fc-lock body {
+  overflow: hidden;
+}
+
+.premium.fmx-payday .sbb-controls.fmx-fc {
+  display: block;
+  margin-bottom: 24px;
+}
+
+.premium.fmx-payday .fmx-fc__bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 0;
+}
+
+.premium.fmx-payday .fmx-fc__dd {
+  position: relative;
+}
+
+.premium.fmx-payday .fmx-fc__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--pm-ink);
+  border-radius: 999px;
+  background: var(--pm-white);
+  color: var(--pm-ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.premium.fmx-payday .fmx-fc__pill:hover {
+  background: var(--pm-surface);
+}
+
+.premium.fmx-payday .fmx-fc__chev {
+  flex: none;
+  transition: transform 0.15s ease-out;
+}
+
+.premium.fmx-payday .fmx-fc__pill[aria-expanded="true"] .fmx-fc__chev {
+  transform: rotate(180deg);
+}
+
+.premium.fmx-payday .fmx-fc__panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 5;
+  min-width: 256px;
+  max-height: 50vh;
+  overflow: auto;
+  padding: 8px 0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  background: var(--pm-white);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.premium.fmx-payday .fmx-fc__dd--end .fmx-fc__panel {
+  right: 0;
+  left: auto;
+}
+
+.premium.fmx-payday .fmx-fc__opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--pm-ink);
+  cursor: pointer;
+}
+
+.premium.fmx-payday .fmx-fc__opt:hover {
+  background: var(--pm-surface);
+}
+
+.premium.fmx-payday .fmx-fc__opt.is-off {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.premium.fmx-payday .fmx-fc__opt.is-off:hover {
+  background: none;
+}
+
+.premium.fmx-payday .fmx-fc__label {
+  flex: 0 1 auto;
+}
+
+.premium.fmx-payday .fmx-fc__n {
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+/* Pill dropdowns show "(17)", the drawer a bare number on the right (as magicperfume.co) */
+.premium.fmx-payday .fmx-fc__bar .fmx-fc__n::before {
+  content: "(";
+}
+
+.premium.fmx-payday .fmx-fc__bar .fmx-fc__n::after {
+  content: ")";
+}
+
+.premium.fmx-payday .fmx-fc__opt input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0;
+  background: var(--pm-surface);
+  cursor: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.premium.fmx-payday .fmx-fc__opt input[type="radio"] {
+  border-radius: 50%;
+}
+
+.premium.fmx-payday .fmx-fc__opt input:checked {
+  border-color: var(--pm-ink);
+  background: var(--pm-ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E") center / 70% no-repeat;
+}
+
+.premium.fmx-payday .fmx-fc__opt input[type="radio"]:checked {
+  background: var(--pm-white);
+  box-shadow: inset 0 0 0 4px var(--pm-ink);
+}
+
+.premium.fmx-payday .fmx-fc__opt input:focus-visible,
+.premium.fmx-payday .fmx-fc__pill:focus-visible,
+.premium.fmx-payday .fmx-fc__trigger:focus-visible,
+.premium.fmx-payday .fmx-fc__apply:focus-visible {
+  outline: 2px solid var(--pm-ink);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.premium.fmx-payday .fmx-fc__clear,
+.premium.fmx-payday .fmx-fc__clearlink {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--pm-muted);
+  font: inherit;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* "Rensa alla" pill: same pill, x icon, greyed out until a filter, sort or search is active */
+.premium.fmx-payday .fmx-fc__pill.fmx-fc__reset:disabled {
+  border-color: var(--pm-line);
+  background: var(--pm-white);
+  color: var(--pm-muted);
+  cursor: default;
+}
+
+.premium.fmx-payday .fmx-fc__mbar {
+  display: none;
+}
+
+.premium.fmx-payday .fmx-fc__mreset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--pm-ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* Drawer (below 990px) */
+.premium.fmx-payday .fmx-fc__drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  background: var(--pm-white);
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .fmx-fc__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 54px;
+  padding: env(safe-area-inset-top, 0px) 6px 0 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.premium.fmx-payday .fmx-fc__title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.premium.fmx-payday .fmx-fc__x {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--pm-ink);
+  cursor: pointer;
+}
+
+.premium.fmx-payday .fmx-fc__body {
+  flex: 1;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 0 16px;
+}
+
+.premium.fmx-payday .fmx-fc__acc {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.premium.fmx-payday .fmx-fc__acc summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 60px;
+  font-size: 14px;
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+
+.premium.fmx-payday .fmx-fc__acc summary::-webkit-details-marker {
+  display: none;
+}
+
+.premium.fmx-payday .fmx-fc__acc summary::after {
+  content: "+";
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.premium.fmx-payday .fmx-fc__acc[open] summary::after {
+  content: "\2212";
+}
+
+.premium.fmx-payday .fmx-fc__sel {
+  margin-left: 6px;
+  font-weight: 400;
+  color: var(--pm-muted);
+}
+
+.premium.fmx-payday .fmx-fc__list {
+  padding: 0 0 14px;
+}
+
+.premium.fmx-payday .fmx-fc__drawer .fmx-fc__opt {
+  min-height: 44px;
+  padding: 4px 0;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.premium.fmx-payday .fmx-fc__drawer .fmx-fc__opt:hover {
+  background: none;
+}
+
+.premium.fmx-payday .fmx-fc__drawer .fmx-fc__opt input {
+  width: 20px;
+  height: 20px;
+}
+
+.premium.fmx-payday .fmx-fc__drawer .fmx-fc__n {
+  margin-left: auto;
+  font-size: 15px;
+  opacity: 0.75;
+}
+
+.premium.fmx-payday .fmx-fc__foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 15px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.premium.fmx-payday .fmx-fc__apply {
+  width: 100%;
+  height: 54px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--pm-ink);
+  color: var(--pm-white);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.premium.fmx-payday .fmx-fc__apply:hover {
+  background: var(--pm-black);
+}
+
+.premium.fmx-payday .fmx-fc__foot .fmx-fc__clearlink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+/* Search pill */
+.premium.fmx-payday .fmx-fc__search {
+  padding: 4px 0 0;
+}
+
+.premium.fmx-payday .fmx-fc__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  margin: 0 auto;
+  border: 1px solid var(--pm-ink);
+  border-radius: 999px;
+  background: var(--pm-white);
+  color: var(--pm-ink);
+  cursor: text;
+}
+
+.premium.fmx-payday .fmx-fc__field:focus-within {
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+}
+
+.premium.fmx-payday .fmx-fc__ico {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  width: 20px;
+  height: 20px;
+  color: var(--pm-ink);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.premium.fmx-payday .fmx-fc__field .fmx-fc__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 52px;
+  margin: 0;
+  padding: 0 42px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: var(--pm-ink);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.premium.fmx-payday .fmx-fc__field .fmx-fc__input:not(:placeholder-shown) {
+  padding: 0 48px;
+}
+
+.premium.fmx-payday .fmx-fc__field .fmx-fc__input:focus,
+.premium.fmx-payday .fmx-fc__field .fmx-fc__input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.premium.fmx-payday .fmx-fc__input::placeholder {
+  color: var(--pm-ink);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+.premium.fmx-payday .fmx-fc__input::-webkit-search-cancel-button,
+.premium.fmx-payday .fmx-fc__input::-webkit-search-decoration {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.premium.fmx-payday .fmx-fc__xsearch {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0 0 2px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--pm-surface);
+  color: var(--pm-ink);
+  font-family: inherit;
+  font-size: 22px;
+  line-height: 1;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.premium.fmx-payday .fmx-fc__xsearch:hover {
+  background: var(--pm-line);
+}
+
+.premium.fmx-payday .fmx-fc__status {
+  min-height: 1.5em;
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--pm-muted);
+}
+
+@media screen and (min-width: 750px) {
+  .premium.fmx-payday .fmx-fc__field {
+    max-width: 460px;
+  }
+
+  .premium.fmx-payday .fmx-fc__ico {
+    left: 18px;
+  }
+
+  .premium.fmx-payday .fmx-fc__field .fmx-fc__input {
+    padding: 0 48px;
+  }
+
+  .premium.fmx-payday .fmx-fc__input::placeholder {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+  }
+}
+
+@media screen and (max-width: 989px) {
+  .premium.fmx-payday .fmx-fc__bar {
+    display: none;
+  }
+
+  .premium.fmx-payday .fmx-fc__mbar {
+    display: block;
+    padding: 12px 0;
+  }
+
+  .premium.fmx-payday .fmx-fc__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 54px;
+    padding: 0 16px;
+    border: 1px solid var(--pm-ink);
+    border-radius: 999px;
+    background: var(--pm-white);
+    color: var(--pm-ink);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+}
+
+/* 12. Scent cards: FM product card (no frame, image on the grey surface, red offer tag, uppercase title, ink ADD button) */
+.premium.fmx-payday .sbb-grid {
+  gap: 28px 16px;
+}
+
+.premium.fmx-payday .sbb-grid .sbb-card {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.premium.fmx-payday .sbb-grid .sbb-card.is-selected {
+  box-shadow: none;
+}
+
+.premium.fmx-payday .sbb-card .sbb-card__media {
+  overflow: hidden;
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-surface);
+}
+
+.premium.fmx-payday .sbb-card.is-selected .sbb-card__media {
+  outline: 1.5px solid var(--pm-ink);
+  outline-offset: -1.5px;
+}
+
+.premium.fmx-payday .sbb-card .sbb-card__media img {
+  background: var(--pm-surface);
+}
+
+/* Offer ribbon: the live full-width strip along the bottom of the image, sale red instead of green */
+.premium.fmx-payday .sbb-card .sbb-card__ribbon {
+  background: var(--pm-sale);
+}
+
+.premium.fmx-payday .sbb-card .sbb-card__title {
+  margin: 12px 0 4px;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-card .sbb-card__price {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-card .sbb-card__price s,
+.premium.fmx-payday .sbb-card .sbb-card__size {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--pm-muted);
+}
+
+.premium.fmx-payday .sbb-card .sbb-card__cta {
+  width: 100%;
+  min-height: 40px;
+  margin: auto 0 0;
+  padding: 8px 12px;
+  border: 1px solid var(--pm-ink);
+  border-radius: 2px;
+  background: var(--pm-ink);
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pm-white);
+}
+
+.premium.fmx-payday .sbb-card .sbb-card__cta.is-active {
+  background: var(--pm-white);
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-card .sbb-card__cta:disabled {
+  opacity: 0.35;
+}
+
+.premium.fmx-payday .sbb-empty {
+  color: var(--pm-muted);
+}
+
+/* 13. Sticky bar: white, hairline, ink slots and button */
+.premium.fmx-payday .sbb-sticky .sbb-sticky__inner {
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+  box-shadow: var(--pm-shadow-float);
+}
+
+.premium.fmx-payday .sbb-sticky .sbb-sticky__slot {
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-white);
+}
+
+.premium.fmx-payday .sbb-sticky .sbb-sticky__slot--free {
+  background: var(--pm-surface);
+}
+
+.premium.fmx-payday .sbb-sticky .sbb-sticky__slot.is-filled {
+  border-color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-sticky .sbb-sticky__pill {
+  border-radius: 2px;
+  background: var(--pm-sale);
+}
+
+.premium.fmx-payday .sbb-sticky .sbb-sticky__bottle,
+.premium.fmx-payday .sbb-sticky .sbb-sticky__slot.is-filled .sbb-sticky__bottle,
+.premium.fmx-payday .sbb-sticky .sbb-sticky__slot--free .sbb-sticky__bottle {
+  fill: var(--pm-surface);
+  stroke: #bdbdbd;
+}
+
+.premium.fmx-payday .sbb-sticky .sbb-counter {
+  font-weight: 700;
+  color: var(--pm-ink);
+}
+
+.premium.fmx-payday .sbb-sticky .sbb-message {
+  color: var(--pm-muted);
+}
+
+.premium.fmx-payday .sbb-sticky .sbb-sticky__price {
+  font-family: var(--fmx-font-heading), sans-serif;
+  font-weight: 800;
+  color: var(--pm-ink);
+}
+
+/* 12b. Below 990px: 3 scent tiles per row (live: 2), card text sized for the ~110px column on a phone */
+@media screen and (max-width: 989px) {
+  .premium.fmx-payday .sbb-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px 10px;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .premium.fmx-payday .sbb-sticky .sbb-sticky__inner {
+    border-width: 1px 0 0;
+    border-radius: 0;
+  }
+
+  .premium.fmx-payday .sbb-grid {
+    gap: 20px 8px;
+  }
+
+  .premium.fmx-payday .sbb-card .sbb-card__ribbon {
+    padding: 3px 4px;
+    font-size: 9px;
+    line-height: 11px;
+  }
+
+  .premium.fmx-payday .sbb-card .sbb-card__title {
+    margin: 8px 0 4px;
+    font-size: 11px;
+    line-height: 14px;
+    letter-spacing: 0;
+  }
+
+  .premium.fmx-payday .sbb-card .sbb-card__price {
+    column-gap: 4px;
+    margin: 0 0 8px;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .premium.fmx-payday .sbb-card .sbb-card__price s,
+  .premium.fmx-payday .sbb-card .sbb-card__size {
+    font-size: 11px;
+  }
+
+  .premium.fmx-payday .sbb-card .sbb-card__cta {
+    min-height: 36px;
+    padding: 6px 4px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+}

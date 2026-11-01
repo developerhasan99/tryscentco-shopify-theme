@@ -1,0 +1,12 @@
+{%- comment -%}
+  fmx (FM product page test): copy of snippets/scent-profiling.liquid without the quick links
+  ("Fullständig beskrivning" / "Rent märke") and without the four icon tags row (family / occasion /
+  season / strength), which repeat what the scent notes section below the buy box shows. The script
+  that wired the "Fullständig beskrivning" link is gone with the link. The stopwatch claim line is
+  gone too (the selling points above carry the 95% / 20% / 12+ h claims).
+{%- endcomment -%}
+{% if product.metafields.custom.scent_description != blank %}
+  <p class="pm-sdesc">
+    {{ product.metafields.custom.scent_description }}
+  </p>
+{% endif %}

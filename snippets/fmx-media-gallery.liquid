@@ -1,0 +1,343 @@
+{% comment %}
+  fmx-media-gallery: the FM editorial product gallery (FM theme snippets/product-media-gallery.liquid,
+  editorial branch) for the FM product page test (sections/fmx-main-product.liquid). Always editorial:
+  from 990px a full-bleed image stack (first image full width, the rest 2-up), below 990 a Swiper
+  slider with a 52px thumbnail column on the right. Swiper 11 is loaded by layout/theme.liquid.
+  Styles: assets/fmx-pdp.css (.premium .pm-pdp .pm-gallery...).
+
+  Which images show is the live tryscent.co logic (snippets/product-media-gallery.liquid), not FM's:
+  - tag 'local_image': the image whose alt is bundle_<country> (fallback: alt bundle_usd), then the
+    marketing images;
+  - otherwise: the first product image, then the marketing images;
+  - tag 'own_gallery': no marketing images;
+  - marketing images = metaobject marketing_images/swedish, swapped per Weglot language (fi, da, no)
+    after load, as on live.
+  The live gallery also renders the Pair Scent desktop slot (fuel03-pair-scent mode v2d); kept here.
+
+  Usage: {% render 'fmx-media-gallery' %}
+{% endcomment %}
+{% if product == blank %}
+  {% assign product = product_param %}
+{% endif %}
+
+{% liquid
+  # Products tagged 'own_gallery' show only their own images, no marketing images
+  unless product.tags contains 'own_gallery'
+    assign marketing_images = shop.metaobjects['marketing_images']['swedish'].images.value
+    assign fi_marketing_images = shop.metaobjects['marketing_images']['finnish'].images.value
+    assign da_marketing_images = shop.metaobjects['marketing_images']['danish'].images.value
+    assign no_marketing_images = shop.metaobjects['marketing_images']['norwegian'].images.value
+  endunless
+
+  assign gid = section.id | default: product.id
+
+  # New theme photos (custom.fm_images, list of files) go first; the product's own photos and the marketing
+  # images follow as before. The live theme never reads this field (theme A/B test keeps live photos).
+  assign fm_images = product.metafields.custom.fm_images.value
+
+  # Which product images make the gallery: the first image, the visitor's currency bundle image, or the USD bundle image
+  assign image_mode = 'first'
+  if product.tags contains 'local_image'
+    assign curr_currency = localization.country.iso_code | prepend: 'bundle_' | downcase
+    assign image_mode = 'bundle_usd'
+    for image in product.images
+      assign img_alt = image.alt | downcase
+      if img_alt contains 'bundle_' and img_alt == curr_currency
+        assign image_mode = 'bundle_currency'
+        break
+      endif
+    endfor
+  endif
+
+  assign slide_class = 'productSwiperImage swiper-slide'
+  assign thumb_class = 'productThumbnail swiper-slide'
+  assign slide_sizes = '(min-width: 990px) 50vw, 100vw'
+  assign slide_index = 0
+%}
+
+<div id="pm-gallery-{{ gid }}" class="pm-gallery">
+  <div class="pm-gallery__row">
+    <div
+      class="doftmatch-tooltip pm-badge pm-gallery__tag"
+      tabindex="0"
+      aria-describedby="doftmatch-tooltip-{{ product.id }}">
+      ≈95% doftlikhet ⓘ
+      <span
+        id="doftmatch-tooltip-{{ product.id }}"
+        class="doftmatch-tooltip__content"
+        role="tooltip">
+        Baserat på verifierade kundbetyg av doftlikhet.
+      </span>
+    </div>
+    <div id="productSwiper-{{ gid }}" class="swiper">
+      <div class="swiper-wrapper">
+        {%- for fm_media in fm_images -%}
+          {%- assign image = fm_media.preview_image -%}
+          {%- assign slide_index = slide_index | plus: 1 -%}
+          <img
+            src="{{ image | image_url: width: 1500 }}"
+            srcset="{{ image | image_url: width: 750 }} 750w, {{ image | image_url: width: 1100 }} 1100w, {{ image | image_url: width: 1500 }} 1500w"
+            sizes="{{ slide_sizes }}"
+            alt="{{ fm_media.alt | default: product.title | escape }}"
+            height="{{ image.height }}"
+            width="{{ image.width }}"
+            {% if slide_index == 1 %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+            class="{{ slide_class }}">
+        {%- endfor -%}
+        {%- for image in product.images -%}
+          {%- liquid
+            assign show_image = false
+            assign img_alt = image.alt | downcase
+            if image_mode == 'first' and forloop.first
+              assign show_image = true
+            elsif image_mode == 'bundle_currency' and img_alt contains 'bundle_' and img_alt == curr_currency
+              assign show_image = true
+            elsif image_mode == 'bundle_usd' and img_alt contains 'bundle_usd'
+              assign show_image = true
+            endif
+          -%}
+          {%- if show_image -%}
+            {%- assign slide_index = slide_index | plus: 1 -%}
+            <img
+              src="{{ image | image_url: width: 1500 }}"
+              srcset="{{ image | image_url: width: 750 }} 750w, {{ image | image_url: width: 1100 }} 1100w, {{ image | image_url: width: 1500 }} 1500w"
+              sizes="{{ slide_sizes }}"
+              alt="{{ image.alt | escape }}"
+              height="{{ image.height }}"
+              width="{{ image.width }}"
+              {% if slide_index == 1 %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+              class="{{ slide_class }}">
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if marketing_images != blank -%}
+          {%- for image in marketing_images -%}
+            {%- assign slide_index = slide_index | plus: 1 -%}
+            <img
+              src="{{ image | image_url: width: 1500 }}"
+              srcset="{{ image | image_url: width: 750 }} 750w, {{ image | image_url: width: 1100 }} 1100w, {{ image | image_url: width: 1500 }} 1500w"
+              sizes="{{ slide_sizes }}"
+              alt="{{ image.alt | escape }}"
+              height="{{ image.height }}"
+              width="{{ image.width }}"
+              {% if slide_index == 1 %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+              class="{{ slide_class }} marketing_image">
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+      <div
+        data-text="text"
+        id="productSwiperPrev-{{ gid }}"
+        class="swiper-button-prev"></div>
+      <div
+        data-text="text"
+        id="productSwiperNext-{{ gid }}"
+        class="swiper-button-next"></div>
+    </div>
+  </div>
+  {%- comment -%} Desktop bar under the main image (Thomson Carter pattern): counter left, arrows right. {%- endcomment -%}
+  <div class="pm-gallery__bar">
+    <span class="pm-gallery__count" aria-live="polite"><span data-fmx-current>1</span> / {{ slide_index }}</span>
+    <div class="pm-gallery__arrows">
+      <button type="button" class="pm-gallery__arrow" id="fmxGalleryPrev-{{ gid }}" aria-label="Föregående bild">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      </button>
+      <button type="button" class="pm-gallery__arrow" id="fmxGalleryNext-{{ gid }}" aria-label="Nästa bild">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="pm-gallery__side">
+    <div id="productThumbnails-{{ gid }}" class="swiper pm-gallery__thumbs">
+      <div class="swiper-wrapper">
+        {%- for fm_media in fm_images -%}
+          <img
+            id="slider-thumbnail-fm-{{ forloop.index0 }}"
+            src="{{ fm_media.preview_image | image_url: width: 150, height: 150 }}"
+            alt="{{ fm_media.alt | default: product.title | escape }}"
+            height="150"
+            width="150"
+            loading="lazy"
+            class="{{ thumb_class }}">
+        {%- endfor -%}
+        {%- for image in product.images -%}
+          {%- liquid
+            assign show_image = false
+            assign img_alt = image.alt | downcase
+            if image_mode == 'first' and forloop.first
+              assign show_image = true
+            elsif image_mode == 'bundle_currency' and img_alt contains 'bundle_' and img_alt == curr_currency
+              assign show_image = true
+            elsif image_mode == 'bundle_usd' and img_alt contains 'bundle_usd'
+              assign show_image = true
+            endif
+          -%}
+          {%- if show_image -%}
+            <img
+              id="slider-thumbnail-{{ forloop.index0 }}"
+              src="{{ image | image_url: width: 150, height: 150 }}"
+              alt="{{ image.alt | escape }}"
+              height="150"
+              width="150"
+              loading="lazy"
+              class="{{ thumb_class }}">
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if marketing_images != blank -%}
+          {%- for image in marketing_images -%}
+            <img
+              id="slider-thumbnail-{{ forloop.index0 }}"
+              src="{{ image | image_url: width: 150, height: 150 }}"
+              alt="{{ image.alt | escape }}"
+              height="150"
+              width="150"
+              loading="lazy"
+              class="{{ thumb_class }} marketing_image">
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  {% render 'fuel03-pair-scent', product: product, section: section, mode: 'v2d' %}
+
+  <script>
+    // One Swiper at every width. Below 990: thumbnails in a column right of the image (swipe, no arrows).
+    // From 990 (Thomson Carter pattern): one large image, counter + arrows bar under it, thumbnail row below.
+    (function () {
+      var gallery = document.getElementById('pm-gallery-{{ gid }}');
+      var mainSwiper = null;
+      var thumbsSwiper = null;
+
+      function build() {
+        if (mainSwiper || typeof Swiper === 'undefined') return;
+
+        thumbsSwiper = new Swiper('#productThumbnails-{{ gid }}', {
+          slidesPerView: 'auto',
+          spaceBetween: 4,
+          freeMode: true,
+          watchSlidesProgress: true,
+          watchOverflow: true,
+          direction: 'vertical',
+          slideToClickedSlide: true,
+          breakpoints: { 990: { direction: 'horizontal', spaceBetween: 14 } }
+        });
+
+        mainSwiper = new Swiper('#productSwiper-{{ gid }}', {
+          slidesPerView: 1,
+          spaceBetween: 0,
+          observer: true,
+          observeParents: true,
+          navigation: { prevEl: '#fmxGalleryPrev-{{ gid }}', nextEl: '#fmxGalleryNext-{{ gid }}' },
+          thumbs: { swiper: thumbsSwiper }
+        });
+
+        var current = gallery && gallery.querySelector('[data-fmx-current]');
+        if (current) {
+          mainSwiper.on('slideChange', function () { current.textContent = mainSwiper.realIndex + 1; });
+        }
+      }
+
+      function initProductGallerySwiper() {
+        build();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initProductGallerySwiper);
+      } else {
+        initProductGallerySwiper();
+      }
+
+      {% if marketing_images != blank %}
+      // Marketing images per Weglot language (falls back to "sv"), as in the live gallery.
+      // Swapping a language also drops srcset, otherwise the browser keeps the Swedish srcset image.
+      var localImages = {
+        sv: {
+          main: [
+            {% for item in marketing_images %}
+              "{{ item | image_url: width: 1500 }}"{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ],
+          thumbnail: [
+            {% for item in marketing_images %}
+              "{{ item | image_url: width: 150, height: 150 }}"{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ]
+        },
+        fi: {
+          main: [
+            {% for item in fi_marketing_images %}
+              "{{ item | image_url: width: 1500 }}"{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ],
+          thumbnail: [
+            {% for item in fi_marketing_images %}
+              "{{ item | image_url: width: 150, height: 150 }}"{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ]
+        },
+        da: {
+          main: [
+            {% for item in da_marketing_images %}
+              "{{ item | image_url: width: 1500 }}"{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ],
+          thumbnail: [
+            {% for item in da_marketing_images %}
+              "{{ item | image_url: width: 150, height: 150 }}"{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ]
+        },
+        no: {
+          main: [
+            {% for item in no_marketing_images %}
+              "{{ item | image_url: width: 1500 }}"{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ],
+          thumbnail: [
+            {% for item in no_marketing_images %}
+              "{{ item | image_url: width: 150, height: 150 }}"{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ]
+        }
+      };
+
+      function changeLocalImages(newLang) {
+        var lang = localImages[newLang] ? newLang : 'sv';
+        if (lang === 'sv') return;
+        var images = localImages[lang];
+
+        var mainImages = Array.from(document.querySelectorAll('#productSwiper-{{ gid }} .marketing_image'));
+        var thumbnailImages = Array.from(document.querySelectorAll('#productThumbnails-{{ gid }} .marketing_image'));
+
+        if (images.main.length === mainImages.length && images.thumbnail.length === thumbnailImages.length) {
+          mainImages.forEach(function (image, index) {
+            image.removeAttribute('srcset');
+            image.src = images.main[index];
+          });
+
+          thumbnailImages.forEach(function (image, index) {
+            image.src = images.thumbnail[index];
+          });
+        }
+      }
+
+      function initLocalImages() {
+        var currentLang = (window.Weglot && typeof Weglot.getCurrentLang === 'function' && Weglot.getCurrentLang()) || 'sv';
+        changeLocalImages(currentLang);
+
+        if (window.Weglot && typeof Weglot.on === 'function') {
+          Weglot.on('languageChanged', function (newLang) {
+            changeLocalImages(newLang);
+          });
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initLocalImages);
+      } else {
+        initLocalImages();
+      }
+      {% endif %}
+    })();
+  </script>
+</div>

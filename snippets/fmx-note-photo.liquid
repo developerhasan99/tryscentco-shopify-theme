@@ -1,0 +1,78 @@
+{%- comment -%}
+  fmx-note-photo: Swedish note name -> FM note photo filename in Shopify Files (uploaded from the FM store).
+  Usage: {%- capture f -%}{%- render 'fmx-note-photo', name: note -%}{%- endcapture -%} -> "note_vanilla.webp" or empty.
+  Generated from the tsr-bundle tier headings; only true matches (no stand-in photos). Regenerate, don't hand-edit.
+{%- endcomment -%}
+{%- assign fmx_n = name | downcase | strip -%}
+{%- case fmx_n -%}
+  {%- when 'akigalawood' -%}note_akigalawood.webp
+  {%- when 'aldehyder' -%}note_aldehydes.webp
+  {%- when 'bittermandel' -%}note_almond.webp
+  {%- when 'amber', 'amberträ', 'amberwood', 'bärnsten' -%}note_amber.webp
+  {%- when 'ambergris', 'ambra' -%}note_ambergris.webp
+  {%- when 'ambroxan' -%}note_ambroxan.webp
+  {%- when 'äpple' -%}note_apple.webp
+  {%- when 'bensoe', 'bensoin', 'benzoin', 'siambensoin' -%}note_benzoin.webp
+  {%- when 'bergamott', 'kalabrisk bergamott' -%}note_bergamot.webp
+  {%- when 'björk' -%}note_birch.webp
+  {%- when 'peppar', 'svartpeppar' -%}note_black-pepper.webp
+  {%- when 'cassis', 'svart vinbär', 'svarta vinbär', 'svartvinbär' -%}note_blackcurrant.webp
+  {%- when 'blodapelsin', 'röd apelsin' -%}note_blood-orange.webp
+  {%- when 'choklad', 'kakao', 'mörk choklad' -%}note_cacao.webp
+  {%- when 'kardemumma' -%}note_cardamom.webp
+  {%- when 'cashmeran', 'kashmeran' -%}note_cashmeran.webp
+  {%- when 'cedar', 'ceder', 'cederträ', 'virginia ceder', 'virginiaceder' -%}note_cedar.webp
+  {%- when 'ceylonkanel', 'kanel' -%}note_cinnamon.webp
+  {%- when 'citrusfrukter' -%}note_citrus.webp
+  {%- when 'kokos' -%}note_coconut.webp
+  {%- when 'cognac' -%}note_cognac.webp
+  {%- when 'fikon', 'fikonblad', 'fikonlöv' -%}note_fig.webp
+  {%- when 'granharts' -%}note_fir-resin.webp
+  {%- when 'freesia' -%}note_freesia.webp
+  {%- when 'gardenia' -%}note_gardenia.webp
+  {%- when 'geranium', 'pelargon', 'pelargonium' -%}note_geranium.webp
+  {%- when 'ingefära', 'nigeriansk ingefära' -%}note_ginger.webp
+  {%- when 'grapefruit', 'grapefrukt' -%}note_grapefruit.webp
+  {%- when 'grön  mandarin', 'grön mandarin' -%}note_green-mandarin.webp
+  {%- when 'heliotrop' -%}note_heliotrope.webp
+  {%- when 'honung' -%}note_honey.webp
+  {%- when 'olibanum', 'rökelse' -%}note_incense.webp
+  {%- when 'iris', 'irisrot', 'orris', 'orrisrot' -%}note_iris.webp
+  {%- when 'indisk jasmin', 'jasmin', 'jasmin sambac', 'marockansk jasmin', 'sambacjasmin', 'storbladig jasmin' -%}note_jasmine.webp
+  {%- when 'enbär' -%}note_juniper.webp
+  {%- when 'lavendel' -%}note_lavender.webp
+  {%- when 'läder' -%}note_leather.webp
+  {%- when 'amalficitron', 'citron', 'citronskal', 'lemon', 'siciliansk citron' -%}note_lemon.webp
+  {%- when 'liljekonvalj' -%}note_lily-of-the-valley.webp
+  {%- when 'clementin', 'italiensk mandarin', 'mandarin', 'mandarin apelsin', 'mandarinapelsin', 'röd mandarin' -%}note_mandarin.webp
+  {%- when 'mint', 'mynta' -%}note_mint.webp
+  {%- when 'mysk', 'vit mysk' -%}note_musk.webp
+  {%- when 'neroli', 'tunisisk neroli' -%}note_neroli.webp
+  {%- when 'muskot', 'muskotnöt' -%}note_nutmeg.webp
+  {%- when 'apelsinblomma', 'tunisisk apelsinblomma' -%}note_orange-blossom.webp
+  {%- when 'apelsin', 'siciliansk apelsin' -%}note_orange.webp
+  {%- when 'orkidé' -%}note_orchid.webp
+  {%- when 'agarträ', 'agarträ (oud)', 'agarwood', 'oud' -%}note_oud.webp
+  {%- when 'indisk patchouli', 'indonesisk patchouli', 'patchouli' -%}note_patchouli.webp
+  {%- when 'persika' -%}note_peach.webp
+  {%- when 'päron' -%}note_pear.webp
+  {%- when 'pion' -%}note_peony.webp
+  {%- when 'ananas' -%}note_pineapple.webp
+  {%- when 'pink pepper', 'rosa peppar', 'rosapeppar', 'rosépeppar' -%}note_pink-pepper.webp
+  {%- when 'plommon' -%}note_plum.webp
+  {%- when 'pralin', 'praliné' -%}note_praline.webp
+  {%- when 'hallon', 'röda bär', 'röda vinbär' -%}note_red-fruits.webp
+  {%- when 'bulgarisk ros', 'damaskros', 'damastros', 'grasse ros', 'ros', 'turkisk ros', 'vit ros' -%}note_rose.webp
+  {%- when 'saffran' -%}note_saffron.webp
+  {%- when 'muskatellsalvia', 'salvia' -%}note_sage.webp
+  {%- when 'australiskt sandelträ', 'sandelträ' -%}note_sandalwood.webp
+  {%- when 'salt' -%}note_sea-salt.webp
+  {%- when 'akvatiska noter', 'havsanteckningar', 'havsvatten', 'marina noter' -%}note_sea-water.webp
+  {%- when 'tobak', 'tobaksblad' -%}note_tobacco.webp
+  {%- when 'toffee' -%}note_toffee.webp
+  {%- when 'tonka', 'tonkaböna', 'tonkabönor' -%}note_tonka-bean.webp
+  {%- when 'tuberosa', 'tuberose' -%}note_tuberose.webp
+  {%- when 'bourbonvanilj', 'madagaskarvanilj', 'madagaskisk vanilj', 'svart vanilj', 'vanilj', 'vanilj absolut' -%}note_vanilla.webp
+  {%- when 'haitisk vetiver', 'vetiver' -%}note_vetiver.webp
+  {%- when 'träiga noter', 'träiga toner', 'tränoter' -%}note_woody-notes.webp
+{%- endcase -%}
