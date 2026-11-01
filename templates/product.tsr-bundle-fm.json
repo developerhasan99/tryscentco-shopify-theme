@@ -568,6 +568,7 @@
       "settings": {
         "color_scheme": "scheme-1",
         "video": "shopify://files/videos/MAGYX-SITE02.mp4",
+        "video_start": 70,
         "rounded_image": true,
         "eyebrow": "Tillverkade utan hårda kemikalier",
         "layout": "split",
