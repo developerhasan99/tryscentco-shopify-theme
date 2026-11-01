@@ -23,7 +23,7 @@
 
 .premium .pm-bs-vs__title em {
   font-style: italic;
-  color: var(--pm-muted);
+  color: var(--pm-bs-gold, #e5a00d);
 }
 
 .premium .pm-bs-vs__sub {

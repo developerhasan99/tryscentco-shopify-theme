@@ -35,7 +35,7 @@
 .premium .pm-bs-ct__title em {
   display: block;
   font-style: italic;
-  color: var(--pm-muted);
+  color: var(--pm-bs-gold, #e5a00d);
 }
 
 .premium .pm-bs-ct__table {

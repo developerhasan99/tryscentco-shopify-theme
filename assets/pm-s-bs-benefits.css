@@ -63,7 +63,7 @@
 
 .premium .pm-bsb__heading em {
   font-style: italic;
-  color: var(--pm-muted);
+  color: var(--pm-bs-gold, #e5a00d);
 }
 
 .premium .pm-bsb__list {
