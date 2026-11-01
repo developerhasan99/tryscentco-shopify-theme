@@ -270,7 +270,7 @@
 }
 
 .premium .pm-pdp .pm-rating__score .pm-stars {
-  color: var(--pm-ink);
+  color: #e5a00d;
 }
 
 .premium .pm-pdp .pm-rating__sep {
@@ -437,7 +437,7 @@
 
 .premium .pm-pdp .pm-benefits__icon {
   flex: none;
-  color: var(--pm-ink);
+  color: #22613a;
 }
 
 /* Vertical rhythm note: the spec's 1440 steps (20 / 32 / 28 / 32) put the ATC at y=956 on a 900px viewport
@@ -616,6 +616,17 @@
   background: #17803d;
 }
 
+/* Discount badges red (-37%, Spara 48%), review stars gold (same gold as the Bundle & Save page) */
+.premium .pm-badge.pm-badge--ink {
+  border-color: #c8202f;
+  background: #c8202f;
+}
+
+.premium .pm-reviews .pm-stars,
+.premium .pm-review .pm-review__stars {
+  color: #e5a00d;
+}
+
 /* 3. Subtotal + add to cart (FM pm-subtotal / pm-atc): "Delsumma 547,96 kr 289,99 kr" above the ink button */
 .premium .product-form.fmx-product-form {
   margin: 0;
@@ -759,7 +770,7 @@
 }
 
 .premium .fuel06-pdp-link .fuel06-pdp-link__icon {
-  background-color: var(--pm-ink);
+  background-color: #146b32;
 }
 
 .premium .fuel06-pdp-link:focus-visible {
@@ -813,7 +824,7 @@
   align-self: flex-start;
   padding: 2px 6px;
   border-radius: 2px;
-  background: var(--pm-ink);
+  background: #c8202f;
   color: var(--pm-white);
   font-size: 11px;
   line-height: 14px;
@@ -876,16 +887,12 @@
   color: var(--pm-muted);
 }
 
-/* 7b. Badge row (fmx-shipping-badges, tryscent.co tiles): PostNord logo and guarantee seal in dark grey */
-.premium .fmx-shipping-badges .fmx-shipping-badges__logo,
-.premium .fmx-shipping-badges .fmx-shipping-badges__carrier img {
-  filter: grayscale(1) brightness(0.3);
-}
+/* 7b. Badge row (fmx-shipping-badges, tryscent.co tiles): PostNord logo and guarantee seal in their own colours */
 
 /* 8. Outside .premium: floating add to cart bar on this template (FM sticky bar button) ------------ */
 body:has(.fmx-pdp-scope) #floatingAtc button.shimmer-btn {
-  background-color: #232323;
-  border: 1px solid #000000;
+  background-color: #146b32;
+  border: 1px solid #146b32;
   border-radius: 4px;
   box-shadow: none;
   font-size: 14px;
@@ -895,7 +902,7 @@ body:has(.fmx-pdp-scope) #floatingAtc button.shimmer-btn {
 }
 
 body:has(.fmx-pdp-scope) #floatingAtc button.shimmer-btn:hover {
-  background-color: #000000;
+  background-color: #17803d;
 }
 
 @media (max-width: 749px) {

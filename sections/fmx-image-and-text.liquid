@@ -200,8 +200,21 @@
     (function () {
       var videos = document.querySelectorAll('.pm-split--{{ section.id }} video');
       if (!videos.length) return;
+      // First play starts at the section's start point (% of the video), later loops from 0.
+      var startAt = {{ section.settings.video_start | default: 0 }} / 100;
+      var seek = function (v) {
+        if (v.dataset.started) return;
+        v.dataset.started = '1';
+        if (!startAt) return;
+        var go = function () {
+          if (v.duration) v.currentTime = v.duration * startAt;
+        };
+        if (v.readyState >= 1) go();
+        else v.addEventListener('loadedmetadata', go, { once: true });
+      };
       var play = function (v) {
         v.muted = true;
+        seek(v);
         var p = v.play();
         if (p && p.catch) p.catch(function () {});
       };
@@ -259,6 +272,17 @@
         "id": "video",
         "label": "Section Video",
         "info": "Plays muted on a loop in place of the image. Leave empty to show the image."
+      },
+      {
+        "type": "range",
+        "id": "video_start",
+        "label": "Video starts at",
+        "info": "Point of the video where the first play starts. Later loops start from the beginning.",
+        "min": 0,
+        "max": 90,
+        "step": 5,
+        "unit": "%",
+        "default": 0
       },
       {
         "type": "checkbox",
