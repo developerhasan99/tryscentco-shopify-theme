@@ -310,6 +310,11 @@
         "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
         "disabled": false,
         "settings": {}
+      },
+      "14854005245444984169": {
+        "type": "shopify://apps/ai-traffic-booster/blocks/llms_markdown-embed/019e2886-0545-7583-86f9-1ac4fc0f67bd",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
