@@ -1,0 +1,1010 @@
+/*
+ * FUEL_04 tiered multi-buy. Loaded on every page from snippets/fuel04-global.liquid,
+ * on the Swedish market only.
+ *
+ * Two gates, the same pair FUEL_01 uses.
+ *
+ * .fuel04 is for the pieces the variant ADDS next to something the control does
+ * not have (product page banner, collection grid card, cart drawer bar). Those
+ * open in the theme editor too, so a strategist can find and configure them.
+ *
+ * .fuel04-v is for a piece that REPLACES something the control already shows
+ * (the announcement row). It never opens in the editor, because there it would
+ * stand next to the control row it replaces and the merchant would see both.
+ *
+ * Nothing here reveals itself. The class on <html> comes from the testing tool
+ * in production, and from the #f04 preview switch in snippets/fuel04-global.liquid
+ * on any theme that is not the live one.
+ */
+
+.fuel04 {
+  display: none !important;
+}
+
+html.ab-f04-multibuy .fuel04,
+.shopify-design-mode .fuel04 {
+  display: block !important;
+}
+
+.fuel04-v {
+  display: none !important;
+}
+
+html.ab-f04-multibuy .fuel04-v {
+  display: block !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * Market belt.
+ *
+ * Every placement is gated in Liquid on request.locale.iso_code == 'sv', and
+ * that gate cannot do the job: the store runs ONE Shopify locale and Weglot
+ * translates at the edge, so the gate is true on the Danish, Finnish and
+ * Norwegian pages as well and the Swedish strings render on all of them. The
+ * two readings below take the decision away from Liquid.
+ *
+ * The first is Weglot's own stamp on <html> and needs no script at all.
+ * The second is the stamp snippets/fuel04-global.liquid writes once it has
+ * settled the market, from the path prefix (/da-dk, /fi-fi, /no-no) or from
+ * that same Weglot attribute arriving late.
+ *
+ * Swedish is matched on the first two letters and case-insensitively, so a
+ * regional value like sv-SE still counts as the market the test is for and
+ * the belt cannot switch the test off where it is meant to run.
+ *
+ * These sit after the two reveals on purpose. They carry the same weight as
+ * html.ab-f04-multibuy .fuel04 and win on source order.
+ * ------------------------------------------------------------------ */
+
+html[data-wg-translated]:not([data-wg-translated^='sv' i]) .fuel04,
+html[data-wg-translated]:not([data-wg-translated^='sv' i]) .fuel04-v,
+html[data-fuel04-market='off'] .fuel04,
+html[data-fuel04-market='off'] .fuel04-v {
+  display: none !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * Announcement bar.
+ *
+ * The variant row renders from snippets/fuel04-announcement.liquid inside
+ * the offer-timebar link, between the top banner and the control offer row.
+ * With the variant class on, the control offer row (the very next element)
+ * goes away, and so does the white mobile icon strip that follows the
+ * section's link wrapper, because the variant row shows the icons itself.
+ * Same two selectors FUEL_01 uses for the same swap, on its own class.
+ *
+ * Both read the market the same way the belt above does, and they have to
+ * read BOTH stamps, not just the script's. Hiding control's row is only
+ * right where the variant row is actually shown; anywhere else it leaves the
+ * announcement area blank. QA found exactly that on /da-dk, /fi-fi and
+ * /no-no: Weglot's own data-wg-translated was on <html> and hid the variant
+ * row through the belt, while snippets/fuel04-global.liquid had not written
+ * data-fuel04-market="off", so these two rules still fired and took the
+ * control row with them. So the condition is spelled out here rather than
+ * left to the script: either <html> carries no Weglot stamp at all, or the
+ * stamp is Swedish.
+ * ------------------------------------------------------------------ */
+
+html.ab-f04-multibuy:not([data-fuel04-market='off']):not([data-wg-translated]) .fuel04-bar + div,
+html.ab-f04-multibuy:not([data-fuel04-market='off'])[data-wg-translated^='sv' i] .fuel04-bar + div {
+  display: none !important;
+}
+
+html.ab-f04-multibuy:not([data-fuel04-market='off']):not([data-wg-translated]) div:has(> a .fuel04-bar) + div,
+html.ab-f04-multibuy:not([data-fuel04-market='off'])[data-wg-translated^='sv' i] div:has(> a .fuel04-bar) + div {
+  display: none !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * Shared face.
+ *
+ * Every text node the design file draws for this test is Plus Jakarta
+ * Sans, with one exception: the cart ladder, whose chips and captions
+ * are Figtree (127:150998 / 127:151007). The store serves Figtree only,
+ * so all four placements inherited it and none of them stood in the
+ * drawn face.
+ *
+ * The file below is the Latin subset of the variable face, 200-800, so
+ * one request covers every weight the frames ask for (Medium 500,
+ * SemiBold 600, Bold 700, ExtraBold 800). It is the same file FUEL_01
+ * ships for the same reason. The URL is relative because Shopify serves
+ * this stylesheet out of the same assets folder the font is in, and a
+ * stylesheet may not carry Liquid. font-display: swap, so the copy is
+ * readable from the first paint.
+ *
+ * The face is set per placement, not on .fuel04, so the cart block is
+ * left in the store's Figtree exactly as it stood.
+ * ------------------------------------------------------------------ */
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('fuel04-plus-jakarta-sans.woff2') format('woff2');
+}
+
+.fuel04-bar,
+.fuel04-pdp,
+.fuel04-card {
+  font-family: 'Plus Jakarta Sans', var(--font-body-family);
+}
+
+.fuel04-cart {
+  font-family: var(--font-body-family);
+}
+
+/* ------------------------------------------------------------------ *
+ * Announcement bar. Frame 127:70044: 1440 x 56, #17803d, one centred
+ * row, padding 12 / 16, gap 24 between the copy group and the icon
+ * strip; inside the copy group a 20.28 x 20 outline glyph, the line and
+ * a second glyph, gap 12. Copy 18 / 28, letter spacing 0.63, #ffffff.
+ * Icon strip 220.09 x 32 for the five icons, so 32 tall and 15 apart.
+ *
+ * The colours are fixed here and not taken from the section settings.
+ * The row this one replaces sits on secondary_color and writes in
+ * primary_color, and on this store that pair is pale mint with dark
+ * green ink, which is the design inverted. The variant bar is one
+ * colour in the frame and it is not a merchant decision.
+ * ------------------------------------------------------------------ */
+
+.fuel04-bar {
+  padding: 12px 16px;
+  background-color: #17803d;
+}
+
+.fuel04-bar__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.fuel04-bar__group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.fuel04-bar__glyph {
+  flex: 0 0 auto;
+  width: 20.28px;
+  height: 20px;
+  color: #ffffff;
+}
+
+.fuel04-bar__copy {
+  margin: 0;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0.63px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.fuel04-bar__sub {
+  margin: 0;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  text-align: center;
+  opacity: 0.9;
+}
+
+.fuel04-bar__icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.fuel04-bar__icon {
+  height: 36px;
+  width: auto;
+  border-radius: 4px;
+}
+
+/* One row, 56 px tall, at every width from the tablet branch up, the way the
+   frame draws it. The row is 910.65 px of content at the frame's own 18 px and
+   a 768 or 820 viewport cannot carry that, so what gives is the type, not the
+   layout: the icon strip used to drop to a second line there and the bar stood
+   90 px tall at 768 and 96 at 820 against the frame's 56.
+
+   The strip is the frame's fixed 220.09 x 32 (127:70049 draws it as one 2366 x
+   344 image, 6.878 : 1). Here it is five separate icon blocks, so the width is
+   held on the strip and the icons are spaced out inside it: at the shipped set
+   they run 209.75 px at 32 tall, which leaves 3.45 px between them. It used to
+   carry a 15 px gap and measure 254.75 at 1440, and to step the icons down to
+   24 px between 750 and 1023, which the frame never does.
+
+   With the strip at its frame width the line is what answers to the viewport.
+   Room for it = viewport - 32 (the bar's own padding) - 220.09 (strip) - 24
+   (gap) - 64.56 (the two glyphs and their 12 px gaps), and the line runs
+   31.72 x the font size plus 0.63 per character in Plus Jakarta Sans, measured
+   from the shipped woff2. So it reaches the frame's 18 px at about 955 px wide
+   and holds one row all the way down to the phone branch. */
+/* Under 750 the line wraps to two rows at 14 / 18 and QA asked for the glyphs
+   on the first row rather than centred on the block (Roj, Sep 16, with the
+   phone frame). The glyph is 20 tall on an 18 px row, so it sits 1 px above
+   the row's box to share its centre. */
+@media screen and (max-width: 749px) {
+  .fuel04-bar__group {
+    align-items: flex-start;
+  }
+
+  .fuel04-bar__glyph {
+    margin-top: -1px;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .fuel04-bar__inner {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 24px;
+    /* The frame's row is 32 tall inside 12 px of padding, which is where the
+       56 comes from. The payment strip is what usually sets it; this holds the
+       height even if a merchant leaves the strip empty. */
+    min-height: 32px;
+  }
+
+  .fuel04-bar__group {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .fuel04-bar__copy {
+    font-size: clamp(10px, calc((100vw - 384px) / 31.86), 18px);
+    line-height: 28px;
+    white-space: nowrap;
+  }
+
+  .fuel04-bar__sub {
+    font-size: 14px;
+  }
+
+  .fuel04-bar__icons {
+    flex: 0 0 auto;
+    width: 220.09px;
+    justify-content: space-between;
+    gap: 0;
+  }
+
+  .fuel04-bar__icon {
+    height: 32px;
+    min-width: 0;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Product page module, in the buy column.
+ * Frame 127:133522: 510 x 155, white, 1 px #cccccc, radius 8, padding
+ * 12 / 24 / 12 / 122, artwork across the left 158.4 px, then a heading
+ * with its second half in #126930, a sub line, and two tier rows of
+ * count - 34 px rule - reward with a hairline between them.
+ *
+ * Mobile draws the same card scaled: 211:15 is 360 x 109.41, which is the
+ * desktop card at 0.70588, and every value in it - padding 86.1, heading
+ * 12.7, sub 10.6, tier 9.9, connector 24 - is the desktop value times that
+ * one factor. So the phone branch is written as the frame's shares of the
+ * card and needs no numbers of its own.
+ *
+ * From the tablet branch up the column is not the frame's 510: it is about
+ * 422 at 1024 and 284 at 768, and there the frame's own 122 px gutter would
+ * leave the tier rows too little to hold the frame's 14 px type. So the
+ * gutter is what gives first, down to a floor of 8 % of the card, and the
+ * type follows only once the gutter has nothing left. That keeps the artwork
+ * and the padding in the frame's own ratio (158.4 / 122) at every width,
+ * which is what went wrong before: a 14 % artwork behind a 10 % gutter drew
+ * the glyph wider than the room reserved for it, so it ran under the copy.
+ * ------------------------------------------------------------------ */
+
+/* The module is its own container: the buy column is 510 wide in the frame and
+   on a wide screen, around 422 at 1024, 284 at 768 and 360 on a phone, and it
+   is the card's own width that decides what still fits on a tier row. */
+.fuel04-pdp {
+  container-type: inline-size;
+  margin: 16px 0;
+}
+
+.fuel04-pdp__card {
+  position: relative;
+  /* The room the artwork stands in. On the phone branch it is the frame's own
+     share of the card and nothing else; the tablet branch below trades it away
+     for type. */
+  --fuel04-gutter: 23.922cqi;
+  padding: 2.353cqi 4.706cqi 2.353cqi var(--fuel04-gutter);
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  background-color: #ffffff;
+  background-repeat: no-repeat;
+  background-position: left center;
+  /* A width and AUTO, never a width and a height. The artwork is a square
+     bitmap (320 x 315) and a percentage pair stretched it into whatever
+     proportion the card had, so the two rings of the % rendered as vertical
+     ovals at every width under 1280. A width with an automatic height keeps
+     the glyph round wherever the card goes. The 1.2984 is the frame's own
+     ratio of artwork to gutter, 158.4 / 122, so the glyph always fills the
+     room reserved for it and never more. */
+  background-size: calc(var(--fuel04-gutter) * 1.2984) auto;
+  overflow: hidden;
+}
+
+.fuel04-pdp__heading {
+  margin: 0;
+  color: #000000;
+  font-size: max(12.7px, 3.529cqi);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.66px;
+}
+
+.fuel04-pdp__heading-alt {
+  color: #126930;
+}
+
+.fuel04-pdp__sub {
+  margin: 0.784cqi 0 0;
+  color: #000000;
+  font-size: max(10.6px, 2.941cqi);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.66px;
+}
+
+.fuel04-pdp__tiers {
+  margin: 0.784cqi 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The frame's row is a three column table: the count, a 34 px connector and the
+   reward hard against the right edge, and both rows are the same height. So the
+   connector is a fixed 34 and cannot give up width, and neither label may wrap.
+   What answers to a narrow column is the type size, below. Before this the
+   connector was the flex item that collapsed first, which left the two rows of
+   one card with 34 px and 16.56 px rules at 360 and unequal heights at 768. */
+.fuel04-pdp__tier {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2.745cqi;
+  margin: 0;
+  padding: 2.353cqi 0;
+}
+
+.fuel04-pdp__tier + .fuel04-pdp__tier {
+  border-top: 1px solid rgba(17, 17, 17, 0.11);
+}
+
+.fuel04-pdp__count,
+.fuel04-pdp__reward {
+  margin: 0;
+  color: #000000;
+  font-size: max(9.88px, 2.745cqi);
+  line-height: 1.2;
+  letter-spacing: 0.047em;
+  white-space: nowrap;
+}
+
+/* The frame's count column is 84.21 wide inside a 510 card and it is what puts
+   the connector at card + 221 and the reward at card + 269 (211:12,
+   127:133530). Sized to the text alone the column ran 72 px and both stood
+   12.1 px left of the frame. min-width, not width, so a longer count label
+   still sets its own column instead of running into the connector. */
+.fuel04-pdp__count {
+  flex: 0 0 auto;
+  min-width: 16cqi;
+  font-weight: 500;
+}
+
+/* The reward takes what is left, so it starts at the same x on both rows and
+   the connector stands at the same x too, the way the frame's fixed three
+   column table draws it: count at 41452, rule at 41550, reward at 41598 on
+   both rows. */
+.fuel04-pdp__reward {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
+  font-weight: 700;
+}
+
+.fuel04-pdp__rule {
+  flex: 0 0 6.667cqi;
+  height: 1px;
+  background: #1c1c1c;
+}
+
+/* Under about 330 the floored type no longer fits the longest reward on one
+   line beside the count and the rule; the reward wraps rather than clips.
+   No frame draws a column this narrow. */
+@container (max-width: 329px) {
+  .fuel04-pdp__reward {
+    white-space: normal;
+  }
+}
+
+/* From the tablet branch up.
+ *
+ * The phone frame is the desktop card scaled whole, so above it everything is
+ * written in the frame's own pixels again and only the gutter and the tier
+ * type answer to the column.
+ *
+ * The gutter runs from the frame's 122 px at a 510 column down to 8 % of the
+ * card, reaching 62 px at the 422 px column a 1024 window leaves, which is
+ * exactly the room the tier rows need to hold the frame's 14 px type on one
+ * line. Below that the type follows. Both terms of the min() below are the
+ * same fit written against the two ends of the gutter - 4.87cqi while the
+ * gutter is at its floor, 0.73cqi while it is on its way down - and the
+ * smaller one is the binding one at every width, so the row is one line from
+ * the widest column in the theme to the narrowest without a breakpoint.
+ *
+ * The two labels were measured in the shipped Plus Jakarta Sans: 4.84 x the
+ * font size for the count, 14.53 for the longer reward, plus the 0.047em the
+ * frame sets. The old numbers were measured in Figtree and read 3 % wide.
+ *
+ * 1440 is untouched by all of this: at a 510 column every clamp lands on the
+ * frame's own value. */
+/* No desktop branch. The frame's phone card (211:15) is its desktop card
+   scaled to the column, and the rules above are that scaling: at the 510 px
+   column they land on the desktop frame's own numbers (18 / 15 / 14 px type,
+   a 122 px gutter), and every narrower column, whether a 440 px phone, a
+   422 px iPad column or a 284 px one, keeps the same proportions with the
+   type floored at what the phone frame draws. A desktop branch for columns
+   over 400 px pinned 18 px type and squeezed the glyph on big phones and
+   iPads, which is the picture the review rejected. */
+
+
+/* ------------------------------------------------------------------ *
+ * Collection grid offer card.
+ * Frame 127:126253: one grid cell, radius 8, drop shadow
+ * 0 1 2 rgba(0,0,0,.05), a photograph under a dark gradient, everything
+ * centred: heading 24 ExtraBold white, a sub line 16 Medium, translucent
+ * banded tier rows (white at 10 / 20 / 30 %, glass blur) and a #000000
+ * CTA 44 tall, radius 8, uppercase with 2 px letter spacing.
+ *
+ * The tier copy is the brief's, not the frame's. The frame's card is
+ * unfinished: its first row is drawn twice and the two rows under it
+ * still carry the percentage ladder this test replaces.
+ * ------------------------------------------------------------------ */
+
+/* The card is its own container: the grid runs two columns of 160-350 px and
+   four of 216-260 px on the same breakpoints, so what the type has to answer to
+   is the cell it stands in, not the viewport. Every size below is written as
+   the space the cell leaves divided by how wide that string runs per pixel of
+   type, measured in the store's own Figtree, so each line lands on the frame's
+   size at the frame's own 267.75 px card and steps down from there instead of
+   wrapping. The viewport media query that used to do this fired on the wrong
+   thing: at 1024 to 2560 the cell is 216 to 260 px and the whole card rendered
+   a step below the frame. */
+.fuel04-card {
+  container-type: inline-size;
+}
+
+.fuel04-card__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 100%;
+  min-height: 300px;
+  /* 13 px each side is what the frame leaves: a 242 px content block in a
+     267.75 px card. */
+  padding: 16px 13px;
+  border-radius: 8px;
+  background: #1c1c1c;
+  color: #ffffff;
+  text-decoration: none;
+  overflow: hidden;
+  box-sizing: border-box;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+a.fuel04-card__inner:hover {
+  text-decoration: none;
+}
+
+.fuel04-card__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The wash the frame lays over the photograph, so the white type keeps
+   its contrast whatever the picture is. It follows the stack: the denim
+   card (127:126079) darkens both ends, black at the top-left corner and
+   again behind the low stack and the white button; the sand and knit
+   cards (127:126253, 127:126350) run one black wash down from the
+   top-left corner, where their stack sits, and leave the bottle clear. */
+.fuel04-card__inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(164deg, #000000 1.5%, rgba(0, 0, 0, 0) 33.4%, rgba(0, 0, 0, 0) 51.2%, #000000 99.8%);
+}
+
+.fuel04-card--tiers-top .fuel04-card__inner::after {
+  background: linear-gradient(166deg, #000000 5.5%, rgba(102, 102, 102, 0) 78.6%);
+}
+
+.fuel04-card__head,
+.fuel04-card__tiers,
+.fuel04-card__cta {
+  position: relative;
+  z-index: 1;
+}
+
+/* The live frames set the heading and the tier copy flush left inside the
+   card's 13 px, not centred: 127:126079, 127:126253 and 127:126350 all
+   start the heading and each band's text at the same left edge. */
+.fuel04-card__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  text-align: left;
+  width: 100%;
+}
+
+.fuel04-card__heading {
+  display: block;
+  color: #ffffff;
+  font-size: 20px;
+  /* The straight line through the frame's own two cards: ExtraBold 15
+   * on the 173 px phone card (127:117535) and 24 on the 267.75 px
+   * desktop card, with a second term that only bites on a cell narrower
+   * than about 163 px, where even untracked the line would not fit.
+   * Kop fler, spara mer! runs 9.61 x the font size in the shipped Plus
+   * Jakarta Sans. */
+  font-size: clamp(11px, min(calc(9.499cqi - 1.434px), calc((100cqi - 28px) / 9.61)), 24px);
+  font-weight: 800;
+  line-height: 1.2;
+  /* The frame's 0.63 px at its own card width, given up as the cell
+   * narrows so the heading holds one line. At the frame's size the line
+   * is 243 px in a 242 px block, so it is the tracking that has to go
+   * first, exactly as on the button. */
+  letter-spacing: clamp(0px, calc(0.435cqi - 0.711px), 0.026em);
+}
+
+.fuel04-card__sub {
+  display: block;
+  color: #ffffff;
+  font-size: 13px;
+  /* Same straight line, through Medium 12 at 173 and 16 at 267.75. The
+   * frame's own mobile card draws this text on TWO lines (head box
+   * 174x50: an 18px heading line, a 4px gap and a 28px sub), so a wrap
+   * on the narrow cells is the design, not a defect. */
+  font-size: clamp(9px, calc(4.222cqi + 4.696px), 16px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.039em;
+}
+
+/* Bands sized to their own copy, not to each other. The frame's first band is
+   66 tall (127:126259) and the second is taller, because "Få en 100 ml Mystery
+   Scent GRATIS" runs to two lines in a 242 px panel and all three live cards
+   draw it that way. An earlier grid-auto-rows: 1fr matched the two bands to the
+   taller one and put the first at 86.92 against the frame's 66. */
+.fuel04-card__tiers {
+  display: grid;
+  width: 100%;
+}
+
+.fuel04-card__tier {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  text-align: left;
+}
+
+.fuel04-card__tier:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+/* The second band is the heavier tint in every frame (0.3 against the
+   first band's 0.1 in 127:126253 and 127:126350), on the 4 px bottom
+   corners those two cards draw. */
+.fuel04-card__tier:last-child {
+  border-radius: 0 0 4px 4px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* The denim card (127:126079) tints both bands 0.3 and rounds the
+   stack 8 px at both ends. */
+.fuel04-card--tiers-bottom .fuel04-card__tier {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.fuel04-card--tiers-bottom .fuel04-card__tier:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.fuel04-card__tier-count {
+  flex: 0 0 auto;
+  color: #ffffff;
+  font-size: 15px;
+  font-size: clamp(11px, 6.9cqi, 18px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.035em;
+  white-space: nowrap;
+}
+
+/* Line height 1, the way 127:126261 sets it: at 1.2 the band stood 2.7 px
+   taller per line than the frame draws it. */
+.fuel04-card__tier-text {
+  color: #ffffff;
+  font-size: 13px;
+  font-size: clamp(10px, 6cqi, 16px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.039em;
+}
+
+/* One line, 44 px tall, 14 px with 2 px of letter spacing, the way 127:126272
+   draws it inside a 232.75 x 44 button.
+
+   That only closes with the frame's own label. LÅS UPP DINA GÅVOR runs 10.79 x
+   the font size in Plus Jakarta Sans, so at 14 px with 2 px of tracking it is
+   187 px and sits inside the 224.75 the frame's button leaves. The 27
+   character label the build shipped before runs 224.7 px at 14 px before any
+   tracking at all, which is the whole of that room, so it could never be
+   14 / 2 on one line in any cell this grid has - it measured 11.65 px at 1440
+   and 9.38 at 1024.
+
+   The two clamps below spend the room in the order the button should lose it:
+   the tracking closes first, from 2 px down to 0 across the cells between the
+   frame's card and a 185 px one, and only under that does the type step down.
+   So a 260 px cell at 1440 and a 324 px one at 768 both land on the frame's
+   14 / 2, a 216 px cell at 1024 keeps 14 px and gives up tracking, and the
+   175 px phone cell keeps one line at 12.9. */
+.fuel04-card__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 4px;
+  border-radius: 8px;
+  background: #000000;
+  color: #ffffff;
+  font-size: 11px;
+  font-size: clamp(9px, calc((100cqi - 36px) / 10.49), 14px);
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: clamp(0px, calc((100cqi - 183px) / 18), 2px);
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+/* Where the tier stack sits and what the button wears differ per photograph
+   in the frames: the denim card (127:126079) keeps the stack low, just
+   above a white button; the sand and knit cards (127:126253, 127:126350,
+   and the phone's 127:117535) stack the tiers right under the heading
+   with a black button. The phone frame's denim cell (127:117466) is a
+   flat picture carrying only the heading, so the desktop card stands in
+   for it. */
+.fuel04-card--tiers-top .fuel04-card__inner {
+  justify-content: flex-start;
+}
+
+.fuel04-card--tiers-top .fuel04-card__cta {
+  margin-top: auto;
+}
+
+.fuel04-card--tiers-bottom .fuel04-card__tiers {
+  margin-top: auto;
+}
+
+.fuel04-card--cta-light .fuel04-card__cta {
+  background: #ffffff;
+  color: #000000;
+}
+
+/* Above the frame's own card width the card gets the frame's roomier outer
+   padding. The bands keep 12 px at every width, which is what both the desktop
+   frame (127:126259) and the phone one (127:129604) draw; the 10 px they used
+   to fall back to below 240 showed up at 1024, where the cell is 216. */
+@container (min-width: 240px) {
+  .fuel04-card__inner {
+    min-height: 420px;
+    padding: 20px 13px;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Which cards a screen gets.
+ *
+ * The variant frames draw three cards on the desktop grid (positions 8, 11
+ * and 13 of 127:125138) and two on the phone one (positions 4 and 5 of
+ * 127:116756), so the blocks are placed per device the way the UGC tiles in
+ * this same section already are, and the ones the screen is not for are
+ * taken back out here. Same shape as assets/fuel05-ugc.css, and it has to
+ * outrank the reveal at the top of this file, which it does on source order
+ * at equal weight.
+ * ------------------------------------------------------------------ */
+
+@media screen and (max-width: 749px) {
+  html.ab-f04-multibuy .fuel04-card--desktop,
+  .shopify-design-mode .fuel04-card--desktop {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  html.ab-f04-multibuy .fuel04-card--mobile,
+  .shopify-design-mode .fuel04-card--mobile {
+    display: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Cart drawer ladder and message strip.
+ *
+ * Form from frames 127:150993 and 127:151012: a rail with a #003900
+ * fill and round chips on it, a caption row under the chips, then a
+ * #f1f2ee strip with an icon and one sentence, in that order.
+ *
+ * Content from the brief, not from those frames: the frames still draw
+ * the free shipping and 10 / 15 / 20 % ladder this test replaces, and
+ * the brief sets the ladder to 1 | 2 | 3 gift 30 ml GRATIS | 4 | 5 gift
+ * +100 ml MYSTERY. Every chip and caption is a theme setting so a ruling
+ * the other way needs no deploy.
+ * ------------------------------------------------------------------ */
+
+/* The cart rail is the cart frame's own (Figma 211:2623): a 389 x 77 block
+   straight on the drawer above the line items - 12 px above and below, a
+   37 px row holding a 373 x 32 rail, a 4 px gap and a 12 px caption row.
+   The drawer already carries the 15 px side padding the 389 is measured
+   against, so this block adds none. */
+.fuel04-cart {
+  padding: 12px 0;
+}
+
+.fuel04-cart__row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 37px;
+}
+
+/* tier_2 + 2 nodes spread evenly over the rail; the track runs from 10 px
+   in to 16 px before the end, 347 of the 373, ending under the last node's
+   middle. */
+.fuel04-cart__rail {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 373px;
+  height: 32px;
+}
+
+/* The track and the fill hold no text of their own and assets/base.css
+   hides every empty div on the site (div:empty { display: none }), so each
+   carries a display of its own on a selector that outranks that one. */
+.fuel04-cart__rail .fuel04-cart__track {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  left: 10px;
+  display: block;
+  height: 5px;
+  overflow: hidden;
+  transform: translateY(-50%);
+  background: #dededf;
+}
+
+.fuel04-cart__track .fuel04-cart__fill {
+  display: block;
+  width: var(--fuel04-fill, 0%);
+  height: 100%;
+  background: #187f3e;
+  transition: width 240ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fuel04-cart__track .fuel04-cart__fill {
+    transition: none;
+  }
+}
+
+.fuel04-cart__node {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 32.109px;
+  height: 32px;
+  border: 0.744px solid #ffffff;
+  border-radius: 50%;
+  background: #e8e8e9;
+  color: #1c1c1c;
+  font-size: 14.716px;
+  font-weight: 600;
+  line-height: 16.054px;
+  letter-spacing: 0.446px;
+  text-transform: uppercase;
+}
+
+.fuel04-cart__node.is-on {
+  background: #187f3e;
+  color: #ffffff;
+}
+
+/* The reward nodes are the frame's own vectors exported whole - circle,
+   stroke, shadow and glyph - one for a reached reward and one for a pending
+   one. The rail in the file is a column turned -90 degrees, so the export
+   carries the column's orientation and turns back here, the way the frame
+   turns its numerals back. */
+.fuel04-cart__gift {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  width: 32.109px;
+  height: 32px;
+}
+
+.fuel04-cart__gift.is-on {
+  width: 34.885px;
+}
+
+.fuel04-cart__gift img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 33.597px;
+  height: 33.488px;
+  max-width: none;
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.fuel04-cart__gift.is-on img {
+  width: 40.159px;
+  height: 40.25px;
+}
+
+/* Two-line captions centred under the reward nodes. The frame sets them at
+   198 and 389 - 22.18 across its 389, which is 3.5 px right of the first
+   node and drifts further on any other drawer width; QA asked for them dead
+   under the nodes (Roj, Sep 16). So the strip spans the rail's own 373 and
+   each caption sits where its node sits: half a node in, plus its share of
+   the pitch, the share written by the snippet from the tier settings. */
+/* The gate that reveals the block sets display: block, so the 4 px between
+   the rail row and the captions is a margin, not a flex gap. */
+.fuel04-cart__labels {
+  position: relative;
+  max-width: 373px;
+  height: 12px;
+  margin: 4px auto 0;
+  color: #8d8d8d;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 12px;
+  letter-spacing: 0.5993px;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.fuel04-cart__label {
+  position: absolute;
+  top: 9.75px;
+  transform: translate(-50%, -50%);
+}
+
+.fuel04-cart__label--a {
+  left: calc(16.054px + (100% - 32.109px) * var(--fuel04-label-a, 0.5));
+}
+
+.fuel04-cart__label--b {
+  left: calc(100% - 16.054px);
+}
+
+/* Optional line under the rail, off unless the setting turns it on. */
+.fuel04-cart__msg {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 12px;
+  border-radius: 6px;
+  background: #f1f2ee;
+  color: #000000;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.66px;
+}
+
+.fuel04-cart__msg-icon {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  color: #000000;
+}
+
+.fuel04-cart__hl,
+.fuel04-cart__msg strong {
+  color: #146b32;
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* ------------------------------------------------------------------ *
+ * The app owned gift ladder that already sits in the cart drawer (Kite
+ * discount and free gift, app embed enabled in config/settings_data.json).
+ * QA found it inside the drawer, directly above the line items, showing the
+ * kr 500 / kr 600 / kr 710 thresholds. FUEL_04's bar states a different
+ * offer, counted in bottles, so the two cannot stand on top of each other.
+ *
+ * Two hooks, one from each side. #CartDrawer is the theme's, in
+ * snippets/cart-drawer.liquid, the only element with that id and the outer
+ * wrapper of everything the drawer draws. The app's own hooks are read off
+ * the rendered drawer: it draws the ladder as
+ * div.gfgConsolidatedProgressBarSideCartWrapperV4 wrapping
+ * div#<widget id>_SIDE_CART.gfgCCDProgressBarWidget. Both are named here
+ * because the wrapper is versioned (V4) and the widget can be re-parented.
+ *
+ * .gfgPageWrapper is kept as well. snippets/cart-drawer.liquid already hides
+ * an instance of that class in the drawer footer through the Tailwind pair on
+ * .cart__ctas, so it is a class this app does use here, just not the one the
+ * ladder is under today.
+ *
+ * .gfgGlobalWidgetsSideCartWrapperV4, the app's other container in this
+ * drawer, is deliberately left alone: that is where the gift itself is
+ * offered, and this test replaces the ladder, not the gift.
+ *
+ * Scoped to the variant, so control keeps the app's ladder exactly as it is.
+ * Hide, never delete, per the house SOP: the app keeps running, keeps adding
+ * its gift and keeps its own state, it just does not draw over our bar.
+ * ------------------------------------------------------------------ */
+
+html.ab-f04-multibuy #CartDrawer .gfgPageWrapper,
+html.ab-f04-multibuy #CartDrawer .gfgConsolidatedProgressBarSideCartWrapperV4,
+html.ab-f04-multibuy #CartDrawer .gfgCCDProgressBarWidget {
+  display: none !important;
+}
+
+/* ------------------------------------------------------------------ *
+ * Build-your-own bundle page (sections/fuel01-byo.liquid).
+ *
+ * The product page module stands above the scent grid at the buy column's own
+ * width, the 510 the frame draws, centred, so its container units read the
+ * same as on the product page. The wrapper carries the page's 16px phone
+ * gutter as side padding only, so it takes no room while the module is hidden.
+ * ------------------------------------------------------------------ */
+.fuel01-byo__offer {
+  padding: 0 16px;
+}
+
+.fuel01-byo__offer .fuel04-pdp {
+  max-width: 510px;
+  margin: 0 auto 24px;
+}

@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="">
     <link rel="canonical" href="{{ canonical_url }}">
+    {% render 'seo-hreflang' %}
 
     {%- if settings.favicon != blank -%}
       <link
@@ -362,7 +363,9 @@ body {
     {{ 'blocky.css' | asset_url | stylesheet_tag }}
 
     {% comment %} Load Swiper Assets {% endcomment %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"></noscript>
     <script defer="" src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
@@ -372,6 +375,9 @@ body {
   </script>
     {%- comment -%}{% render 'lazyload_img' %} {% render 'sb-cls-improve' %}{%- endcomment -%}
     {% render 'schema-sitewide' %}
+    {% render 'seo-faq-schema' %}
+    {%- unless template.name == 'product' -%}{% render 'schema-breadcrumbs' %}{%- endunless -%}
+    {%- if template.name == 'collection' -%}{% render 'schema-collection' %}{%- endif -%}
     {% render 'fuel01-global' %}
 
   </head>
@@ -457,14 +463,16 @@ body {
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
     <script>
-      (function() {
-        var script = document.createElement('script');
-        script.id = 'minty-onsite-script';
-        script.src = 'https://cdn.addshoppers.com/minty/shopify-onsite/executeminty.js';
-        script.async = true;
-        script.defer = true;
-        document.head.appendChild(script);
-      })();
+      /* SEO 2026-11-03: AddShoppers loads after the page has finished loading */
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var script = document.createElement('script');
+          script.id = 'minty-onsite-script';
+          script.src = 'https://cdn.addshoppers.com/minty/shopify-onsite/executeminty.js';
+          script.async = true;
+          document.head.appendChild(script);
+        }, 1500);
+      });
     </script>
 
     {% comment %} Convert the non product currencies local users exchange rate {% endcomment %}
@@ -480,7 +488,7 @@ body {
       });
     </script>
 
-    <script async src="https://news.google.com/swg/js/v1/publisher.js"></script>
+    {% comment %} SEO 2026-11-03: removed unused Google News script (news.google.com/swg) {% endcomment %}
   {% comment %} {% render 'navidium-script' %} {% endcomment %}
   {% comment %} {% render 'sb-preload-booster' %}  {% endcomment %}
   {% comment %} {% render 'checkout-modal' %} {% endcomment %}
@@ -506,7 +514,7 @@ body {
     {% render 'subscribfy-custom' %}
     {% render 'price-test-card-sync' %}
     <script>
-      !function(){var e="https://subscribfy.nyc3.cdn.digitaloceanspaces.com/js/script-subscribify.js?"+(new Date).getTime(),t=document.createElement("script");t.type="text/javascript",t.src=e,document.querySelector("body").appendChild(t)}();
+      !function(){var e="https://subscribfy.nyc3.cdn.digitaloceanspaces.com/js/script-subscribify.js?"+Math.floor(Date.now()/36e5),t=document.createElement("script");t.type="text/javascript",t.src=e,document.querySelector("body").appendChild(t)}();
     </script>
   </body>
 </html>

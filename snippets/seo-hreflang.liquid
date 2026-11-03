@@ -1,0 +1,23 @@
+{%- comment -%}
+  SEO 2026-11-03: hreflang for the three Nordic storefronts.
+  Each page points to its Swedish, Danish and Finnish version. x-default is left to Shopify (/sv-se).
+{%- endcomment -%}
+{%- liquid
+  assign rp = request.path
+  assign root = routes.root_url
+  if root != '/'
+    assign rp = rp | remove_first: root
+  endif
+  if rp == '/'
+    assign rp = ''
+  endif
+  assign skip = false
+  if template.name == 'search' or template.name == 'cart' or template.name == '404' or template.name == 'password' or template contains 'customers'
+    assign skip = true
+  endif
+-%}
+{%- unless skip -%}
+    <link rel="alternate" hreflang="sv-SE" href="{{ request.origin }}/sv-se{{ rp }}">
+    <link rel="alternate" hreflang="da-DK" href="{{ request.origin }}/da-dk{{ rp }}">
+    <link rel="alternate" hreflang="fi-FI" href="{{ request.origin }}/fi-fi{{ rp }}">
+{%- endunless -%}

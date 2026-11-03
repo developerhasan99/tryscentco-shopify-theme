@@ -1,130 +1,21 @@
 {%- comment -%}
-  Breadcrumb schema. Works on:
-  - product
-  - collection
-  - blog
-  - article
-  - pages
+  Breadcrumb schema (SEO update 2026-11-03: home crumb is "Hem" and points to the market root).
 {%- endcomment -%}
-
-{%- assign crumbs = "" -%}
-{%- assign pos = 1 -%}
-
-{%- capture breadcrumb_items -%}
-  {
-    "@type": "ListItem",
-    "position": {{ pos }},
-    "name": "Home",
-    "item": {{ shop.url | json }}
-  }
-{%- endcapture -%}
-
-{%- assign pos = pos | plus: 1 -%}
-
-{%- if template contains 'product' -%}
+{%- capture home_item -%}{"@type":"ListItem","position":1,"name":"Hem","item":{{ request.origin | append: routes.root_url | json }}}{%- endcapture -%}
+{%- if template.name == 'product' -%}
+  {%- assign pos = 2 -%}
+  {%- capture citem -%}{%- endcapture -%}
   {%- if collection and collection.handle != blank -%}
-    {%- capture citem -%},
-    {
-      "@type": "ListItem",
-      "position": {{ pos }},
-      "name": {{ collection.title | json }},
-      "item": {{ shop.url | append: collection.url | json }}
-    }{%- endcapture -%}
-    {%- assign pos = pos | plus: 1 -%}
-  {%- else -%}
-    {%- comment -%} No collection context: skip collection crumb {%- endcomment -%}
-    {%- assign citem = "" -%}
+    {%- capture citem -%},{"@type":"ListItem","position":2,"name":{{ collection.title | json }},"item":{{ request.origin | append: collection.url | json }}}{%- endcapture -%}
+    {%- assign pos = 3 -%}
   {%- endif -%}
-
-  {%- capture pitem -%},
-  {
-    "@type": "ListItem",
-    "position": {{ pos }},
-    "name": {{ product.title | json }},
-    "item": {{ shop.url | append: product.url | json }}
-  }{%- endcapture -%}
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {{ breadcrumb_items }}{{ citem }}{{ pitem }}
-    ]
-  }
-  </script>
-
-{%- elsif template contains 'collection' -%}
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {{ breadcrumb_items }},
-      {
-        "@type": "ListItem",
-        "position": {{ pos }},
-        "name": {{ collection.title | json }},
-        "item": {{ shop.url | append: collection.url | json }}
-      }
-    ]
-  }
-  </script>
-
-{%- elsif template contains 'blog' -%}
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {{ breadcrumb_items }},
-      {
-        "@type": "ListItem",
-        "position": {{ pos }},
-        "name": {{ blog.title | json }},
-        "item": {{ shop.url | append: blog.url | json }}
-      }
-    ]
-  }
-  </script>
-
-{%- elsif template contains 'article' -%}
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {{ breadcrumb_items }},
-      {
-        "@type": "ListItem",
-        "position": {{ pos }},
-        "name": {{ blog.title | json }},
-        "item": {{ shop.url | append: blog.url | json }}
-      },
-      {
-        "@type": "ListItem",
-        "position": {{ pos | plus: 1 }},
-        "name": {{ article.title | json }},
-        "item": {{ shop.url | append: article.url | json }}
-      }
-    ]
-  }
-  </script>
-
-{%- elsif template contains 'page' -%}
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {{ breadcrumb_items }},
-      {
-        "@type": "ListItem",
-        "position": {{ pos }},
-        "name": {{ page.title | json }},
-        "item": {{ shop.url | append: page.url | json }}
-      }
-    ]
-  }
-  </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{{ home_item }}{{ citem }},{"@type":"ListItem","position":{{ pos }},"name":{{ product.title | json }},"item":{{ request.origin | append: product.url | json }}}]}</script>
+{%- elsif template.name == 'collection' -%}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{{ home_item }},{"@type":"ListItem","position":2,"name":{{ collection.title | json }},"item":{{ request.origin | append: collection.url | json }}}]}</script>
+{%- elsif template.name == 'blog' -%}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{{ home_item }},{"@type":"ListItem","position":2,"name":{{ blog.title | json }},"item":{{ request.origin | append: blog.url | json }}}]}</script>
+{%- elsif template.name == 'article' -%}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{{ home_item }},{"@type":"ListItem","position":2,"name":{{ blog.title | json }},"item":{{ request.origin | append: blog.url | json }}},{"@type":"ListItem","position":3,"name":{{ article.title | json }},"item":{{ request.origin | append: article.url | json }}}]}</script>
+{%- elsif template.name == 'page' -%}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{{ home_item }},{"@type":"ListItem","position":2,"name":{{ page.title | json }},"item":{{ request.origin | append: page.url | json }}}]}</script>
 {%- endif -%}
