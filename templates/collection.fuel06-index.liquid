@@ -141,7 +141,7 @@
       "title":{{ p.title | json }},
       "url":{{ p.url | json }},
       "inspired":{{ inspired | json }},
-      "image":{{ p.featured_image | image_url: width: 400 | json }},
+      "image":{% if p.featured_image %}{{ p.featured_image | image_url: width: 400 | json }}{% else %}null{% endif %},
       "variant_id":{{ v.id | json }},
       "available":{{ v.available | json }},
       "size":{{ v.title | json }},
