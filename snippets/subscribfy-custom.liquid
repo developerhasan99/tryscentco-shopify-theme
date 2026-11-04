@@ -1018,10 +1018,66 @@ function exm_cta_proceed() {
   window.location = exm_cta_checkout_url();
 }
 
+// Checkout apps (Selleasy pre-checkout popup, Insureful shipping protection) hook the
+// theme's native [name="checkout"] button, which the CTA block hides. Click it so their
+// handlers run, then take over at the form submit it ends in and go through the proxy.
+let exm_cta_pending = false;
+let exm_cta_guard_timer = null;
+
+function exm_cta_checkout(block) {
+  const target = exm_cta_target(block);
+  const native = target && target.querySelector('[name="checkout"].exm-cta-replaced');
+
+  if (!native || native.disabled || !native.form) {
+    exm_cta_proceed();
+
+    return;
+  }
+
+  exm_cta_pending = true;
+  exm_cta_guard();
+  native.click();
+}
+
+// Safety net: if no submit follows (an app swallowed the click or failed), go to
+// checkout anyway. Waits while the Selleasy popup is open, since the shopper is on it.
+function exm_cta_guard() {
+  clearTimeout(exm_cta_guard_timer);
+
+  exm_cta_guard_timer = setTimeout(function(){
+    if (!exm_cta_pending) {
+      return;
+    }
+
+    if (document.querySelector('#lb-upsell-dialog[open]')) {
+      exm_cta_guard();
+
+      return;
+    }
+
+    exm_cta_pending = false;
+    exm_cta_proceed();
+  }, 8000);
+}
+
+document.addEventListener('submit', function(e){
+  if (!exm_cta_pending || !e.submitter || e.submitter.name !== 'checkout') {
+    return;
+  }
+
+  e.preventDefault();
+
+  exm_cta_pending = false;
+  clearTimeout(exm_cta_guard_timer);
+  exm_cta_proceed();
+}, true);
+
 function exm_cta_cancel_fallback() {
   clearTimeout(exm_cta_fallback_timer);
+  clearTimeout(exm_cta_guard_timer);
 
   exm_cta_fallback_timer = null;
+  exm_cta_pending = false;
 }
 
 function exm_cta_reset() {
@@ -1070,7 +1126,7 @@ function exm_cta_handle(block, mode) {
   const planId = Number(block.getAttribute('data-exm-vip-plan') || 0);
 
   if (!variantId) {
-    exm_cta_proceed();
+    exm_cta_checkout(block);
 
     return;
   }
@@ -1109,7 +1165,7 @@ function exm_cta_handle(block, mode) {
       return exm_cta_post(window.routes.cart_change_url + '.js', { id: line.key, quantity: 0 });
     })
     .then(function(){
-      exm_cta_proceed();
+      exm_cta_checkout(block);
     })
     .catch(function(error){
       exm_cta_fail(error);
@@ -1141,7 +1197,7 @@ document.addEventListener('click', function(e){
   exm_cta_set_busy(true);
 
   if (mode !== 'guest' && mode !== 'vip') {
-    exm_cta_proceed();
+    exm_cta_checkout(block);
 
     return;
   }
