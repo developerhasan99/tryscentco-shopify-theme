@@ -7,13 +7,24 @@
     assign filter_all = 'Alla'
   endif
 %}
+{%- comment -%}
+  iPhone Safari: the page behind is locked while the picker is open, the search box is only
+  focused on open where there is a mouse (on phones that focus kept the list from taking the
+  first swipe), and on phones the sheet uses the visible screen height so it sits higher.
+{%- endcomment -%}
+<style>
+  @media screen and (max-width: 767px) {
+    .bb-modal-sheet { height: 90vh; height: 90dvh; }
+  }
+</style>
 <div
   x-data
+  x-init="$watch('$store.bundleBuilder.showModal', open => document.body.classList.toggle('overflow-hidden', open))"
   x-transition
   x-show="$store.bundleBuilder.showModal"
   class="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center z-[9999]"
   x-cloak>
-  <div class="fmx-bb-modal bg-white pb-3 max-w-xl w-full h-[80vh] md:h-[90vh] flex flex-col relative" @click.away="$store.bundleBuilder.showModal = false">
+  <div class="fmx-bb-modal bb-modal-sheet bg-white pb-3 max-w-xl w-full h-[80vh] md:h-[90vh] flex flex-col relative" @click.away="$store.bundleBuilder.showModal = false">
     <button @click="$store.bundleBuilder.showModal = false" class="absolute -top-10 right-2 md:top-2 md:right-2 w-8 h-8 fmx-bb-close flex items-center justify-center  border-0 text-3xl cursor-pointer transition">
       <span class="[rotate:-45deg] size-4 flex">
         {{- 'icon-plus.svg' | inline_asset_content -}}
@@ -64,7 +75,7 @@
             type="text"
             placeholder="Söka..."
             x-model="$store.bundleBuilder.searchText"
-            x-effect="$store.bundleBuilder.showModal && $nextTick(() => $el.focus({ preventScroll: true }))"
+            x-effect="$store.bundleBuilder.showModal && window.matchMedia('(hover: hover)').matches && $nextTick(() => $el.focus({ preventScroll: true }))"
             class="fmx-bb-search block w-full p-2 pl-8">
         </div>
       </div>

@@ -333,7 +333,11 @@
           this.selectedProducts = [];
           {%- endunless %}
           if (goToCheckout) window.location.href = '/checkout';
-          else if (cart) cart.renderContents(data);
+          else if (cart) {
+            cart.renderContents(data);
+            // The drawer was rendered for an empty cart; clear that state like product-form.js does.
+            if (cart.classList.contains('is-empty')) cart.classList.remove('is-empty');
+          }
           else window.location.href = '/cart';
         })
         .catch(error => {
