@@ -1,7 +1,10 @@
 {%- comment -%}
-  Product cards carry the variant behind their printed price (data-variant-id on the card wrapper).
   The price test app rewrites only the spots on its own selector list, so card prices are synced
   here from the app's group prices. Visitors outside a test have no group data and nothing changes.
+  Two card types:
+  - older cards carry the variant behind their printed price (data-variant-id on the card wrapper);
+  - the cards in use since Oct 2026 are a product link with .ab-current-price and no variant id.
+    They print the product's lowest price, so they get the lowest price of the visitor's group.
 {%- endcomment -%}
 <style>
   .price-test-compare-under {
@@ -18,11 +21,30 @@
       const tests = window.absolutelyConfig?.priceTests;
       if (!groups || !tests) return null;
       const prices = new Map();
+      const lowest = new Map();
       for (const test of tests) {
         const group = (test.groups || []).find(item => item.id === groups[test.id]);
-        for (const variant of group?.variants || []) prices.set(String(variant.variantId), Number(variant.price));
+        for (const variant of group?.variants || []) {
+          const price = Number(variant.price);
+          prices.set(String(variant.variantId), price);
+          const handle = variant.productHandle;
+          if (handle && !(lowest.get(handle) <= price)) lowest.set(handle, price);
+        }
       }
-      return prices;
+      return { prices, lowest };
+    };
+
+    const linkCardLabels = () => document.querySelectorAll('a[href*="/products/"] .ab-current-price');
+
+    const handleOf = label => {
+      const href = label.closest('a[href*="/products/"]').getAttribute('href');
+      const handle = href.split('/products/')[1]?.split(/[/?#]/)[0];
+      return handle ? decodeURIComponent(handle) : null;
+    };
+
+    const setAmount = (label, price) => {
+      const text = label.textContent.replace(/\d[\d.,]*/, asNumber(price));
+      if (label.textContent !== text) label.textContent = text;
     };
 
     const asNumber = amount => {
@@ -39,7 +61,9 @@
     // shop's compare at price on a product that is on sale, and then the strike through would
     // sit under the price; those spots hide it, and show it again as soon as it is above.
     const guardCompare = () => {
-      for (const block of document.querySelectorAll('#product-price, .card-information')) {
+      const blocks = new Set(document.querySelectorAll('#product-price, .card-information'));
+      for (const label of linkCardLabels()) blocks.add(label.parentElement);
+      for (const block of blocks) {
         const compare = block.querySelector('.compare-price, .line-through, s, del');
         const current = block.querySelector('.current-price, .ab-current-price');
         if (!compare || !current) continue;
@@ -52,14 +76,18 @@
 
     const sync = () => {
       guardCompare();
-      const prices = testPrices();
-      if (!prices?.size) return;
+      const data = testPrices();
+      if (!data?.prices.size) return;
       for (const card of document.querySelectorAll('.product-card-wrapper[data-variant-id]')) {
-        const price = prices.get(card.dataset.variantId);
+        const price = data.prices.get(card.dataset.variantId);
         const label = card.querySelector('.ab-current-price');
-        if (!price || !label) continue;
-        const text = label.textContent.replace(/\d[\d.,]*/, asNumber(price));
-        if (label.textContent !== text) label.textContent = text;
+        if (price && label) setAmount(label, price);
+      }
+      for (const label of linkCardLabels()) {
+        if (label.closest('.product-card-wrapper[data-variant-id]')) continue;
+        const handle = handleOf(label);
+        const price = handle && data.lowest.get(handle);
+        if (price) setAmount(label, price);
       }
       guardCompare();
     };
@@ -90,7 +118,7 @@
     let looks = 0;
     const lookForPrices = setInterval(() => {
       looks += 1;
-      const found = Boolean(testPrices()?.size);
+      const found = Boolean(testPrices()?.prices.size);
       if (found || looks >= 100) clearInterval(lookForPrices);
       if (found) sync();
     }, 200);
