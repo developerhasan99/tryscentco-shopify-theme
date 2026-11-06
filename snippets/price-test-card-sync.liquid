@@ -64,14 +64,22 @@
       guardCompare();
     };
 
-    let timer;
+    // The page changes several times a second on its own (app scripts, the countdown timer), so
+    // waiting for a quiet moment can wait forever. Crossed out prices are checked on every change,
+    // before the browser paints, and the cards sync at most 150 ms after the first change.
+    // The app rewrites a price's text in place, so text changes count as changes too.
+    let timer = null;
     const schedule = () => {
-      clearTimeout(timer);
-      timer = setTimeout(sync, 150);
+      guardCompare();
+      if (timer) return;
+      timer = setTimeout(() => {
+        timer = null;
+        sync();
+      }, 150);
     };
 
     // The app fills its price data after load without an event, and grids add cards on scroll.
-    new MutationObserver(schedule).observe(document.documentElement, { childList: true, subtree: true });
+    new MutationObserver(schedule).observe(document.documentElement, { childList: true, characterData: true, subtree: true });
     sync();
     window.addEventListener('load', schedule);
 
