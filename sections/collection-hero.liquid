@@ -13,7 +13,7 @@
       {{ collection.title }}
     </h1>
     <p class="max-w-[400px] text-[clamp(15px,1.05vw,17px)] leading-[1.5] text-[#14181c]">
-      {{ collection.metafields.custom.short_description }}
+      {{ collection.metafields.custom.short_description | metafield_text }}
     </p>
   </div>
 </div>
