@@ -1,0 +1,178 @@
+.collection-faq-section {
+  color: #222;
+  background: #fff;
+}
+
+.collection-faq-section .collection-faq {
+  padding: 4.5rem 0;
+  background: #fff;
+  color: #222;
+}
+
+.collection-faq-section .collection-faq__main {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(3rem, 6vw, 8rem);
+  align-items: start;
+}
+
+.collection-faq-section .collection-faq__heading {
+  margin: 0 0 1rem;
+  color: inherit;
+  font-family: var(--font-heading-family);
+  font-size: clamp(2.6rem, 3vw, 3.2rem);
+  font-weight: var(--font-heading-weight-bold);
+  line-height: 1.1;
+}
+
+.collection-faq-section .collection-faq__introduction {
+  margin: 0;
+  color: inherit;
+  font-size: 1.3rem;
+  line-height: 1.5;
+}
+
+.collection-faq-section .collection-faq__questions {
+  border-top: 1px solid #e5e5e5;
+}
+
+.collection-faq-section .collection-faq__item {
+  margin: 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.collection-faq-section .collection-faq__question-heading {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.collection-faq-section .collection-faq__question {
+  display: flex;
+  width: 100%;
+  min-height: 4.8rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.2rem 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: 1.45;
+  text-align: left;
+  cursor: pointer;
+}
+
+.collection-faq-section .collection-faq__question:focus-visible {
+  outline: 0.2rem solid currentColor;
+  outline-offset: 0.4rem;
+}
+
+.collection-faq-section .collection-faq__icon {
+  position: relative;
+  flex: 0 0 1.8rem;
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.collection-faq-section .collection-faq__icon::before,
+.collection-faq-section .collection-faq__icon::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.6rem;
+  height: 0.1rem;
+  background: currentColor;
+  content: '';
+  transform: translate(-50%, -50%);
+  transition: transform 180ms ease;
+}
+
+.collection-faq-section .collection-faq__icon::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.collection-faq-section .collection-faq__question[aria-expanded='true'] .collection-faq__icon::after {
+  transform: translate(-50%, -50%) rotate(90deg) scaleX(0);
+}
+
+.collection-faq-section .collection-faq__answer {
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: height 240ms ease, opacity 180ms ease;
+}
+
+.collection-faq-section .collection-faq__answer[hidden] {
+  display: none;
+}
+
+.collection-faq-section .collection-faq__answer p {
+  margin: 0;
+  padding: 0 3.5rem 1.2rem 0;
+  color: inherit;
+  font-size: 1.2rem;
+  line-height: 1.55;
+}
+
+.collection-faq-section .collection-faq__seo {
+  display: grid;
+  gap: 1.8rem;
+  margin-top: 4.5rem;
+}
+
+.collection-faq-section .collection-faq__seo-item h3 {
+  margin: 0 0 0.6rem;
+  color: inherit;
+  font-family: var(--font-heading-family);
+  font-size: 1.5rem;
+  font-weight: var(--font-heading-weight);
+  line-height: 1.3;
+}
+
+.collection-faq-section .collection-faq__seo-item p {
+  max-width: 100%;
+  margin: 0;
+  color: inherit;
+  font-size: 1.2rem;
+  line-height: 1.55;
+}
+
+@media screen and (max-width: 749px) {
+  .collection-faq-section .collection-faq {
+    padding: 3rem 0;
+  }
+
+  .collection-faq-section .collection-faq__main {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+  }
+
+  .collection-faq-section .collection-faq__heading {
+    font-size: 2.6rem;
+  }
+
+  .collection-faq-section .collection-faq__question {
+    min-height: 4.6rem;
+    gap: 1.2rem;
+    padding: 1rem 0;
+    font-size: 1.2rem;
+  }
+
+  .collection-faq-section .collection-faq__answer p {
+    padding-right: 2rem;
+  }
+
+  .collection-faq-section .collection-faq__seo {
+    gap: 1.6rem;
+    margin-top: 3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collection-faq-section .collection-faq__icon::before,
+  .collection-faq-section .collection-faq__icon::after,
+  .collection-faq-section .collection-faq__answer {
+    transition: none;
+  }
+}

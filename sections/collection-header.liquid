@@ -1,3 +1,4 @@
+{%- unless request.page_type == 'collection' -%}
 {%- style -%}
   .section-{{ section.id }} {
     padding-top: {{ section.settings.mobile_padding_top }}px;
@@ -121,6 +122,7 @@
     </div>
   </div>
 </div>
+{%- endunless -%}
 
 {% schema %}
   {

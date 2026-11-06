@@ -1,3 +1,4 @@
+{%- if request.page_type != 'collection' -%}
 {%- liquid
   assign mobile_bg_size = 'cover'
   if section.settings.mobile_bg_zoom > 100
@@ -142,6 +143,7 @@
     </div>
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
   {

@@ -1,0 +1,94 @@
+{{ 'collection-faq.css' | asset_url | stylesheet_tag }}
+{%- if request.page_type == 'collection' -%}
+<script src="{{ 'collection-faq.js' | asset_url }}" defer="defer"></script>
+
+<section class="collection-faq" aria-labelledby="CollectionFaqHeading-{{ section.id }}">
+  <div class="page-width collection-faq__container">
+    <div class="collection-faq__main">
+      <header class="collection-faq__intro">
+        <h2 class="collection-faq__heading" id="CollectionFaqHeading-{{ section.id }}">Vanliga frågor</h2>
+        <p class="collection-faq__introduction">Har du frågor? Här hittar du svaren.</p>
+      </header>
+
+      <div class="collection-faq__questions">
+        {%- for faq_index in (1..5) -%}
+          {%- capture faq_question -%}
+            {%- case faq_index -%}
+              {%- when 1 -%}Hur länge sitter TryScent-parfymer kvar på huden?
+              {%- when 2 -%}Är TryScents parfymer veganska och inte testade på djur?
+              {%- when 3 -%}Hur väljer jag en parfym som passar mig utan att först kunna dofta på den?
+              {%- when 4 -%}Vad betyder designerinspirerad parfym och hur lika är dofterna?
+              {%- when 5 -%}Kan jag kombinera TryScents parfymer för att skapa min egen signaturdoft?
+            {%- endcase -%}
+          {%- endcapture -%}
+          {%- capture faq_answer -%}
+            {%- case faq_index -%}
+              {%- when 1 -%}TryScents dofter är framtagna för att ge en härlig doftupplevelse under dagen. Hur länge en parfym håller beror bland annat på dess sammansättning, din hudtyp och hur du applicerar den. Genom att applicera parfym på återfuktad hud kan du hjälpa doften att hålla längre.
+              {%- when 2 -%}Vi tycker att det är viktigt att du kan göra medvetna val när du väljer parfym. Information om ingredienser och djurtester kan variera mellan olika produkter. Läs produktinformationen för den specifika parfymen eller kontakta vår kundservice om du har frågor.
+              {%- when 3 -%}Börja med att utforska olika doftfamiljer, till exempel blommiga, fruktiga, träiga, fräscha och orientaliska dofter. Fundera på vilka dofter du brukar tycka om och om du föredrar något lätt och fräscht eller fylligt och intensivt. Våra doftbeskrivningar hjälper dig att hitta din nästa favorit.
+              {%- when 4 -%}Designerinspirerade parfymer hämtar inspiration från doftprofilerna hos välkända parfymer. De erbjuder ett mer prisvärt sätt att upptäcka doftstilar som påminner om populära designerparfymer. Varje parfym har sin egen sammansättning och är en unik doftupplevelse.
+              {%- when 5 -%}Absolut! Att kombinera olika parfymer är ett roligt sätt att skapa en personlig doft som passar just dig. Testa att kombinera kompletterande doftfamiljer. Börja gärna med en lättare doft och lägg sedan till en fylligare parfym för att skapa en unik kombination.
+            {%- endcase -%}
+          {%- endcapture -%}
+          {%- assign question_id = 'CollectionFaqQuestion-' | append: section.id | append: '-' | append: faq_index -%}
+          {%- assign answer_id = 'CollectionFaqAnswer-' | append: section.id | append: '-' | append: faq_index -%}
+
+          <article class="collection-faq__item">
+            <h3 class="collection-faq__question-heading">
+              <button
+                class="collection-faq__question"
+                id="{{ question_id }}"
+                type="button"
+                aria-expanded="false"
+                aria-controls="{{ answer_id }}"
+              >
+                <span>{{ faq_question | strip | escape }}</span>
+                <span class="collection-faq__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div
+              class="collection-faq__answer"
+              id="{{ answer_id }}"
+              role="region"
+              aria-labelledby="{{ question_id }}"
+              hidden
+            >
+              <p>{{ faq_answer | strip | escape }}</p>
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <div class="collection-faq__seo">
+      <article class="collection-faq__seo-item">
+        <h3>Designerinspirerade parfymer och dofter</h3>
+        <p>
+          Upptäck världen av designerinspirerade parfymer hos TryScent. Vi tycker att alla ska kunna njuta av fantastiska dofter utan att behöva betala premiumpriser för välkända designermärken. Utforska vårt sortiment av noggrant utvalda dofter inspirerade av ikoniska doftprofiler och hitta parfymer som passar din personlighet, stil och vardag.
+        </p>
+      </article>
+      <article class="collection-faq__seo-item">
+        <h3>Hitta din signaturdoft</h3>
+        <p>
+          Oavsett om du älskar fräscha och upplyftande noter, mjuka blommiga dofter, söta och fruktiga toner eller djupa och sensuella träiga dofter finns det mycket att upptäcka hos TryScent. Hitta parfymer för alla tillfällen, från vardagens små stunder till speciella ögonblick. Upptäck doften som gör varje intryck minnesvärt.
+        </p>
+      </article>
+      <article class="collection-faq__seo-item">
+        <h3>Kvalitet och prisvärd lyx</h3>
+        <p>
+          Njut av fantastiska dofter till tillgängliga priser. Hos TryScent gör vi det enklare att upptäcka designerinspirerade parfymer utan att spräcka budgeten. Hitta din nästa favoritdoft och unna dig lite vardagslyx.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Vanliga frågor",
+  "tag": "section",
+  "class": "collection-faq-section",
+  "settings": []
+}
+{% endschema %}

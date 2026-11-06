@@ -1,3 +1,4 @@
+{%- unless request.page_type == 'collection' -%}
 {%- assign hero_mobile_image = collection.metafields.custom.hero_mobile_image -%}
 {%- assign hero_desktop_image = collection.image -%}
 <div class="relative flex h-auto min-h-[520px] items-end bg-[#eef1f3] bg-[image:var(--hero-img-mobile)] bg-cover bg-[position:50%_10%] bg-no-repeat pb-[34px] sm:h-[clamp(430px,33.33vw,600px)] sm:min-h-0 sm:items-center sm:bg-[image:var(--hero-img-desktop)] sm:bg-[position:50%_3%] sm:pb-0" style="{% if hero_mobile_image %}--hero-img-mobile: url('{{ hero_mobile_image | image_url: width: 750 }}');{% endif %} {% if hero_desktop_image %}--hero-img-desktop: url('{{ hero_desktop_image | image_url: width: 1920 }}');{% endif %}">
@@ -17,6 +18,7 @@
     </p>
   </div>
 </div>
+{%- endunless -%}
 
 {% schema %}
   {

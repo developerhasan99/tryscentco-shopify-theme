@@ -382,7 +382,7 @@ body {
 
   </head>
 
-  <body class="{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
+  <body class="{% if request.page_type == 'collection' %}template-collection {% endif %}{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
     {{ 'subscribfy-custom-styles.css' | asset_url | stylesheet_tag }}
 
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
@@ -400,7 +400,9 @@ body {
       class="content-for-layout focus-none"
       role="main"
       tabindex="-1">
+      {% section 'collection-text-banner' %}
       {{ content_for_layout }}
+      {% section 'collection-faq' %}
     </main>
 
     {% sections 'footer-group' %}

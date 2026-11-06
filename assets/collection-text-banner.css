@@ -1,0 +1,121 @@
+.collection-text-banner-section,
+.collection-text-banner-section .collection-text-banner {
+  background: #fff;
+}
+
+body:not(.template-collection) .collection-text-banner-section,
+body:not(.template-collection) .collection-faq-section {
+  display: none;
+}
+
+body.template-collection .ts-h22-hero,
+body.template-collection .ts-m22-hero {
+  display: none;
+}
+
+body.template-collection a,
+body.template-collection button,
+body.template-collection input,
+body.template-collection label,
+body.template-collection select,
+body.template-collection summary,
+body.template-collection [role='button'],
+body.template-collection [role='link'] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.collection-text-banner-section .collection-text-banner {
+  padding: 2rem 0 1.5rem;
+  color: #222;
+  text-align: center;
+}
+
+.collection-text-banner-section .collection-text-banner__content {
+  max-width: 90rem;
+}
+
+.collection-text-banner-section .collection-text-banner__title {
+  margin: 0;
+  color: inherit;
+  font-family: var(--font-heading-family);
+  font-size: clamp(2.4rem, 3.2vw, 3.6rem);
+  font-weight: var(--font-heading-weight-bold);
+  line-height: 1.15;
+}
+
+.collection-text-banner-section .collection-text-banner--lander .collection-text-banner__title {
+  font-weight: 700;
+}
+
+.collection-text-banner-section .collection-text-banner--lander .collection-text-banner__description > p,
+.collection-text-banner-section .collection-text-banner--lander .collection-text-banner__description .rte > p {
+  margin-block: 0.25rem;
+}
+
+.collection-text-banner-section .collection-text-banner--new .collection-text-banner__title {
+  font-weight: 700;
+}
+
+.collection-text-banner-section .collection-text-banner--unisex .collection-text-banner__title {
+  font-weight: 700;
+}
+
+.collection-text-banner-section .collection-text-banner--new .collection-text-banner__description .rte > p {
+  margin-block: 0.25rem;
+}
+
+.collection-text-banner-section .collection-text-banner__description {
+  max-width: 72rem;
+  margin: 0.8rem auto 0;
+  color: inherit;
+  font-size: 1.4rem;
+  line-height: 1.55;
+}
+
+.collection-text-banner-section .collection-text-banner__preview,
+.collection-text-banner-section .collection-text-banner__full > :first-child {
+  margin-top: 0;
+}
+
+.collection-text-banner-section .collection-text-banner__preview,
+.collection-text-banner-section .collection-text-banner__full > :last-child {
+  margin-bottom: 0;
+}
+
+.collection-text-banner-section .collection-text-banner__toggle {
+  margin-top: 0.4rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1.2rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+  cursor: pointer;
+}
+
+.collection-text-banner-section .collection-text-banner__toggle:focus-visible {
+  outline: 0.2rem solid currentColor;
+  outline-offset: 0.3rem;
+}
+
+.collection-text-banner-section .collection-text-banner__toggle[hidden],
+.collection-text-banner-section [hidden] {
+  display: none;
+}
+
+@media screen and (max-width: 749px) {
+  .collection-text-banner-section .collection-text-banner {
+    padding: 1.5rem 0 1rem;
+  }
+
+  .collection-text-banner-section .collection-text-banner__title {
+    font-size: 2.4rem;
+  }
+
+  .collection-text-banner-section .collection-text-banner__description {
+    margin-top: 0.6rem;
+    font-size: 1.3rem;
+  }
+}

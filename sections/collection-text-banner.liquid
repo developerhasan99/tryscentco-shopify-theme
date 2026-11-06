@@ -1,0 +1,73 @@
+{{ 'collection-text-banner.css' | asset_url | stylesheet_tag }}
+
+{%- if request.page_type == 'collection' -%}
+<script src="{{ 'collection-text-banner.js' | asset_url }}" defer="defer"></script>
+{%- assign banner_title = collection.title -%}
+{%- assign banner_description = collection.description -%}
+{%- if template.suffix == 'collection-lander-v1' -%}
+  {%- assign banner_title = 'Hitta doften som får dem att tänka på dig.' -%}
+{%- endif -%}
+{%- assign description_preview = banner_description | strip_html | strip -%}
+{%- assign description_words = description_preview | split: ' ' -%}
+<section class="collection-text-banner{% if template.suffix == 'collection-lander-v1' %} collection-text-banner--lander{% endif %}{% if collection.handle == 'new' %} collection-text-banner--new{% endif %}{% if collection.handle == 'unisex' %} collection-text-banner--unisex{% endif %}" aria-labelledby="CollectionTextBannerTitle-{{ section.id }}">
+  <div class="page-width collection-text-banner__content">
+    <h1 class="collection-text-banner__title" id="CollectionTextBannerTitle-{{ section.id }}">
+      {{ banner_title | escape }}
+    </h1>
+    {%- if template.suffix == 'collection-lander-v1' -%}
+      {%- assign description_id = 'CollectionTextBannerDescription-' | append: section.id -%}
+      <div class="collection-text-banner__description">
+        <p class="collection-text-banner__preview" id="{{ description_id }}">
+          Toppvalet inom designerinspirerade parfymer.
+        </p>
+        <div class="collection-text-banner__full rte" id="{{ description_id }}-full" hidden>
+          <p>Toppvalet inom designerinspirerade parfymer.</p>
+          <p>Skapade av samma parfymexperter som står bakom några av världens mest välkända dofter.</p>
+          <p>Tro oss inte. Testa själv.</p>
+        </div>
+        <button
+          class="collection-text-banner__toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="{{ description_id }}-full"
+        >
+          <span class="collection-text-banner__more">+ Läs mer</span>
+          <span class="collection-text-banner__less" hidden>− Läs mindre</span>
+        </button>
+      </div>
+    {%- elsif description_preview != blank -%}
+      <div class="collection-text-banner__description">
+        {%- if description_words.size > 24 -%}
+          {%- assign description_id = 'CollectionTextBannerDescription-' | append: section.id -%}
+          <p class="collection-text-banner__preview" id="{{ description_id }}">
+            {{ description_preview | truncatewords: 24 }}
+          </p>
+          <div class="collection-text-banner__full rte" id="{{ description_id }}-full" hidden>
+            {{ collection.description }}
+          </div>
+          <button
+            class="collection-text-banner__toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="{{ description_id }}-full"
+          >
+            <span class="collection-text-banner__more">{% if collection.handle == 'unisex' %}+ Läs mer{% else %}+ Read More{% endif %}</span>
+            <span class="collection-text-banner__less" hidden>{% if collection.handle == 'unisex' %}− Läs mindre{% else %}− Read Less{% endif %}</span>
+          </button>
+        {%- else -%}
+          <div class="collection-text-banner__full rte">{{ collection.description }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Collection text banner",
+  "tag": "section",
+  "class": "collection-text-banner-section",
+  "settings": []
+}
+{% endschema %}

@@ -1,4 +1,5 @@
 {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+{%- unless request.page_type == 'collection' -%}
 {{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
@@ -44,6 +45,7 @@
     {%- endif -%}
   </div>
 </div>
+{%- endunless -%}
 
 {% schema %}
 {

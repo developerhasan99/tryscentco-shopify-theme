@@ -2,6 +2,7 @@
   © BlockyApps. You are permitted to use this content within your store. Redistribution or use in any other application is strictly prohibited. 
   Unauthorized copying, distribution, or reproduction in any form will result in legal action.
 {% endcomment %}
+{%- unless request.page_type == 'collection' -%}
 <div 
   class="blocky blocky-padding"
   style="--padding-top: {{ section.settings.padding_top }}; --padding-bottom: {{ section.settings.padding_bottom }}; --overlay_opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --section-page-width: {{ section.settings.page_width | divided_by: 10 }}rem; --border-radius: {{ section.settings.border_radius }}px;"
@@ -42,6 +43,7 @@
     </div>
   </div>
 </div>
+{%- endunless -%}
 
 {% schema %}
 {
