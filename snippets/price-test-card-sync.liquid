@@ -5,6 +5,7 @@
   - older cards carry the variant behind their printed price (data-variant-id on the card wrapper);
   - the cards in use since Oct 2026 are a product link with .ab-current-price and no variant id.
     They print the product's lowest price, so they get the lowest price of the visitor's group.
+  The side cart's size menus (its "you'll love these" picks) print a price per size and are synced too.
 {%- endcomment -%}
 <style>
   .price-test-compare-under {
@@ -88,6 +89,15 @@
         const handle = handleOf(label);
         const price = handle && data.lowest.get(handle);
         if (price) setAmount(label, price);
+      }
+      // The side cart's picks print each size's price in their size menu (option value = variant id).
+      for (const option of document.querySelectorAll('cart-drawer select[name="id"] option[value]')) {
+        const price = data.prices.get(option.value);
+        if (!price) continue;
+        const amount = asNumber(price);
+        const text = option.textContent.replace(/\d[\d.]*,\d{2}(?=\s*kr)/, amount);
+        if (option.textContent !== text) option.textContent = text;
+        if (option.dataset.price && option.dataset.price !== amount) option.dataset.price = amount;
       }
       guardCompare();
     };
