@@ -389,6 +389,37 @@
 
 {{ 'pm-s-bundle-save.css' | asset_url | stylesheet_tag }}
 
+{%- comment -%}
+  Black header on the Bundle & Save page only (Adrian 07.11). The header keeps its own markup; this page swaps the
+  header's colour scheme to white-on-black and turns the dark logo white. Dropdowns and the mobile drawer keep the
+  normal white scheme.
+{%- endcomment -%}
+{%- style -%}
+  .section-header .header-wrapper.color-scheme-1 {
+    --color-background: 0, 0, 0;
+    --gradient-background: #000000;
+    --color-foreground: 255, 255, 255;
+    --color-link: 255, 255, 255;
+    background: #000000;
+    color: #ffffff;
+  }
+
+  .section-header .header-wrapper .header__heading-logo {
+    filter: brightness(0) invert(1);
+  }
+
+  .section-header .header-wrapper .global-settings-popup,
+  .section-header .header-wrapper .menu-drawer,
+  .section-header .header-wrapper .disclosure__list-wrapper,
+  .section-header .header-wrapper .search-modal {
+    --color-background: 255, 255, 255;
+    --gradient-background: #ffffff;
+    --color-foreground: 18, 18, 18;
+    --color-link: 18, 18, 18;
+    color: rgb(18, 18, 18);
+  }
+{%- endstyle -%}
+
 {%- if pm_bp == blank -%}
   {%- if request.design_mode -%}
     <div class="pm-bs pm-bs--missing color-{{ st.color_scheme }} gradient">
