@@ -721,7 +721,7 @@
    Right padding keeps the last node and its label inside the column. */
 .premium .pm-bs-goals {
   margin-top: 12px;
-  padding: 0 14px 0 0;
+  padding: 0 20px 0 0;
 }
 
 .premium .pm-bs-goals__msg {
@@ -730,7 +730,7 @@
   justify-content: center;
   align-items: flex-start;
   min-height: 34px;
-  margin: 0 -14px 12px 0;
+  margin: 0 -20px 14px 0;
   padding: 7px 12px;
   border-radius: var(--pm-radius-sm);
   background: #eef7f1;
@@ -843,7 +843,7 @@
 
 .premium .pm-bs-goals__label.is-last {
   text-align: right;
-  transform: translateX(calc(-100% + 14px));
+  transform: translateX(calc(-100% + 15px));
 }
 
 .premium .pm-bs-goals__amount {
@@ -886,7 +886,8 @@
   font-size: 9px;
   line-height: 12px;
   font-weight: 700;
-  white-space: nowrap;
+  text-align: left;
+  max-width: 100%;
 }
 
 .premium .pm-bs-tier__perk svg {
@@ -899,7 +900,7 @@
   }
 
   .premium .pm-bs-goals__label {
-    width: 120px;
+    width: 170px;
   }
 
   .premium .pm-bs-goals__reward {
