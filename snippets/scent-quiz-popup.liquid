@@ -508,7 +508,8 @@
   </div>
 {% endraw %}
 
-{% if settings.scent_quiz_show_floating_button %}
+{%- comment -%} Hidden on the Bundle & Save page (Adrian 07.11) {%- endcomment -%}
+{% if settings.scent_quiz_show_floating_button and product.template_suffix != 'bundle-save' %}
   <button
     type="button"
     id="scent-quiz-fab"
