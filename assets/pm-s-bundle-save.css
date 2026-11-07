@@ -1246,8 +1246,10 @@
   cursor: pointer;
 }
 
-/* Row badges as on Whop (bestseller / new), kept in the FM palette */
-.premium .pm-bs-row__badge.pm-bs-row__badge--best {
-  background: var(--pm-ink);
+/* Row badges as on Whop (bestseller / new) in the tryscent.co badge green (Adrian 07.11) */
+.premium .pm-bs-row__badge.pm-bs-row__badge--best,
+.premium .pm-bs-row__badge.pm-bs-row__badge--new {
+  border-color: #22613a;
+  background: #22613a;
   color: var(--pm-white);
 }
