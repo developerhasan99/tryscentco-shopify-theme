@@ -469,15 +469,16 @@
   outline-offset: 2px;
 }
 
+/* Saving badge (-25% ... -40%) in sale red (Adrian 07.11) */
 .premium .pm-bs-tier__badge {
   position: absolute;
   top: -9px;
   left: 50%;
   transform: translateX(-50%);
   padding: 1px 5px;
-  border: 1px solid var(--pm-ink);
+  border: 1px solid var(--pm-sale);
   border-radius: var(--pm-radius-sm);
-  background: var(--pm-ink);
+  background: var(--pm-sale);
   color: var(--pm-white);
   font-size: 9px;
   line-height: 13px;
