@@ -922,24 +922,36 @@
             this.$watch('query', toTop);
             this.$nextTick(function () { self.checkScroll(); });
 
-            this.goals = this.cfg.mode === 'per_line' ? [] : this.readGoals();
-            if (this.goals.length) {
-              this.refreshCart();
-              if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
-                this._unsubCart = subscribe(PUB_SUB_EVENTS.cartUpdate, function (e) {
-                  if (e && e.cartData && typeof e.cartData.total_price === 'number' && e.cartData.items) self.applyCart(e.cartData);
-                  else self.refreshCart();
-                });
-              }
+            if (this.cfg.mode !== 'per_line') this.startGoals(0);
+          },
+
+          /* Kite loads after this component: its config is in window.gfg.settings once its script ran (the page's
+             #kite-app-data tag is emptied by Kite after reading). Retry for ~10 s, then keep the picks bar. */
+          startGoals: function (tries) {
+            var self = this;
+            var goals = this.readGoals();
+            if (!goals.length) {
+              if (tries < 20) this._goalTimer = setTimeout(function () { self.startGoals(tries + 1); }, 500);
+              return;
+            }
+            this.goals = goals;
+            this.refreshCart();
+            if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+              this._unsubCart = subscribe(PUB_SUB_EVENTS.cartUpdate, function (e) {
+                if (e && e.cartData && typeof e.cartData.total_price === 'number' && e.cartData.items) self.applyCart(e.cartData);
+                else self.refreshCart();
+              });
             }
           },
 
           /* Cart goals: Kite's progress bar goals (cart subtotal thresholds), this market's value, sorted by amount */
           readGoals: function () {
-            var el = document.getElementById('kite-app-data');
-            if (!el) return [];
-            var data;
-            try { data = JSON.parse(el.textContent); } catch (e) { return []; }
+            var data = window.gfg && window.gfg.settings && window.gfg.settings.consolidatedCombinedDiscount ? window.gfg.settings : null;
+            if (!data) {
+              var el = document.getElementById('kite-app-data');
+              try { data = el && el.textContent ? JSON.parse(el.textContent) : null; } catch (e) { data = null; }
+            }
+            if (!data) return [];
             var market = this.cfg.market || '';
             var rate = parseFloat(window.Shopify && window.Shopify.currency && window.Shopify.currency.rate) || 1;
             var out = [];
@@ -1253,6 +1265,7 @@
           destroy: function () {
             clearInterval(this._timerId);
             clearInterval(this._revId);
+            clearTimeout(this._goalTimer);
             if (typeof this._unsubCart === 'function') this._unsubCart();
           },
 
