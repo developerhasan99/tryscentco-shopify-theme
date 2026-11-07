@@ -157,3 +157,18 @@
 .premium .pm-bsug .fuel05-ugc__pill-add {
   border-color: var(--pm-ink);
 }
+
+/* Black product card on the UGC tiles (Adrian 07.11): white text, white-outlined "+" */
+.premium .pm-bsug .fuel05-ugc__pill {
+  background: #000000;
+  color: var(--pm-white);
+}
+
+.premium .pm-bsug .fuel05-ugc__pill-add {
+  border-color: var(--pm-white);
+  background: #000000;
+}
+
+.premium .pm-bsug .fuel05-ugc__pill-add svg path {
+  fill: var(--pm-white);
+}
