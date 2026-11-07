@@ -401,6 +401,7 @@
       "rowCount": {{ pm_row_count }},
       "variants": { {{ pm_variants_json }} },
       "maxTotal": {{ pm_max_total }},
+      "market": {{ localization.market.handle | json }},
       "mode": {{ st.pricing_mode | json }},
       "timerOn": {{ st.show_timer }},
       "reviewMs": {{ st.review_interval | default: 5 | times: 1000 }},
@@ -639,8 +640,38 @@
             {%- render 'pm-bs-text', text: st.counter_text, t1: '[x]', x1: 'picks.length', v1: 0, t2: '[n]', x2: 'shownTotal', v2: pm_start_target -%}
           </div>
         </div>
-        <div class="pm-bs-progress" aria-hidden="true">
+        {%- comment -%}
+          Cart goals (Adrian 07.11): the same goals the cart drawer shows (Kite "TryScent Days" progress bar: gifts +
+          free shipping, per market), read from Kite's page data. Fill = cart total + the bundle being built, so it moves
+          with every pick. Without Kite goals the old picks bar stays.
+        {%- endcomment -%}
+        <div class="pm-bs-progress" aria-hidden="true" x-show="goals.length === 0">
           <span class="pm-bs-progress__bar" :style="{ width: percent + '%' }"></span>
+        </div>
+        <div class="pm-bs-goals" aria-hidden="true" x-show="goals.length > 0" x-cloak>
+          <div class="pm-bs-goals__track">
+            <span class="pm-bs-goals__fill" :style="{ width: goalPercent + '%' }"></span>
+            <template x-for="(g, i) in goals" :key="'n' + i">
+              <span
+                class="pm-bs-goals__node"
+                :class="{ 'is-reached': goalValue >= g.amount }"
+                :style="{ left: ((i + 1) / goals.length * 100) + '%' }"
+              >
+                <span class="pm-bs-goals__icon" x-show="g.ship">{%- render 'pm-icon', icon: 'truck', size: 12, stroke: 2 -%}</span>
+                <span class="pm-bs-goals__icon" x-show="!g.ship">{%- render 'pm-icon', icon: 'gift', size: 12, stroke: 2 -%}</span>
+              </span>
+            </template>
+          </div>
+          <div class="pm-bs-goals__amounts">
+            <template x-for="(g, i) in goals" :key="'a' + i">
+              <span
+                class="pm-bs-goals__amount"
+                :class="{ 'is-reached': goalValue >= g.amount, 'is-last': i === goals.length - 1 }"
+                :style="{ left: ((i + 1) / goals.length * 100) + '%' }"
+                x-text="money(g.amount)"
+              ></span>
+            </template>
+          </div>
         </div>
         {%- if st.max_text != blank -%}
           <div class="pm-bs-hint" x-show="atMax && picks.length > 0" x-cloak>
@@ -854,6 +885,9 @@
           revCount: 0,
           revPaused: false,
           clock: { h: '00', m: '00', s: '00' },
+          goals: [],
+          cartTotal: 0,
+          cartMarkers: [],
 
           init: function () {
             var self = this;
@@ -887,6 +921,83 @@
             this.$watch('lineIndex', toTop);
             this.$watch('query', toTop);
             this.$nextTick(function () { self.checkScroll(); });
+
+            this.goals = this.cfg.mode === 'per_line' ? [] : this.readGoals();
+            if (this.goals.length) {
+              this.refreshCart();
+              if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+                this._unsubCart = subscribe(PUB_SUB_EVENTS.cartUpdate, function (e) {
+                  if (e && e.cartData && typeof e.cartData.total_price === 'number' && e.cartData.items) self.applyCart(e.cartData);
+                  else self.refreshCart();
+                });
+              }
+            }
+          },
+
+          /* Cart goals: Kite's progress bar goals (cart subtotal thresholds), this market's value, sorted by amount */
+          readGoals: function () {
+            var el = document.getElementById('kite-app-data');
+            if (!el) return [];
+            var data;
+            try { data = JSON.parse(el.textContent); } catch (e) { return []; }
+            var market = this.cfg.market || '';
+            var rate = parseFloat(window.Shopify && window.Shopify.currency && window.Shopify.currency.rate) || 1;
+            var out = [];
+            (data.consolidatedCombinedDiscount || []).forEach(function (c) {
+              if (!c || c.isEnabled === false || c.discountFunctionType !== 'CONSOLIDATED_PROGRESS_BAR') return;
+              ((c.segmentsData && c.segmentsData.segmentsList) || []).forEach(function (s) {
+                var rules = (s.buyXRulesData && s.buyXRulesData.rulesList) || [];
+                var r = rules[0];
+                if (!r || !/subtotal/i.test(r.ruleType || '')) return;
+                var rv = r.ruleValue || {};
+                var amount = parseFloat(rv.qualifierValue) * rate;
+                (rv.marketValues || []).forEach(function (m) {
+                  if (m && m.handle === market && parseFloat(m.value) > 0) amount = parseFloat(m.value);
+                });
+                if (!(amount > 0)) return;
+                out.push({ amount: Math.round(amount * 100), ship: s.goalType !== 'FREE_GIFT' });
+              });
+            });
+            return out.sort(function (a, b) { return a.amount - b.amount; });
+          },
+          refreshCart: function () {
+            var self = this;
+            var root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+            fetch(root + 'cart.js', { headers: { Accept: 'application/json' } })
+              .then(function (r) { return r.json(); })
+              .then(function (c) { self.applyCart(c); })
+              .catch(function () {});
+          },
+          applyCart: function (c) {
+            this.cartTotal = (c && c.total_price) || 0;
+            this.cartMarkers = ((c && c.items) || [])
+              .map(function (it) { return it.properties && it.properties._bundle_items; })
+              .filter(Boolean);
+          },
+          /* What the picks add to the cart: the bundle price for this count; below the smallest bundle, its price per
+             bottle. 0 once this exact bundle is in the cart (picks stay selected after adding). */
+          get builderValue() {
+            var n = this.picks.length;
+            if (!n || this.cartMarkers.indexOf(this.picks.join(',')) > -1) return 0;
+            var v = this.cfg.variants[String(n)];
+            if (v) return v.price;
+            var k = this.nextSellable(1);
+            var base = k ? this.cfg.variants[String(k)] : null;
+            return base ? Math.round((base.price / k) * n) : 0;
+          },
+          get goalValue() { return this.cartTotal + this.builderValue; },
+          /* Goals evenly spaced on the bar; the fill runs proportionally between two goals */
+          get goalPercent() {
+            var g = this.goals;
+            var v = this.goalValue;
+            if (!g.length || v <= 0) return 0;
+            var step = 100 / g.length;
+            var prev = 0;
+            for (var i = 0; i < g.length; i++) {
+              if (v < g[i].amount) return Math.round((i * step + ((v - prev) / (g[i].amount - prev)) * step) * 10) / 10;
+              prev = g[i].amount;
+            }
+            return 100;
           },
 
           /* Tiers */
@@ -1142,6 +1253,7 @@
           destroy: function () {
             clearInterval(this._timerId);
             clearInterval(this._revId);
+            if (typeof this._unsubCart === 'function') this._unsubCart();
           },
 
           /* Reviews */

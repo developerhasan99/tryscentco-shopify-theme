@@ -716,6 +716,81 @@
   transition: width var(--pm-dur) var(--pm-ease);
 }
 
+/* Cart goals bar: Kite goals as nodes evenly spaced on the track, amount under each (Adrian 07.11).
+   Side padding keeps the last node and its amount inside the column. */
+.premium .pm-bs-goals {
+  margin-top: 10px;
+  padding: 0 12px 0 0;
+}
+
+.premium .pm-bs-goals__track {
+  position: relative;
+  height: 6px;
+  border-radius: var(--pm-radius-pill);
+  background: var(--pm-line);
+}
+
+.premium .pm-bs-goals__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-radius: inherit;
+  background: #22613a;
+  transition: width var(--pm-dur) var(--pm-ease);
+}
+
+.premium .pm-bs-goals__node {
+  position: absolute;
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-pill, 999px);
+  background: var(--pm-white);
+  color: var(--pm-muted);
+  transform: translate(-50%, -50%);
+  transition: background-color var(--pm-dur) var(--pm-ease), color var(--pm-dur) var(--pm-ease), border-color var(--pm-dur) var(--pm-ease);
+}
+
+.premium .pm-bs-goals__node.is-reached {
+  border-color: #22613a;
+  background: #22613a;
+  color: var(--pm-white);
+}
+
+.premium .pm-bs-goals__icon {
+  display: inline-flex;
+}
+
+.premium .pm-bs-goals__amounts {
+  position: relative;
+  height: 14px;
+  margin-top: 14px;
+}
+
+.premium .pm-bs-goals__amount {
+  position: absolute;
+  top: 0;
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--pm-muted);
+  transform: translateX(-50%);
+}
+
+.premium .pm-bs-goals__amount.is-last {
+  transform: translateX(calc(-100% + 12px));
+}
+
+.premium .pm-bs-goals__amount.is-reached {
+  color: #22613a;
+}
+
 .premium .pm-bs-hint,
 .premium .pm-bs-empty {
   margin: 0;
