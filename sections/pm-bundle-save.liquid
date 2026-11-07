@@ -416,14 +416,41 @@
     <div class="pm-bs__media">
       <div class="pm-bs-gallery">
         <div class="pm-bs-gallery__viewport">
+          {%- liquid
+            comment
+              Market packshots (Adrian 07.11): images with alt bundle_<country> (bundle_se / bundle_dk / bundle_fi / bundle_no,
+              same convention as the product and bundle pages) show only in their own market. A market without its own
+              packshot gets the first bundle_ image. Every other image shows everywhere.
+            endcomment
+            assign pm_pack = localization.country.iso_code | prepend: 'bundle_' | downcase
+            assign pm_pack_first = ''
+            assign pm_pack_hit = false
+            for media in pm_bp.media
+              assign pm_a = media.alt | downcase | strip
+              if pm_a contains 'bundle_'
+                if pm_pack_first == blank
+                  assign pm_pack_first = pm_a
+                endif
+                if pm_a == pm_pack
+                  assign pm_pack_hit = true
+                endif
+              endif
+            endfor
+            unless pm_pack_hit
+              assign pm_pack = pm_pack_first
+            endunless
+          -%}
           <div class="pm-bs-gallery__track" x-ref="track" @scroll.passive="onTrack()">
             {%- assign pm_media_count = 0 -%}
             {%- for media in pm_bp.media -%}
               {%- if media.preview_image == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign pm_a = media.alt | downcase | strip -%}
+              {%- if pm_a contains 'bundle_' and pm_a != pm_pack -%}{%- continue -%}{%- endif -%}
               {%- assign pm_media_count = pm_media_count | plus: 1 -%}
               {%- assign pm_alt = media.alt | default: pm_bp.title -%}
+              {%- if pm_a contains 'bundle_' -%}{%- assign pm_alt = pm_bp.title -%}{%- endif -%}
               <div class="pm-bs-gallery__slide">
-                {%- if forloop.first -%}
+                {%- if pm_media_count == 1 -%}
                   {{ media.preview_image | image_url: width: 1400 | image_tag: widths: '375, 550, 750, 1100, 1400', sizes: '(min-width: 990px) 50vw, 100vw', fetchpriority: 'high', loading: 'eager', alt: pm_alt, class: 'pm-bs-gallery__img' }}
                 {%- else -%}
                   {{ media.preview_image | image_url: width: 1400 | image_tag: widths: '375, 550, 750, 1100, 1400', sizes: '(min-width: 990px) 50vw, 100vw', loading: 'lazy', alt: pm_alt, class: 'pm-bs-gallery__img' }}
@@ -448,6 +475,8 @@
             {%- assign pm_mi = 0 -%}
             {%- for media in pm_bp.media -%}
               {%- if media.preview_image == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign pm_a = media.alt | downcase | strip -%}
+              {%- if pm_a contains 'bundle_' and pm_a != pm_pack -%}{%- continue -%}{%- endif -%}
               <button
                 type="button"
                 class="pm-bs-gallery__thumb{% if pm_mi == 0 %} is-active{% endif %}"
