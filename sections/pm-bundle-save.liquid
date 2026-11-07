@@ -319,7 +319,7 @@
             {%- if p_dcents > 0 and st.row_designer_label != blank -%}
               <div class="pm-bs-row__designer pm-bs-inline">
                 <div>{{ st.row_designer_label | escape }}</div>
-                <div><s>{{ p.metafields.custom.original_retail_price.value | money_without_trailing_zeros }}</s></div>
+                <div><s>{{ p_dcents | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros }}</s></div>
               </div>
             {%- endif -%}
             {%- if p_occasions.size > 0 -%}
@@ -827,19 +827,19 @@
         <dl class="pm-bs-sum" aria-live="polite" x-show="showSummary" x-cloak>
           <div class="pm-bs-sum__row" x-show="showDesigner">
             <dt>{{ st.sum_designer_label | escape }}</dt>
-            <dd class="pm-bs-sum__was"><s x-text="money(designerTotal)"></s></dd>
+            <dd class="pm-bs-sum__was"><s x-text="money(kr(designerTotal))"></s></dd>
           </div>
-          <div class="pm-bs-sum__row pm-bs-sum__row--save" x-show="showDesigner && designerTotal > ourValue">
+          <div class="pm-bs-sum__row pm-bs-sum__row--save" x-show="showDesigner && kr(designerTotal) > kr(ourValue)">
             <dt>{{ st.sum_save_designer_label | escape }}</dt>
-            <dd x-text="money(designerTotal - ourValue)"></dd>
+            <dd x-text="money(kr(designerTotal) - kr(ourValue))"></dd>
           </div>
           <div class="pm-bs-sum__row" x-show="ourValue > totalPrice">
             <dt>{{ st.sum_regular_label | escape }}</dt>
-            <dd class="pm-bs-sum__was"><s x-text="money(ourValue)"></s></dd>
+            <dd class="pm-bs-sum__was"><s x-text="money(kr(ourValue))"></s></dd>
           </div>
           <div class="pm-bs-sum__row pm-bs-sum__row--save" x-show="ourValue > totalPrice">
             <dt>{{ st.sum_save_bundle_label | escape }}</dt>
-            <dd x-text="money(ourValue - totalPrice)"></dd>
+            <dd x-text="money(kr(ourValue) - totalPrice)"></dd>
           </div>
           <div class="pm-bs-sum__row pm-bs-sum__row--total">
             <dt>{{ st.sum_total_label | escape }}</dt>
@@ -1137,6 +1137,8 @@
             return this.picks.reduce(function (sum, vid) { return sum + (map[vid] || 0); }, 0);
           },
           get showDesigner() { return this.designerTotal > this.totalPrice; },
+          /* Whole currency units for the breakdown (designer and regular values carry öre) */
+          kr: function (cents) { return Math.round((Number(cents) || 0) / 100) * 100; },
           get showSummary() { return this.cfg.mode !== 'per_line' && this.picks.length > 0 && !!this.bundleVariant; },
           get reachedCount() {
             var v = this.goalValue;
