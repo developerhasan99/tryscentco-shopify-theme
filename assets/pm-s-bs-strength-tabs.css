@@ -1,5 +1,5 @@
 /* pm-s-bs-strength-tabs.css (Bundle & Save): three-tab strength comparison.
-   375: card = full gutter width (335), tabs 3 equal columns, rows 2 columns (label | value), 13px text.
+   375: card = full gutter width (335), tabs share the width equally (any count), rows 2 columns (label | value), 13px text.
    1440: card max 608 centred, rows 64px, 14px text. Shaded section, ink row icons, ours = ink tick, theirs = muted cross (tryscent.eu monochrome). */
 .premium .pm-bs-st {
   box-sizing: border-box;
@@ -38,7 +38,8 @@
 /* Tabs */
 .premium .pm-bs-st__tabs {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
   border-bottom: 1px solid var(--pm-line);
 }
 
@@ -171,6 +172,8 @@
 
 .premium .pm-bs-st__value--plain {
   color: var(--pm-ink);
+  /* No tick here: indent by tick (16) + gap (8) so the text lines up with the rows above */
+  padding-left: 24px;
 }
 
 .premium .pm-bs-st__note {
