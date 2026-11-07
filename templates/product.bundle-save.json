@@ -332,7 +332,7 @@
         "kicker": "Koncentration",
         "title": "Därför spelar koncentrationen roll",
         "subtitle": "Eau de Toilette innehåller mycket mindre doftolja än Eau de Parfum. Våra dofter har 20%.",
-        "default_tab": 3,
+        "default_tab": 2,
         "row_strength_label": "Styrka",
         "row_longevity_label": "Hållbarhet",
         "row_oil_label": "Doftolja",
@@ -365,23 +365,10 @@
             "oil": "20% parfymolja",
             "summary": "20% parfymolja i varje flaska. Du betalar för doften, inte för namnet."
           }
-        },
-        "t_edp": {
-          "type": "tab",
-          "settings": {
-            "label": "Eau de Parfum",
-            "sublabel": "De flesta märken",
-            "is_ours": false,
-            "strength": "Måttlig",
-            "longevity": "Oftast 6-8 timmar",
-            "oil": "15-25% doftolja",
-            "summary": "Mer doftolja än en Eau de Toilette, men du betalar fortfarande för märkesnamnet."
-          }
         }
       },
       "block_order": [
         "t1",
-        "t_edp",
         "t2"
       ]
     },
