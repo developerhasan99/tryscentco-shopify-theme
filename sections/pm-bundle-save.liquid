@@ -270,6 +270,13 @@
             assign p_cart_name = p_cart_name | append: ' - ' | append: pm_size
           endif
 
+          # Designer price (custom.original_retail_price, money): read directly it is cents in the shopper's currency
+          # (Shopify converts values stored in USD); 0 = none, the row then shows no designer price and adds 0
+          assign p_dcents = 0
+          if p.metafields.custom.original_retail_price != blank
+            assign p_dcents = p.metafields.custom.original_retail_price.value | append: '' | plus: 0
+          endif
+
           # Search text: title, designer, brand, occasion, scent family, gender label
           assign p_search = p.title | append: ' ' | append: p_insp | append: ' ' | append: p.metafields.custom.brand.value | append: ' ' | append: p.metafields.custom.occasion.value | append: ' ' | append: p.metafields.custom.fragrance_family.value | append: ' ' | append: p_gender | downcase | strip_newlines
         -%}
@@ -281,6 +288,7 @@
           data-title="{{ p_cart_name | escape }}"
           data-line="{{ p_line | escape }}"
           data-search="{{ p_search | escape }}"
+          data-designer="{{ p_dcents }}"
           x-show="rowOk('{{ v.id }}')"
           :class="{ 'is-picked': qty({{ v.id }}) > 0 }"
         >
@@ -306,6 +314,12 @@
                   </span>
                 {%- endif -%}
                 <div class="pm-dmeta__text"><div class="pm-bs-inline"><div>{{ st.inspired_prefix | escape }}</div> <div><strong>{{ p_insp | escape }}</strong></div></div></div>
+              </div>
+            {%- endif -%}
+            {%- if p_dcents > 0 and st.row_designer_label != blank -%}
+              <div class="pm-bs-row__designer pm-bs-inline">
+                <div>{{ st.row_designer_label | escape }}</div>
+                <div><s>{{ p.metafields.custom.original_retail_price.value | money_without_trailing_zeros }}</s></div>
               </div>
             {%- endif -%}
             {%- if p_occasions.size > 0 -%}
@@ -805,6 +819,33 @@
 
       {%- comment -%} 6. CTA: every state rendered here (Weglot), the component only switches them {%- endcomment -%}
       <div class="pm-bs-cta">
+        {%- comment -%}
+          Price breakdown of the picks (FM setup, Adrian 07.11): designer value (sum of original_retail_price; picks
+          without one add 0, so it can only understate; shown while above the bundle price), saving vs our regular
+          price, our regular price (bundle variant compare-at), bundle saving, total = bundle price.
+        {%- endcomment -%}
+        <dl class="pm-bs-sum" aria-live="polite" x-show="showSummary" x-cloak>
+          <div class="pm-bs-sum__row" x-show="showDesigner">
+            <dt>{{ st.sum_designer_label | escape }}</dt>
+            <dd class="pm-bs-sum__was"><s x-text="money(designerTotal)"></s></dd>
+          </div>
+          <div class="pm-bs-sum__row pm-bs-sum__row--save" x-show="showDesigner && designerTotal > ourValue">
+            <dt>{{ st.sum_save_designer_label | escape }}</dt>
+            <dd x-text="money(designerTotal - ourValue)"></dd>
+          </div>
+          <div class="pm-bs-sum__row" x-show="ourValue > totalPrice">
+            <dt>{{ st.sum_regular_label | escape }}</dt>
+            <dd class="pm-bs-sum__was"><s x-text="money(ourValue)"></s></dd>
+          </div>
+          <div class="pm-bs-sum__row pm-bs-sum__row--save" x-show="ourValue > totalPrice">
+            <dt>{{ st.sum_save_bundle_label | escape }}</dt>
+            <dd x-text="money(ourValue - totalPrice)"></dd>
+          </div>
+          <div class="pm-bs-sum__row pm-bs-sum__row--total">
+            <dt>{{ st.sum_total_label | escape }}</dt>
+            <dd x-text="money(totalPrice)"></dd>
+          </div>
+        </dl>
         <button
           type="button"
           class="pm-btn pm-btn--primary pm-bs-cta__btn"
@@ -955,6 +996,7 @@
           revCount: 0,
           revPaused: false,
           clock: { h: '00', m: '00', s: '00' },
+          designers: {},
           goals: [],
           cartTotal: 0,
           cartMarkers: [],
@@ -980,6 +1022,7 @@
               self.rowLines[row.dataset.vid] = row.dataset.line || '';
               self.rowSearch[row.dataset.vid] = row.dataset.search || '';
               self.rowIds.push(row.dataset.vid);
+              self.designers[row.dataset.vid] = Math.max(0, Math.round(Number(row.dataset.designer) || 0));
             });
             this.revCount = this.$el.querySelectorAll('.pm-bs-review').length;
 
@@ -1085,6 +1128,16 @@
             return base ? Math.round((base.price / k) * n) : 0;
           },
           get goalValue() { return this.cartTotal + this.builderValue; },
+          /* Price breakdown (cents, shopper's currency). Bundle variant for the picked count only, so it shows
+             once the picks form a size that is sold */
+          get totalPrice() { var v = this.bundleVariant; return v ? Number(v.price) || 0 : 0; },
+          get ourValue() { var v = this.bundleVariant; return v ? Math.max(Number(v.compare) || 0, this.totalPrice) : 0; },
+          get designerTotal() {
+            var map = this.designers;
+            return this.picks.reduce(function (sum, vid) { return sum + (map[vid] || 0); }, 0);
+          },
+          get showDesigner() { return this.designerTotal > this.totalPrice; },
+          get showSummary() { return this.cfg.mode !== 'per_line' && this.picks.length > 0 && !!this.bundleVariant; },
           get reachedCount() {
             var v = this.goalValue;
             return this.goals.filter(function (g) { return v >= g.amount; }).length;
@@ -1811,6 +1864,47 @@
       "id": "error_text",
       "label": "Error text",
       "default": "Något gick fel. Försök igen."
+    },
+    {
+      "type": "header",
+      "content": "Price breakdown",
+      "info": "Designer prices come from the product field Original Retail Price. Scents without it add 0, so the designer value can only be lower than the real one."
+    },
+    {
+      "type": "text",
+      "id": "row_designer_label",
+      "label": "Designer price on each scent",
+      "default": "Designerpris"
+    },
+    {
+      "type": "text",
+      "id": "sum_designer_label",
+      "label": "Designer value",
+      "default": "Designervärde"
+    },
+    {
+      "type": "text",
+      "id": "sum_save_designer_label",
+      "label": "Saving vs designer",
+      "default": "Du sparar mot designerpriset"
+    },
+    {
+      "type": "text",
+      "id": "sum_regular_label",
+      "label": "Our regular price",
+      "default": "Vårt ordinarie pris"
+    },
+    {
+      "type": "text",
+      "id": "sum_save_bundle_label",
+      "label": "Bundle saving",
+      "default": "Du sparar med paketet"
+    },
+    {
+      "type": "text",
+      "id": "sum_total_label",
+      "label": "Total",
+      "default": "Totalt"
     },
     {
       "type": "checkbox",

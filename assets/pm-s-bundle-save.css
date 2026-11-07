@@ -1049,6 +1049,19 @@
   color: var(--pm-ink);
 }
 
+/* Designer price per scent (original_retail_price), struck */
+.premium .pm-bs-row__designer {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--pm-muted);
+}
+
+.premium .pm-bs-row__designer s {
+  color: var(--pm-sale);
+  text-decoration-thickness: 1px;
+}
+
 .premium .pm-bs-row__tags {
   display: flex;
   flex-wrap: wrap;
@@ -1177,6 +1190,66 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* Price breakdown above the button (FM setup) */
+.premium .pm-bs-sum {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-white);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.premium .pm-bs-sum__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.premium .pm-bs-sum dt,
+.premium .pm-bs-sum dd {
+  margin: 0;
+}
+
+.premium .pm-bs-sum dt {
+  color: var(--pm-muted);
+}
+
+.premium .pm-bs-sum dd {
+  white-space: nowrap;
+}
+
+.premium .pm-bs-sum__was {
+  color: var(--pm-muted);
+}
+
+.premium .pm-bs-sum__was s {
+  text-decoration-thickness: 1px;
+}
+
+.premium .pm-bs-sum__row--save dt,
+.premium .pm-bs-sum__row--save dd {
+  font-weight: 700;
+  color: var(--pm-sale);
+}
+
+.premium .pm-bs-sum__row--total {
+  padding-top: 8px;
+  border-top: 1px solid var(--pm-line);
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 800;
+}
+
+.premium .pm-bs-sum__row--total dt {
+  color: var(--pm-ink);
 }
 
 .premium .pm-bs-cta__btn {
