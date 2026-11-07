@@ -32,8 +32,10 @@
     assign tb_date = ''
   endif
 -%}
+{%- unless tb_bs -%}
 <link rel="stylesheet" href="https://pbutcher.uk/flipdown/css/flipdown/flipdown.css">
 <script defer src="https://pbutcher.uk/flipdown/js/flipdown/flipdown.js"></script>
+{%- endunless %}
 
 <style>
   /* FlipDown Custom Styles */
@@ -171,36 +173,33 @@
   }
 
   {%- if tb_bs %}
-  /* Timer like magyx.co: dark grey boxes, white digits, grey bold labels */
-  .flipdown.flipdown__theme-dark .rotor,
-  .flipdown.flipdown__theme-dark .rotor-top,
-  .flipdown.flipdown__theme-dark .rotor-bottom,
-  .flipdown.flipdown__theme-dark .rotor-leaf-front,
-  .flipdown.flipdown__theme-dark .rotor-leaf-rear {
-    background-color: {{ section.settings.bs_timer_box_color }};
-    color: #ffffff;
+  /* Plain text countdown (no boxes): "SLUTAR OM 09:11:01" */
+  .tb-bs-timer {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 15px;
+    line-height: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 
-  .flipdown.flipdown__theme-dark .rotor:after {
-    border-color: {{ section.settings.bs_timer_box_color }};
+  .tb-bs-ends {
+    font-weight: 600;
+    opacity: 0.85;
   }
 
-  .flipdown.flipdown__theme-dark .rotor-group-heading:before {
-    color: {{ section.settings.bs_timer_label_color }};
-    font-weight: 700;
+  .tb-bs-clock {
+    min-width: 8ch;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
   }
 
-  @media screen and (max-width: 767px) {
-    .flipdown {
-      zoom: 0.8;
-    }
-
-    .flipdown .rotor {
-      font-size: 1.5rem;
-    }
-
-    .flipdown.flipdown__theme-dark .rotor-group-heading:before {
-      font-size: 9px;
+  @media screen and (min-width: 768px) {
+    .tb-bs-timer {
+      font-size: 20px;
+      line-height: 26px;
     }
   }
 
@@ -252,12 +251,19 @@
               <div style="color: {{ tb_primary }};" class="font-semibold text-sm md:text-lg tracking-wider md:order-1 underline">
                 {{ tb_append }}
               </div>
-              <div class="flex items-center gap-2">
-                <div style="color: {{ tb_primary }};" class="text-sm md:text-base font-bold leading-none md:hidden">
-                  Slutar om
+              {%- if tb_bs -%}
+                <div class="tb-bs-timer" style="color: {{ tb_primary }};">
+                  <div class="tb-bs-ends">Slutar om</div>
+                  <div class="tb-bs-clock" data-tb-clock>00:00:00</div>
                 </div>
-                <div id="flipdown" class="flipdown"></div>
-              </div>
+              {%- else -%}
+                <div class="flex items-center gap-2">
+                  <div style="color: {{ tb_primary }};" class="text-sm md:text-base font-bold leading-none md:hidden">
+                    Slutar om
+                  </div>
+                  <div id="flipdown" class="flipdown"></div>
+                </div>
+              {%- endif -%}
             </div>
             {% if section.blocks.size > 0 %}
               <div class="[display:none] md:flex gap-4">
@@ -330,6 +336,20 @@
     }
 
     const deadline = getCountdownDeadline();
+
+    {%- if tb_bs %}
+    // Bundle & Save page: plain HH:MM:SS text clock instead of FlipDown
+    const tbClocks = document.querySelectorAll('[data-tb-clock]');
+    const tbPad = (n) => String(n).padStart(2, '0');
+    const tbTick = () => {
+      const left = Math.max(0, deadline - Math.floor(Date.now() / 1000));
+      const text = tbPad(Math.floor(left / 3600)) + ':' + tbPad(Math.floor((left % 3600) / 60)) + ':' + tbPad(left % 60);
+      tbClocks.forEach((el) => { el.textContent = text; });
+    };
+    tbTick();
+    setInterval(tbTick, 1000);
+    return;
+    {%- endif %}
 
     // Countdown headings per Weglot language (falls back to "sv")
     const countdownHeadings = {
@@ -446,7 +466,7 @@
         "type": "color",
         "id": "bs_primary_color",
         "label": "Primary color",
-        "info": "Top strip, text and timer dots",
+        "info": "Top strip and text",
         "default": "#FFFFFF"
       },
       {
@@ -455,18 +475,6 @@
         "label": "Secondary color",
         "info": "Offer row and badge row",
         "default": "#000000"
-      },
-      {
-        "type": "color",
-        "id": "bs_timer_box_color",
-        "label": "Timer boxes",
-        "default": "#3A3A3C"
-      },
-      {
-        "type": "color",
-        "id": "bs_timer_label_color",
-        "label": "Timer labels",
-        "default": "#C7C9CB"
       },
       {
         "type": "text",
