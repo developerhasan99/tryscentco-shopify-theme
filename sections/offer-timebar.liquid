@@ -1,3 +1,37 @@
+{%- liquid
+  comment
+    Bundle & Save page (product template bundle-save, Adrian 07.11): own red/white bar that matches the offer timer
+    in the buy box: "Black Month", up to the bundle's best saving (from its compare-at prices), counting to the
+    visitor's local midnight like the buy box timer. Every other page keeps the settings below unchanged.
+  endcomment
+  assign tb_primary = section.settings.primary_color
+  assign tb_secondary = section.settings.secondary_color
+  assign tb_top = section.settings.top_banner_text
+  assign tb_prepend = section.settings.prepend_text
+  assign tb_append = section.settings.append_text
+  assign tb_link = section.settings.link
+  assign tb_date = section.settings.countdown_date
+  assign tb_bs = false
+  if product and product.template_suffix == 'bundle-save'
+    assign tb_bs = true
+    assign tb_max = 0
+    for v in product.variants
+      if v.compare_at_price > v.price
+        assign v_pct = v.compare_at_price | minus: v.price | times: 100.0 | divided_by: v.compare_at_price | round
+        if v_pct > tb_max
+          assign tb_max = v_pct
+        endif
+      endif
+    endfor
+    assign tb_primary = section.settings.bs_primary_color
+    assign tb_secondary = section.settings.bs_secondary_color
+    assign tb_top = section.settings.bs_top_banner_text
+    assign tb_prepend = section.settings.bs_prepend_text | replace: '[max]', tb_max
+    assign tb_append = section.settings.bs_append_text
+    assign tb_link = '#pm-bs-box'
+    assign tb_date = ''
+  endif
+-%}
 <link rel="stylesheet" href="https://pbutcher.uk/flipdown/css/flipdown/flipdown.css">
 <script defer src="https://pbutcher.uk/flipdown/js/flipdown/flipdown.js"></script>
 
@@ -77,7 +111,7 @@
   }
 
   .flipdown.flipdown__theme-dark .rotor-group-heading:before {
-    color: {{ section.settings.primary_color }};
+    color: {{ tb_primary }};
     font-size: 8px;
     font-weight: 400;
     text-transform: uppercase;
@@ -129,14 +163,14 @@
   .flipdown.flipdown__theme-dark .rotor-leaf-front,
   .flipdown.flipdown__theme-dark .rotor-group:nth-child(n + 2):nth-child(-n + 3):before,
   .flipdown.flipdown__theme-dark .rotor-group:nth-child(n + 2):nth-child(-n + 3):after {
-    background-color: {{ section.settings.primary_color }};
+    background-color: {{ tb_primary }};
   }
 
   .flipdown.flipdown__theme-dark .rotor:after {
-    border-color: {{ section.settings.primary_color }};
+    border-color: {{ tb_primary }};
   }
 
-  {% if section.settings.countdown_date == blank %}
+  {% if tb_date == blank %}
     .flipdown {
       width: 140px !important;
     }
@@ -148,29 +182,29 @@
 
 {% unless product.template_suffix == 'payday-60' or collection.template_suffix == 'bundle-save' %}
   <div id="{{ section.id }}">
-    <a href="{{ section.settings.link }}" class="no-underline block">
-      {% if section.settings.top_banner_text != blank %}
-        <div class="py-3" style="background-color: {{ section.settings.primary_color }};">
+    <a href="{{ tb_link }}" class="no-underline block">
+      {% if tb_top != blank %}
+        <div class="py-3" style="background-color: {{ tb_primary }};">
           <div class="page-width">
             <div class="text-center text-white flex items-center justify-center gap-4 leading-none">-
-              <span>{{ section.settings.top_banner_text }}</span>
+              <span>{{ tb_top }}</span>
               -</div>
           </div>
         </div>
       {% endif %}
-      {% render 'fuel04-announcement', section: section %}
-      <div class="py-3 md:py-2" style="background-color: {{ section.settings.secondary_color }};">
+      {%- unless tb_bs -%}{% render 'fuel04-announcement', section: section %}{%- endunless -%}
+      <div class="py-3 md:py-2" style="background-color: {{ tb_secondary }};">
         <div class="container mx-auto px-4">
           <div class="flex flex-wrap items-center gap-x-6 gap-y-1 justify-center">
             <div class="flex flex-wrap gap-x-4 gap-y-1 items-center justify-center">
-              <div style="color: {{ section.settings.primary_color }};" class="font-bold text-base md:text-xl">
-                {{ section.settings.prepend_text }}
+              <div style="color: {{ tb_primary }};" class="font-bold text-base md:text-xl">
+                {{ tb_prepend }}
               </div>
-              <div style="color: {{ section.settings.primary_color }};" class="font-semibold text-sm md:text-lg tracking-wider md:order-1 underline">
-                {{ section.settings.append_text }}
+              <div style="color: {{ tb_primary }};" class="font-semibold text-sm md:text-lg tracking-wider md:order-1 underline">
+                {{ tb_append }}
               </div>
               <div class="flex items-center gap-2">
-                <div style="color: {{ section.settings.primary_color }};" class="text-sm md:text-base font-bold leading-none md:hidden">
+                <div style="color: {{ tb_primary }};" class="text-sm md:text-base font-bold leading-none md:hidden">
                   Slutar om
                 </div>
                 <div id="flipdown" class="flipdown"></div>
@@ -235,7 +269,7 @@
     }
 
     function getCountdownDeadline() {
-      const configuredDate = {{ section.settings.countdown_date | json }};
+      const configuredDate = {{ tb_date | json }};
 
       if (!configuredDate) {
         return getNextMidnightTimestamp();
@@ -350,6 +384,45 @@
         "id": "fuel04_sub",
         "label": "Second line",
         "info": "Empty on purpose. The bar carries one line; a second one only if the copy changes."
+      },
+      {
+        "type": "header",
+        "content": "Bundle & Save page"
+      },
+      {
+        "type": "paragraph",
+        "content": "Only on the product page with template bundle-save. Counts to the visitor's midnight, like the offer timer in the buy box. Links to the buy box."
+      },
+      {
+        "type": "color",
+        "id": "bs_primary_color",
+        "label": "Primary color",
+        "default": "#E0201B"
+      },
+      {
+        "type": "color",
+        "id": "bs_secondary_color",
+        "label": "Secondary color",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "text",
+        "id": "bs_top_banner_text",
+        "label": "Top banner text",
+        "default": "BLACK MONTH"
+      },
+      {
+        "type": "text",
+        "id": "bs_prepend_text",
+        "label": "Offer text",
+        "default": "UPP TILL [max]% RABATT",
+        "info": "[max] = the biggest saving over the bundle sizes."
+      },
+      {
+        "type": "text",
+        "id": "bs_append_text",
+        "label": "Second text",
+        "default": "BARA IDAG"
       }
     ],
     "blocks": [
