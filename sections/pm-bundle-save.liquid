@@ -623,6 +623,24 @@
                 {%- if t_stack != blank -%}
                   <span class="pm-bs-tier__stack">{{ t_stack | escape }}</span>
                 {%- endif -%}
+                {%- comment -%} What this size unlocks in the cart (Kite goals: gifts + free shipping), with the cart total {%- endcomment -%}
+                {%- if t_price > 0 -%}
+                  <span class="pm-bs-tier__perks" x-show="tierPerks({{ t_price }}).gifts > 0 || tierPerks({{ t_price }}).ship" x-cloak>
+                    <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).gifts === 1">
+                      {%- render 'pm-icon', icon: 'gift', size: 11, stroke: 2.25 -%}
+                      <div class="pm-bs-t">{{ st.goal_tier_gift_one | escape }}</div>
+                    </span>
+                    <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).gifts > 1">
+                      {%- render 'pm-icon', icon: 'gift', size: 11, stroke: 2.25 -%}
+                      {%- capture pm_perk_x -%}tierPerks({{ t_price }}).gifts{%- endcapture -%}
+                      {%- render 'pm-bs-text', text: st.goal_tier_gifts, t1: '[n]', x1: pm_perk_x, v1: 2 -%}
+                    </span>
+                    <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).ship">
+                      {%- render 'pm-icon', icon: 'truck', size: 11, stroke: 2.25 -%}
+                      <div class="pm-bs-t">{{ st.goal_tier_ship | escape }}</div>
+                    </span>
+                  </span>
+                {%- endif -%}
               </button>
               {%- assign ti = ti | plus: 1 -%}
             {%- endfor -%}
@@ -648,8 +666,25 @@
         <div class="pm-bs-progress" aria-hidden="true" x-show="goals.length === 0">
           <span class="pm-bs-progress__bar" :style="{ width: percent + '%' }"></span>
         </div>
-        <div class="pm-bs-goals" aria-hidden="true" x-show="goals.length > 0" x-cloak>
-          <div class="pm-bs-goals__track">
+        <div class="pm-bs-goals" x-show="goals.length > 0" x-cloak :class="{ 'is-done': goalsDone }">
+          <div class="pm-bs-goals__msg" aria-live="polite" :class="{ 'is-flash': flash !== null }">
+            <div class="pm-bs-goals__line" x-show="flash === 'gift'">
+              <div class="pm-bs-t">{{ st.goal_unlock_gift | escape }}</div>
+            </div>
+            <div class="pm-bs-goals__line" x-show="flash === 'ship'">
+              <div class="pm-bs-t">{{ st.goal_unlock_ship | escape }}</div>
+            </div>
+            <div class="pm-bs-goals__line" x-show="flash === null && goalsDone">
+              <div class="pm-bs-t">{{ st.goal_msg_done | escape }}</div>
+            </div>
+            <div class="pm-bs-goals__line" x-show="flash === null && nextGoal && !nextGoal.ship">
+              {%- render 'pm-bs-text', text: st.goal_msg_gift, t1: '[x]', x1: 'nextLeft', v1: '' -%}
+            </div>
+            <div class="pm-bs-goals__line" x-show="flash === null && nextGoal && nextGoal.ship">
+              {%- render 'pm-bs-text', text: st.goal_msg_ship, t1: '[x]', x1: 'nextLeft', v1: '' -%}
+            </div>
+          </div>
+          <div class="pm-bs-goals__track" aria-hidden="true">
             <span class="pm-bs-goals__fill" :style="{ width: goalPercent + '%' }"></span>
             <template x-for="(g, i) in goals" :key="'n' + i">
               <span
@@ -657,19 +692,22 @@
                 :class="{ 'is-reached': goalValue >= g.amount }"
                 :style="{ left: ((i + 1) / goals.length * 100) + '%' }"
               >
-                <span class="pm-bs-goals__icon" x-show="g.ship">{%- render 'pm-icon', icon: 'truck', size: 12, stroke: 2 -%}</span>
-                <span class="pm-bs-goals__icon" x-show="!g.ship">{%- render 'pm-icon', icon: 'gift', size: 12, stroke: 2 -%}</span>
+                <span class="pm-bs-goals__icon" x-show="g.ship">{%- render 'pm-icon', icon: 'truck', size: 14, stroke: 2 -%}</span>
+                <span class="pm-bs-goals__icon" x-show="!g.ship">{%- render 'pm-icon', icon: 'gift', size: 14, stroke: 2 -%}</span>
               </span>
             </template>
           </div>
-          <div class="pm-bs-goals__amounts">
+          <div class="pm-bs-goals__labels">
             <template x-for="(g, i) in goals" :key="'a' + i">
-              <span
-                class="pm-bs-goals__amount"
+              <div
+                class="pm-bs-goals__label"
                 :class="{ 'is-reached': goalValue >= g.amount, 'is-last': i === goals.length - 1 }"
                 :style="{ left: ((i + 1) / goals.length * 100) + '%' }"
-                x-text="money(g.amount)"
-              ></span>
+              >
+                <div class="pm-bs-goals__amount" x-text="money(g.amount)"></div>
+                <div class="pm-bs-goals__reward" x-show="!g.ship">{{ st.goal_gift_label | escape }}</div>
+                <div class="pm-bs-goals__reward" x-show="g.ship">{{ st.goal_ship_label | escape }}</div>
+              </div>
             </template>
           </div>
         </div>
@@ -888,6 +926,7 @@
           goals: [],
           cartTotal: 0,
           cartMarkers: [],
+          flash: null,
 
           init: function () {
             var self = this;
@@ -936,6 +975,18 @@
             }
             this.goals = goals;
             this.refreshCart();
+            /* "Unlocked" flash when a pick crosses a goal (not on cart refreshes: only while picks grow) */
+            this.$watch('picks', function () {
+              var now = self.reachedCount;
+              if (self._reached !== undefined && now > self._reached && self.builderValue > 0) {
+                self.flash = self.goals[now - 1].ship ? 'ship' : 'gift';
+                clearTimeout(self._flashTimer);
+                self._flashTimer = setTimeout(function () { self.flash = null; }, 2600);
+              }
+              self._reached = now;
+            });
+            this._reached = this.reachedCount;
+            this.$watch('cartTotal', function () { self._reached = self.reachedCount; });
             if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
               this._unsubCart = subscribe(PUB_SUB_EVENTS.cartUpdate, function (e) {
                 if (e && e.cartData && typeof e.cartData.total_price === 'number' && e.cartData.items) self.applyCart(e.cartData);
@@ -998,6 +1049,28 @@
             return base ? Math.round((base.price / k) * n) : 0;
           },
           get goalValue() { return this.cartTotal + this.builderValue; },
+          get reachedCount() {
+            var v = this.goalValue;
+            return this.goals.filter(function (g) { return v >= g.amount; }).length;
+          },
+          get goalsDone() { return this.goals.length > 0 && this.reachedCount === this.goals.length; },
+          get nextLeft() { return this.nextGoal ? this.money(this.nextGoal.amount - this.goalValue) : ''; },
+          get nextGoal() {
+            var v = this.goalValue;
+            for (var i = 0; i < this.goals.length; i++) if (this.goals[i].amount > v) return this.goals[i];
+            return null;
+          },
+          /* What a size card unlocks: cart total + that card's price against the goals */
+          tierPerks: function (price) {
+            var v = this.cartTotal + (Number(price) || 0);
+            var out = { gifts: 0, ship: false };
+            this.goals.forEach(function (g) {
+              if (v < g.amount) return;
+              if (g.ship) out.ship = true;
+              else out.gifts += 1;
+            });
+            return out;
+          },
           /* Goals evenly spaced on the bar; the fill runs proportionally between two goals */
           get goalPercent() {
             var g = this.goals;
@@ -1266,6 +1339,7 @@
             clearInterval(this._timerId);
             clearInterval(this._revId);
             clearTimeout(this._goalTimer);
+            clearTimeout(this._flashTimer);
             if (typeof this._unsubCart === 'function') this._unsubCart();
           },
 
@@ -1503,6 +1577,74 @@
       "label": "Extra bottle note (8+ card)",
       "default": "Bara [price] per extra flaska",
       "info": "On cards whose maximum is above their bottle count. [price] = price of each extra bottle."
+    },
+    {
+      "type": "header",
+      "content": "Cart goals (gift app)",
+      "info": "Goals and amounts come from the gift app (Kite) per market. These are the words around them."
+    },
+    {
+      "type": "text",
+      "id": "goal_gift_label",
+      "label": "Gift goal label",
+      "default": "Gratis 50 ml Mystery-doft"
+    },
+    {
+      "type": "text",
+      "id": "goal_ship_label",
+      "label": "Shipping goal label",
+      "default": "Gratis frakt"
+    },
+    {
+      "type": "text",
+      "id": "goal_msg_gift",
+      "label": "Next goal: gift",
+      "default": "Bara [x] kvar till en gratis 50 ml Mystery-doft!",
+      "info": "[x] = amount left."
+    },
+    {
+      "type": "text",
+      "id": "goal_msg_ship",
+      "label": "Next goal: shipping",
+      "default": "Bara [x] kvar till gratis frakt!",
+      "info": "[x] = amount left."
+    },
+    {
+      "type": "text",
+      "id": "goal_msg_done",
+      "label": "All goals reached",
+      "default": "Grattis! Gratis frakt och gratis Mystery-dofter upplåsta 🎉"
+    },
+    {
+      "type": "text",
+      "id": "goal_unlock_gift",
+      "label": "Flash: gift unlocked",
+      "default": "🎉 Upplåst: gratis 50 ml Mystery-doft!"
+    },
+    {
+      "type": "text",
+      "id": "goal_unlock_ship",
+      "label": "Flash: shipping unlocked",
+      "default": "🎉 Upplåst: gratis frakt!"
+    },
+    {
+      "type": "text",
+      "id": "goal_tier_gift_one",
+      "label": "Size card: one gift",
+      "default": "+1 gratis doft"
+    },
+    {
+      "type": "text",
+      "id": "goal_tier_gifts",
+      "label": "Size card: several gifts",
+      "default": "+[n] gratis dofter",
+      "info": "[n] = number of gifts."
+    },
+    {
+      "type": "text",
+      "id": "goal_tier_ship",
+      "label": "Size card: shipping",
+      "default": "Gratis frakt"
     },
     {
       "type": "header",

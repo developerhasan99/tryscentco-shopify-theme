@@ -716,18 +716,53 @@
   transition: width var(--pm-dur) var(--pm-ease);
 }
 
-/* Cart goals bar: Kite goals as nodes evenly spaced on the track, amount under each (Adrian 07.11).
-   Side padding keeps the last node and its amount inside the column. */
+/* Cart goals bar (Adrian 07.11): Kite goals (gift / free shipping) evenly spaced on the track, amount + reward
+   under each, a live "X kr left" line above, shimmer on the fill, nodes pop when unlocked.
+   Right padding keeps the last node and its label inside the column. */
 .premium .pm-bs-goals {
-  margin-top: 10px;
-  padding: 0 12px 0 0;
+  margin-top: 12px;
+  padding: 0 14px 0 0;
+}
+
+.premium .pm-bs-goals__msg {
+  display: flex;
+  align-items: center;
+  min-height: 34px;
+  margin: 0 -14px 12px 0;
+  padding: 7px 12px;
+  border-radius: var(--pm-radius-sm);
+  background: #eef7f1;
+  color: #22613a;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 700;
+  transition: background-color var(--pm-dur) var(--pm-ease), color var(--pm-dur) var(--pm-ease);
+}
+
+.premium .pm-bs-goals__line {
+  display: block;
+}
+
+.premium .pm-bs-goals__msg .pm-bs-t--num {
+  color: var(--pm-sale);
+}
+
+.premium .pm-bs-goals__msg.is-flash,
+.premium .pm-bs-goals.is-done .pm-bs-goals__msg {
+  background: #22613a;
+  color: var(--pm-white);
+}
+
+.premium .pm-bs-goals__msg.is-flash {
+  animation: pm-bs-goal-flash 0.6s var(--pm-ease);
 }
 
 .premium .pm-bs-goals__track {
   position: relative;
-  height: 6px;
+  height: 10px;
   border-radius: var(--pm-radius-pill);
-  background: var(--pm-line);
+  background: #e6ebe7;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 .premium .pm-bs-goals__fill {
@@ -735,23 +770,45 @@
   top: 0;
   left: 0;
   bottom: 0;
+  overflow: hidden;
   border-radius: inherit;
-  background: #22613a;
-  transition: width var(--pm-dur) var(--pm-ease);
+  background: linear-gradient(90deg, #22613a 0%, #2f8a52 60%, #45b46d 100%);
+  box-shadow: 0 0 10px rgba(69, 180, 109, 0.45);
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Moving light stripes on the fill */
+.premium .pm-bs-goals__fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.28) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.28) 50%,
+    rgba(255, 255, 255, 0.28) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 16px 16px;
+  animation: pm-bs-goal-stripes 0.9s linear infinite;
 }
 
 .premium .pm-bs-goals__node {
   position: absolute;
   top: 50%;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  border: 1px solid var(--pm-line);
+  width: 30px;
+  height: 30px;
+  border: 2px solid #d5ddd7;
   border-radius: var(--pm-radius-pill, 999px);
   background: var(--pm-white);
-  color: var(--pm-muted);
+  color: #8a958d;
   transform: translate(-50%, -50%);
   transition: background-color var(--pm-dur) var(--pm-ease), color var(--pm-dur) var(--pm-ease), border-color var(--pm-dur) var(--pm-ease);
 }
@@ -760,35 +817,123 @@
   border-color: #22613a;
   background: #22613a;
   color: var(--pm-white);
+  box-shadow: 0 0 0 4px rgba(69, 180, 109, 0.25);
+  animation: pm-bs-goal-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .premium .pm-bs-goals__icon {
   display: inline-flex;
 }
 
-.premium .pm-bs-goals__amounts {
+.premium .pm-bs-goals__labels {
   position: relative;
-  height: 14px;
-  margin-top: 14px;
+  height: 46px;
+  margin-top: 20px;
 }
 
-.premium .pm-bs-goals__amount {
+.premium .pm-bs-goals__label {
   position: absolute;
   top: 0;
-  font-size: 11px;
-  line-height: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-  color: var(--pm-muted);
+  width: 92px;
+  text-align: center;
   transform: translateX(-50%);
 }
 
-.premium .pm-bs-goals__amount.is-last {
-  transform: translateX(calc(-100% + 12px));
+.premium .pm-bs-goals__label.is-last {
+  text-align: right;
+  transform: translateX(calc(-100% + 14px));
 }
 
-.premium .pm-bs-goals__amount.is-reached {
+.premium .pm-bs-goals__amount {
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 800;
+  color: var(--pm-ink);
+}
+
+.premium .pm-bs-goals__reward {
+  margin-top: 1px;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 600;
+  color: var(--pm-muted);
+}
+
+.premium .pm-bs-goals__label.is-reached .pm-bs-goals__amount,
+.premium .pm-bs-goals__label.is-reached .pm-bs-goals__reward {
   color: #22613a;
+}
+
+/* Size cards: what the size unlocks */
+.premium .pm-bs-tier__perks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: 6px;
+}
+
+.premium .pm-bs-tier__perk {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 5px;
+  border-radius: var(--pm-radius-sm);
+  background: #eef7f1;
+  color: #22613a;
+  font-size: 9px;
+  line-height: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.premium .pm-bs-tier__perk svg {
+  flex: none;
+}
+
+@media (min-width: 750px) {
+  .premium .pm-bs-goals__msg {
+    font-size: 14px;
+  }
+
+  .premium .pm-bs-goals__label {
+    width: 120px;
+  }
+
+  .premium .pm-bs-goals__reward {
+    font-size: 11px;
+    line-height: 14px;
+  }
+
+  .premium .pm-bs-tier__perk {
+    font-size: 10px;
+    line-height: 13px;
+  }
+}
+
+@keyframes pm-bs-goal-stripes {
+  from { background-position: 0 0; }
+  to { background-position: 16px 0; }
+}
+
+@keyframes pm-bs-goal-pop {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  45% { transform: translate(-50%, -50%) scale(1.35); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes pm-bs-goal-flash {
+  0% { transform: scale(0.97); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premium .pm-bs-goals__fill::after,
+  .premium .pm-bs-goals__node.is-reached,
+  .premium .pm-bs-goals__msg.is-flash {
+    animation: none;
+  }
 }
 
 .premium .pm-bs-hint,
