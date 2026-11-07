@@ -894,6 +894,25 @@
   flex: none;
 }
 
+/* Phones: cards are ~70px wide, so text only (one line), icon from 750 */
+@media (max-width: 749px) {
+  .premium .pm-bs-tier__perks {
+    align-self: stretch;
+  }
+
+  .premium .pm-bs-tier__perk {
+    justify-content: center;
+    padding: 2px 2px;
+    font-size: 9px;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+  }
+
+  .premium .pm-bs-tier__perk svg {
+    display: none;
+  }
+}
+
 @media (min-width: 750px) {
   .premium .pm-bs-goals__msg {
     font-size: 14px;
