@@ -1,6 +1,6 @@
 {%- liquid
   comment
-    Bundle & Save page (product template bundle-save, Adrian 07.11): own red/white bar that matches the offer timer
+    Bundle & Save page (product template bundle-save, Adrian 07.11): own black/white bar (reversed: white strip, black offer + badge rows, white timer) that matches the offer timer
     in the buy box: "Black Month", up to the bundle's best saving (from its compare-at prices), counting to the
     visitor's local midnight like the buy box timer. Every other page keeps the settings below unchanged.
   endcomment
@@ -170,6 +170,30 @@
     border-color: {{ tb_primary }};
   }
 
+  {%- if tb_bs %}
+  .flipdown.flipdown__theme-dark .rotor,
+  .flipdown.flipdown__theme-dark .rotor-top,
+  .flipdown.flipdown__theme-dark .rotor-bottom,
+  .flipdown.flipdown__theme-dark .rotor-leaf-front,
+  .flipdown.flipdown__theme-dark .rotor-leaf-rear {
+    color: {{ tb_secondary }};
+  }
+
+  .timebar-bs-badges {
+    background-color: {{ tb_secondary }};
+    border-color: {{ tb_secondary }};
+  }
+
+  .timebar-bs-badges .timebar-bs-label,
+  .timebar-bs-label {
+    color: {{ tb_primary }};
+  }
+
+  .timebar-bs-badges .timebar-bs-divider {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+  {%- endif %}
+
   {% if tb_date == blank %}
     .flipdown {
       width: 140px !important;
@@ -184,9 +208,9 @@
   <div id="{{ section.id }}">
     <a href="{{ tb_link }}" class="no-underline block">
       {% if tb_top != blank %}
-        <div class="py-3" style="background-color: {{ tb_primary }};">
+        <div class="py-3" style="background-color: {{ tb_primary }};{% if tb_bs %} color: {{ tb_secondary }};{% endif %}">
           <div class="page-width">
-            <div class="text-center text-white flex items-center justify-center gap-4 leading-none">-
+            <div class="text-center {% unless tb_bs %}text-white {% endunless %}flex items-center justify-center gap-4 leading-none">-
               <span>{{ tb_top }}</span>
               -</div>
           </div>
@@ -220,7 +244,7 @@
                       height="25"
                       width=""
                       alt="{{ block.settings.label }}">
-                    <div class="leading-none text-xs mt-1 font-semibold text-black">
+                    <div class="leading-none text-xs mt-1 font-semibold {% if tb_bs %}timebar-bs-label{% else %}text-black{% endif %}">
                       {{ block.settings.label }}
                     </div>
                   </div>
@@ -234,7 +258,7 @@
   </div>
 {% endunless %}
 {% if section.blocks.size > 0 %}
-  <div class="md:hidden py-3 border-0 border-b border-solid border-gray-200">
+  <div class="md:hidden py-3 border-0 border-b border-solid border-gray-200{% if tb_bs %} timebar-bs-badges{% endif %}">
     <div class="page-width">
       <div class="flex gap-2 justify-between">
         {% for block in section.blocks %}
@@ -245,12 +269,12 @@
               height="25"
               width=""
               alt="{{ block.settings.label }}">
-            <div class="leading-none text-xs mt-1 font-semibold text-black">
+            <div class="leading-none text-xs mt-1 font-semibold {% if tb_bs %}timebar-bs-label{% else %}text-black{% endif %}">
               {{ block.settings.label }}
             </div>
           </div>
           {% unless forloop.last %}
-            <div class="!block w-[1px] bg-gray-200 self-stretch"></div>
+            <div class="!block w-[1px] bg-gray-200 self-stretch{% if tb_bs %} timebar-bs-divider{% endif %}"></div>
           {% endunless %}
         {% endfor %}
       </div>
@@ -397,13 +421,15 @@
         "type": "color",
         "id": "bs_primary_color",
         "label": "Primary color",
-        "default": "#000000"
+        "info": "Top strip, text and timer tiles",
+        "default": "#FFFFFF"
       },
       {
         "type": "color",
         "id": "bs_secondary_color",
         "label": "Secondary color",
-        "default": "#FFFFFF"
+        "info": "Offer row, badge row and timer digits",
+        "default": "#000000"
       },
       {
         "type": "text",
