@@ -630,10 +630,13 @@
                       {%- render 'pm-icon', icon: 'gift', size: 11, stroke: 2.25 -%}
                       <div class="pm-bs-t">{{ st.goal_tier_gift_one | escape }}</div>
                     </span>
-                    <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).gifts > 1">
+                    <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).gifts === 2">
                       {%- render 'pm-icon', icon: 'gift', size: 11, stroke: 2.25 -%}
-                      {%- capture pm_perk_x -%}tierPerks({{ t_price }}).gifts{%- endcapture -%}
-                      {%- render 'pm-bs-text', text: st.goal_tier_gifts, t1: '[n]', x1: pm_perk_x, v1: 2 -%}
+                      <div class="pm-bs-t">{{ st.goal_tier_gifts | replace: '[n]', '2' | escape }}</div>
+                    </span>
+                    <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).gifts > 2">
+                      {%- render 'pm-icon', icon: 'gift', size: 11, stroke: 2.25 -%}
+                      <div class="pm-bs-t">{{ st.goal_tier_gifts | replace: '[n]', '3' | escape }}</div>
                     </span>
                     <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).ship">
                       {%- render 'pm-icon', icon: 'truck', size: 11, stroke: 2.25 -%}
@@ -668,10 +671,10 @@
         </div>
         <div class="pm-bs-goals" x-show="goals.length > 0" x-cloak :class="{ 'is-done': goalsDone }">
           <div class="pm-bs-goals__msg" aria-live="polite" :class="{ 'is-flash': flash !== null }">
-            <div class="pm-bs-goals__line" x-show="flash === 'gift'">
+            <div class="pm-bs-goals__line" x-show="flash && flash.gift">
               <div class="pm-bs-t">{{ st.goal_unlock_gift | escape }}</div>
             </div>
-            <div class="pm-bs-goals__line" x-show="flash === 'ship'">
+            <div class="pm-bs-goals__line" x-show="flash && flash.ship">
               <div class="pm-bs-t">{{ st.goal_unlock_ship | escape }}</div>
             </div>
             <div class="pm-bs-goals__line" x-show="flash === null && goalsDone">
@@ -979,7 +982,11 @@
             this.$watch('picks', function () {
               var now = self.reachedCount;
               if (self._reached !== undefined && now > self._reached && self.builderValue > 0) {
-                self.flash = self.goals[now - 1].ship ? 'ship' : 'gift';
+                var fresh = self.goals.slice(self._reached, now);
+                self.flash = {
+                  gift: fresh.some(function (g) { return !g.ship; }),
+                  ship: fresh.some(function (g) { return g.ship; })
+                };
                 clearTimeout(self._flashTimer);
                 self._flashTimer = setTimeout(function () { self.flash = null; }, 2600);
               }
@@ -1054,7 +1061,7 @@
             return this.goals.filter(function (g) { return v >= g.amount; }).length;
           },
           get goalsDone() { return this.goals.length > 0 && this.reachedCount === this.goals.length; },
-          get nextLeft() { return this.nextGoal ? this.money(this.nextGoal.amount - this.goalValue) : ''; },
+          get nextLeft() { return this.nextGoal ? this.money(Math.ceil((this.nextGoal.amount - this.goalValue) / 100) * 100) : ''; },
           get nextGoal() {
             var v = this.goalValue;
             for (var i = 0; i < this.goals.length; i++) if (this.goals[i].amount > v) return this.goals[i];
