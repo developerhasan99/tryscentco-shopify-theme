@@ -52,7 +52,7 @@
 }
 
 .premium .pm-bs-vs__card--ours {
-  background: var(--pm-ink);
+  background: #000000;
   color: var(--pm-white);
 }
 

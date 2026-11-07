@@ -1,6 +1,6 @@
 {%- liquid
   comment
-    Bundle & Save page (product template bundle-save, Adrian 07.11): own black/white bar (reversed: white strip, black offer + badge rows, white timer) that matches the offer timer
+    Bundle & Save page (product template bundle-save, Adrian 07.11): own black/white bar (reversed: white strip, black offer + badge rows, timer styled like magyx.co) that matches the offer timer
     in the buy box: "Black Month", up to the bundle's best saving (from its compare-at prices), counting to the
     visitor's local midnight like the buy box timer. Every other page keeps the settings below unchanged.
   endcomment
@@ -171,12 +171,37 @@
   }
 
   {%- if tb_bs %}
+  /* Timer like magyx.co: dark grey boxes, white digits, grey bold labels */
   .flipdown.flipdown__theme-dark .rotor,
   .flipdown.flipdown__theme-dark .rotor-top,
   .flipdown.flipdown__theme-dark .rotor-bottom,
   .flipdown.flipdown__theme-dark .rotor-leaf-front,
   .flipdown.flipdown__theme-dark .rotor-leaf-rear {
-    color: {{ tb_secondary }};
+    background-color: {{ section.settings.bs_timer_box_color }};
+    color: #ffffff;
+  }
+
+  .flipdown.flipdown__theme-dark .rotor:after {
+    border-color: {{ section.settings.bs_timer_box_color }};
+  }
+
+  .flipdown.flipdown__theme-dark .rotor-group-heading:before {
+    color: {{ section.settings.bs_timer_label_color }};
+    font-weight: 700;
+  }
+
+  @media screen and (max-width: 767px) {
+    .flipdown {
+      zoom: 0.8;
+    }
+
+    .flipdown .rotor {
+      font-size: 1.5rem;
+    }
+
+    .flipdown.flipdown__theme-dark .rotor-group-heading:before {
+      font-size: 9px;
+    }
   }
 
   .timebar-bs-badges {
@@ -421,15 +446,27 @@
         "type": "color",
         "id": "bs_primary_color",
         "label": "Primary color",
-        "info": "Top strip, text and timer tiles",
+        "info": "Top strip, text and timer dots",
         "default": "#FFFFFF"
       },
       {
         "type": "color",
         "id": "bs_secondary_color",
         "label": "Secondary color",
-        "info": "Offer row, badge row and timer digits",
+        "info": "Offer row and badge row",
         "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "bs_timer_box_color",
+        "label": "Timer boxes",
+        "default": "#3A3A3C"
+      },
+      {
+        "type": "color",
+        "id": "bs_timer_label_color",
+        "label": "Timer labels",
+        "default": "#C7C9CB"
       },
       {
         "type": "text",
