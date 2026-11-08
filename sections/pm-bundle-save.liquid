@@ -701,6 +701,13 @@
                   assign t_pct = t_compare | minus: t_price | times: 100.0 | divided_by: t_compare | round
                   assign t_badge = st.saving_badge | replace: '[pct]', t_pct
                 endif
+                # Highlight badge on the card edge: own text, or the caption moved up (keeps its translations)
+                assign t_flag = block.settings.highlight | strip
+                assign t_tag = block.settings.tag
+                if t_flag == blank and block.settings.tag_as_badge
+                  assign t_flag = t_tag
+                  assign t_tag = ''
+                endif
               -%}
               <button
                 type="button"
@@ -716,8 +723,8 @@
                   only the selected card opens the rest (caption, per bottle, extra-bottle price, perks).
                   Text parts are <div>s so Weglot keeps them as separate strings.
                 {%- endcomment -%}
-                {%- if block.settings.highlight != blank -%}
-                  <div class="pm-bs-tier__flag">{{ block.settings.highlight | escape }}</div>
+                {%- if t_flag != blank -%}
+                  <div class="pm-bs-tier__flag">{{ t_flag | escape }}</div>
                 {%- endif -%}
                 <span class="pm-bs-tier__row">
                   <span class="pm-bs-tier__check" aria-hidden="true">{%- render 'pm-icon', icon: 'check', size: 12, stroke: 2.5 -%}</span>
@@ -748,8 +755,8 @@
                 </span>
                 <span class="pm-bs-tier__more">
                   <span class="pm-bs-tier__more-in">
-                    {%- if block.settings.tag != blank -%}
-                      <div class="pm-bs-tier__tag">{{ block.settings.tag | escape }}</div>
+                    {%- if t_tag != blank -%}
+                      <div class="pm-bs-tier__tag">{{ t_tag | escape }}</div>
                     {%- endif -%}
                     <span class="pm-bs-tier__chips">
                       {%- if t_stack != blank -%}
@@ -2165,6 +2172,13 @@
           "id": "highlight",
           "label": "Highlight badge",
           "info": "E.g. Mest populär. Black badge on the card's top edge, always visible."
+        },
+        {
+          "type": "checkbox",
+          "id": "tag_as_badge",
+          "label": "Show caption as highlight badge",
+          "info": "Used when Highlight badge is empty. The caption (and its translations) moves to the badge.",
+          "default": false
         },
         {
           "type": "checkbox",
