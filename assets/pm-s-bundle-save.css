@@ -405,12 +405,12 @@
 }
 
 /* 4. Tier cards + 5. line cards (shared card look) --------------------------------------- */
-/* Tiers sit in one row at every width (as HOK); phones get compact type */
+/* Tiers: vertical list, one card per row; only the selected card opens (Adrian 08.11) */
 .premium .pm-bs-tiers {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
-  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 8px;
 }
 
 .premium .pm-bs-lines {
@@ -442,8 +442,9 @@
 }
 
 .premium .pm-bs-tier {
-  justify-content: flex-start;
-  padding: 18px 3px 10px;
+  display: block;
+  padding: 14px 12px;
+  text-align: left;
 }
 
 .premium .pm-bs-line {
@@ -469,44 +470,46 @@
   outline-offset: 2px;
 }
 
-/* Saving badge (-25% ... -40%) in sale red (Adrian 07.11) */
-.premium .pm-bs-tier__badge {
-  position: absolute;
-  top: -9px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 1px 5px;
-  border: 1px solid var(--pm-sale);
-  border-radius: var(--pm-radius-sm);
-  background: var(--pm-sale);
-  color: var(--pm-white);
-  font-size: 9px;
-  line-height: 13px;
-  font-weight: 600;
-  white-space: nowrap;
+/* Card head: radio, label + saving badge, prices on the right (always visible) */
+.premium .pm-bs-tier__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .premium .pm-bs-tier__check {
-  position: absolute;
-  top: -7px;
-  right: -5px;
-  display: none;
+  display: inline-flex;
+  flex: none;
   align-items: center;
   justify-content: center;
-  width: 14px;
-  height: 14px;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--pm-muted);
   border-radius: var(--pm-radius-pill, 999px);
+  background: var(--pm-white);
+  color: transparent;
+  transition: background-color var(--pm-dur) var(--pm-ease), border-color var(--pm-dur) var(--pm-ease);
+}
+
+.premium .pm-bs-tier.is-selected .pm-bs-tier__check {
+  border-color: var(--pm-ink);
   background: var(--pm-ink);
   color: var(--pm-white);
 }
 
-.premium .pm-bs-tier.is-selected .pm-bs-tier__check {
-  display: inline-flex;
+.premium .pm-bs-tier__check svg {
+  width: 12px;
+  height: 12px;
 }
 
-.premium .pm-bs-tier__check svg {
-  width: 10px;
-  height: 10px;
+.premium .pm-bs-tier__name {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  min-width: 0;
 }
 
 .premium .pm-bs-tier__label,
@@ -517,53 +520,127 @@
 }
 
 .premium .pm-bs-tier__label {
-  font-size: 12px;
-  line-height: 15px;
+  font-size: 15px;
+  line-height: 20px;
 }
 
-.premium .pm-bs-tier__tag {
+/* Saving badge (-25% ... -40%) in sale red (Adrian 07.11), next to the label */
+.premium .pm-bs-tier__badge {
+  padding: 1px 6px;
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-sale);
+  color: var(--pm-white);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Highlight badge (Mest populär) on the card's top edge */
+.premium .pm-bs-tier__flag {
+  position: absolute;
+  top: -9px;
+  right: 12px;
+  padding: 1px 8px;
+  border-radius: var(--pm-radius-pill, 999px);
+  background: var(--pm-ink);
+  color: var(--pm-white);
   font-size: 10px;
-  line-height: 13px;
-  font-weight: 500;
-  color: var(--pm-muted);
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .premium .pm-bs-tier__prices {
-  display: inline-flex;
+  display: flex;
+  flex: none;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0 6px;
-  margin-top: 4px;
+  align-items: flex-end;
+  text-align: right;
 }
 
 .premium .pm-bs-tier__price {
-  font-size: 16px;
-  line-height: 20px;
+  font-size: 17px;
+  line-height: 22px;
   font-weight: 700;
 }
 
 .premium .pm-bs-tier__compare {
-  font-size: 11px;
-  line-height: 14px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--pm-muted);
+}
+
+/* Details: closed on every card except the selected one */
+.premium .pm-bs-tier__more {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--pm-dur) var(--pm-ease);
+}
+
+.premium .pm-bs-tier.is-selected .pm-bs-tier__more {
+  grid-template-rows: 1fr;
+}
+
+.premium .pm-bs-tier__more-in {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+  padding-left: 30px;
+  visibility: hidden;
+  transition: visibility var(--pm-dur) var(--pm-ease);
+}
+
+.premium .pm-bs-tier.is-selected .pm-bs-tier__more-in {
+  visibility: visible;
+}
+
+.premium .pm-bs-tier__more-in > :first-child {
+  margin-top: 10px;
+}
+
+.premium .pm-bs-tier__info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+}
+
+.premium .pm-bs-tier__tag {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
   color: var(--pm-muted);
 }
 
 .premium .pm-bs-tier__each {
-  margin-top: 4px;
-  font-size: 10px;
-  line-height: 13px;
+  font-size: 13px;
+  line-height: 18px;
   font-weight: 700;
   color: var(--pm-ink);
 }
 
+.premium .pm-bs-tier__chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.premium .pm-bs-tier__chips:empty {
+  display: none;
+}
+
 .premium .pm-bs-tier__stack {
-  margin-top: 4px;
-  padding: 2px 5px;
+  padding: 2px 8px;
   border-radius: var(--pm-radius-sm);
   background: var(--pm-ink);
-  font-size: 9px;
-  line-height: 12px;
+  font-size: 11px;
+  line-height: 16px;
   font-weight: 700;
   color: var(--pm-white);
 }
@@ -607,15 +684,14 @@
 }
 
 @media (min-width: 750px) {
-  .premium .pm-bs-tiers {
-    gap: 10px;
-  }
-
   .premium .pm-bs-tier {
-    padding: 20px 6px 12px;
+    padding: 16px;
   }
 
-  .premium .pm-bs-tier__badge,
+  .premium .pm-bs-tier__flag {
+    right: 16px;
+  }
+
   .premium .pm-bs-line__badge {
     top: -10px;
     padding: 2px 8px;
@@ -623,59 +699,13 @@
     line-height: 14px;
   }
 
-  .premium .pm-bs-tier__check {
-    top: 6px;
-    right: 6px;
-    width: 18px;
-    height: 18px;
-  }
-
-  .premium .pm-bs-tier__check svg {
-    width: 12px;
-    height: 12px;
-  }
-
   .premium .pm-bs-tier__label {
-    font-size: 13px;
-    line-height: 16px;
-  }
-
-  .premium .pm-bs-tier__tag {
-    font-size: 11px;
-    line-height: 14px;
+    font-size: 16px;
+    line-height: 22px;
   }
 
   .premium .pm-bs-tier__price {
     font-size: 18px;
-    line-height: 22px;
-  }
-
-  .premium .pm-bs-tier__compare {
-    font-size: 12px;
-    line-height: 16px;
-  }
-
-  .premium .pm-bs-tier__each {
-    font-size: 12px;
-    line-height: 16px;
-  }
-
-  .premium .pm-bs-tier__stack {
-    padding: 2px 8px;
-    font-size: 11px;
-    line-height: 15px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .premium .pm-bs-tier__label {
-    font-size: 14px;
-    line-height: 18px;
-  }
-
-  .premium .pm-bs-tier__prices {
-    flex-direction: row;
-    align-items: baseline;
   }
 }
 
@@ -866,51 +896,31 @@
   color: #22613a;
 }
 
-/* Size cards: what the size unlocks */
+/* Size cards: what the size unlocks (chips in the opened card) */
 .premium .pm-bs-tier__perks {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 2px;
-  margin-top: 6px;
+  gap: 4px;
 }
 
 .premium .pm-bs-tier__perk {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 2px 5px;
+  gap: 4px;
+  padding: 2px 8px;
   border-radius: var(--pm-radius-sm);
   background: #eef7f1;
   color: #22613a;
-  font-size: 9px;
-  line-height: 12px;
+  font-size: 11px;
+  line-height: 16px;
   font-weight: 700;
   text-align: left;
-  max-width: 100%;
+  white-space: nowrap;
 }
 
 .premium .pm-bs-tier__perk svg {
   flex: none;
-}
-
-/* Phones: cards are ~70px wide, so text only (one line), icon from 750 */
-@media (max-width: 749px) {
-  .premium .pm-bs-tier__perks {
-    align-self: stretch;
-  }
-
-  .premium .pm-bs-tier__perk {
-    justify-content: center;
-    padding: 2px 2px;
-    font-size: 9px;
-    letter-spacing: -0.2px;
-    white-space: nowrap;
-  }
-
-  .premium .pm-bs-tier__perk svg {
-    display: none;
-  }
 }
 
 @media (min-width: 750px) {
@@ -925,11 +935,6 @@
   .premium .pm-bs-goals__reward {
     font-size: 11px;
     line-height: 14px;
-  }
-
-  .premium .pm-bs-tier__perk {
-    font-size: 10px;
-    line-height: 13px;
   }
 }
 

@@ -685,55 +685,77 @@
                 @click="selectTier({{ ti }})"
                 {{ block.shopify_attributes }}
               >
-                {%- if t_badge != blank -%}
-                  <span class="pm-bs-tier__badge">{{ t_badge | escape }}</span>
+                {%- comment -%}
+                  Vertical list (Adrian 08.11): every card shows label, saving badge, price and compare-at;
+                  only the selected card opens the rest (caption, per bottle, extra-bottle price, perks).
+                  Text parts are <div>s so Weglot keeps them as separate strings.
+                {%- endcomment -%}
+                {%- if block.settings.highlight != blank -%}
+                  <div class="pm-bs-tier__flag">{{ block.settings.highlight | escape }}</div>
                 {%- endif -%}
-                <span class="pm-bs-tier__check" aria-hidden="true">{%- render 'pm-icon', icon: 'check', size: 12, stroke: 2.5 -%}</span>
-                <span class="pm-bs-tier__label">{{ block.settings.label | escape }}</span>
-                {%- if block.settings.tag != blank -%}
-                  <span class="pm-bs-tier__tag">{{ block.settings.tag | escape }}</span>
-                {%- endif -%}
-                <span class="pm-bs-tier__prices">
-                  {%- if t_price > 0 -%}
-                    <span
-                      class="pm-bs-tier__price"
-                      {% if t_max_n > t_bottles %}x-text="liveTier({{ ti }}) ? money(liveTier({{ ti }}).price) : {{ t_price | money_without_trailing_zeros | json | escape }}"{% endif %}
-                    >{{ t_price | money_without_trailing_zeros }}</span>
-                  {%- endif -%}
-                  {%- if t_compare > t_price -%}
-                    <s
-                      class="pm-bs-tier__compare"
-                      {% if t_max_n > t_bottles %}x-text="liveTier({{ ti }}) ? money(liveTier({{ ti }}).compare) : {{ t_compare | money_without_trailing_zeros | json | escape }}"{% endif %}
-                    >{{ t_compare | money_without_trailing_zeros }}</s>
-                  {%- endif -%}
+                <span class="pm-bs-tier__row">
+                  <span class="pm-bs-tier__check" aria-hidden="true">{%- render 'pm-icon', icon: 'check', size: 12, stroke: 2.5 -%}</span>
+                  <span class="pm-bs-tier__name">
+                    <div class="pm-bs-tier__label">{{ block.settings.label | escape }}</div>
+                    {%- if t_badge != blank -%}
+                      <div class="pm-bs-tier__badge">{{ t_badge | escape }}</div>
+                    {%- endif -%}
+                  </span>
+                  <span class="pm-bs-tier__prices">
+                    {%- if t_price > 0 -%}
+                      <span
+                        class="pm-bs-tier__price"
+                        {% if t_max_n > t_bottles %}x-text="liveTier({{ ti }}) ? money(liveTier({{ ti }}).price) : {{ t_price | money_without_trailing_zeros | json | escape }}"{% endif %}
+                      >{{ t_price | money_without_trailing_zeros }}</span>
+                    {%- endif -%}
+                    {%- if t_compare > t_price -%}
+                      <s
+                        class="pm-bs-tier__compare"
+                        {% if t_max_n > t_bottles %}x-text="liveTier({{ ti }}) ? money(liveTier({{ ti }}).compare) : {{ t_compare | money_without_trailing_zeros | json | escape }}"{% endif %}
+                      >{{ t_compare | money_without_trailing_zeros }}</s>
+                    {%- endif -%}
+                  </span>
                 </span>
-                {%- if t_each != blank -%}
-                  <span class="pm-bs-tier__each">{{ t_each | escape }}</span>
-                {%- endif -%}
-                {%- if t_stack != blank -%}
-                  <span class="pm-bs-tier__stack">{{ t_stack | escape }}</span>
-                {%- endif -%}
-                {%- comment -%} What this size unlocks in the cart (Kite goals: gifts + free shipping), with the cart total {%- endcomment -%}
-                {%- if t_price > 0 -%}
-                  <span class="pm-bs-tier__perks" x-show="tierPerks({{ t_price }}).gifts > 0 || tierPerks({{ t_price }}).ship" x-cloak>
-                    <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).gifts === 1">
-                      {%- render 'pm-icon', icon: 'gift', size: 11, stroke: 2.25 -%}
-                      <div class="pm-bs-t">{{ st.goal_tier_gift_one | escape }}</div>
-                    </span>
-                    <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).gifts === 2">
-                      {%- render 'pm-icon', icon: 'gift', size: 11, stroke: 2.25 -%}
-                      <div class="pm-bs-t">{{ st.goal_tier_gifts | replace: '[n]', '2' | escape }}</div>
-                    </span>
-                    <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).gifts > 2">
-                      {%- render 'pm-icon', icon: 'gift', size: 11, stroke: 2.25 -%}
-                      <div class="pm-bs-t">{{ st.goal_tier_gifts | replace: '[n]', '3' | escape }}</div>
-                    </span>
-                    <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).ship">
-                      {%- render 'pm-icon', icon: 'truck', size: 11, stroke: 2.25 -%}
-                      <div class="pm-bs-t">{{ st.goal_tier_ship | escape }}</div>
+                <span class="pm-bs-tier__more">
+                  <span class="pm-bs-tier__more-in">
+                    {%- if block.settings.tag != blank or t_each != blank -%}
+                      <span class="pm-bs-tier__info">
+                        {%- if block.settings.tag != blank -%}
+                          <div class="pm-bs-tier__tag">{{ block.settings.tag | escape }}</div>
+                        {%- endif -%}
+                        {%- if t_each != blank -%}
+                          <div class="pm-bs-tier__each">{{ t_each | escape }}</div>
+                        {%- endif -%}
+                      </span>
+                    {%- endif -%}
+                    <span class="pm-bs-tier__chips">
+                      {%- if t_stack != blank -%}
+                        <div class="pm-bs-tier__stack">{{ t_stack | escape }}</div>
+                      {%- endif -%}
+                      {%- comment -%} What this size unlocks in the cart (Kite goals: gifts + free shipping), with the cart total {%- endcomment -%}
+                      {%- if t_price > 0 -%}
+                        <span class="pm-bs-tier__perks" x-show="tierPerks({{ t_price }}).gifts > 0 || tierPerks({{ t_price }}).ship" x-cloak>
+                          <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).gifts === 1">
+                            {%- render 'pm-icon', icon: 'gift', size: 12, stroke: 2.25 -%}
+                            <div class="pm-bs-t">{{ st.goal_tier_gift_one | escape }}</div>
+                          </span>
+                          <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).gifts === 2">
+                            {%- render 'pm-icon', icon: 'gift', size: 12, stroke: 2.25 -%}
+                            <div class="pm-bs-t">{{ st.goal_tier_gifts | replace: '[n]', '2' | escape }}</div>
+                          </span>
+                          <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).gifts > 2">
+                            {%- render 'pm-icon', icon: 'gift', size: 12, stroke: 2.25 -%}
+                            <div class="pm-bs-t">{{ st.goal_tier_gifts | replace: '[n]', '3' | escape }}</div>
+                          </span>
+                          <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).ship">
+                            {%- render 'pm-icon', icon: 'truck', size: 12, stroke: 2.25 -%}
+                            <div class="pm-bs-t">{{ st.goal_tier_ship | escape }}</div>
+                          </span>
+                        </span>
+                      {%- endif -%}
                     </span>
                   </span>
-                {%- endif -%}
+                </span>
               </button>
               {%- assign ti = ti | plus: 1 -%}
             {%- endfor -%}
@@ -2102,6 +2124,12 @@
           "id": "badge_override",
           "label": "Badge",
           "info": "Empty = saving in % from the variant's compare-at price (format in section settings)."
+        },
+        {
+          "type": "text",
+          "id": "highlight",
+          "label": "Highlight badge",
+          "info": "E.g. Mest populär. Black badge on the card's top edge, always visible."
         },
         {
           "type": "checkbox",

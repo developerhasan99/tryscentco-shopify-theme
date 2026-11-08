@@ -69,7 +69,8 @@
             "bottles": 6,
             "max_bottles": 20,
             "label": "6+ flaskor",
-            "tag": "Mest populär",
+            "tag": "",
+            "highlight": "Mest populär",
             "preselected": true
           }
         },
