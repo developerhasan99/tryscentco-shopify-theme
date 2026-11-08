@@ -183,6 +183,8 @@
         "saving_badge": "-[pct]%",
         "per_bottle_text": "[price] / flaska",
         "stack_text": "Bara [price] per extra flaska",
+        "goal_tier_gift_one": "+1 gratis mystery-doft",
+        "goal_tier_gifts": "+[n] gratis mystery-dofter",
         "goal_gift_product": "gratis-mystik-parfym-50ml",
         "goal_ship_product": "premiumfrakt",
         "scents_heading": "Välj dina [n] dofter",
