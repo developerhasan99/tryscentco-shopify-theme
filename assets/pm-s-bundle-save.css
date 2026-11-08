@@ -503,20 +503,14 @@
   height: 12px;
 }
 
-/* Left column: label + saving badge, per bottle under it (level with the compare-at price) */
+/* Label, saving badge and per bottle on one line (wraps only when the card is too narrow) */
 .premium .pm-bs-tier__name {
   display: flex;
   flex: 1 1 auto;
-  flex-direction: column;
-  align-items: flex-start;
-  min-width: 0;
-}
-
-.premium .pm-bs-tier__title {
-  display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px 8px;
+  gap: 4px 6px;
+  min-width: 0;
 }
 
 .premium .pm-bs-tier__label,
@@ -527,8 +521,9 @@
 }
 
 .premium .pm-bs-tier__label {
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
+  white-space: nowrap;
 }
 
 /* Saving badge (-25% ... -40%) in sale red (Adrian 07.11), next to the label */
@@ -618,11 +613,11 @@
 }
 
 .premium .pm-bs-tier__each {
-  margin-top: 2px;
   font-size: 12px;
   line-height: 16px;
   font-weight: 600;
   color: var(--pm-ink);
+  white-space: nowrap;
 }
 
 .premium .pm-bs-tier__chips {
@@ -905,15 +900,16 @@
   gap: 4px;
 }
 
+/* Perk tile: product image (gift bottle / delivery truck) + green line (Adrian 08.11) */
 .premium .pm-bs-tier__perk {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
+  gap: 8px;
+  padding: 4px 10px 4px 4px;
   border-radius: var(--pm-radius-sm);
   background: #eef7f1;
   color: #22613a;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 16px;
   font-weight: 700;
   text-align: left;
@@ -922,6 +918,16 @@
 
 .premium .pm-bs-tier__perk svg {
   flex: none;
+}
+
+.premium .pm-bs-tier__perk-img {
+  flex: none;
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-radius: calc(var(--pm-radius-sm) - 1px);
+  background: var(--pm-white);
+  object-fit: contain;
 }
 
 @media (min-width: 750px) {

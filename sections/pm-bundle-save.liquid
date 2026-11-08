@@ -631,6 +631,32 @@
 
       {%- comment -%} 4. Tier cards {%- endcomment -%}
       {%- if pm_tier_count > 0 -%}
+        {%- liquid
+          comment
+            Perk visuals on the opened size card (Adrian 08.11): the gift product's and the shipping product's main
+            image (settings goal_gift_product / goal_ship_product); without a product the line icon stays.
+          endcomment
+          assign pm_perk_img = st.goal_gift_product.featured_image
+          if pm_perk_img
+            capture pm_perk_gift_visual
+              echo pm_perk_img | image_url: width: 120 | image_tag: width: 40, height: 40, loading: 'lazy', alt: '', class: 'pm-bs-tier__perk-img'
+            endcapture
+          else
+            capture pm_perk_gift_visual
+              render 'pm-icon', icon: 'gift', size: 12, stroke: 2.25
+            endcapture
+          endif
+          assign pm_perk_img = st.goal_ship_product.featured_image
+          if pm_perk_img
+            capture pm_perk_ship_visual
+              echo pm_perk_img | image_url: width: 120 | image_tag: width: 40, height: 40, loading: 'lazy', alt: '', class: 'pm-bs-tier__perk-img'
+            endcapture
+          else
+            capture pm_perk_ship_visual
+              render 'pm-icon', icon: 'truck', size: 12, stroke: 2.25
+            endcapture
+          endif
+        -%}
         <div class="pm-bs-group">
           {%- if st.tiers_heading != blank -%}
             <h2 class="pm-bs-h">{{ st.tiers_heading | escape }}</h2>
@@ -695,14 +721,12 @@
                 {%- endif -%}
                 <span class="pm-bs-tier__row">
                   <span class="pm-bs-tier__check" aria-hidden="true">{%- render 'pm-icon', icon: 'check', size: 12, stroke: 2.5 -%}</span>
+                  {%- comment -%} Label, saving badge and per bottle on one line (Adrian 08.11) {%- endcomment -%}
                   <span class="pm-bs-tier__name">
-                    <span class="pm-bs-tier__title">
-                      <div class="pm-bs-tier__label">{{ block.settings.label | escape }}</div>
-                      {%- if t_badge != blank -%}
-                        <div class="pm-bs-tier__badge">{{ t_badge | escape }}</div>
-                      {%- endif -%}
-                    </span>
-                    {%- comment -%} Per bottle sits under the label, level with the compare-at price (Adrian 08.11) {%- endcomment -%}
+                    <div class="pm-bs-tier__label">{{ block.settings.label | escape }}</div>
+                    {%- if t_badge != blank -%}
+                      <div class="pm-bs-tier__badge">{{ t_badge | escape }}</div>
+                    {%- endif -%}
                     {%- if t_each != blank -%}
                       <div class="pm-bs-tier__each">{{ t_each | escape }}</div>
                     {%- endif -%}
@@ -735,19 +759,19 @@
                       {%- if t_price > 0 -%}
                         <span class="pm-bs-tier__perks" x-show="tierPerks({{ t_price }}).gifts > 0 || tierPerks({{ t_price }}).ship" x-cloak>
                           <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).gifts === 1">
-                            {%- render 'pm-icon', icon: 'gift', size: 12, stroke: 2.25 -%}
+                            {{ pm_perk_gift_visual }}
                             <div class="pm-bs-t">{{ st.goal_tier_gift_one | escape }}</div>
                           </span>
                           <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).gifts === 2">
-                            {%- render 'pm-icon', icon: 'gift', size: 12, stroke: 2.25 -%}
+                            {{ pm_perk_gift_visual }}
                             <div class="pm-bs-t">{{ st.goal_tier_gifts | replace: '[n]', '2' | escape }}</div>
                           </span>
                           <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).gifts > 2">
-                            {%- render 'pm-icon', icon: 'gift', size: 12, stroke: 2.25 -%}
+                            {{ pm_perk_gift_visual }}
                             <div class="pm-bs-t">{{ st.goal_tier_gifts | replace: '[n]', '3' | escape }}</div>
                           </span>
                           <span class="pm-bs-tier__perk" x-show="tierPerks({{ t_price }}).ship">
-                            {%- render 'pm-icon', icon: 'truck', size: 12, stroke: 2.25 -%}
+                            {{ pm_perk_ship_visual }}
                             <div class="pm-bs-t">{{ st.goal_tier_ship | escape }}</div>
                           </span>
                         </span>
@@ -1804,6 +1828,18 @@
       "id": "goal_tier_ship",
       "label": "Size card: shipping",
       "default": "Gratis frakt"
+    },
+    {
+      "type": "product",
+      "id": "goal_gift_product",
+      "label": "Size card: gift image from product",
+      "info": "Main image of this product next to the free scent line. Empty = gift icon."
+    },
+    {
+      "type": "product",
+      "id": "goal_ship_product",
+      "label": "Size card: shipping image from product",
+      "info": "Main image of this product next to the free shipping line. Empty = truck icon."
     },
     {
       "type": "header",

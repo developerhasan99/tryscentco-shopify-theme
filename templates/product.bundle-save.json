@@ -183,6 +183,8 @@
         "saving_badge": "-[pct]%",
         "per_bottle_text": "[price] / flaska",
         "stack_text": "Bara [price] per extra flaska",
+        "goal_gift_product": "gratis-mystik-parfym-50ml",
+        "goal_ship_product": "premiumfrakt",
         "scents_heading": "Välj dina [n] dofter",
         "counter_text": "[x] av [n] valda",
         "max_text": "Paketet är fullt: [max] flaskor",
