@@ -696,9 +696,15 @@
                 <span class="pm-bs-tier__row">
                   <span class="pm-bs-tier__check" aria-hidden="true">{%- render 'pm-icon', icon: 'check', size: 12, stroke: 2.5 -%}</span>
                   <span class="pm-bs-tier__name">
-                    <div class="pm-bs-tier__label">{{ block.settings.label | escape }}</div>
-                    {%- if t_badge != blank -%}
-                      <div class="pm-bs-tier__badge">{{ t_badge | escape }}</div>
+                    <span class="pm-bs-tier__title">
+                      <div class="pm-bs-tier__label">{{ block.settings.label | escape }}</div>
+                      {%- if t_badge != blank -%}
+                        <div class="pm-bs-tier__badge">{{ t_badge | escape }}</div>
+                      {%- endif -%}
+                    </span>
+                    {%- comment -%} Per bottle sits under the label, level with the compare-at price (Adrian 08.11) {%- endcomment -%}
+                    {%- if t_each != blank -%}
+                      <div class="pm-bs-tier__each">{{ t_each | escape }}</div>
                     {%- endif -%}
                   </span>
                   <span class="pm-bs-tier__prices">
@@ -718,15 +724,8 @@
                 </span>
                 <span class="pm-bs-tier__more">
                   <span class="pm-bs-tier__more-in">
-                    {%- if block.settings.tag != blank or t_each != blank -%}
-                      <span class="pm-bs-tier__info">
-                        {%- if block.settings.tag != blank -%}
-                          <div class="pm-bs-tier__tag">{{ block.settings.tag | escape }}</div>
-                        {%- endif -%}
-                        {%- if t_each != blank -%}
-                          <div class="pm-bs-tier__each">{{ t_each | escape }}</div>
-                        {%- endif -%}
-                      </span>
+                    {%- if block.settings.tag != blank -%}
+                      <div class="pm-bs-tier__tag">{{ block.settings.tag | escape }}</div>
                     {%- endif -%}
                     <span class="pm-bs-tier__chips">
                       {%- if t_stack != blank -%}
