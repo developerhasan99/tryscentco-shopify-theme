@@ -89,8 +89,8 @@
         "button_link": "https://tryscent.co/#quiz",
         "secondary_button_text": "Bästsäljare",
         "secondary_button_link": "shopify://collections/bestseller-singles",
-        "padding_top": 132,
-        "padding_bottom": 132,
+        "padding_top": 80,
+        "padding_bottom": 80,
         "mobile_padding_top": 36,
         "mobile_padding_bottom": 48,
         "custom_css": "@media (max-width: 767px) {\n .hero__buttons {\n padding-top: 250px;\n}\n}"
