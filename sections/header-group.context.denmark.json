@@ -13,12 +13,18 @@
   },
   "parent": "header-group.json",
   "sections": {
+    "offer_announcement_cN6pMF": {
+      "settings": {
+        "link_text": "Køb 4, betal for 3!"
+      },
+      "blocks": {}
+    },
     "offer_timebar_xLgmJd": {
       "settings": {
         "top_banner_text": "",
         "prepend_text": "Tidlig Black Friday",
         "countdown_date": "",
-        "append_text": "Køb 3 få 1 GRATIS",
+        "append_text": "Køb 4, betal for 3!",
         "link": "https://tryscent.co/da-dk/collections/bestseller-singles",
         "fuel04_line": ""
       },
@@ -57,12 +63,6 @@
           }
         }
       }
-    },
-    "offer_announcement_cN6pMF": {
-      "settings": {
-        "link_text": "Køb 4, betal for 3!"
-      },
-      "blocks": {}
     }
   }
 }
