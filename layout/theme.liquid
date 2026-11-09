@@ -385,6 +385,49 @@ body {
   <body class="{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
     {{ 'subscribfy-custom-styles.css' | asset_url | stylesheet_tag }}
 
+    {%- comment -%}
+      Subscribfy (VIP membership) is off for Denmark. The cart widget and the Subscribfy
+      scripts are skipped in Liquid; the product page app blocks can't be, so they're hidden
+      here. A VIP line carried over from another market is removed from the cart.
+    {%- endcomment -%}
+    {%- if localization.country.iso_code == 'DK' -%}
+      {%- if template.suffix == 'membership-landing' -%}
+        <script>location.replace({{ routes.root_url | json }});</script>
+        <meta http-equiv="refresh" content="0; url={{ routes.root_url }}">
+      {%- endif -%}
+      <style>
+        [id*='__subscribfy_'],
+        .exm_dialog-collection {
+          display: none !important;
+        }
+      </style>
+      {%- liquid
+        assign exm_vip_variant_key = shop.metafields.exison.exison_plan_settings.product_variant_id | append: ''
+        assign exm_plan2_variant_key = shop.metafields.exison.exison_plan_settings2.product_variant_id | append: ''
+        assign exm_vip_line_key = ''
+        for item in cart.items
+          assign exm_item_key = item.variant_id | append: ''
+          if exm_item_key == exm_vip_variant_key or exm_item_key == exm_plan2_variant_key
+            assign exm_vip_line_key = item.key
+            break
+          endif
+        endfor
+      -%}
+      {%- if exm_vip_line_key != blank -%}
+        <script>
+          fetch({{ routes.cart_change_url | append: '.js' | json }}, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: {{ exm_vip_line_key | json }}, quantity: 0 }),
+          }).then(function(response){
+            if (response.ok) {
+              location.reload();
+            }
+          });
+        </script>
+      {%- endif -%}
+    {%- endif -%}
+
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
@@ -511,10 +554,14 @@ body {
       {%- render 'quiz-bundle-prefill' -%}
     {%- endif -%}
   {%- endif -%}
-    {% render 'subscribfy-custom' %}
+    {%- unless localization.country.iso_code == 'DK' -%}
+      {% render 'subscribfy-custom' %}
+    {%- endunless -%}
     {% render 'price-test-card-sync' %}
-    <script>
-      !function(){var e="https://subscribfy.nyc3.cdn.digitaloceanspaces.com/js/script-subscribify.js?"+Math.floor(Date.now()/36e5),t=document.createElement("script");t.type="text/javascript",t.src=e,document.querySelector("body").appendChild(t)}();
-    </script>
+    {%- unless localization.country.iso_code == 'DK' -%}
+      <script>
+        !function(){var e="https://subscribfy.nyc3.cdn.digitaloceanspaces.com/js/script-subscribify.js?"+Math.floor(Date.now()/36e5),t=document.createElement("script");t.type="text/javascript",t.src=e,document.querySelector("body").appendChild(t)}();
+      </script>
+    {%- endunless -%}
   </body>
 </html>

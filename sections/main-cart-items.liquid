@@ -52,9 +52,11 @@
       <div class="cart__items" id="main-cart-items" data-id="{{ section.id }}">
         <div class="js-contents">
           {%- if cart != empty -%}
-            <div id="subscribfy-widget-cart" data-exm-managed="1">
-              {% render 'subscribfy-widget' %}
-            </div>
+            {%- unless localization.country.iso_code == 'DK' -%}
+              <div id="subscribfy-widget-cart" data-exm-managed="1">
+                {% render 'subscribfy-widget' %}
+              </div>
+            {%- endunless -%}
             <table class="cart-items">
               <caption class="visually-hidden">
                 {{ 'sections.cart.title' | t }}
