@@ -57,6 +57,12 @@
           }
         }
       }
+    },
+    "offer_announcement_cN6pMF": {
+      "settings": {
+        "link_text": "Køb 4, betal for 3!"
+      },
+      "blocks": {}
     }
   }
 }
