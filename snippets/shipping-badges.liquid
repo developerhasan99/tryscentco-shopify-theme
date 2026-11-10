@@ -1,0 +1,65 @@
+{%- comment -%}
+  Badges under the add-to-cart, after the payment icons. Rendered by quantity-breaker and reactive-atc.
+  One row of equal tiles: delivery time, carriers (DPD and DHL side by side, half the tile each), 60-day
+  money-back guarantee. Layout from tryscent.eu (snippets/shipping-badges.liquid there, InPost tile), German copy.
+  The delivery tile keeps the claims these buy boxes made before: Germany ships from Berlin within 48 hours,
+  every other country gets "in 5 Werktagen". Logos in their own colours, like the payment icons; the seal is tryscent.eu's guarantee-badge-accent.png (Pine #184031).
+{%- endcomment -%}
+<style>
+  .shipping-badges { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); margin: 24px 0; }
+  .shipping-badges__item { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 4px 6px; text-align: center; }
+  .shipping-badges__item + .shipping-badges__item { border-left: 1px solid var(--mgx-hairline); }
+  .shipping-badges__media { display: flex; align-items: center; justify-content: center; width: 100%; height: 28px; }
+  .shipping-badges__icon { display: block; width: 28px; height: 28px; }
+  .shipping-badges__icon svg { display: block; width: 100%; height: 100%; fill: currentColor; }
+  .shipping-badges__logo { display: block; width: auto; height: 28px; }
+  .shipping-badges__carriers { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; width: 100%; max-width: 132px; height: 28px; }
+  .shipping-badges__carrier { display: flex; align-items: center; justify-content: center; min-width: 0; border-radius: 4px; overflow: hidden; }
+  .shipping-badges__carrier--dpd { background: var(--mgx-white); border: 1px solid var(--mgx-hairline); }
+  .shipping-badges__carrier--dhl { background: #FECC00; }
+  .shipping-badges__carrier img { display: block; width: 100%; height: 100%; object-fit: contain; }
+  .shipping-badges__carrier--dpd img { padding: 3px; }
+  .shipping-badges__text { font-size: 12px; line-height: 1.3; font-weight: 600; letter-spacing: 0; }
+  #atc_scroll_target { scroll-margin-top: calc(var(--header-height, 0px) + 12px); }
+  @media (min-width: 750px) {
+    .shipping-badges__item { padding: 4px 10px; }
+    .shipping-badges__text { font-size: 13px; }
+  }
+</style>
+<div class="shipping-badges mgx-text">
+  <div class="shipping-badges__item">
+    <span class="shipping-badges__media">
+      <span class="shipping-badges__icon" aria-hidden="true">{{ 'icon-truck.svg' | inline_asset_content }}</span>
+    </span>
+    {%- if localization.country.iso_code == 'DE' -%}
+      <span class="shipping-badges__text">Versand in 48 Stunden aus Berlin</span>
+    {%- else -%}
+      <span class="shipping-badges__text">Lieferung nach {{ localization.country.name }} in 5 Werktagen</span>
+    {%- endif -%}
+  </div>
+  <div class="shipping-badges__item">
+    <span class="shipping-badges__media">
+      <span class="shipping-badges__carriers">
+        <span class="shipping-badges__carrier shipping-badges__carrier--dpd">
+          <img src="{{ 'logo-dpd.svg' | asset_url }}" alt="DPD" width="60" height="25" loading="lazy">
+        </span>
+        <span class="shipping-badges__carrier shipping-badges__carrier--dhl">
+          <img src="{{ 'logo-dhl.svg' | asset_url }}" alt="DHL" width="64" height="14" loading="lazy">
+        </span>
+      </span>
+    </span>
+    <span class="shipping-badges__text">Sicherer Versand mit DPD &amp; DHL</span>
+  </div>
+  <div class="shipping-badges__item">
+    <span class="shipping-badges__media">
+      <img
+        class="shipping-badges__logo"
+        src="{{ 'guarantee-badge-accent.png' | asset_url }}"
+        alt=""
+        width="28"
+        height="28"
+        loading="lazy">
+    </span>
+    <span class="shipping-badges__text">60 Tage Geld-zurück-Garantie</span>
+  </div>
+</div>
