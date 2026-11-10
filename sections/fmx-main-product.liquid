@@ -311,14 +311,10 @@
                 </div>
               {%- when 'atc_bundle_builder' -%}
                 <div class="atc-bundle-builder" {{ block.shopify_attributes }}>
-                   {% if product.metafields.custom.bundle_size != blank %}
+                  {% if product.metafields.custom.bundle_size != blank %}
                     {% render 'fmx-bundle-builder', product: product, block: block %}
                   {% else %}
-                    {% if product.template_suffix == 'tsr-bundle' or product.template_suffix == 'tsr-bundle-fm' or product.template_suffix == 'quantity-breaker' %}
-                    {% render 'quantity-breaker', product: product, section: section %}
-                  {% else %}
                     {% render 'fmx-variant-selector', product: product, section: section %}
-                  {% endif %}
                   {% endif %}
                 </div>
               {%- when 'fuel09_offer_box' -%}

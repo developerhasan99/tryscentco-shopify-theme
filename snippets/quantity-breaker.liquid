@@ -52,7 +52,7 @@
   }
 
   #atc_scroll_target .qb-tier-radio--selected {
-    border-color: #222;
+    border-color: var(--qb-active);
   }
 
   #atc_scroll_target .qb-tier-radio__inner {
@@ -60,7 +60,46 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: #222;
+    background: var(--qb-active);
+  }
+
+  /* Active states. Unscoped because the picker modal is teleported to <body>. */
+  :root {
+    --qb-active: #22613a;
+  }
+
+  .mgx-selected {
+    border-color: var(--qb-active);
+  }
+
+  .mgx-bg-silver-tint {
+    background-color: rgba(34, 97, 58, 0.06);
+  }
+
+  .mgx-text-accent {
+    color: var(--qb-active);
+  }
+
+  .mgx-pill {
+    background: #fff;
+    border-color: #e5e7eb;
+    color: #111;
+  }
+
+  .mgx-pill-active {
+    background: var(--qb-active);
+    border-color: var(--qb-active);
+    color: #fff;
+  }
+
+  .mgx-hover-selected:hover,
+  .mgx-input:focus {
+    border-color: var(--qb-active);
+  }
+
+  .mgx-btn-primary:not(.atc-button) {
+    background-color: var(--qb-active);
+    color: #fff;
   }
 </style>
 
@@ -78,10 +117,10 @@
   {% if product.variants.size > 1 %}
     <div class="flex justify-between items-center mb-3 !mt-6">
       <h2 class="m-0 text-sm md:text-base font-semibold">
-        Größe auswählen:
+        Välj storlek:
       </h2>
       <div class="text-xs md:text-sm italic text-gray-500">
-        80 % unserer Kunden kaufen 50 ml oder mehr
+        80 % av våra kunder köper 50 ml eller mer
       </div>
     </div>
 
@@ -120,21 +159,22 @@
             </div>
 
             {% if variant_ml > 0 %}
-              <div class="text-[11px] text-gray-500 mt-0.5">
-                {{ price_per_ml | money }} / ml
+              <div
+                class="text-[11px] text-gray-500 mt-0.5"
+                x-text="$store.qb.money({{ price_per_ml }}) + ' / ml'">
               </div>
             {% endif %}
           </div>
 
           {% if variant.title contains '50' %}
-            <span class="text-[10px] italic text-white rounded absolute -top-[10px] left-1/2 [transform:translateX(-50%)] mgx-badge-amber px-2 py-0.5">
-              Beliebt
+            <span class="text-[10px] italic text-white rounded absolute -top-[10px] left-1/2 [transform:translateX(-50%)] bg-[#c8202f] px-2 py-0.5">
+              Mest Populär
             </span>
           {% endif %}
 
           {% if variant.title contains '100' %}
-            <span class="text-[10px] italic text-white rounded absolute -top-[10px] left-1/2 [transform:translateX(-50%)] mgx-badge-amber px-2 py-0.5">
-              Bestseller
+            <span class="text-[10px] italic text-white rounded absolute -top-[10px] left-1/2 [transform:translateX(-50%)] bg-[#22613a] px-2 py-0.5">
+              Bäst värde
             </span>
           {% endif %}
 
@@ -144,7 +184,7 @@
   {% endif %}
 
   <h2 class="m-0 text-sm md:text-base font-semibold !mt-4 mb-2">
-    Menge wählen &amp; sparen:
+    Välj antal &amp; spara:
   </h2>
 
   <div class="flex flex-col gap-3">
@@ -188,7 +228,7 @@
             <span
               class="block text-[11px] text-gray-500 mt-0.5 font-bold"
               x-show="tier.total > 1 || tier.note"
-              x-text="tier.total > 1 ? $store.qb.money($store.qb.perBottle(tier)) + ' / Flasche' : tier.note">
+              x-text="tier.total > 1 ? $store.qb.money($store.qb.perBottle(tier)) + ' / flaska' : tier.note">
             </span>
           </span>
 
@@ -224,17 +264,17 @@
             class="m-0 text-[11px] font-semibold text-gray-500">
 
             <span x-text="tier.total"></span>
-            Düfte im Paket —
+            dofter i paketet —
 
             <span
               x-show="$store.qb.remaining > 0"
-              x-text="'noch ' + $store.qb.remaining + ' wählen'">
+              x-text="'välj ' + $store.qb.remaining + ' till'">
             </span>
 
             <span
               x-show="$store.qb.remaining === 0"
               class="mgx-text-accent">
-              komplett ✓
+              klart ✓
             </span>
           </p>
 
@@ -271,20 +311,20 @@
                     <div
                       class="text-[11px] text-gray-500 line-clamp-1"
                       x-show="slot.inspiration_name"
-                      x-text="'Inspiriert von ' + slot.inspiration_name">
+                      x-text="'Inspirerad av ' + slot.inspiration_name">
                     </div>
 
                     <div
                       x-show="i === 0 && slot.id === $store.qb.mainProduct.id"
                       class="text-[11px] font-semibold mgx-text-accent">
-                      Vorausgewählt
+                      Förvald
                     </div>
                   </div>
                 </template>
 
                 <template x-if="!slot">
                   <div class="text-[13px] font-semibold text-gray-500">
-                    Duft wählen
+                    Välj doft
                   </div>
                 </template>
               </div>
@@ -294,7 +334,7 @@
                 @click="$store.qb.openModal(i)"
                 class="shrink-0 rounded-lg text-[11px] font-semibold px-3 py-1.5 cursor-pointer border border-solid transition-colors"
                 :class="slot ? 'bg-white text-black border-gray-300 hover:border-black' : 'bg-black text-white border-black hover:bg-gray-800'"
-                x-text="slot ? 'Ändern' : 'Auswählen'">
+                x-text="slot ? 'Ändra' : 'Välj'">
               </button>
 
             </div>
@@ -355,21 +395,20 @@
         type="submit"
         name="add"
         value="1"
-        :aria-disabled="!$store.qb.isComplete"
-        :class="!$store.qb.isComplete ? 'opacity-60 cursor-not-allowed' : ''"
-        class="atc-button shimmer-btn cta_product_from_submit_btn flex gap-x-2 flex-wrap items-center justify-center !mb-0 text-2xl !p-3 rounded-lg button mgx-btn-primary transition-colors shadow-xl tracking-normal button--full-width button--primary"
-        aria-label="In den Warenkorb">
-
-        <span
-          x-show="!$store.qb.isComplete"
-          x-cloak
-          x-text="'Wähle noch ' + $store.qb.remaining + ($store.qb.remaining === 1 ? ' Duft' : ' Düfte')">
+        class="atc-button shimmer-btn cta_product_from_submit_btn flex gap-2 flex-wrap items-center !mb-0 !py-4 !px-3 rounded-lg button bg-[#22613a] hover:bg-[#368856] transition-colors shadow-xl tracking-normal button--full-width button--primary"
+        aria-label="{{ 'products.product.add_to_cart' | t }}"
+        {% if product.metafields.custom.bundle_size != blank %}
+        disabled="disabled"
+        {% endif %}
+        {%- unless selected_variant.available %}
+        disabled="disabled"
+        data-sold-out{% endunless %}>
+        <span class="text-[20px] md:text-[24px]">
+          {% if selected_variant.available %}
+            {{ 'products.product.add_to_cart' | t }}
+          {% else %}
+            {{ 'products.product.sold_out' | t }}{% endif %}
         </span>
-
-        <span x-show="$store.qb.isComplete">
-          {{ 'products.product.add_to_cart' | t }}
-        </span>
-
         {%- render 'loading-spinner' -%}
       </button>
 
@@ -396,19 +435,19 @@
           <div class="p-3 pt-5 border-0 border-b border-solid border-gray-200">
             <h2 class="text-lg font-bold text-gray-900 my-0 text-center tracking-normal">
               <span x-show="$store.qb.remaining === 0">
-                Auswahl abgeschlossen!
+                Urvalet är klart!
               </span>
               <span x-show="$store.qb.remaining > 0">
-                Wähle noch
+                Välj
                 <span x-text="$store.qb.remaining"></span>
-                <span x-show="$store.qb.remaining === 1">Duft</span>
-                <span x-show="$store.qb.remaining > 1">Düfte</span>
+                <span x-show="$store.qb.remaining === 1">doft till</span>
+                <span x-show="$store.qb.remaining > 1">dofter till</span>
               </span>
             </h2>
 
             <p class="my-0 text-center text-sm text-[#6b7280]">
               <span x-text="$store.qb.selectedTier.total"></span>
-              Düfte im Paket · Größe
+              dofter i paketet · storlek
               <span x-text="$store.qb.selectedSizeLabel"></span>
             </p>
           </div>
@@ -419,21 +458,21 @@
                 @click="$store.qb.activeCategory = 'All'"
                 :class="$store.qb.activeCategory === 'All' ? 'mgx-pill-active' : 'mgx-pill'"
                 class="px-2 py-1.5 rounded-full font-semibold border-2 border-solid cursor-pointer mgx-hover-selected">
-                Bestseller
+                Bästsäljare
               </button>
 
               <button
                 @click="$store.qb.activeCategory = 'fuer-maenner'"
                 :class="$store.qb.activeCategory === 'fuer-maenner' ? 'mgx-pill-active' : 'mgx-pill'"
                 class="px-2 py-1.5 rounded-full font-semibold border-2 border-solid cursor-pointer mgx-hover-selected">
-                Herren
+                Herr
               </button>
 
               <button
                 @click="$store.qb.activeCategory = 'fuer-frauen'"
                 :class="$store.qb.activeCategory === 'fuer-frauen' ? 'mgx-pill-active' : 'mgx-pill'"
                 class="px-2 py-1.5 rounded-full font-semibold border-2 border-solid cursor-pointer mgx-hover-selected">
-                Damen
+                Dam
               </button>
             </div>
           </div>
@@ -449,7 +488,7 @@
 
               <input
                 type="text"
-                placeholder="Suchen..."
+                placeholder="Sök..."
                 x-model="$store.qb.searchText"
                 class="block w-full p-2 pl-8 rounded-xl border-2 border-solid cursor-pointer bg-white border-gray-200 focus:outline-none mgx-input focus:shadow-none focus:border-2">
             </div>
@@ -485,8 +524,8 @@
 
                       <span
                         x-show="product.tags.some(tag => tag.toLowerCase() === 'bestseller')"
-                        class="shrink-0 px-2 py-0.5 rounded-full mgx-badge-amber text-[10px] font-semibold leading-tight">
-                        Bestseller
+                        class="shrink-0 px-2 py-0.5 rounded-full bg-[#22613a] text-white text-[10px] font-semibold leading-tight">
+                        Bästsäljare
                       </span>
                     </div>
 
@@ -494,13 +533,13 @@
                       <span
                         x-show="product.tags.some(tag => tag === 'fuer-maenner')"
                         class="shrink-0 px-2 py-0.5 rounded-full bg-gray-100 text-[#6b7280] text-[10px] font-semibold leading-tight">
-                        Herren
+                        Herr
                       </span>
 
                       <span
                         x-show="product.tags.some(tag => tag === 'fuer-frauen')"
                         class="shrink-0 px-2 py-0.5 rounded-full bg-gray-100 text-[#6b7280] text-[10px] font-semibold leading-tight">
-                        Damen
+                        Dam
                       </span>
 
                       <span
@@ -521,7 +560,7 @@
                       x-show="!$store.qb.countOf(product.id)"
                       type="button"
                       @click.stop="$store.qb.pickProduct(product)"
-                      :aria-label="product.name + ' hinzufügen'"
+                      :aria-label="'Lägg till ' + product.name"
                       class="size-8 p-0 rounded-full border-[1.5px] border-solid mgx-border-black bg-white flex items-center justify-center text-xl leading-none mgx-text cursor-pointer">
                       +
                     </button>
@@ -533,7 +572,7 @@
                       <button
                         type="button"
                         @click.stop="$store.qb.unpickProduct(product)"
-                        :aria-label="product.name + ' entfernen'"
+                        :aria-label="'Ta bort ' + product.name"
                         class="size-8 p-0 border-0 bg-white flex items-center justify-center text-xl leading-none mgx-text cursor-pointer hover:bg-gray-100">
                         −
                       </button>
@@ -547,7 +586,7 @@
                       <button
                         type="button"
                         @click.stop="$store.qb.pickProduct(product)"
-                        :aria-label="product.name + ' hinzufügen'"
+                        :aria-label="'Lägg till ' + product.name"
                         class="size-8 p-0 border-0 mgx-btn-primary flex items-center justify-center text-xl leading-none cursor-pointer">
                         +
                       </button>
@@ -564,7 +603,7 @@
           <button
             @click="$store.qb.showModal = false"
             class="w-full rounded-full mgx-btn-primary border-0 text-lg font-bold py-3 cursor-pointer transition-colors">
-            Fertig
+            Klar
           </button>
         </div>
 
@@ -575,9 +614,9 @@
 
 <script>
   document.addEventListener('alpine:init', function () {
-    var MONEY = new Intl.NumberFormat('de-DE', {
+    var MONEY = new Intl.NumberFormat({{ request.locale.iso_code | json }}, {
       style: 'currency',
-      currency: '{{ shop.currency }}'
+      currency: {{ cart.currency.iso_code | json }}
     });
 
     Alpine.store('qb', {
@@ -598,28 +637,28 @@
       tiers: [
         {
           key: 't1',
-          label: '1 Flasche',
+          label: '1 flaska',
           pay: 1,
           total: 1,
           badge: '',
           badgeColor: '',
-          note: 'Einzelflasche zum Kennenlernen'
+          note: 'En flaska att testa med'
         },
         {
           key: 't2',
           label: '2 + 1 GRATIS',
           pay: 2,
           total: 3,
-          badge: 'Beliebt',
-          badgeColor: '#184031'
+          badge: 'Populär',
+          badgeColor: '#c8202f'
         },
         {
           key: 't3',
           label: '4 + 2 GRATIS',
           pay: 4,
           total: 6,
-          badge: 'Bester Preis 🔥',
-          badgeColor: '#184031'
+          badge: 'Bästa pris 🔥',
+          badgeColor: '#22613a'
         }
       ],
 
@@ -867,47 +906,24 @@
 
 {% endunless %}
 
-{%- render 'fuel06-pdp-link' -%}
-
 <div>
-  {% render 'mgx-pay-icons' %}
+  <img
+    class="max-w-full mx-auto mt-8 block [filter:grayscale(1)]"
+    src="{{ 'payment-badge.png' | asset_url }}"
+    alt="Payment methods"
+    width="100%"
+    height="auto"
+    loading="lazy">
 </div>
 
-{% render 'shipping-badges' %}
+{% unless product.template_suffix == 'cro-deck' %}
+  <div class="!my-6">
+    <p class="my-0 text-center font-semibold tracking-normal">
+      Levereras till
+      <span class="shipping_location">{{ localization.country.name }}</span>
+      inom 5 arbetsdagar.
+    </p>
+  </div>
+{% endunless %}
 
-{% assign bundle_product = all_products['8x-50ml-parfumflaschen'] %}
 
-{% if bundle_product != blank and product.template_suffix == 'tsr-promo' %}
-  <a
-    href="{{ bundle_product.url }}"
-    class="mt-8 grid grid-cols-3 overflow-hidden rounded-lg border-2 mgx-border-amber border-solid bg-white text-inherit no-underline shadow-sm">
-
-    <div class="relative w-full overflow-hidden bg-white">
-      <img
-        src="{{ bundle_product.featured_image | image_url: width: 560 }}"
-        alt="{{ bundle_product.title | escape }}"
-        class="h-full w-full object-cover"
-        loading="lazy"
-        width="280"
-        height="280">
-    </div>
-
-    <div class="col-span-2 p-4">
-      <div class="inline-block rounded-xl mgx-badge-sale px-2 py-1 text-xs font-semibold uppercase">
-        Spare 64%
-      </div>
-
-      <h3 class="my-2 font-semibold text-base md:text-lg">
-        Unser bestes Angebot: Bundle zusammenstellen!
-      </h3>
-
-      <div class="text-sm md:text-base">
-        Nur
-        <strong>
-          {{ bundle_product.price | divided_by: 8 | money }}
-        </strong>
-        pro Flasche
-      </div>
-    </div>
-  </a>
-{% endif %}
