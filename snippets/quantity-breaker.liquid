@@ -27,43 +27,13 @@
     display: none !important;
   }
 
+  {% comment %} .button.loading only fades inherited text color; this badge sets its
+     own background/text color so it needs to be hidden explicitly while loading {% endcomment %}
   .atc-button.loading > *:not(.loading__spinner) {
     visibility: hidden;
   }
 
-  /* Quantity breaker radio indicators */
-  #atc_scroll_target .qb-tier-card::before,
-  #atc_scroll_target .qb-tier-card::after,
-  #atc_scroll_target .qb-tier-radio::before,
-  #atc_scroll_target .qb-tier-radio::after {
-    content: none;
-    display: none;
-  }
-
-  #atc_scroll_target .qb-tier-radio {
-    box-sizing: border-box;
-    flex: 0 0 18px;
-    display: inline-flex;
-    width: 18px;
-    height: 18px;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid #d1d5db;
-    border-radius: 50%;
-    background: #fff;
-  }
-
-  #atc_scroll_target .qb-tier-radio--selected {
-    border-color: #222;
-  }
-
-  #atc_scroll_target .qb-tier-radio__inner {
-    display: block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #222;
-  }
+  
 </style>
 
 {% unless product.available %}
