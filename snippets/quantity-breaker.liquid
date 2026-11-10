@@ -32,6 +32,26 @@
   .atc-button.loading > *:not(.loading__spinner) {
     visibility: hidden;
   }
+
+
+/* Remove unwanted bullet points from quantity breaker */
+
+#atc_scroll_target li,
+#atc_scroll_target ul {
+  list-style: none;
+  list-style-type: none;
+}
+
+#atc_scroll_target li::marker {
+  content: "";
+}
+
+/* Remove unwanted pseudo-element bullets */
+#atc_scroll_target .mgx-selected::before,
+#atc_scroll_target .mgx-selected::after {
+  content: none;
+}
+
 </style>
 
 {% unless product.available %}
