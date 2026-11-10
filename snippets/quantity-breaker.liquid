@@ -97,6 +97,11 @@
     border-color: var(--qb-active);
   }
 
+  #atc_scroll_target .atc-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
   .mgx-badge-sale {
     background-color: #c8202f;
     color: #fff;
@@ -405,9 +410,11 @@
         {% if product.metafields.custom.bundle_size != blank %}
         disabled="disabled"
         {% endif %}
-        {%- unless selected_variant.available %}
+        {%- if selected_variant.available %}
+        :disabled="!$store.qb.isComplete"
+        {%- else %}
         disabled="disabled"
-        data-sold-out{% endunless %}>
+        data-sold-out{% endif %}>
         <span class="text-[20px] md:text-[24px]">
           {% if selected_variant.available %}
             {{ 'products.product.add_to_cart' | t }}
