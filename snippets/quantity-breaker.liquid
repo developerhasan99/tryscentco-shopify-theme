@@ -97,6 +97,11 @@
     border-color: var(--qb-active);
   }
 
+  .mgx-badge-sale {
+    background-color: #c8202f;
+    color: #fff;
+  }
+
   .mgx-btn-primary:not(.atc-button) {
     background-color: var(--qb-active);
     color: #fff;
@@ -773,14 +778,9 @@
         return Math.round(this.tierPrice(t) / t.total);
       },
 
+      // Share of bottles that are free, e.g. 2 + 1 → 33 %.
       savingsPercent: function (t) {
-        var full = this.tierCompare(t);
-
-        if (full <= this.tierPrice(t)) return 0;
-
-        return Math.round(
-          (full - this.tierPrice(t)) / full * 100
-        );
+        return Math.round((t.total - t.pay) / t.total * 100);
       },
 
       money: function (cents) {
