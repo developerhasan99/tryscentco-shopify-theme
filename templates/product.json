@@ -99,7 +99,7 @@
             "default_join": false,
             "widget_template": "3",
             "template3_control_style": "checkbox",
-            "member_badge_image": "shopify://shop_images/cGLuWmsD6gNb.png",
+            "member_badge_image": "shopify://shop_images/MAGYX_VIP_Membership.webp",
             "always_show_widget": true,
             "hide_discount_badge": true,
             "hide_price": true,
@@ -320,7 +320,9 @@
         "atc_bundle_builder_aLJUaV": {
           "type": "atc_bundle_builder",
           "settings": {
-            "collection_handles": "best-sellers,new"
+            "collection_handles": "best-sellers,new",
+            "skip_atc_button": true,
+            "open_checkout": false
           }
         },
         "money_back_cEqkRK": {
