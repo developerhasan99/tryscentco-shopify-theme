@@ -5,7 +5,7 @@
 
   for variant in product.variants
     assign variant_title_down = variant.title | downcase
-    if variant_title_down contains '100'
+    if variant_title_down contains '50' and variant.available
       assign selected_variant = variant
       break
     endif
