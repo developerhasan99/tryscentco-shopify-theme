@@ -315,6 +315,11 @@
         "type": "shopify://apps/ai-traffic-booster/blocks/llms_markdown-embed/019e2886-0545-7583-86f9-1ac4fc0f67bd",
         "disabled": false,
         "settings": {}
+      },
+      "12429728106950981667": {
+        "type": "shopify://apps/blocky-fraud-blocker/blocks/app-embed/aa25b3bf-c2c5-4359-aa61-7836c225c5a9",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
