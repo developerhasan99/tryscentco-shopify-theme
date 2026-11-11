@@ -153,9 +153,9 @@
 .premium .pm-reviews [hidden] {
   display: none;
 }
-/* Custom Bundle FM: align heading with review cards */
+/* Align review headings with review cards on both bundle templates */
 @media screen and (min-width: 990px) {
-  .premium .pm-reviews--custom-bundle .pm-reviews__head {
+  .premium .pm-reviews--bundle-aligned .pm-reviews__head {
     max-width: 1080px;
     margin-left: auto;
     margin-right: auto;
