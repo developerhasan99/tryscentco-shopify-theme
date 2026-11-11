@@ -1,11 +1,22 @@
 
+{% comment %}
+  Optional params:
+  - default_size: size preselected, matched against the variant title (default '50')
+  - largest_first: true lists sizes 100 ml → 30 ml instead of 30 ml → 100 ml
+{% endcomment %}
 {% liquid
   assign product_form_id = 'product-form-' | append: section.id
   assign selected_variant = product.selected_or_first_available_variant
+  assign default_size = default_size | default: '50'
+
+  assign size_variants = product.variants | reverse
+  if largest_first
+    assign size_variants = product.variants
+  endif
 
   for variant in product.variants
     assign variant_title_down = variant.title | downcase
-    if variant_title_down contains '50' and variant.available
+    if variant_title_down contains default_size and variant.available
       assign selected_variant = variant
       break
     endif
@@ -135,7 +146,7 @@
     </div>
 
     <div class="grid grid-cols-3 gap-3" id="variant-selector">
-      {% for variant in product.variants reversed %}
+      {% for variant in size_variants %}
         {% liquid
           assign variant_ml = 0
           if variant.title contains '100'
