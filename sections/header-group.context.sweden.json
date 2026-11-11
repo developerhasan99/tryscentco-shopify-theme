@@ -16,11 +16,11 @@
     "offer_timebar_xLgmJd": {
       "settings": {
         "top_banner_text": "",
-        "prepend_text": "Tidig Black Friday",
+        "prepend_text": "🎁 Black Friday:",
         "countdown_date": "",
-        "append_text": "Var 3:e flaska gratis",
-        "fuel04_line": "",
-        "link": "https://tryscent.co/sv-se/pages/presentguide"
+        "append_text": "Doftpresenter till fyndpris!",
+        "link": "https://tryscent.co/sv-se/pages/presentguide",
+        "fuel04_line": ""
       },
       "blocks": {}
     },
