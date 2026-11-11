@@ -271,8 +271,17 @@
         },
         "atc_bundle_builder_aLJUaV": {
           "type": "atc_bundle_builder",
+          "disabled": true,
           "settings": {
-            "collection_handles": "best-sellers,new"
+            "collection_handles": "best-sellers,new",
+            "skip_atc_button": true,
+            "open_checkout": false
+          }
+        },
+        "custom_liquid_TiCGhh": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{% render 'quantity-breaker', largest_first: true  %}"
           }
         },
         "fuel03_pair_1": {
@@ -519,6 +528,7 @@
         "fuel09_box_b",
         "fuel09_box_c",
         "atc_bundle_builder_aLJUaV",
+        "custom_liquid_TiCGhh",
         "fuel03_pair_1",
         "fuel03_pair_2",
         "fuel03_pair_3",
