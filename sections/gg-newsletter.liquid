@@ -1,0 +1,113 @@
+{{ 'gg-base.css' | asset_url | stylesheet_tag }}
+{{ 'gg-sections.css' | asset_url | stylesheet_tag }}
+<div class="gg gg-nl gg--dark" id="gg-{{ section.id }}">
+  {%- if section.settings.anchor != blank -%}
+    <span class="gg-anchor" id="{{ section.settings.anchor | handleize }}">&#8203;</span>
+  {%- endif -%}
+  <div class="gg__wrap">
+    <div class="gg-nl__col">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="gg-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="gg-h2 gg-nl__heading">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <p class="gg-sub gg-nl__text">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+
+      {%- form 'customer', class: 'gg-nl__form' -%}
+        {%- if form.posted_successfully? -%}
+          <p class="gg-nl__msg gg-nl__msg--ok" role="status">{{ section.settings.success_text | escape }}</p>
+        {%- else -%}
+          {%- if form.errors -%}
+            <div class="gg-nl__msg gg-nl__msg--err" role="alert">
+              {%- for field in form.errors -%}
+                <p>{{ form.errors.translated_fields[field] | capitalize }} {{ form.errors.messages[field] }}</p>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+          <input type="hidden" name="contact[tags]" value="newsletter,geschenkguide-2026" data-gg-tags>
+          {%- if section.settings.chips_label != blank -%}
+            <fieldset class="gg-nl__chips">
+              <legend class="gg-nl__legend">{{ section.settings.chips_label | escape }}</legend>
+              <div class="gg-nl__chip-row">
+                {%- assign gg_chips = 'sie,ihn,beide,mich' | split: ',' -%}
+                {%- assign gg_chip_labels = section.settings.chip_labels | split: ',' -%}
+                {%- for chip in gg_chips -%}
+                  <label class="gg-nl__chip">
+                    <input class="gg-nl__radio" type="radio" name="gg-for-{{ section.id }}" value="{{ chip }}" data-gg-chip>
+                    <span class="gg-nl__pill">{{ gg_chip_labels[forloop.index0] | default: chip | strip | escape }}</span>
+                  </label>
+                {%- endfor -%}
+              </div>
+            </fieldset>
+          {%- endif -%}
+          <div class="gg-nl__hp gg-vh" aria-hidden="true">
+            <label for="gg-hp-{{ section.id }}">Bitte leer lassen</label>
+            <input id="gg-hp-{{ section.id }}" type="text" name="gg_hp" tabindex="-1" autocomplete="new-password" data-gg-hp>
+          </div>
+          <div class="gg-nl__field">
+            <label class="gg-vh" for="gg-email-{{ section.id }}">E-Mail</label>
+            <input
+              id="gg-email-{{ section.id }}"
+              class="gg-nl__input"
+              type="email"
+              name="contact[email]"
+              autocomplete="email"
+              placeholder="{{ section.settings.placeholder | escape }}"
+              required>
+            <button class="gg-btn gg-btn--light gg-nl__btn" type="submit">{{ section.settings.button_label | escape }}</button>
+          </div>
+          {%- if section.settings.fine_print != blank -%}
+            <div class="gg-nl__fine gg-small">{{ section.settings.fine_print }}</div>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+  <script>
+    (function () {
+      var root = document.getElementById('gg-{{ section.id }}');
+      if (!root || root.getAttribute('data-gg-nl-init')) return;
+      root.setAttribute('data-gg-nl-init', '1');
+      var form = root.querySelector('form');
+      if (!form) return;
+      var tags = form.querySelector('[data-gg-tags]');
+      var hp = form.querySelector('[data-gg-hp]');
+      if (!tags) return;
+      var base = tags.value;
+      form.addEventListener('submit', function (e) {
+        if (hp && hp.value) {
+          e.preventDefault();
+          return;
+        }
+        var chosen = form.querySelector('[data-gg-chip]:checked');
+        tags.value = chosen ? base + ',sucht-fuer-' + chosen.value : base;
+      });
+    })();
+  </script>
+</div>
+
+{% schema %}
+{
+  "name": "GG Newsletter",
+  "tag": "section",
+  "class": "gg-section pm-scope",
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Anker-ID (optional)" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Noch unentschlossen?" },
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Noch nicht bereit? Hol dir die Angebote zuerst." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Trag dich ein und erfahre als Erste oder Erster, wenn es neue Geschenksets und Angebote gibt." },
+    { "type": "text", "id": "chips_label", "label": "Label Auswahl", "default": "Du suchst für" },
+    { "type": "text", "id": "chip_labels", "label": "Auswahl-Texte (Komma getrennt, 4 Stück)", "info": "Reihenfolge: Sie, Ihn, Beide, Mich. Gespeicherte Tags bleiben sie, ihn, beide, mich.", "default": "Sie,Ihn,Beide,Mich" },
+    { "type": "text", "id": "placeholder", "label": "Platzhalter E-Mail", "default": "Deine E-Mail-Adresse" },
+    { "type": "text", "id": "button_label", "label": "Button Text", "default": "Gib mir Bescheid" },
+    { "type": "richtext", "id": "fine_print", "label": "Kleingedrucktes", "default": "<p>Kein Spam. Abmeldung jederzeit möglich.</p>" },
+    { "type": "text", "id": "success_text", "label": "Erfolgsmeldung", "default": "Danke, du bist dabei. Wir melden uns mit den ersten Angeboten." }
+  ],
+  "presets": [
+    { "name": "GG Newsletter" }
+  ]
+}
+{% endschema %}

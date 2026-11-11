@@ -1,0 +1,9 @@
+{%- comment -%}
+  gg-placeholder: neutral image placeholder for an empty image slot (Gift Guide).
+  Accepts: label (slot name, e.g. "Hero Desktop"), size (e.g. "1440×572"), class (optional extra class)
+  Renders a striped box with the slot name + size so the editor shows which image goes where.
+{%- endcomment -%}
+<span class="gg-ph{% if class != blank %} {{ class }}{% endif %}" role="img" aria-label="{{ label | escape }}">
+  <span>{{ label | escape }}</span>
+  {%- if size != blank -%}<span class="gg-ph__size">{{ size | escape }}</span>{%- endif -%}
+</span>

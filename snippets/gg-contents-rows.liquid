@@ -1,0 +1,66 @@
+{%- comment -%}
+  gg-contents-rows: "Was drin ist" list of a gift set (Gift Guide card + hero).
+  Accepts:
+    - product: the gift-set bundle product (reads custom.fixed_bundle_products + custom.gift_slot_labels)
+    - heading: small uppercase heading above the rows (optional)
+    - inspired_word: word before the designer name (default "Inspiriert von")
+  One row per 50 ml variant in custom.fixed_bundle_products:
+    left  = "Nr. 067" (links to the scent) + "Inspiriert von <designer>"
+    right = label (gift_slot_labels[i], fallback the scent's occasion) + up to 3 notes
+  Renders nothing when the product has no fixed_bundle_products.
+{%- endcomment -%}
+{%- liquid
+  assign ggr_list = product.metafields.custom.fixed_bundle_products.value
+  assign ggr_labels = product.metafields.custom.gift_slot_labels.value
+  assign ggr_word = inspired_word | default: 'Inspiriert von'
+  assign ggr_expected = product.metafields.custom.bundle_size.value | default: 0 | plus: 0
+  if ggr_list != blank and ggr_expected > ggr_list.size
+    assign ggr_labels = blank
+  endif
+-%}
+{%- if ggr_list != blank -%}
+  <div class="gg-rows">
+    {%- if heading != blank -%}
+      <h4 class="gg-rows__heading">{{ heading | escape }}</h4>
+    {%- endif -%}
+    <ul class="gg-rows__list" role="list">
+      {%- for v in ggr_list -%}
+        {%- capture ggr_meta -%}{% render 'gg-scent-meta', product: v.product, variant: v, inspired_word: ggr_word %}{%- endcapture -%}
+        {%- liquid
+          assign ggr_m = ggr_meta | split: '~|~'
+          assign ggr_num = ggr_m[0] | default: '' | strip
+          assign ggr_insp = ggr_m[1] | default: '' | strip
+          assign ggr_notes = ggr_m[2] | default: '' | strip
+          assign ggr_occ = ggr_m[3] | default: '' | strip
+          assign ggr_label = ''
+          if ggr_labels != blank
+            assign ggr_label = ggr_labels[forloop.index0] | default: '' | strip
+          endif
+          if ggr_label == blank
+            assign ggr_label = ggr_occ
+          endif
+        -%}
+        <li class="gg-rows__row">
+          <div class="gg-rows__left">
+            <a class="gg-rows__num" href="{{ v.product.url }}">
+              {%- if ggr_num != blank -%}Nr. {{ ggr_num | escape }}{%- else -%}{{ v.product.title | escape }}{%- endif -%}
+            </a>
+            {%- if ggr_insp != blank -%}
+              <span class="gg-rows__muted">{{ ggr_word | escape }} {{ ggr_insp | escape }}</span>
+            {%- endif -%}
+          </div>
+          {%- if ggr_label != blank or ggr_notes != blank -%}
+            <div class="gg-rows__right">
+              {%- if ggr_label != blank -%}
+                <span class="gg-rows__label">{{ ggr_label | escape }}</span>
+              {%- endif -%}
+              {%- if ggr_notes != blank -%}
+                <span class="gg-rows__muted">{{ ggr_notes | escape }}</span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}

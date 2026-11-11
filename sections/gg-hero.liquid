@@ -1,0 +1,170 @@
+{%- comment -%}
+  Gift Guide hero. From 1200: copy column over a full-bleed image. Below 1200: image on top, copy below on a light
+  background (stacked, so the text never depends on the image for contrast); 990-1199 shows the desktop image stacked.
+  mobile_focus picks which part of the image stays visible when the stacked image is cropped.
+{%- endcomment -%}
+{{ 'gg-base.css' | asset_url | stylesheet_tag }}
+{{ 'gg-sections.css' | asset_url | stylesheet_tag }}
+{%- style -%}
+  #gg-{{ section.id }} {
+    --gg-hero-h-desktop: {{ section.settings.height_desktop }}px;
+    --gg-hero-h-mobile: {{ section.settings.height_mobile }}px;
+    --gg-hero-pos-m: {{ section.settings.mobile_focus | default: 'center' }};
+  }
+{%- endstyle -%}
+{%- liquid
+  assign gg_light = false
+  if section.settings.text_color == 'light'
+    assign gg_light = true
+  endif
+-%}
+<div class="gg gg-hero{% if gg_light %} gg-hero--light{% endif %}" id="gg-{{ section.id }}">
+  {%- if section.settings.anchor != blank -%}
+    <span class="gg-anchor" id="{{ section.settings.anchor | handleize }}">&#8203;</span>
+  {%- endif -%}
+  <div class="gg-hero__media">
+    {%- liquid
+      assign hero_d = section.settings.image_desktop
+      assign hero_m = section.settings.image_mobile | default: section.settings.image_desktop
+      assign hero_alt = hero_d.alt | default: hero_m.alt | default: section.settings.heading
+    -%}
+    {%- if hero_d != blank or hero_m != blank -%}
+      {%- comment -%} One <picture>: phones download only the mobile file, desktops only the desktop file {%- endcomment -%}
+      <div class="gg-hero__img">
+        <picture>
+          {%- if hero_d != blank -%}
+            <source
+              media="(min-width: 990px)"
+              srcset="{{ hero_d | image_url: width: 1080 }} 1080w, {{ hero_d | image_url: width: 1440 }} 1440w, {{ hero_d | image_url: width: 1920 }} 1920w, {{ hero_d | image_url: width: 2560 }} 2560w"
+              sizes="100vw"
+            >
+          {%- endif -%}
+          {%- assign hero_small = hero_m | default: hero_d -%}
+          <img
+            class="gg-hero__pic"
+            src="{{ hero_small | image_url: width: 750 }}"
+            srcset="{{ hero_small | image_url: width: 375 }} 375w, {{ hero_small | image_url: width: 560 }} 560w, {{ hero_small | image_url: width: 750 }} 750w, {{ hero_small | image_url: width: 1125 }} 1125w"
+            sizes="100vw"
+            width="{{ hero_small.width }}"
+            height="{{ hero_small.height }}"
+            alt="{{ hero_alt | escape }}"
+            fetchpriority="high"
+          >
+        </picture>
+      </div>
+    {%- else -%}
+      <div class="gg-hero__img gg-hero__img--desktop">
+        {% render 'gg-placeholder', label: 'Hero Desktop', size: '1440×572' %}
+      </div>
+      <div class="gg-hero__img gg-hero__img--mobile">
+        {% render 'gg-placeholder', label: 'Hero Mobil', size: '375×660' %}
+      </div>
+    {%- endif -%}
+  </div>
+  <div class="gg-hero__inner gg__wrap">
+    <div class="gg-hero__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="gg-eyebrow gg-hero__eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      {%- comment -%}
+        Rating above the headline, live from Judge.me's shop totals (judgeme.all_reviews_rating / all_reviews_count,
+        same numbers as the store's reviews widget). [rating] = average with one decimal ("4,8"), [count] = all
+        reviews rounded down to hundreds ("1.400"; under 100 the exact count). No reviews = no line.
+      {%- endcomment -%}
+      {%- if section.settings.show_rating -%}
+        {%- liquid
+          assign hr_num = shop.metafields.judgeme.all_reviews_rating.value | default: shop.metafields.judgeme.all_reviews_rating | plus: 0
+          assign hr_cnt = shop.metafields.judgeme.all_reviews_count.value | default: shop.metafields.judgeme.all_reviews_count | plus: 0
+          assign hr_r10 = hr_num | times: 10 | round
+          assign hr_whole = hr_r10 | divided_by: 10
+          assign hr_dec = hr_r10 | modulo: 10
+          assign hr_rating = hr_whole | append: ',' | append: hr_dec
+          assign hr_c = hr_cnt
+          if hr_cnt >= 100
+            assign hr_c = hr_cnt | divided_by: 100 | times: 100
+          endif
+          assign hr_count = hr_c | append: ''
+          if hr_c >= 1000
+            assign hr_th = hr_c | divided_by: 1000
+            assign hr_rest = hr_c | modulo: 1000 | prepend: '00' | slice: -3, 3
+            assign hr_count = hr_th | append: '.' | append: hr_rest
+          endif
+          assign hr_text = section.settings.rating_text | default: '[rating]/5 aus über [count] Bewertungen' | replace: '[rating]', hr_rating | replace: '[count]', hr_count
+        -%}
+        {%- if hr_cnt > 0 and hr_num > 0 -%}
+          <p class="gg-hero__rating">
+            <span class="gg-hero__stars" aria-hidden="true">
+              {%- for i in (1..5) -%}
+                <svg class="gg-hero__star" viewBox="0 0 24 24" width="18" height="18" focusable="false"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.7l7.1-.6z"/></svg>
+              {%- endfor -%}
+            </span>
+            <span>{{ hr_text | escape }}</span>
+          </p>
+        {%- endif -%}
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h1 class="gg-display gg-hero__heading">{{ section.settings.heading | escape }}</h1>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <p class="gg-hero__text">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+      <div class="gg-hero__actions">
+        {%- if section.settings.button_1_label != blank -%}
+          <a class="gg-btn gg-btn--primary" href="{{ section.settings.button_1_link | default: '#fuer-sie' }}">{{ section.settings.button_1_label | escape }}</a>
+        {%- endif -%}
+        {%- if section.settings.button_2_label != blank -%}
+          <a class="gg-btn gg-btn--secondary" href="{{ section.settings.button_2_link | default: '/collections/all' }}">{{ section.settings.button_2_label | escape }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "GG Hero",
+  "tag": "section",
+  "class": "gg-section pm-scope",
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Anker-ID (optional)" },
+    { "type": "image_picker", "id": "image_desktop", "label": "Bild Desktop (1440×572)" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Bild Mobil (375×660)" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Der MagyX Geschenkguide 2026" },
+    { "type": "checkbox", "id": "show_rating", "label": "Bewertung über der Überschrift", "info": "Sterne + Schnitt und Anzahl aller Judge.me-Bewertungen, live aus Judge.me.", "default": true },
+    { "type": "text", "id": "rating_text", "label": "Bewertung Text", "info": "[rating] = Schnitt (4,8), [count] = Anzahl, abgerundet auf Hunderter (1.400).", "default": "[rating]/5 aus über [count] Bewertungen" },
+    { "type": "text", "id": "heading", "label": "Überschrift (H1)", "default": "Duftgeschenke, die wirklich getragen werden" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Geschenksets für alle auf deiner Liste, vom sicheren Treffer bis zur Person, die schon alles hat." },
+    { "type": "text", "id": "button_1_label", "label": "Button 1 Text", "default": "Geschenksets ansehen" },
+    { "type": "text", "id": "button_1_link", "label": "Button 1 Link (auch #Anker)", "default": "#fuer-sie" },
+    { "type": "text", "id": "button_2_label", "label": "Button 2 Text", "default": "Alle Düfte" },
+    { "type": "url", "id": "button_2_link", "label": "Button 2 Link", "default": "/collections/all" },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Textfarbe auf Desktop (über dem Bild)",
+      "options": [
+        { "value": "dark", "label": "Dunkel" },
+        { "value": "light", "label": "Hell" }
+      ],
+      "default": "dark"
+    },
+    { "type": "range", "id": "height_desktop", "label": "Höhe Desktop", "min": 400, "max": 800, "step": 4, "unit": "px", "default": 572 },
+    { "type": "range", "id": "height_mobile", "label": "Bildhöhe Mobil", "min": 240, "max": 700, "step": 10, "unit": "px", "default": 660 },
+    {
+      "type": "select",
+      "id": "mobile_focus",
+      "label": "Bildausschnitt Mobil",
+      "info": "Welcher Teil des Mobil-Bildes sichtbar bleibt, wenn die Bildhöhe kleiner ist als das Bild.",
+      "options": [
+        { "value": "top", "label": "Oben" },
+        { "value": "center", "label": "Mitte" },
+        { "value": "bottom", "label": "Unten" }
+      ],
+      "default": "center"
+    }
+  ],
+  "presets": [
+    { "name": "GG Hero" }
+  ]
+}
+{% endschema %}

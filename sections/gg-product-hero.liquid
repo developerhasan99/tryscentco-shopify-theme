@@ -1,0 +1,391 @@
+{%- comment -%}
+  gg-product-hero: Gift Guide "Wichteln" block. One gift set shown big: image left (434px, 1:1), content right
+  (eyebrow, heading, text, price, add to cart, boxed line, guarantee, contents rows, link blocks). Stacked on mobile.
+  Price / buy / contents use the same contract as the gift-set cards: <gg-buy> (assets/gg-card.js) +
+  snippets/gg-contents-rows.liquid. Without a product the section renders only in the theme editor.
+{%- endcomment -%}
+{{ 'gg-base.css' | asset_url | stylesheet_tag }}
+{{ 'gg-card.css' | asset_url | stylesheet_tag }}
+<script>window.ggMoneyFormat = window.ggMoneyFormat || {{ shop.money_format | json }};</script>
+<script src="{{ 'gg-core.js' | asset_url }}" defer></script>
+<script src="{{ 'gg-card.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign gh = section.settings
+  assign gh_product = gh.product
+  assign gh_bg = ''
+  case gh.background
+    when 'surface'
+      assign gh_bg = ' gg--surface'
+    when 'surface-2'
+      assign gh_bg = ' gg--surface-2'
+    when 'green'
+      assign gh_bg = ' gg--green'
+  endcase
+  assign gh_anchor = gh.anchor | handleize
+  assign gh_word = gh.inspired_word | default: 'Inspiriert von'
+-%}
+
+{%- if gh_product != blank or request.design_mode -%}
+  {%- style -%}
+    @media screen and (min-width: 990px) {
+      #gg-{{ section.id }} {
+        --gg-pad-top: {{ gh.padding_top }}px;
+        --gg-pad-bottom: {{ gh.padding_bottom }}px;
+      }
+    }
+  {%- endstyle -%}
+
+  {%- liquid
+    assign gh_title = ''
+    assign gh_image = gh.image
+    if gh_product != blank
+      assign gh_variant = gh_product.selected_or_first_available_variant
+      assign gh_list = gh_product.metafields.custom.fixed_bundle_products.value
+      assign gh_title = gh_product.metafields.custom.gift_title.value | default: gh_product.title
+      # Guard as in gg-gift-card: sell only when every scent of custom.bundle_size is visible on the storefront
+      assign gh_count = 0
+      if gh_list != blank
+        assign gh_count = gh_list.size
+      endif
+      assign gh_expected = gh_product.metafields.custom.bundle_size.value | default: 0 | plus: 0
+      assign gh_buyable = gh_variant.available
+      if gh_expected > gh_count
+        assign gh_buyable = false
+      endif
+      if gh_count == 0 and gh_product.tags contains 'fixed_bundle'
+        assign gh_buyable = false
+      endif
+      if gh_image == blank and gh_product.featured_media != blank
+        assign gh_image = gh_product.featured_media.preview_image
+      endif
+
+      assign gh_price = gh_variant.price
+      assign gh_compare = gh_variant.compare_at_price | default: 0
+      assign gh_on_sale = false
+      assign gh_pct = 0
+      if gh_compare > gh_price
+        assign gh_on_sale = true
+        assign gh_pct = gh_compare | minus: gh_price | times: 100.0 | divided_by: gh_compare | round
+      endif
+    endif
+    assign gh_heading = gh.heading | default: gh_title
+  -%}
+
+  <div class="gg gg-hero2{{ gh_bg }}" id="gg-{{ section.id }}">
+    {%- if gh_anchor != blank -%}
+      <span class="gg-anchor" id="{{ gh_anchor }}">&#8203;</span>
+    {%- endif -%}
+    <div class="gg__wrap">
+      <div class="gg-hero2__inner">
+        {%- if gh_product != blank -%}
+          <a class="gg-hero2__media" href="{{ gh_product.url }}" tabindex="-1" aria-hidden="true">
+        {%- else -%}
+          <div class="gg-hero2__media">
+        {%- endif -%}
+          {%- if gh_image != blank -%}
+            <img
+              class="gg-hero2__img"
+              src="{{ gh_image | image_url: width: 900 }}"
+              srcset="{{ gh_image | image_url: width: 360 }} 360w, {{ gh_image | image_url: width: 540 }} 540w, {{ gh_image | image_url: width: 720 }} 720w, {{ gh_image | image_url: width: 900 }} 900w, {{ gh_image | image_url: width: 1100 }} 1100w"
+              sizes="(min-width: 990px) 434px, (min-width: 750px) 560px, calc(100vw - 32px)"
+              alt="{{ gh_image.alt | default: gh_heading | escape }}"
+              width="{{ gh_image.width }}"
+              height="{{ gh_image.height }}"
+              loading="lazy"
+            >
+          {%- else -%}
+            {%- render 'gg-placeholder', label: 'Wichtel-Set', size: '1:1' -%}
+          {%- endif -%}
+        {%- if gh_product != blank -%}
+          </a>
+        {%- else -%}
+          </div>
+        {%- endif -%}
+
+        <div class="gg-hero2__content">
+          {%- if gh.eyebrow != blank -%}
+            <span class="gg-eyebrow">{{ gh.eyebrow | escape }}</span>
+          {%- endif -%}
+          {%- if gh_heading != blank -%}
+            <h2 class="gg-h2 gg-hero2__heading">{{ gh_heading | escape }}</h2>
+          {%- endif -%}
+          {%- if gh.text != blank -%}
+            <div class="gg-hero2__text">{{ gh.text }}</div>
+          {%- endif -%}
+
+          {%- if gh_product != blank -%}
+            <gg-buy
+              class="gg-hero2__buy"
+              data-variant="{{ gh_variant.id }}"
+              data-label="{{ gh.bottle_label | default: 'Flasche' | escape }}"
+              data-title="{{ gh_title | escape }}"
+              data-added="{{ gh.added_label | default: 'Hinzugefügt' | escape }}"
+              data-error="{{ gh.error_label | default: 'Das hat nicht geklappt. Bitte versuch es noch einmal.' | escape }}"
+            >
+              <script type="application/json" data-gg-scents>
+                [
+                  {%- for v in gh_list -%}
+                    {%- capture gh_meta -%}{% render 'gg-scent-meta', product: v.product, variant: v, inspired_word: gh_word %}{%- endcapture -%}
+                    {%- assign gh_m = gh_meta | split: '~|~' -%}
+                    {%- assign gh_line = gh_m[4] | default: v.product.title -%}
+                    {"id": {{ v.id | json }}, "name": {{ gh_line | json }}}
+                    {%- unless forloop.last -%},{%- endunless -%}
+                  {%- endfor -%}
+                ]
+              </script>
+
+              <div class="gg-card__price-row">
+                {%- if gh_on_sale and gh.badge_text != blank -%}
+                  <span class="gg-badge gg-badge--sale">{{ gh.badge_text | escape }}</span>
+                {%- endif -%}
+                <span class="gg-price">
+                  {%- if gh_on_sale -%}
+                    <span class="gg-price__pct">-{{ gh_pct }}%</span>
+                  {%- endif -%}
+                  <span class="gg-price__now">{{ gh_price | money_without_trailing_zeros }}</span>
+                  {%- if gh_on_sale -%}
+                    <s class="gg-price__was">{{ gh_compare | money_without_trailing_zeros }}</s>
+                  {%- endif -%}
+                </span>
+              </div>
+
+              <div class="gg-card__buy">
+                {%- if gh_buyable == false and gh_variant.available and request.design_mode -%}
+                  <p class="gg-card__warn">Nur {{ gh_count }} von {{ gh_expected }} Düften sichtbar: ein Duft dieses Sets ist nicht im Onlineshop (z. B. Entwurf). Kaufen ist gesperrt, bis alle Düfte aktiv sind.</p>
+                {%- endif -%}
+                {%- if gh_buyable -%}
+                  <button type="button" class="gg-btn gg-btn--primary gg-btn--block gg-card__atc" data-gg-atc>
+                    <span data-gg-atc-text>{{ gh.atc_label | default: 'In den Warenkorb' | escape }}</span>
+                  </button>
+                {%- else -%}
+                  <button type="button" class="gg-btn gg-btn--primary gg-btn--block gg-card__atc" disabled>
+                    {{ gh.soldout_label | default: 'Ausverkauft' | escape }}
+                  </button>
+                {%- endif -%}
+                <p class="gg-card__status" data-gg-status role="status" aria-live="polite"></p>
+                {%- if gh.boxed_line != blank -%}
+                  <p class="gg-small gg-card__boxed">{{ gh.boxed_line | escape }}</p>
+                {%- endif -%}
+                {%- if gh.guarantee_text != blank -%}
+                  <p class="gg-small gg-hero2__guarantee">{{ gh.guarantee_text | escape }}</p>
+                {%- endif -%}
+              </div>
+
+              {%- render 'gg-contents-rows', product: gh_product, heading: gh.contents_heading, inspired_word: gh_word -%}
+            </gg-buy>
+          {%- else -%}
+            <p class="gg-hero2__empty">Geschenkset wählen: Wähl im Editor das Wichtel-Set aus.</p>
+          {%- endif -%}
+
+          {%- if section.blocks.size > 0 -%}
+            <ul class="gg-hero2__links" role="list">
+              {%- for block in section.blocks -%}
+                {%- assign gl = block.settings -%}
+                {%- if gl.label != blank and gl.link != blank -%}
+                  <li class="gg-hero2__link" {{ block.shopify_attributes }}>
+                    {%- if gl.lead != blank -%}{{ gl.lead | escape }} {% endif -%}
+                    <a class="gg-link" href="{{ gl.link | escape }}">{{ gl.label | escape }}</a>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "GG Wichtel-Set",
+  "tag": "section",
+  "class": "gg-section pm-scope",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anker (ohne #)",
+      "default": "wichteln"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Hintergrund",
+      "options": [
+        { "value": "none", "label": "Keiner" },
+        { "value": "surface", "label": "Grau" },
+        { "value": "surface-2", "label": "Hellgrau" },
+        { "value": "green", "label": "Grün" }
+      ],
+      "default": "green"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Überzeile",
+      "default": "Ein Set, drei Geschenke"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Überschrift",
+      "info": "Leer = Titel des Geschenksets.",
+      "default": "Drei Wichtelgeschenke in einem Set."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Jeder Flakon ist einzeln verpackt. Teil das Set auf: eins für sie, eins für ihn, eins für alle.</p>"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Geschenkset-Produkt",
+      "info": "Bundle mit custom.fixed_bundle_products."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Bild (optional)",
+      "info": "Leer = Produktbild. Format 1:1."
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Abstand oben (Desktop)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Abstand unten (Desktop)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "header",
+      "content": "Texte"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge bei Rabatt",
+      "default": "Sonderangebot"
+    },
+    {
+      "type": "text",
+      "id": "atc_label",
+      "label": "Button",
+      "default": "In den Warenkorb"
+    },
+    {
+      "type": "text",
+      "id": "soldout_label",
+      "label": "Button ausverkauft",
+      "default": "Ausverkauft"
+    },
+    {
+      "type": "text",
+      "id": "added_label",
+      "label": "Button nach dem Hinzufügen",
+      "default": "Hinzugefügt"
+    },
+    {
+      "type": "text",
+      "id": "error_label",
+      "label": "Fehlermeldung",
+      "default": "Das hat nicht geklappt. Bitte versuch es noch einmal."
+    },
+    {
+      "type": "text",
+      "id": "boxed_line",
+      "label": "Zeile unter dem Button",
+      "default": "Jede Flasche einzeln verpackt, fertig zum Verschenken"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_text",
+      "label": "Garantie-Zeile (optional)"
+    },
+    {
+      "type": "text",
+      "id": "contents_heading",
+      "label": "Überschrift Inhalt",
+      "default": "Was drin ist"
+    },
+    {
+      "type": "text",
+      "id": "inspired_word",
+      "label": "Wort vor der Inspiration",
+      "default": "Inspiriert von"
+    },
+    {
+      "type": "text",
+      "id": "bottle_label",
+      "label": "Warenkorb: Wort pro Flasche",
+      "info": "Muss zum Lager passen. Standard: Flasche",
+      "default": "Flasche"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "lead",
+          "label": "Text davor (optional)"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Linktext",
+          "default": "Stell dir drei selbst zusammen"
+        },
+        {
+          "type": "text",
+          "id": "link",
+          "label": "Link",
+          "info": "Anker auf dieser Seite (z. B. #selbst-zusammenstellen) oder eine URL.",
+          "default": "#selbst-zusammenstellen"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "GG Wichtel-Set",
+      "blocks": [
+        {
+          "type": "link",
+          "settings": {
+            "lead": "Verschiedene Leute auf deiner Liste?",
+            "label": "Stell dir drei selbst zusammen",
+            "link": "#selbst-zusammenstellen"
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "lead": "Lieber ein fertiges Set für eine Person?",
+            "label": "Alle Geschenksets ansehen",
+            "link": "#fuer-sie"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

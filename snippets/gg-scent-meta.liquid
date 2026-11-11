@@ -1,0 +1,99 @@
+{%- comment -%}
+  gg-scent-meta: resolves the display data of ONE scent for the Gift Guide (cards, contents rows, builder pool).
+  THE ONLY FILE TO ADAPT PER STORE when porting (metafield keys / title pattern differ per shop).
+
+  Accepts:
+    - product: the single-scent product (required)
+    - variant: the variant that goes into the bundle (optional; used for the cart line size suffix)
+    - inspired_word: word between title and designer in the cart line (default "Inspiriert von")
+
+  Output (raw, NOT escaped; consumers escape), five fields joined by "~|~":
+    number ~|~ inspiration ~|~ notes ~|~ occasion ~|~ cart line
+  Usage:
+    {%- capture gg_meta -%}{% render 'gg-scent-meta', product: p, variant: v %}{%- endcapture -%}
+    {%- assign gg_m = gg_meta | split: '~|~' -%}  -> gg_m[0] number, [1] inspiration, [2] notes, [3] occasion, [4] cart line
+
+  magicperfume.co data (verified 06.11.2026):
+    number      -> title "Duftet wie X - Nr. 067" (also "No."), fallback first 3 chars of the SKU ("067w05")
+    inspiration -> custom.inspiration (metaobject).name, fallback custom.inspired_by (text)
+    notes       -> custom.main_notes (metaobjects, .name), max 3, fallback custom.top_notes (.heading)
+    occasion    -> custom.occasion (Alltag / Abend / Party / Besondere Anlässe)
+    cart line   -> "<product title> Inspiriert von <designer> - <variant title>" (same as fmx-bundle-builder)
+{%- endcomment -%}
+{%- liquid
+  assign gg_p = product
+  assign gg_v = variant | default: gg_p.selected_or_first_available_variant
+  assign gg_word = inspired_word | default: 'Inspiriert von'
+
+  assign gg_num = ''
+  if gg_p.title contains 'Nr. '
+    assign gg_num = gg_p.title | split: 'Nr. ' | last | strip
+  elsif gg_p.title contains 'No. '
+    assign gg_num = gg_p.title | split: 'No. ' | last | strip
+  elsif gg_p.title contains 'Nr.'
+    assign gg_num = gg_p.title | split: 'Nr.' | last | strip
+  endif
+  if gg_num == blank and gg_v.sku != blank
+    assign gg_num = gg_v.sku | slice: 0, 3
+  endif
+
+  assign gg_insp = ''
+  if gg_p.metafields.custom.inspiration.value != blank
+    assign gg_insp = gg_p.metafields.custom.inspiration.value.name | strip
+  endif
+  if gg_insp == blank and gg_p.metafields.custom.inspired_by != blank
+    assign gg_insp = gg_p.metafields.custom.inspired_by.value | strip
+  endif
+
+  assign gg_notes = ''
+  assign gg_n = 0
+  if gg_p.metafields.custom.main_notes.value != blank
+    for note in gg_p.metafields.custom.main_notes.value
+      if gg_n >= 3
+        break
+      endif
+      assign gg_name = note.name | strip
+      if gg_name != blank
+        if gg_n > 0
+          assign gg_notes = gg_notes | append: ' · '
+        endif
+        assign gg_notes = gg_notes | append: gg_name
+        assign gg_n = gg_n | plus: 1
+      endif
+    endfor
+  endif
+  if gg_notes == blank and gg_p.metafields.custom.top_notes.value != blank
+    for note in gg_p.metafields.custom.top_notes.value
+      if gg_n >= 3
+        break
+      endif
+      assign gg_name = note.heading | strip
+      if gg_name != blank
+        if gg_n > 0
+          assign gg_notes = gg_notes | append: ' · '
+        endif
+        assign gg_notes = gg_notes | append: gg_name
+        assign gg_n = gg_n | plus: 1
+      endif
+    endfor
+  endif
+
+  assign gg_occ = ''
+  assign gg_occ_mf = gg_p.metafields.custom.occasion
+  if gg_occ_mf != blank
+    if gg_occ_mf.type contains 'list.'
+      assign gg_occ = gg_occ_mf.value | join: ', '
+    else
+      assign gg_occ = gg_occ_mf.value | strip
+    endif
+  endif
+
+  assign gg_cart = gg_p.title
+  if gg_insp != blank
+    assign gg_cart = gg_cart | append: ' ' | append: gg_word | append: ' ' | append: gg_insp
+  endif
+  if gg_v.title != blank and gg_v.title != 'Default Title'
+    assign gg_cart = gg_cart | append: ' - ' | append: gg_v.title
+  endif
+-%}
+{{- gg_num | remove: '~|~' -}}~|~{{- gg_insp | remove: '~|~' -}}~|~{{- gg_notes | remove: '~|~' -}}~|~{{- gg_occ | remove: '~|~' -}}~|~{{- gg_cart | remove: '~|~' -}}

@@ -1,0 +1,57 @@
+{{ 'gg-base.css' | asset_url | stylesheet_tag }}
+{{ 'gg-sections.css' | asset_url | stylesheet_tag }}
+<div class="gg gg-gtk" id="gg-{{ section.id }}">
+  {%- if section.settings.anchor != blank -%}
+    <span class="gg-anchor" id="{{ section.settings.anchor | handleize }}">&#8203;</span>
+  {%- endif -%}
+  <div class="gg__wrap">
+    {%- if section.settings.heading != blank -%}
+      <div class="gg-head gg-head--center">
+        <h2 class="gg-h2">{{ section.settings.heading | escape }}</h2>
+      </div>
+    {%- endif -%}
+    {%- if section.blocks.size > 0 -%}
+      <ul class="gg-gtk__grid">
+        {%- for block in section.blocks -%}
+          <li class="gg-gtk__item" {{ block.shopify_attributes }}>
+            <h3 class="gg-h3 gg-gtk__title">{{ block.settings.title | escape }}</h3>
+            <div class="gg-gtk__text">{{ block.settings.text }}</div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "GG Gut zu wissen",
+  "tag": "section",
+  "class": "gg-section pm-scope",
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Anker-ID (optional)" },
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Gut zu wissen vor der Bestellung" }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Eintrag",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titel", "default": "Titel" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Text</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "GG Gut zu wissen",
+      "blocks": [
+        { "type": "item", "settings": { "title": "Fertig zum Verschenken", "text": "<p>Jede Flasche ist einzeln verpackt.</p>" } },
+        { "type": "item", "settings": { "title": "Direkt an die beschenkte Person?", "text": "<p>Im Checkout gibst du die Lieferadresse an, an die das Geschenk gehen soll.</p>" } },
+        { "type": "item", "settings": { "title": "Unsicher, welcher Duft?", "text": "<p>Starte mit einem Set aus drei Düften und lass die beschenkte Person ihren Favoriten finden.</p>" } },
+        { "type": "item", "settings": { "title": "Passt nicht?", "text": "<p>Du hast 60 Tage Zeit für die Rückgabe. 60 Tage Geld-zurück-Garantie.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

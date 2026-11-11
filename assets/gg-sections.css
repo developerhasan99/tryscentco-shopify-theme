@@ -1,0 +1,669 @@
+/* gg-sections.css: styles for the Gift Guide sections (gg-hero, gg-trust-strip, gg-recipients, gg-reviews,
+   gg-more-ways, gg-newsletter, gg-good-to-know, gg-closing). Needs gg-base.css (tokens, .gg shell, buttons, rows).
+   px only, mobile-first (375 base, 750 / 990 / 1200), no importance overrides. */
+
+/* ---------- Hero ---------- */
+.gg-hero {
+  --gg-pad-top: 0;
+  --gg-pad-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--gg-surface);
+  overflow: hidden;
+}
+
+.gg-hero__media {
+  position: relative;
+  width: 100%;
+  height: var(--gg-hero-h-mobile, 660px);
+  background: var(--gg-surface);
+}
+
+.gg-hero__img {
+  position: absolute;
+  inset: 0;
+}
+
+.gg-hero__img--desktop { display: none; }
+
+.gg-hero__img picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.gg-hero .gg-hero__pic,
+.gg-hero .gg-ph {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right var(--gg-hero-pos-m, center);
+}
+
+.gg-hero__inner {
+  padding-top: 24px;
+  padding-bottom: 32px;
+}
+
+.gg-hero__copy {
+  max-width: 635px;
+}
+
+/* Judge.me rating above the headline: gold stars + "4,8/5 aus über 1.400 Bewertungen" (text in the copy colour) */
+.gg-hero__rating {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+  color: var(--gg-ink);
+}
+
+.gg-hero__stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.gg-hero__star {
+  display: block;
+  width: 18px;
+  height: 18px;
+  fill: #f5b301;
+}
+
+.gg-hero__text {
+  margin: 16px 0 0;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--gg-muted);
+}
+
+.gg-hero__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+@media (min-width: 750px) {
+  .gg-hero__actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+/* 990-1199 keeps the stacked layout (desktop image on top, copy below): at these widths the copy column would sit on
+   top of the product in the desktop image. Text over the image only from 1200. */
+@media (min-width: 990px) {
+  .gg-hero__img--desktop { display: block; }
+  .gg-hero__img--mobile { display: none; }
+}
+
+@media (min-width: 1200px) {
+  .gg-hero {
+    display: block;
+    position: relative;
+    height: var(--gg-hero-h-desktop, 572px);
+  }
+
+  .gg-hero__media {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
+
+  .gg-hero .gg-hero__pic,
+  .gg-hero .gg-ph {
+    object-position: right center;
+  }
+
+  /* the product sits right of ~45% of the viewport (image anchored right), so the copy column scales with it */
+  .gg-hero__copy {
+    max-width: min(520px, 38vw);
+  }
+
+  .gg-hero__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .gg-hero--light .gg-eyebrow,
+  .gg-hero--light .gg-hero__heading,
+  .gg-hero--light .gg-hero__text {
+    color: var(--gg-white);
+  }
+
+  .gg-hero--light .gg-hero__eyebrow { opacity: 0.85; }
+
+  .gg-hero--light .gg-hero__rating { color: var(--gg-white); }
+
+  .gg-hero--light .gg-btn--primary {
+    background: var(--gg-white);
+    color: var(--gg-black);
+  }
+
+  .gg-hero--light .gg-btn--secondary {
+    color: var(--gg-white);
+    border-color: var(--gg-white);
+  }
+
+  .gg-hero--light .gg-btn--secondary:hover {
+    background: var(--gg-white);
+    color: var(--gg-black);
+  }
+}
+
+/* ---------- Trust strip ---------- */
+.gg-trust {
+  --gg-pad-top: 0;
+  --gg-pad-bottom: 0;
+  overflow: hidden;
+}
+
+.gg-trust__viewport {
+  display: flex;
+  align-items: center;
+  height: 42px;
+  overflow: hidden;
+}
+
+.gg-trust__track {
+  display: flex;
+  flex: 0 0 auto;
+  width: max-content;
+  animation: gg-trust-scroll var(--gg-trust-speed, 40s) linear infinite;
+}
+
+.gg-trust__group {
+  display: flex;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gg-trust__item {
+  position: relative;
+  flex: 0 0 auto;
+  padding: 0 28px;
+  font-size: 12px;
+  line-height: 42px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.gg-trust__item::after {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 50%;
+  background: var(--gg-muted);
+}
+
+@keyframes gg-trust-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-33.3333%); }
+}
+
+@media (min-width: 990px) {
+  .gg-trust__viewport { height: 51px; }
+  .gg-trust__item { line-height: 51px; font-size: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gg-trust__track { animation: none; }
+}
+
+/* ---------- Recipients ---------- */
+.gg-rec__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gg-rec__card {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.gg-rec__media {
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--gg-radius-md);
+  background: var(--gg-surface);
+}
+
+.gg-rec .gg-rec__img,
+.gg-rec .gg-rec__media .gg-ph {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.gg-rec__card:hover .gg-rec__img { transform: scale(1.03); }
+
+.gg-rec__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 12px;
+}
+
+.gg-rec__meta {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--gg-muted);
+}
+
+.gg-rec__count {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.gg-rec__budget {
+  margin-top: 32px;
+}
+
+.gg-rec__budget-label {
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.gg-rec__chips {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gg-rec__chip {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-height: 56px;
+  height: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--gg-line);
+  border-radius: var(--gg-radius-md);
+  background: var(--gg-white);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color var(--gg-dur), background-color var(--gg-dur);
+}
+
+.gg-rec__chip:hover {
+  border-color: var(--gg-ink);
+}
+
+.gg-rec__chip-price {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+}
+
+.gg-rec__chip-text {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--gg-muted);
+}
+
+@media (min-width: 750px) {
+  .gg-rec__chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .gg-rec__chip-item { flex: 0 1 auto; }
+
+  .gg-rec__chip {
+    border-radius: var(--gg-radius-pill);
+    padding: 10px 20px;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+@media (min-width: 990px) {
+  .gg-rec__grid {
+    grid-template-columns: repeat(var(--gg-rec-cols, 4), minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .gg-rec__budget { margin-top: 48px; }
+}
+
+/* ---------- Reviews ---------- */
+.gg-rev__rating {
+  max-width: none;
+}
+
+.gg-rev__card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  border: 1px solid var(--gg-ring);
+  border-radius: var(--gg-radius-card);
+  background: var(--gg-white);
+}
+
+.gg-rev__stars {
+  display: flex;
+  gap: 2px;
+}
+
+.gg-rev__star { fill: #00b67a; }
+.gg-rev__star--off { fill: #dcdce6; }
+
+.gg-rev__title {
+  margin: 0;
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 700;
+}
+
+.gg-rev__text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--gg-muted);
+}
+
+.gg-rev__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  margin: auto 0 0;
+  padding-top: 6px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.gg-rev__author { font-weight: 700; }
+.gg-rev__source { color: var(--gg-muted); }
+
+/* ---------- More ways ---------- */
+.gg-more__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 24px;
+  border: 1px solid var(--gg-line);
+  border-radius: var(--gg-radius-card);
+  background: var(--gg-white);
+}
+
+.gg-more__eyebrow { margin: 0; }
+
+.gg-more__text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--gg-muted);
+}
+
+.gg-more__price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-top: 4px;
+}
+
+.gg-more__now {
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 800;
+}
+
+.gg-more__was {
+  font-size: 16px;
+  line-height: 22px;
+  color: var(--gg-muted);
+}
+
+.gg-more__note { margin: 0; }
+
+.gg-more__btn {
+  margin-top: auto;
+  align-self: stretch;
+}
+
+.gg-more__title + .gg-more__btn,
+.gg-more__text + .gg-more__btn,
+.gg-more__price + .gg-more__btn,
+.gg-more__note + .gg-more__btn {
+  margin-top: 16px;
+}
+
+/* ---------- Newsletter ---------- */
+.gg-nl__col {
+  max-width: 520px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.gg-nl__heading { margin-top: 0; }
+.gg-nl__text { margin-left: auto; margin-right: auto; }
+
+.gg-nl__form {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.gg-nl__chips {
+  margin: 0 0 16px;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.gg-nl__legend {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 0;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.gg-nl__chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.gg-nl__chip {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.gg-nl__radio {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.gg-nl__pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  min-height: 44px;
+  padding: 8px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--gg-radius-pill);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  color: var(--gg-white);
+  transition: background-color var(--gg-dur), color var(--gg-dur), border-color var(--gg-dur);
+}
+
+.gg-nl__radio:checked + .gg-nl__pill {
+  background: var(--gg-white);
+  border-color: var(--gg-white);
+  color: var(--gg-black);
+}
+
+.gg-nl__radio:focus-visible + .gg-nl__pill {
+  outline: 2px solid var(--gg-white);
+  outline-offset: 2px;
+}
+
+.gg-nl__hp {
+  position: absolute;
+  left: -9999px;
+}
+
+.gg-nl__field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gg-nl__input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--gg-radius-btn);
+  background: transparent;
+  font-family: var(--gg-font-body);
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--gg-white);
+}
+
+.gg-nl__input::placeholder { color: rgba(255, 255, 255, 0.6); }
+
+.gg-nl__input:focus-visible {
+  outline: 2px solid var(--gg-white);
+  outline-offset: 2px;
+}
+
+.gg-nl__btn { width: 100%; }
+
+.gg-nl__fine {
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.gg-nl__fine p { margin: 0; }
+
+.gg-nl__msg {
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border-radius: var(--gg-radius-md);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.gg-nl__msg p { margin: 0; }
+
+.gg-nl__msg--ok {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--gg-white);
+}
+
+.gg-nl__msg--err {
+  background: #fdecec;
+  color: #8a1c19;
+  text-align: left;
+}
+
+@media (min-width: 750px) {
+  .gg-nl__field {
+    flex-direction: row;
+  }
+
+  .gg-nl__btn { width: auto; flex: 0 0 auto; }
+}
+
+/* ---------- Good to know ---------- */
+.gg-gtk__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gg-gtk__title { margin: 0 0 8px; }
+
+.gg-gtk__text {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--gg-muted);
+}
+
+.gg-gtk__text p { margin: 0; }
+
+@media (min-width: 750px) {
+  .gg-gtk__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+  }
+}
+
+@media (min-width: 990px) {
+  .gg-gtk__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ---------- Closing ---------- */
+.gg-close__wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.gg-close__sub { margin-left: auto; margin-right: auto; }
+
+.gg-close__btn { margin-top: 24px; }
+
+.gg-close__guarantee { margin: 16px 0 0; }

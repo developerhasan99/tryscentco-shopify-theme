@@ -1,0 +1,905 @@
+/* gg-builder.css: "Selbst zusammenstellen" set builder (sections/gg-bundle-builder.liquid + assets/gg-builder.js).
+   Needs gg-base.css. px only, mobile-first (375 / 750 / 990 / 1200), no importance overrides.
+   Mobile: one column; filters scroll sideways inside their own box; the summary is a sticky bar at the bottom of the
+   card (visible only while the builder is on screen). From 990px: grid 260px / list / 320px, sticky summary. */
+
+.gg-bb__notice {
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border: 1px dashed var(--gg-sale);
+  border-radius: var(--gg-radius-btn);
+  background: var(--gg-white);
+  color: var(--gg-sale);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.gg-bb__card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  background: var(--gg-white);
+  border: 1px solid var(--gg-ring);
+  border-radius: var(--gg-radius-md);
+}
+
+/* ---------- filter column ---------- */
+
+.gg-bb__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  padding: 16px 16px 0;
+}
+
+.gg-bb__group[hidden] { display: none; }
+
+.gg-bb__label {
+  margin: 0 0 8px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gg-muted);
+}
+
+.gg-bb__note {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--gg-muted);
+}
+
+/* Horizontal scroller inside its own box (bleeds to the card edge) */
+.gg-bb__scroller {
+  display: flex;
+  gap: 8px;
+  margin: 0 -16px;
+  padding: 0 16px 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gg-bb__scroller::-webkit-scrollbar { display: none; }
+
+.gg-bb__chip,
+.gg-bb__opt,
+.gg-bb__pill {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--gg-line);
+  border-radius: var(--gg-radius-pill);
+  background: var(--gg-white);
+  color: var(--gg-ink);
+  font-family: var(--gg-font-body);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--gg-dur), border-color var(--gg-dur), color var(--gg-dur);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.gg-bb__chip:hover,
+.gg-bb__opt:hover,
+.gg-bb__pill:hover { border-color: var(--gg-ink); }
+
+.gg-bb__chip[disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.gg-bb__opt.is-active,
+.gg-bb__pill.is-active {
+  background: var(--gg-ink);
+  border-color: var(--gg-ink);
+  color: var(--gg-white);
+}
+
+.gg-bb__opt[hidden] { display: none; }
+
+.gg-bb__cnt {
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.gg-bb__search {
+  position: relative;
+}
+
+.gg-bb__search-ico {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  margin-top: -9px;
+  color: var(--gg-muted);
+  pointer-events: none;
+}
+
+.gg-bb__input {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
+  padding: 12px 14px 12px 42px;
+  border: 1px solid var(--gg-line);
+  border-radius: var(--gg-radius-md);
+  background: var(--gg-white);
+  color: var(--gg-ink);
+  font-family: var(--gg-font-body);
+  font-size: 16px;
+  line-height: 22px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.gg-bb__input:focus {
+  outline: 2px solid var(--gg-ink);
+  outline-offset: 1px;
+}
+
+/* ---------- list column ---------- */
+
+.gg-bb__main {
+  min-width: 0;
+  padding: 0 16px;
+}
+
+.gg-bb__listhead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--gg-line);
+}
+
+.gg-bb__count {
+  margin: 0;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 700;
+}
+
+.gg-bb__sort {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--gg-muted);
+}
+
+.gg-bb__list {
+  max-height: 560px;
+  overflow-y: auto;
+  outline: none;
+}
+
+.gg-bb__none {
+  margin: 0;
+  padding: 32px 0;
+  text-align: center;
+  color: var(--gg-muted);
+}
+
+.gg-bb__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 78px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gg-line);
+}
+
+.gg-bb__row:last-child { border-bottom: 0; }
+
+.gg-bb__thumb {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  background: var(--gg-surface);
+  overflow: hidden;
+}
+
+.gg-bb__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gg-bb__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.gg-bb__l1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.gg-bb__num {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+/* Row badges next to the number: Bestseller = sale red, Neu = the store's badge green (as on Bundle & Save) */
+.gg-bb__tag {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: var(--gg-radius-btn);
+  color: var(--gg-white);
+  font-size: 10px;
+  line-height: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.gg-bb__tag--best { background: var(--gg-sale); }
+.gg-bb__tag--new { background: #22613a; }
+
+.gg-bb__insp {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--gg-muted);
+  overflow-wrap: anywhere;
+}
+
+.gg-bb__act {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.gg-bb__add {
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--gg-ink);
+  border-radius: var(--gg-radius-btn);
+  background: var(--gg-white);
+  color: var(--gg-ink);
+  font-family: var(--gg-font-body);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color var(--gg-dur), color var(--gg-dur), opacity var(--gg-dur);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.gg-bb__add:hover {
+  background: var(--gg-ink);
+  color: var(--gg-white);
+}
+
+.gg-bb__add[disabled] {
+  opacity: 0.35;
+  cursor: not-allowed;
+  background: var(--gg-white);
+  color: var(--gg-ink);
+}
+
+.gg-bb__step {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--gg-ink);
+  border-radius: var(--gg-radius-btn);
+  background: var(--gg-ink);
+  color: var(--gg-white);
+}
+
+.gg-bb__stepbtn {
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: var(--gg-font-body);
+  font-size: 20px;
+  line-height: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.gg-bb__stepbtn[disabled] {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.gg-bb__qty {
+  min-width: 20px;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ---------- summary: mobile sticky bar ---------- */
+
+.gg-bb__sum {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--gg-ring);
+  border-radius: 0 0 var(--gg-radius-md) var(--gg-radius-md);
+  background: var(--gg-white);
+  box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.gg-bb__sum-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.gg-bb__sum-titles {
+  min-width: 0;
+}
+
+.gg-bb__sum-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  margin: 0;
+}
+
+.gg-bb__sum-title {
+  font-family: var(--gg-font-heading);
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 800;
+}
+
+.gg-bb__of {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+  color: var(--gg-muted);
+}
+
+.gg-bb__status {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--gg-muted);
+}
+
+.gg-bb__status-was {
+  color: var(--gg-muted);
+}
+
+.gg-bb__status-pct {
+  font-weight: 700;
+  color: var(--gg-sale);
+}
+
+.gg-bb__chev {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--gg-line);
+  border-radius: var(--gg-radius-pill);
+  background: var(--gg-white);
+  color: var(--gg-ink);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.gg-bb__chev svg {
+  transition: transform var(--gg-dur);
+}
+
+.gg-bb__sum[data-open] .gg-bb__chev svg {
+  transform: rotate(180deg);
+}
+
+.gg-bb__rail {
+  display: none;
+}
+
+.gg-bb__sum[data-open] .gg-bb__rail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Slots on mobile: 52 x 52 chips in a row, the whole chip removes the scent */
+.gg-bb__slots {
+  display: flex;
+  gap: 8px;
+  margin: 0 -16px;
+  padding: 2px 16px;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.gg-bb__slots::-webkit-scrollbar { display: none; }
+
+.gg-bb__slot {
+  position: relative;
+  flex: 0 0 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin: 0;
+  border: 1px dashed #cfcfcf;
+  border-radius: 8px;
+  background: var(--gg-white);
+}
+
+.gg-bb__slot.is-filled {
+  border: 1px solid var(--gg-ink);
+  background: var(--gg-surface);
+}
+
+.gg-bb__slot-idx {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 700;
+  color: var(--gg-muted);
+}
+
+.gg-bb__slot.is-filled .gg-bb__slot-idx,
+.gg-bb__slot-txt {
+  display: none;
+}
+
+.gg-bb__slot-num {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 800;
+}
+
+.gg-bb__slot-x {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  margin: 0;
+  padding: 2px 5px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--gg-ink);
+  font-size: 14px;
+  line-height: 14px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Size buttons (3 / 6 / 9): equal widths, count on top, set price + struck compare-at under it, saving in % as a
+   red pill on the top edge (padding-top on the row keeps the pill inside the box) */
+.gg-bb__sizes {
+  display: flex;
+  gap: 8px;
+  padding-top: 9px;
+}
+
+.gg-bb__size {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 4px 6px;
+  border: 1px solid var(--gg-line);
+  border-radius: var(--gg-radius-md);
+  background: var(--gg-white);
+  color: var(--gg-ink);
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color var(--gg-dur), background-color var(--gg-dur);
+}
+
+.gg-bb__size.is-active {
+  border-color: var(--gg-ink);
+  background: var(--gg-surface);
+  box-shadow: inset 0 0 0 1px var(--gg-ink);
+}
+
+.gg-bb__size:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.gg-bb__size-n {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.gg-bb__size-p {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--gg-muted);
+  white-space: nowrap;
+}
+
+.gg-bb__size.is-active .gg-bb__size-p {
+  color: var(--gg-ink);
+}
+
+.gg-bb__size.has-save {
+  padding-top: 10px;
+}
+
+.gg-bb__size-pr {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  column-gap: 4px;
+}
+
+.gg-bb__size.has-save .gg-bb__size-p {
+  color: var(--gg-ink);
+  font-weight: 800;
+}
+
+.gg-bb__size-was {
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--gg-muted);
+  white-space: nowrap;
+}
+
+.gg-bb__size-pct {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2px 6px;
+  border-radius: var(--gg-radius-pill);
+  background: var(--gg-sale);
+  color: var(--gg-white);
+  font-size: 10px;
+  line-height: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.gg-bb__totals,
+.gg-bb__fine {
+  display: none;
+}
+
+.gg-bb__cta {
+  min-height: 44px;
+  padding: 10px 16px;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+}
+
+.gg-bb__err {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--gg-sale);
+}
+
+.gg-bb__err[hidden] { display: none; }
+
+/* ---------- 750: a little more room ---------- */
+
+@media (min-width: 750px) {
+  .gg-bb__filters { padding: 24px 24px 0; }
+  .gg-bb__main { padding: 0 24px; }
+  .gg-bb__sum { padding: 8px 24px; }
+  .gg-bb__scroller,
+  .gg-bb__slots {
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* ---------- 990: three columns ---------- */
+
+@media (min-width: 990px) {
+  .gg-bb__card {
+    grid-template-columns: 260px minmax(0, 1fr) 320px;
+    gap: 0;
+    align-items: start;
+  }
+
+  .gg-bb__filters {
+    gap: 24px;
+    padding: 24px;
+  }
+
+  .gg-bb__scroller {
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .gg-bb__opts {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+
+  .gg-bb__opt {
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 14px;
+    border-color: transparent;
+    border-radius: var(--gg-radius-btn);
+    background: transparent;
+    font-weight: 500;
+  }
+
+  .gg-bb__opt:hover { border-color: var(--gg-line); }
+
+  .gg-bb__opt.is-active {
+    background: var(--gg-surface);
+    border-color: var(--gg-surface);
+    color: var(--gg-ink);
+    font-weight: 700;
+  }
+
+  .gg-bb__chips {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+
+  .gg-bb__chip {
+    justify-content: flex-start;
+    white-space: normal;
+    text-align: left;
+    border-radius: var(--gg-radius-md);
+  }
+
+  .gg-bb__pill {
+    min-height: 40px;
+    padding: 8px 14px;
+    font-size: 13px;
+    line-height: 18px;
+  }
+
+  .gg-bb__main {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    border-left: 1px solid var(--gg-ring);
+    border-right: 1px solid var(--gg-ring);
+  }
+
+  /* The list fills its column: at least 565px (reference), as tall as the filter column when that is taller */
+  .gg-bb__list {
+    flex: 1 1 0;
+    height: auto;
+    min-height: 565px;
+    max-height: none;
+  }
+
+  /* 14px keeps the full placeholder inside the 260px column (16px stays below 990 against iOS zoom) */
+  .gg-bb__input {
+    font-size: 14px;
+  }
+
+  .gg-bb__sum {
+    position: sticky;
+    top: 112px; /* clears the sticky store header (two rows on desktop) */
+    bottom: auto;
+    gap: 16px;
+    padding: 24px;
+    border-top: 0;
+    border-radius: 0 var(--gg-radius-md) var(--gg-radius-md) 0;
+    box-shadow: none;
+  }
+
+  .gg-bb__sum-head { cursor: default; }
+
+  .gg-bb__sum-line { justify-content: space-between; }
+
+  .gg-bb__sum-title {
+    font-size: 20px;
+    line-height: 26px;
+  }
+
+  .gg-bb__chev { display: none; }
+
+  .gg-bb__size {
+    min-height: 56px;
+    padding: 6px 8px;
+  }
+
+  .gg-bb__size-n {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .gg-bb__size-p {
+    font-size: 13px;
+    line-height: 18px;
+  }
+
+  /* ~85px buttons in the side rail: price above the struck price on every size, so the three line up
+     (one line only fits "44 € 66 €", the 6 and 9 wrapped) */
+  .gg-bb__size-pr {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .gg-bb__rail,
+  .gg-bb__sum[data-open] .gg-bb__rail {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Slots on desktop: numbered rows 01..N */
+  .gg-bb__slots {
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .gg-bb__slot {
+    flex: 0 0 auto;
+    justify-content: flex-start;
+    gap: 12px;
+    width: auto;
+    height: auto;
+    min-height: 52px;
+    padding: 8px 4px 8px 12px;
+  }
+
+  .gg-bb__slot.is-filled {
+    border-color: var(--gg-ring);
+    background: var(--gg-white);
+  }
+
+  .gg-bb__slot-idx,
+  .gg-bb__slot.is-filled .gg-bb__slot-idx {
+    display: block;
+    flex: 0 0 auto;
+    font-size: 12px;
+    color: var(--gg-muted);
+  }
+
+  .gg-bb__slot-txt,
+  .gg-bb__slot.is-filled .gg-bb__slot-txt {
+    display: block;
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--gg-muted);
+    overflow-wrap: anywhere;
+  }
+
+  .gg-bb__slot.is-filled .gg-bb__slot-txt { color: var(--gg-ink); }
+
+  .gg-bb__slot-num { display: none; }
+
+  .gg-bb__slot-x {
+    position: static;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    font-size: 20px;
+    line-height: 20px;
+    color: var(--gg-muted);
+  }
+
+  .gg-bb__slot-x:hover { color: var(--gg-ink); }
+
+  .gg-bb__totals {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gg-line);
+  }
+
+  .gg-bb__trow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 2px 12px;
+    margin: 0;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .gg-bb__trow strong {
+    font-family: var(--gg-font-heading);
+    font-size: 22px;
+    line-height: 28px;
+    font-weight: 800;
+  }
+
+  .gg-bb__trow--small {
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--gg-muted);
+  }
+
+  .gg-bb__save {
+    margin: 0;
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 700;
+    color: var(--gg-good);
+  }
+
+  .gg-bb__save[hidden] { display: none; }
+
+  .gg-bb__cta {
+    min-height: 48px;
+    padding: 12px 16px;
+  }
+
+  .gg-bb__fine {
+    display: block;
+    margin: -4px 0 0;
+    font-size: 13px;
+    line-height: 18px;
+    text-align: center;
+    color: var(--gg-muted);
+  }
+}

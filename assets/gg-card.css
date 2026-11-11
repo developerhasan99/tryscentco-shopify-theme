@@ -1,0 +1,454 @@
+/* gg-card.css: Gift Guide gift-set cards, tiles and the product hero (sections/gg-gift-sets, sections/gg-product-hero).
+   Loads after gg-base.css (tokens, .gg-row, .gg-btn, .gg-price, .gg-badge). px only, mobile-first (375 / 750 / 990 / 1200),
+   no importance overrides, no clipping of text. */
+
+/* ---------- Gift-set card ---------- */
+.gg-sets__item {
+  display: flex;
+  min-width: 0;
+}
+
+.gg-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  background: var(--gg-white);
+  color: var(--gg-ink);
+  border-radius: var(--gg-radius-card);
+  box-shadow: 0 0 0 1px var(--gg-ring);
+}
+
+.gg-card__media {
+  display: block;
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--gg-radius-card) var(--gg-radius-card) 0 0;
+  overflow: hidden;
+  background: var(--gg-surface);
+}
+
+.gg-card__img,
+.gg-card__media .gg-ph {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.gg-card__img {
+  object-fit: cover;
+}
+
+.gg-card__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 20px 24px;
+}
+
+.gg-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gg-card__title {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.gg-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.gg-card__title a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+
+.gg-card__subtitle {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--gg-muted);
+}
+
+.gg-card__price-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.gg-card__buy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gg-card__atc {
+  min-height: 52px;
+  font-size: 15px;
+}
+
+.gg-card__status {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--gg-sale);
+  text-align: center;
+}
+
+.gg-card__status:empty {
+  display: none;
+}
+
+.gg-card__boxed {
+  margin: 0;
+  text-align: center;
+}
+
+.gg-card__desc {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--gg-ink);
+}
+
+.gg-card__desc p {
+  margin: 0;
+}
+
+.gg-card__desc p + p {
+  margin-top: 8px;
+}
+
+.gg-card__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.gg-card__foot .gg-link {
+  min-height: 44px;
+}
+
+.gg-card--empty .gg-card__subtitle {
+  margin-top: 4px;
+}
+
+/* ---------- Contents rows ("Was drin ist") ---------- */
+.gg-rows__heading {
+  margin: 0 0 8px;
+  font-family: var(--gg-font-body);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gg-ink);
+}
+
+.gg-rows__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gg-rows__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  align-items: start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--gg-line);
+}
+
+.gg-rows__row:first-child {
+  border-top: 1px solid var(--gg-line);
+}
+
+.gg-rows__left,
+.gg-rows__right {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.gg-rows__right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.gg-rows__num {
+  align-self: flex-start;
+  padding: 2px 0;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+}
+
+.gg-rows__num:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.gg-rows__label {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+}
+
+.gg-rows__muted {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--gg-muted);
+  overflow-wrap: break-word;
+}
+
+/* ---------- Discovery tile (grid item, same height as the cards) ---------- */
+.gg-disc {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  background: var(--gg-surface);
+  color: var(--gg-ink);
+  border-radius: var(--gg-radius-card);
+}
+
+.gg-disc .gg-eyebrow {
+  margin: 0;
+}
+
+.gg-disc__title {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.gg-disc__text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--gg-muted);
+}
+
+.gg-disc__cta {
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.gg-disc__cta .gg-btn {
+  min-height: 52px;
+}
+
+@media (min-width: 990px) {
+  .gg-disc {
+    padding: 32px;
+  }
+}
+
+/* ---------- Build-your-own tile (full width under the cards, outside the carousel) ---------- */
+.gg-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: var(--gg-gap);
+  padding: 24px 20px;
+  background: var(--gg-surface);
+  color: var(--gg-ink);
+  border-radius: var(--gg-radius-card);
+}
+
+.gg-tile__text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 680px;
+}
+
+.gg-tile__text .gg-eyebrow {
+  margin: 0;
+}
+
+.gg-tile__title {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.gg-tile__copy {
+  margin: 0;
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--gg-muted);
+}
+
+.gg-tile__btn {
+  width: 100%;
+  min-height: 52px;
+}
+
+@media (min-width: 750px) {
+  .gg-tile {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 32px 40px;
+  }
+
+  .gg-tile__btn {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 240px;
+  }
+}
+
+/* ---------- Product hero ("Wichteln") ---------- */
+.gg-hero2__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.gg-hero2__media {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--gg-radius-card);
+  overflow: hidden;
+  background: var(--gg-white);
+}
+
+.gg-hero2__img,
+.gg-hero2__media .gg-ph {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.gg-hero2__img {
+  object-fit: cover;
+}
+
+.gg-hero2__content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.gg-hero2__content .gg-eyebrow {
+  margin: 0;
+}
+
+.gg-hero2__heading {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.gg-hero2__text {
+  font-size: var(--gg-fs-body);
+  line-height: 1.55;
+}
+
+.gg-hero2__text p {
+  margin: 0;
+}
+
+.gg-hero2__text p + p {
+  margin-top: 8px;
+}
+
+.gg-hero2__buy {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gg-hero2__guarantee {
+  margin: 0;
+  text-align: center;
+}
+
+.gg-hero2__links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gg-hero2__link {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.gg-hero2__link .gg-link {
+  min-height: 44px;
+  text-align: left;
+}
+
+.gg-hero2__empty {
+  margin: 0;
+  padding: 16px;
+  border: 1px dashed var(--gg-muted);
+  border-radius: var(--gg-radius-md);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+@media (min-width: 750px) {
+  .gg-hero2__media {
+    max-width: 560px;
+  }
+}
+
+@media (min-width: 990px) {
+  .gg-hero2__inner {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 56px;
+  }
+
+  .gg-hero2__media {
+    flex: 0 0 434px;
+    width: 434px;
+    max-width: 434px;
+  }
+
+  .gg-hero2__content {
+    flex: 1 1 auto;
+    max-width: 640px;
+  }
+}
+
+/* The mobile carousel scrolls on x, which clips on y too: 1px room keeps the top of the card ring visible. */
+.gg-sets__grid {
+  padding-top: 1px;
+}
+
+/* Editor-only warning: a scent of the set is not on the Online Store (cart would carry fewer scents) */
+.gg-card__warn {
+  margin: 0 0 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--gg-sale);
+  border-radius: var(--gg-radius-btn);
+  background: #fff1f0;
+  color: var(--gg-sale);
+  font-size: 12px;
+  line-height: 17px;
+}

@@ -1,0 +1,460 @@
+{%- comment -%}
+  gg-gift-sets: Gift Guide row of ready-made gift sets ("Für sie", "Für ihn", ...).
+  Blocks:
+    - gift_set:   one gift-set card (snippets/gg-gift-card.liquid), product = bundle with custom.fixed_bundle_products
+    - discovery:  grid tile "Probierset" (same height as the cards); without a product it is a placeholder without link
+    - build_tile: full-width tile under the cards (outside the mobile carousel) linking to the builder section
+  Mobile: cards + discovery tile = snap carousel (.gg-row, 85%); desktop: grid of 2 or 3 columns, or with
+  "carousel" on a scrolling row of that many visible cards with prev/next arrows (<gg-carousel>, assets/gg-card.js).
+  Card strings are section settings so each row can be worded on its own.
+{%- endcomment -%}
+{{ 'gg-base.css' | asset_url | stylesheet_tag }}
+{{ 'gg-card.css' | asset_url | stylesheet_tag }}
+<script>window.ggMoneyFormat = window.ggMoneyFormat || {{ shop.money_format | json }};</script>
+<script src="{{ 'gg-core.js' | asset_url }}" defer></script>
+<script src="{{ 'gg-card.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign gs = section.settings
+  assign gs_bg = ''
+  case gs.background
+    when 'surface'
+      assign gs_bg = ' gg--surface'
+    when 'surface-2'
+      assign gs_bg = ' gg--surface-2'
+  endcase
+  assign gs_cols = gs.columns | default: '3'
+  if gs.container == 'narrow'
+    assign gs_wrap = 'gg__wrap gg__wrap--narrow'
+    assign gs_sizes = '(min-width: 990px) 410px, (min-width: 750px) 46vw, 85vw'
+  else
+    assign gs_wrap = 'gg__wrap'
+    if gs_cols == '2'
+      assign gs_sizes = '(min-width: 1360px) 640px, (min-width: 990px) calc((100vw - 88px) / 2), (min-width: 750px) 46vw, 85vw'
+    else
+      assign gs_sizes = '(min-width: 1360px) 420px, (min-width: 990px) calc((100vw - 112px) / 3), (min-width: 750px) 46vw, 85vw'
+    endif
+  endif
+  assign gs_anchor = gs.anchor | handleize
+  assign gs_row_count = 0
+  for block in section.blocks
+    if block.type == 'discovery'
+      assign gs_row_count = gs_row_count | plus: 1
+    elsif block.type == 'gift_set'
+      if block.settings.product != blank or request.design_mode
+        assign gs_row_count = gs_row_count | plus: 1
+      endif
+    endif
+  endfor
+-%}
+
+{%- style -%}
+  @media screen and (min-width: 990px) {
+    #gg-{{ section.id }} {
+      --gg-pad-top: {{ gs.padding_top }}px;
+      --gg-pad-bottom: {{ gs.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="gg gg-sets{{ gs_bg }}" id="gg-{{ section.id }}">
+  {%- if gs_anchor != blank -%}
+    <span class="gg-anchor" id="{{ gs_anchor }}">&#8203;</span>
+  {%- endif -%}
+  <div class="{{ gs_wrap }}">
+    {%- if gs.eyebrow != blank or gs.heading != blank or gs.text != blank -%}
+      <div class="gg-head">
+        {%- if gs.eyebrow != blank -%}
+          <span class="gg-eyebrow">{{ gs.eyebrow | escape }}</span>
+        {%- endif -%}
+        {%- if gs.heading != blank -%}
+          <h2 class="gg-h2">{{ gs.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if gs.text != blank -%}
+          <p class="gg-sub">{{ gs.text }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if gs_row_count > 0 -%}
+      {%- if gs.carousel -%}<gg-carousel class="gg-carousel">{%- endif -%}
+      <div class="gg-row gg-sets__grid{% if gs.carousel %} gg-row--carousel{% endif %}" style="--gg-cols: {{ gs_cols }};"{% if gs.carousel %} data-gg-track tabindex="0" role="region" aria-label="{{ gs.heading | escape }}"{% endif %}>
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'gift_set' -%}
+              {%- if block.settings.product != blank or request.design_mode -%}
+                <div class="gg-sets__item" {{ block.shopify_attributes }}>
+                  {%- render 'gg-gift-card',
+                    product: block.settings.product,
+                    badge_text: gs.badge_text,
+                    atc_label: gs.atc_label,
+                    soldout_label: gs.soldout_label,
+                    boxed_line: gs.boxed_line,
+                    contents_heading: gs.contents_heading,
+                    details_label: gs.details_label,
+                    swap_label: gs.swap_label,
+                    inspired_word: gs.inspired_word,
+                    bottle_label: gs.bottle_label,
+                    error_label: gs.error_label,
+                    added_label: gs.added_label,
+                    show_swap: gs.show_swap,
+                    swap_max: gs.swap_max,
+                    choose_label: gs.choose_label,
+                    img_sizes: gs_sizes
+                  -%}
+                </div>
+              {%- endif -%}
+            {%- when 'discovery' -%}
+              {%- assign gd = block.settings -%}
+              <div class="gg-sets__item" {{ block.shopify_attributes }}>
+                <div class="gg-disc{% if gd.product == blank %} gg-disc--soon{% endif %}">
+                  {%- if gd.eyebrow != blank -%}
+                    <span class="gg-eyebrow">{{ gd.eyebrow | escape }}</span>
+                  {%- endif -%}
+                  {%- if gd.title != blank -%}
+                    <h3 class="gg-h3 gg-disc__title">{{ gd.title | escape }}</h3>
+                  {%- endif -%}
+                  {%- if gd.text != blank -%}
+                    <p class="gg-disc__text">{{ gd.text | escape }}</p>
+                  {%- endif -%}
+                  {%- if gd.product != blank and gd.button_label != blank -%}
+                    <div class="gg-disc__cta">
+                      <a class="gg-btn gg-btn--secondary gg-btn--block" href="{{ gd.product.url }}">
+                        {{- gd.button_label | escape -}}
+                      </a>
+                    </div>
+                  {%- endif -%}
+                </div>
+              </div>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+      {%- if gs.carousel -%}
+        <div class="gg-carousel__nav" data-gg-nav hidden>
+          <button type="button" class="gg-carousel__btn" data-gg-prev aria-label="{{ gs.prev_label | default: 'Zurück' | escape }}">
+            <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="gg-carousel__btn" data-gg-next aria-label="{{ gs.next_label | default: 'Weiter' | escape }}">
+            <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M7.5 4.5 13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        </gg-carousel>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'build_tile' -%}
+        {%- assign gt = block.settings -%}
+        <div class="gg-tile" {{ block.shopify_attributes }}>
+          <div class="gg-tile__text">
+            {%- if gt.eyebrow != blank -%}
+              <span class="gg-eyebrow">{{ gt.eyebrow | escape }}</span>
+            {%- endif -%}
+            {%- if gt.title != blank -%}
+              <h3 class="gg-h3 gg-tile__title">{{ gt.title | escape }}</h3>
+            {%- endif -%}
+            {%- if gt.text != blank -%}
+              <p class="gg-tile__copy">{{ gt.text | escape }}</p>
+            {%- endif -%}
+          </div>
+          {%- if gt.button_label != blank and gt.link != blank -%}
+            <a class="gg-btn gg-btn--primary gg-tile__btn" href="{{ gt.link | escape }}">
+              {{- gt.button_label | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "GG Geschenksets",
+  "tag": "section",
+  "class": "gg-section pm-scope",
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anker (ohne #)",
+      "info": "Zum Verlinken, z. B. fuer-sie. Der Link lautet dann #fuer-sie."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Überzeile",
+      "default": "Fertig zum Verschenken"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Überschrift",
+      "default": "Geschenksets für sie"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "container",
+      "label": "Breite",
+      "options": [
+        { "value": "wide", "label": "Breit" },
+        { "value": "narrow", "label": "Schmal" }
+      ],
+      "default": "wide"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Spalten am Desktop",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "checkbox",
+      "id": "carousel",
+      "label": "Karussell am Desktop",
+      "info": "Zeigt so viele Karten wie Spalten und blättert mit Pfeilen. Auf dem Handy wird immer gewischt.",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "prev_label",
+      "label": "Pfeil zurück (Screenreader)",
+      "default": "Zurück"
+    },
+    {
+      "type": "text",
+      "id": "next_label",
+      "label": "Pfeil weiter (Screenreader)",
+      "default": "Weiter"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Hintergrund",
+      "options": [
+        { "value": "none", "label": "Keiner" },
+        { "value": "surface", "label": "Grau" },
+        { "value": "surface-2", "label": "Hellgrau" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Abstand oben (Desktop)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Abstand unten (Desktop)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "header",
+      "content": "Texte der Karten"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge bei Rabatt",
+      "default": "Sonderangebot"
+    },
+    {
+      "type": "text",
+      "id": "atc_label",
+      "label": "Button",
+      "default": "In den Warenkorb"
+    },
+    {
+      "type": "text",
+      "id": "choose_label",
+      "label": "Button bei Sets zum Selbstwählen",
+      "info": "Für Bundles ohne feste Düfte (z. B. 8 x 50 ml): Der Button führt zur Produktseite.",
+      "default": "Düfte auswählen"
+    },
+    {
+      "type": "text",
+      "id": "soldout_label",
+      "label": "Button ausverkauft",
+      "default": "Ausverkauft"
+    },
+    {
+      "type": "text",
+      "id": "added_label",
+      "label": "Button nach dem Hinzufügen",
+      "default": "Hinzugefügt"
+    },
+    {
+      "type": "text",
+      "id": "error_label",
+      "label": "Fehlermeldung",
+      "default": "Das hat nicht geklappt. Bitte versuch es noch einmal."
+    },
+    {
+      "type": "text",
+      "id": "boxed_line",
+      "label": "Zeile unter dem Button",
+      "default": "Jede Flasche einzeln verpackt, fertig zum Verschenken"
+    },
+    {
+      "type": "text",
+      "id": "contents_heading",
+      "label": "Überschrift Inhalt",
+      "default": "Was drin ist"
+    },
+    {
+      "type": "text",
+      "id": "inspired_word",
+      "label": "Wort vor der Inspiration",
+      "default": "Inspiriert von"
+    },
+    {
+      "type": "text",
+      "id": "details_label",
+      "label": "Link zum Produkt",
+      "default": "Alle Details"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_swap",
+      "label": "Duft tauschen anzeigen",
+      "info": "Öffnet den Set-Baukasten mit den Düften dieses Sets.",
+      "default": true
+    },
+    { "type": "range", "id": "swap_max", "min": 2, "max": 12, "step": 1, "default": 6, "label": "Duft tauschen bis Set-Größe", "info": "Größtes Set, das der Set-Builder verkauft (z. B. 6 mit Upgrade). Größere Sets zeigen kein \"Duft tauschen\"." },
+    {
+      "type": "text",
+      "id": "swap_label",
+      "label": "Duft tauschen",
+      "default": "Duft tauschen"
+    },
+    {
+      "type": "text",
+      "id": "bottle_label",
+      "label": "Warenkorb: Wort pro Flasche",
+      "info": "Muss zum Lager passen. Standard: Flasche",
+      "default": "Flasche"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "gift_set",
+      "name": "Geschenkset",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Geschenkset-Produkt",
+          "info": "Bundle mit custom.fixed_bundle_products. Titel, Untertitel und Text kommen aus den gift_* Metafeldern."
+        }
+      ]
+    },
+    {
+      "type": "discovery",
+      "name": "Probierset",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Probierset-Produkt",
+          "info": "Leer = Kachel ohne Button (kommt bald)."
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Überzeile",
+          "default": "Unsicher bei ihrem Geschmack?"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titel",
+          "default": "Lass sie selbst wählen."
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Das Probierset kommt bald. Damit finden sie ihren Lieblingsduft selbst."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button",
+          "default": "Probierset ansehen"
+        }
+      ]
+    },
+    {
+      "type": "build_tile",
+      "name": "Selbst zusammenstellen",
+      "settings": [
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Überzeile",
+          "default": "Selbst zusammenstellen"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titel",
+          "default": "Du kennst seinen Duft? Wähl drei aus."
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Gleicher Preis, gleiche Verpackung. Du wählst die drei Düfte selbst aus."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button",
+          "default": "Set zusammenstellen"
+        },
+        {
+          "type": "text",
+          "id": "link",
+          "label": "Link",
+          "info": "Anker auf dieser Seite (z. B. #selbst-zusammenstellen) oder eine URL.",
+          "default": "#selbst-zusammenstellen"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "GG Geschenksets",
+      "blocks": [
+        { "type": "gift_set" },
+        { "type": "gift_set" },
+        { "type": "gift_set" }
+      ]
+    }
+  ]
+}
+{% endschema %}

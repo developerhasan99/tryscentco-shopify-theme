@@ -1,0 +1,199 @@
+{%- comment -%}
+  gg-gift-card: one gift-set card (Gift Guide). Used by sections/gg-gift-sets.liquid.
+  Accepts:
+    - product: the gift-set bundle product (blank -> placeholder card in the editor, nothing on the storefront)
+    - badge_text, atc_label, soldout_label, boxed_line, contents_heading, details_label, swap_label,
+      inspired_word, bottle_label, error_label, added_label: card strings (section settings)
+    - show_swap: true shows "Duft tauschen" (needs custom.fixed_bundle_products)
+    - swap_max: largest set the builder sells (default 6); bigger sets get no "Duft tauschen"
+    - choose_label: button text for pick-your-own bundles (custom.bundle_size set, no fixed contents, no
+      fixed_bundle tag): the button links to the product page instead of adding to the cart
+    - img_sizes: optional sizes attribute for the image
+  Data: custom.gift_title (fallback product.title), custom.gift_subtitle, custom.gift_description
+  (fallback custom.bundle_product_content), custom.fixed_bundle_products, custom.gift_slot_labels.
+  Buy logic: <gg-buy> (assets/gg-card.js) reads data-variant / data-label / data-title and the JSON scents child,
+  builds the cart line with GG.bundleItem (same contract as fmx-bundle-builder) and adds it with GG.addItems.
+{%- endcomment -%}
+{%- liquid
+  assign ggc_sizes = img_sizes | default: '(min-width: 1360px) 410px, (min-width: 990px) calc((100vw - 112px) / 3), (min-width: 750px) 46vw, 85vw'
+-%}
+{%- if product == blank -%}
+  {%- if request.design_mode -%}
+    <div class="gg-card gg-card--empty">
+      <div class="gg-card__media">
+        {%- render 'gg-placeholder', label: 'Geschenkset wählen', size: '1:1' -%}
+      </div>
+      <div class="gg-card__body">
+        <h3 class="gg-h3 gg-card__title">Geschenkset wählen</h3>
+        <p class="gg-card__subtitle">Wähl im Editor ein Geschenkset-Produkt aus.</p>
+      </div>
+    </div>
+  {%- endif -%}
+{%- else -%}
+  {%- liquid
+    assign ggc_variant = product.selected_or_first_available_variant
+    assign ggc_list = product.metafields.custom.fixed_bundle_products.value
+    assign ggc_title = product.metafields.custom.gift_title.value | default: product.title
+    assign ggc_subtitle = product.metafields.custom.gift_subtitle.value
+    assign ggc_word = inspired_word | default: 'Inspiriert von'
+
+    # Guard: scents whose product is not on the Online Store (e.g. Draft) drop out of the variant list on the
+    # storefront without any error, so the cart would carry fewer scents than the set promises. Sell only when
+    # every scent of custom.bundle_size is visible.
+    assign ggc_count = 0
+    if ggc_list != blank
+      assign ggc_count = ggc_list.size
+    endif
+    assign ggc_expected = product.metafields.custom.bundle_size.value | default: 0 | plus: 0
+    assign ggc_complete = true
+    if ggc_expected > ggc_count
+      assign ggc_complete = false
+    endif
+    if ggc_count == 0 and product.tags contains 'fixed_bundle'
+      assign ggc_complete = false
+    endif
+    assign ggc_swap_max = swap_max | default: 6 | plus: 0
+    # Set size for the swap check = the larger of the promised size and the visible count
+    assign ggc_set_size = ggc_count
+    if ggc_expected > ggc_set_size
+      assign ggc_set_size = ggc_expected
+    endif
+    # Pick-your-own bundle (e.g. 8x50 without fixed contents): the card links to the product page, where the
+    # customer chooses the scents; adding it here would send an empty bundle to the warehouse.
+    assign ggc_choose = false
+    if ggc_count == 0 and ggc_expected > 0
+      unless product.tags contains 'fixed_bundle'
+        assign ggc_choose = true
+        assign ggc_complete = true
+      endunless
+    endif
+    assign ggc_buyable = false
+    if ggc_variant.available and ggc_complete
+      assign ggc_buyable = true
+    endif
+
+    assign ggc_price = ggc_variant.price
+    assign ggc_compare = ggc_variant.compare_at_price | default: 0
+    assign ggc_on_sale = false
+    assign ggc_pct = 0
+    if ggc_compare > ggc_price
+      assign ggc_on_sale = true
+      assign ggc_pct = ggc_compare | minus: ggc_price | times: 100.0 | divided_by: ggc_compare | round
+    endif
+
+    assign ggc_media = product.featured_media
+  -%}
+  <gg-buy
+    class="gg-card"
+    data-variant="{{ ggc_variant.id }}"
+    data-label="{{ bottle_label | default: 'Flasche' | escape }}"
+    data-title="{{ ggc_title | escape }}"
+    data-added="{{ added_label | default: 'Hinzugefügt' | escape }}"
+    data-error="{{ error_label | default: 'Das hat nicht geklappt. Bitte versuch es noch einmal.' | escape }}"
+  >
+    <script type="application/json" data-gg-scents>
+      [
+        {%- for v in ggc_list -%}
+          {%- capture ggc_meta -%}{% render 'gg-scent-meta', product: v.product, variant: v, inspired_word: ggc_word %}{%- endcapture -%}
+          {%- assign ggc_m = ggc_meta | split: '~|~' -%}
+          {%- assign ggc_line = ggc_m[4] | default: v.product.title -%}
+          {"id": {{ v.id | json }}, "name": {{ ggc_line | json }}}
+          {%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    </script>
+
+    <a class="gg-card__media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+      {%- if ggc_media != blank -%}
+        <img
+          class="gg-card__img"
+          src="{{ ggc_media | image_url: width: 720 }}"
+          srcset="{{ ggc_media | image_url: width: 360 }} 360w, {{ ggc_media | image_url: width: 540 }} 540w, {{ ggc_media | image_url: width: 720 }} 720w, {{ ggc_media | image_url: width: 900 }} 900w"
+          sizes="{{ ggc_sizes }}"
+          alt="{{ ggc_media.alt | default: ggc_title | escape }}"
+          width="{{ ggc_media.preview_image.width | default: 900 }}"
+          height="{{ ggc_media.preview_image.height | default: 900 }}"
+          loading="lazy"
+        >
+      {%- else -%}
+        {%- render 'gg-placeholder', label: 'Geschenkset', size: '1:1' -%}
+      {%- endif -%}
+    </a>
+
+    <div class="gg-card__body">
+      <div class="gg-card__head">
+        <h3 class="gg-h3 gg-card__title">
+          <a href="{{ product.url }}">{{ ggc_title | escape }}</a>
+        </h3>
+        {%- if ggc_subtitle != blank -%}
+          <p class="gg-card__subtitle">{{ ggc_subtitle | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      <div class="gg-card__price-row">
+        {%- if ggc_on_sale and badge_text != blank -%}
+          <span class="gg-badge gg-badge--sale">{{ badge_text | escape }}</span>
+        {%- endif -%}
+        <span class="gg-price">
+          {%- if ggc_on_sale -%}
+            <span class="gg-price__pct">-{{ ggc_pct }}%</span>
+          {%- endif -%}
+          <span class="gg-price__now">{{ ggc_price | money_without_trailing_zeros }}</span>
+          {%- if ggc_on_sale -%}
+            <s class="gg-price__was">{{ ggc_compare | money_without_trailing_zeros }}</s>
+          {%- endif -%}
+        </span>
+      </div>
+
+      <div class="gg-card__buy">
+        {%- if ggc_complete == false and request.design_mode -%}
+          <p class="gg-card__warn">Nur {{ ggc_count }} von {{ ggc_expected }} Düften sichtbar: ein Duft dieses Sets ist nicht im Onlineshop (z. B. Entwurf). Kaufen ist gesperrt, bis alle Düfte aktiv sind.</p>
+        {%- endif -%}
+        {%- if ggc_choose and ggc_buyable -%}
+          <a class="gg-btn gg-btn--primary gg-btn--block gg-card__atc" href="{{ product.url }}">
+            {{- choose_label | default: 'Düfte auswählen' | escape -}}
+          </a>
+        {%- elsif ggc_buyable -%}
+          <button type="button" class="gg-btn gg-btn--primary gg-btn--block gg-card__atc" data-gg-atc>
+            <span data-gg-atc-text>{{ atc_label | default: 'In den Warenkorb' | escape }}</span>
+          </button>
+        {%- else -%}
+          <button type="button" class="gg-btn gg-btn--primary gg-btn--block gg-card__atc" disabled>
+            {{ soldout_label | default: 'Ausverkauft' | escape }}
+          </button>
+        {%- endif -%}
+        <p class="gg-card__status" data-gg-status role="status" aria-live="polite"></p>
+        {%- if boxed_line != blank -%}
+          <p class="gg-small gg-card__boxed">{{ boxed_line | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- liquid
+        assign ggc_desc_mf = product.metafields.custom.gift_description
+        if ggc_desc_mf == blank
+          assign ggc_desc_mf = product.metafields.custom.bundle_product_content
+        endif
+      -%}
+      {%- if ggc_desc_mf != blank -%}
+        <div class="gg-card__desc">
+          {%- if ggc_desc_mf.type == 'rich_text_field' -%}
+            {{ ggc_desc_mf | metafield_tag }}
+          {%- else -%}
+            <p>{{ ggc_desc_mf.value | escape | newline_to_br }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- render 'gg-contents-rows', product: product, heading: contents_heading, inspired_word: ggc_word -%}
+
+      <div class="gg-card__foot">
+        <a class="gg-link" href="{{ product.url }}">{{ details_label | default: 'Alle Details' | escape }}</a>
+        {%- if show_swap and ggc_list != blank and swap_label != blank and ggc_set_size <= ggc_swap_max -%}
+          <button type="button" class="gg-link gg-card__swap" data-gg-swap>
+            {{ swap_label | escape }} <span aria-hidden="true">&rarr;</span>
+          </button>
+        {%- endif -%}
+      </div>
+    </div>
+  </gg-buy>
+{%- endif -%}

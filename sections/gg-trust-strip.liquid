@@ -1,0 +1,55 @@
+{{ 'gg-base.css' | asset_url | stylesheet_tag }}
+{{ 'gg-sections.css' | asset_url | stylesheet_tag }}
+<div class="gg gg-trust gg--surface" id="gg-{{ section.id }}">
+  {%- if section.settings.anchor != blank -%}
+    <span class="gg-anchor" id="{{ section.settings.anchor | handleize }}">&#8203;</span>
+  {%- endif -%}
+  {%- if section.blocks.size > 0 -%}
+    <div class="gg-trust__viewport">
+      <div class="gg-trust__track" style="--gg-trust-speed: {{ section.settings.speed }}s">
+        {%- for i in (1..3) -%}
+          <ul class="gg-trust__group"{% if i > 1 %} aria-hidden="true"{% endif %}>
+            {%- for block in section.blocks -%}
+              <li class="gg-trust__item"{% if i == 1 %} {{ block.shopify_attributes }}{% endif %}>{{ block.settings.text | escape }}</li>
+            {%- endfor -%}
+          </ul>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "GG Vertrauensleiste",
+  "tag": "section",
+  "class": "gg-section pm-scope",
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Anker-ID (optional)" },
+    { "type": "range", "id": "speed", "label": "Dauer pro Durchlauf", "min": 15, "max": 90, "step": 5, "unit": "s", "default": 40 }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Eintrag",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Hält über 12 Stunden" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "GG Vertrauensleiste",
+      "blocks": [
+        { "type": "item", "settings": { "text": "20 % Parfumöl" } },
+        { "type": "item", "settings": { "text": "Hält über 12 Stunden" } },
+        { "type": "item", "settings": { "text": "95 % Duftähnlichkeit" } },
+        { "type": "item", "settings": { "text": "Öle aus Grasse" } },
+        { "type": "item", "settings": { "text": "Ohne Phthalate und Parabene" } },
+        { "type": "item", "settings": { "text": "Vegan und tierversuchsfrei" } },
+        { "type": "item", "settings": { "text": "Jede Flasche einzeln verpackt, fertig zum Verschenken" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
