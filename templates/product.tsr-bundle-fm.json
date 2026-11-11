@@ -15,7 +15,8 @@
         "custom_rating_text_6nA37B": {
           "type": "custom_rating_text",
           "settings": {
-            "text": "Över 10 000 verifierade doftälskare"
+            "text": "Över 10 000 verifierade doftälskare",
+            "rating": ""
           }
         },
         "title": {
@@ -275,8 +276,17 @@
         },
         "atc_bundle_builder_aLJUaV": {
           "type": "atc_bundle_builder",
+          "disabled": true,
           "settings": {
-            "collection_handles": "best-sellers,new"
+            "collection_handles": "best-sellers,new",
+            "skip_atc_button": true,
+            "open_checkout": false
+          }
+        },
+        "custom_liquid_ttThnP": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{% render 'quantity-breaker', largest_first: true  %}"
           }
         },
         "fuel03_pair_1": {
@@ -363,6 +373,7 @@
         "fuel09_box_b",
         "fuel09_box_c",
         "atc_bundle_builder_aLJUaV",
+        "custom_liquid_ttThnP",
         "fuel03_pair_1",
         "fuel03_pair_2",
         "fuel03_pair_3",
@@ -374,6 +385,8 @@
       ],
       "custom_css": [],
       "settings": {
+        "fmx_font_body": "figtree_n4",
+        "fmx_font_heading": "figtree_n8",
         "enable_sticky_info": true,
         "color_scheme": "scheme-1",
         "media_size": "large",
@@ -391,14 +404,6 @@
     },
     "fmx_faq": {
       "type": "fmx-faq",
-      "settings": {
-        "heading": "Vanliga frågor",
-        "heading_alignment": "center",
-        "color_scheme": "scheme-1",
-        "open_first_collapsible_row": false,
-        "padding_top": 36,
-        "padding_bottom": 36
-      },
       "blocks": {
         "scent_notes": {
           "type": "scent_notes",
@@ -465,7 +470,17 @@
         "collapsible_row_5",
         "collapsible_row_6",
         "collapsible_row_7"
-      ]
+      ],
+      "settings": {
+        "caption": "",
+        "heading": "Vanliga frågor",
+        "heading_alignment": "center",
+        "closing_text": "",
+        "color_scheme": "scheme-1",
+        "open_first_collapsible_row": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
     },
     "fmx_scent_notes": {
       "type": "fmx-scent-notes",
@@ -486,24 +501,6 @@
     },
     "fmx_stacks_up": {
       "type": "fmx-stacks-up",
-      "settings": {
-        "color_scheme": "scheme-1",
-        "kicker": "MAGYX vs. original",
-        "title": "Så står sig MAGYX",
-        "ours_label": "MAGYX",
-        "ours_note": "20% koncentration",
-        "theirs_label": "Designer­märken",
-        "dupes_enable": true,
-        "dupes_label": "Andra dupes",
-        "btn_text": "Bläddra bland bästsäljare",
-        "btn_url": "/collections/best-sellers",
-        "proof_1": "Håller 12+ timmar",
-        "proof_2": "Älskad av 10 000+",
-        "yes_label": "Ja",
-        "no_label": "Nej",
-        "padding_top": 80,
-        "padding_bottom": 80
-      },
       "blocks": {
         "stack_bYEPRF": {
           "type": "stack",
@@ -570,10 +567,53 @@
         "stack_RUmWyb",
         "stack_MD4Nma",
         "stack_P8fdyi"
-      ]
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "kicker": "MAGYX vs. original",
+        "title": "Så står sig MAGYX",
+        "ours_label": "MAGYX",
+        "ours_note": "20% koncentration",
+        "theirs_label": "Designer­märken",
+        "dupes_enable": true,
+        "dupes_label": "Andra dupes",
+        "btn_text": "Bläddra bland bästsäljare",
+        "btn_url": "/collections/best-sellers",
+        "proof_1": "Håller 12+ timmar",
+        "proof_2": "Älskad av 10 000+",
+        "yes_label": "Ja",
+        "no_label": "Nej",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "fmx_image_and_text": {
       "type": "fmx-image-and-text",
+      "blocks": {
+        "heading_1": {
+          "type": "heading",
+          "settings": {
+            "content": "Inga billiga importer. Tillverkade utan hårda kemikalier.",
+            "heading_type": "h2",
+            "font_size": 32,
+            "mobile_font_size": 24,
+            "text_color": "#000000"
+          }
+        },
+        "text_2": {
+          "type": "text",
+          "settings": {
+            "content": "<p>Tillverkad i anläggningar inom EU med ingredienser och sammansättningar som uppfyller IFRA:s krav.</p><ul><li>Ftalatfri</li><li>Utan parabener</li><li>Vegansk</li><li>Djurförsöksfritt</li><li>IFRA-godkänd</li><li>Utvecklad enligt EU-standarder</li><li>Inga kända hormonstörande ämnen</li></ul><p>Vi tillverkar parfymer enligt strikta europeiska kosmetikstandarder</p>",
+            "mobile_content": "",
+            "font_size": 18,
+            "text_color": "#000000"
+          }
+        }
+      },
+      "block_order": [
+        "heading_1",
+        "text_2"
+      ],
       "settings": {
         "color_scheme": "scheme-1",
         "video": "shopify://files/videos/MAGYX-SITE02.mp4",
@@ -591,45 +631,10 @@
         "padding_bottom": 72,
         "mobile_padding_top": 40,
         "mobile_padding_bottom": 40
-      },
-      "blocks": {
-        "heading_1": {
-          "type": "heading",
-          "settings": {
-            "content": "Inga billiga importer. Tillverkade utan hårda kemikalier.",
-            "heading_type": "h2",
-            "font_size": 32,
-            "mobile_font_size": 24
-          }
-        },
-        "text_2": {
-          "type": "text",
-          "settings": {
-            "content": "<p>Tillverkad i anläggningar inom EU med ingredienser och sammansättningar som uppfyller IFRA:s krav.</p><ul><li>Ftalatfri</li><li>Utan parabener</li><li>Vegansk</li><li>Djurförsöksfritt</li><li>IFRA-godkänd</li><li>Utvecklad enligt EU-standarder</li><li>Inga kända hormonstörande ämnen</li></ul><p>Vi tillverkar parfymer enligt strikta europeiska kosmetikstandarder</p>",
-            "font_size": 18
-          }
-        }
-      },
-      "block_order": [
-        "heading_1",
-        "text_2"
-      ]
+      }
     },
     "fmx_reviews": {
       "type": "fmx-reviews",
-      "settings": {
-        "color_scheme": "scheme-1",
-        "heading": "Älskad av över 10 000 doftälskare",
-        "review_text": "Över 10 000 verifierade doftälskare",
-        "verified_text": "Verifierad köpare",
-        "initial_count": 6,
-        "columns_desktop": "2",
-        "columns_mobile": "1",
-        "button_text": "Visa fler recensioner",
-        "loading_text": "Laddar recensioner...",
-        "padding_top": 80,
-        "padding_bottom": 80
-      },
       "blocks": {
         "review_sv_01": {
           "type": "review",
@@ -638,7 +643,8 @@
             "author": "Luciana R.",
             "date": "för 7 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_02": {
@@ -648,7 +654,8 @@
             "author": "Alina M.",
             "date": "för 4 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_03": {
@@ -658,7 +665,8 @@
             "author": "Steen J.",
             "date": "för 6 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_04": {
@@ -668,7 +676,8 @@
             "author": "Maria F.",
             "date": "för 5 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_05": {
@@ -678,7 +687,8 @@
             "author": "Pernille O.",
             "date": "för 5 månader sedan",
             "rating": 4,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_06": {
@@ -688,7 +698,8 @@
             "author": "Tetiana H.",
             "date": "för 7 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_07": {
@@ -698,7 +709,8 @@
             "author": "Michael D.",
             "date": "för 1 år sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_08": {
@@ -708,7 +720,8 @@
             "author": "Zein H.",
             "date": "för 7 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_09": {
@@ -718,7 +731,8 @@
             "author": "Nick D.",
             "date": "för 1 år sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_10": {
@@ -728,7 +742,8 @@
             "author": "Peter S.",
             "date": "för 1 år sedan",
             "rating": 4,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_11": {
@@ -738,7 +753,8 @@
             "author": "A'Miracle F.",
             "date": "för 9 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_12": {
@@ -748,7 +764,8 @@
             "author": "Eric M.",
             "date": "för 1 år sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_13": {
@@ -758,7 +775,8 @@
             "author": "Lena A.",
             "date": "för 4 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_14": {
@@ -768,7 +786,8 @@
             "author": "Rozhin D.",
             "date": "för 2 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_15": {
@@ -778,7 +797,8 @@
             "author": "Kevin O.",
             "date": "för 1 år sedan",
             "rating": 4,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_16": {
@@ -788,7 +808,8 @@
             "author": "Emily C.",
             "date": "för 1 år sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_17": {
@@ -798,7 +819,8 @@
             "author": "Mattias E.",
             "date": "för 2 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_18": {
@@ -808,7 +830,8 @@
             "author": "Kiara B.",
             "date": "för 1 år sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_19": {
@@ -818,7 +841,8 @@
             "author": "Ayham A.",
             "date": "för 2 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_20": {
@@ -828,7 +852,8 @@
             "author": "Jason C.",
             "date": "för 1 år sedan",
             "rating": 4,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_21": {
@@ -838,7 +863,8 @@
             "author": "Julia P.",
             "date": "för 3 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_22": {
@@ -848,7 +874,8 @@
             "author": "John M.",
             "date": "för 1 år sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_23": {
@@ -858,7 +885,8 @@
             "author": "Priya S.",
             "date": "för 1 år sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_24": {
@@ -868,7 +896,8 @@
             "author": "René V.",
             "date": "för 4 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_25": {
@@ -878,7 +907,8 @@
             "author": "Emily S.",
             "date": "för 1 år sedan",
             "rating": 4,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_26": {
@@ -888,7 +918,8 @@
             "author": "Amran T.",
             "date": "för 3 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_27": {
@@ -898,7 +929,8 @@
             "author": "Brian O.",
             "date": "för 1 år sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_28": {
@@ -908,7 +940,8 @@
             "author": "Tina H.",
             "date": "för 2 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_29": {
@@ -918,7 +951,8 @@
             "author": "Håcan A.",
             "date": "för 6 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_30": {
@@ -928,7 +962,8 @@
             "author": "Malik J.",
             "date": "för 1 år sedan",
             "rating": 4,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_31": {
@@ -938,7 +973,8 @@
             "author": "Christina T.",
             "date": "för 4 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_32": {
@@ -948,7 +984,8 @@
             "author": "Adam G.",
             "date": "för 1 år sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_33": {
@@ -958,7 +995,8 @@
             "author": "Rimuska B.",
             "date": "för 2 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_34": {
@@ -968,7 +1006,8 @@
             "author": "Claire H.",
             "date": "för 1 år sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_35": {
@@ -978,7 +1017,8 @@
             "author": "Silvana R.",
             "date": "för 6 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         },
         "review_sv_36": {
@@ -988,7 +1028,8 @@
             "author": "Daniela B.",
             "date": "för 7 månader sedan",
             "rating": 5,
-            "show_verified_badge": true
+            "show_verified_badge": true,
+            "product": ""
           }
         }
       },
@@ -1029,7 +1070,22 @@
         "review_sv_34",
         "review_sv_35",
         "review_sv_36"
-      ]
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "heading": "Älskad av över 10 000 doftälskare",
+        "review_text": "Över 10 000 verifierade doftälskare",
+        "rating_value": "",
+        "verified_text": "Verifierad köpare",
+        "layout": "grid",
+        "initial_count": 6,
+        "columns_desktop": "2",
+        "columns_mobile": "1",
+        "button_text": "Visa fler recensioner",
+        "loading_text": "Laddar recensioner...",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "floating-atc": {
       "type": "floating-atc",
