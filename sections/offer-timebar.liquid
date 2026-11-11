@@ -230,7 +230,8 @@
 
 {% unless product.template_suffix == 'payday-60' or collection.template_suffix == 'bundle-save' %}
   <div id="{{ section.id }}">
-    <a href="{{ tb_link }}" class="no-underline block">
+    {%- comment -%} No link set: plain banner (div, no click, no underline). {%- endcomment -%}
+    {%- if tb_link != blank -%}<a href="{{ tb_link }}" class="no-underline block">{%- else -%}<div class="block">{%- endif -%}
       {% if tb_top != blank %}
         <div class="py-3" style="background-color: {{ tb_primary }};{% if tb_bs %} color: {{ tb_secondary }};{% endif %}">
           <div class="page-width">
@@ -248,7 +249,7 @@
               <div style="color: {{ tb_primary }};" class="font-bold text-base md:text-xl">
                 {{ tb_prepend }}
               </div>
-              <div style="color: {{ tb_primary }};" class="font-semibold text-sm md:text-lg tracking-wider md:order-1 underline">
+              <div style="color: {{ tb_primary }};" class="font-semibold text-sm md:text-lg tracking-wider md:order-1{% if tb_link != blank %} underline{% endif %}">
                 {{ tb_append }}
               </div>
               {%- if tb_bs -%}
@@ -285,7 +286,7 @@
           </div>
         </div>
       </div>
-    </a>
+    {%- if tb_link != blank -%}</a>{%- else -%}</div>{%- endif %}
   </div>
 {% endunless %}
 {% if section.blocks.size > 0 %}
