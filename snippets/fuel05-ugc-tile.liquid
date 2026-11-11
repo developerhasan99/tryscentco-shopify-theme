@@ -53,8 +53,19 @@
         id, so only the rendition label in the middle of the file name
         differs, and Shopify builds its ladder downwards, so a clip with a
         1080p rendition has the 480p one. Verified 200 on all six clips this
-        test ships; 5-17MB against 22-77MB. A URL carrying any other label is
-        left exactly as it came.
+        test ships; 5-17MB against 22-77MB. A clip uploaded at a lower quality
+        gets a lower ladder (2.5, 1.6 and 0.9Mbps), so its 1080p label maps to
+        its own 480p file: 10MB against 26MB for the one clip like that in the
+        home row. A URL carrying any other label is left exactly as it came.
+
+        The file then comes from cdn.shopify.com, which serves the same videos,
+        rather than the store's own address. The store's address carries the
+        cart, the finder's feed and product images over one connection, and
+        clips that had started downloading held it long enough for those to
+        queue behind them (finder empty and cart stuck on about half of fresh
+        visits in Chrome). On a connection of their own the clips can't do
+        that, and a tap started faster too (0.26s on a slow line, against
+        0.5-1.9s on the store's address).
       {%- endcomment -%}
       {%- liquid
         assign picked = blank
@@ -80,7 +91,10 @@
         endif
         assign source_url = picked.url
         if picked.height > 480
-          assign source_url = source_url | replace: 'HD-1080p-7.2Mbps', 'SD-480p-1.5Mbps'
+          assign source_url = source_url | replace: 'HD-1080p-7.2Mbps', 'SD-480p-1.5Mbps' | replace: 'HD-1080p-2.5Mbps', 'SD-480p-0.9Mbps'
+        endif
+        if source_url contains '/cdn/shop/videos/'
+          assign source_url = source_url | split: '/cdn/shop/videos/' | last | prepend: 'https://cdn.shopify.com/videos/'
         endif
       -%}
       <video
@@ -131,6 +145,16 @@
           fetchpriority="low">
       {%- endif -%}
     {%- else -%}
+      {%- comment -%}
+        A typed-in Shopify video link gets the same move to cdn.shopify.com as
+        a picked video above, for the same reason.
+      {%- endcomment -%}
+      {%- liquid
+        assign link_url = video_url
+        if link_url contains '/cdn/shop/videos/'
+          assign link_url = link_url | split: '/cdn/shop/videos/' | last | prepend: 'https://cdn.shopify.com/videos/'
+        endif
+      -%}
       <video
         class="fuel05-ugc__video"
         aria-hidden="true"
@@ -139,7 +163,7 @@
         playsinline
         preload="{% if poster != blank or poster_url != blank %}none{% else %}metadata{% endif %}"
         {% if poster != blank %}poster="{{ poster | image_url: width: 600 }}"{% elsif poster_url != blank %}poster="{{ poster_url }}"{% endif %}>
-        <source src="{{ video_url }}" type="video/mp4">
+        <source src="{{ link_url }}" type="video/mp4">
       </video>
       {%- comment -%}
         Same hold as the branch above, reading the URL the row passed instead of

@@ -339,6 +339,15 @@
 
     const videos = root.querySelectorAll('video.fuel05-ugc__video');
 
+    // Only iOS needs the warm-up below. Everywhere else a paused clip that has
+    // started downloading keeps pulling the whole file, and the row's clips
+    // held the store's connection so long that the cart, the finder's feed
+    // and product images queued behind them on about half of fresh visits in
+    // Chrome. There the clips keep the preload their markup gives them and
+    // fetch when they play.
+    const warmByPlayback =
+      /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
     // Above the return below, deliberately. Nothing starts on its own for a
     // shopper who asked for less motion, but a tap still starts a clip, and
     // that tap needs the poster held exactly as much as any other. This is
@@ -366,6 +375,10 @@
     const warmOne = (video, done) => {
       if (video.dataset.fuel05Warm === 'true' || video.readyState >= 2 || !video.paused) {
         video.dataset.fuel05Warm = 'true';
+        done();
+        return;
+      }
+      if (!warmByPlayback) {
         done();
         return;
       }
