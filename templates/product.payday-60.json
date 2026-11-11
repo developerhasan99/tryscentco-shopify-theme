@@ -110,7 +110,9 @@
         "atc_bundle_builder_aLJUaV": {
           "type": "atc_bundle_builder",
           "settings": {
-            "collection_handles": "best-sellers,new"
+            "collection_handles": "best-sellers,new",
+            "skip_atc_button": true,
+            "open_checkout": false
           }
         },
         "money_back_cEqkRK": {
@@ -359,10 +361,10 @@
         "bundle_total": 5,
         "bundle_discount_qty": 3,
         "discount_percent": 60,
-        "offer_badge": "Halloween-erbjudande",
+        "offer_badge": "Tidigt Black Friday-erbjudande",
         "heading": "Bygg ditt doftskåp och",
         "heading_accent": "få 3 flaskor GRATIS",
-        "subheading": "<p>Köp 2x50ml av dina favoritparfymer och få 3x50ml GRATIS. Betala 60% MINDRE i detta HALLOWEEN-ERBJUDANDE!</p>",
+        "subheading": "<p>Köp 2x50ml av dina favoritparfymer och få 3x50ml GRATIS. Betala 60% MINDRE i detta&nbsp;<br/>Tidigt Black Friday-erbjudande!</p>",
         "timer_deadline": "2026-09-28T00:00:00+02:00",
         "timer_label": "Erbjudandet slutar om",
         "timer_days_label": "dagar",
