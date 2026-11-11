@@ -1,0 +1,998 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "gg-hero",
+      "settings": {
+        "show_rating": false,
+        "image_desktop": "shopify://shop_images/geschenkguide-hero-desktop.webp",
+        "image_mobile": "shopify://shop_images/geschenkguide-hero-mobile.webp",
+        "button_1_link": "#for-henne",
+        "button_2_link": "/collections/all",
+        "text_color": "light",
+        "height_desktop": 572,
+        "height_mobile": 460,
+        "mobile_focus": "bottom",
+        "eyebrow": "Presentguiden 2026",
+        "heading": "Doftpresenter som faktiskt används",
+        "text": "Presentset till alla på din lista, från det säkra kortet till personen som redan har allt.",
+        "button_1_label": "Se presentseten",
+        "button_2_label": "Alla dofter",
+        "rating_text": "[rating]/5 baserat på [count] recensioner"
+      }
+    },
+    "trust": {
+      "type": "gg-trust-strip",
+      "settings": {
+        "speed": 40
+      },
+      "blocks": {
+        "t1": {
+          "type": "item",
+          "settings": {
+            "text": "20% parfymolja"
+          }
+        },
+        "t2": {
+          "type": "item",
+          "settings": {
+            "text": "Varje flaska i egen förpackning, redo att ges bort"
+          }
+        },
+        "t3": {
+          "type": "item",
+          "settings": {
+            "text": "Över 12 timmar på huden"
+          }
+        },
+        "t4": {
+          "type": "item",
+          "settings": {
+            "text": "95% doftlikhet"
+          }
+        },
+        "t5": {
+          "type": "item",
+          "settings": {
+            "text": "Parfymolja från Grasse"
+          }
+        },
+        "t6": {
+          "type": "item",
+          "settings": {
+            "text": "Ftalatfri och utan parabener"
+          }
+        },
+        "t7": {
+          "type": "item",
+          "settings": {
+            "text": "Vegansk och djurförsöksfri"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6",
+        "t7"
+      ]
+    },
+    "recipients": {
+      "type": "gg-recipients",
+      "settings": {
+        "columns": "4",
+        "heading": "Vem letar du present till?",
+        "sub": "Varje set innehåller tre flaskor à 50 ml, var och en i egen förpackning: en stor present eller tre små.",
+        "budget_label": "Presenter efter typ"
+      },
+      "blocks": {
+        "r_mama": {
+          "type": "recipient",
+          "settings": {
+            "image": "shopify://shop_images/geschenkguide-fur-mama.webp",
+            "link": "#for-henne",
+            "title": "Till mamma",
+            "meta": "Tidlösa klassiker · Blommig · Varm",
+            "count": "1 set"
+          }
+        },
+        "r_papa": {
+          "type": "recipient",
+          "settings": {
+            "image": "shopify://shop_images/geschenkguide-fur-papa.webp",
+            "link": "#for-honom",
+            "title": "Till pappa",
+            "meta": "Fräsch · Välvårdad · Festlig",
+            "count": "1 set"
+          }
+        },
+        "r_sister": {
+          "type": "recipient",
+          "settings": {
+            "image": "shopify://shop_images/geschenkguide-fur-schwester.webp",
+            "link": "#for-henne",
+            "title": "Till syster",
+            "meta": "Trendig · Fruktig · Söt",
+            "count": "1 set"
+          }
+        },
+        "r_brother": {
+          "type": "recipient",
+          "settings": {
+            "image": "shopify://shop_images/geschenkguide-fur-bruder.webp",
+            "link": "#for-honom",
+            "title": "Till bror",
+            "meta": "Sportig · Fräsch · Kryddig",
+            "count": "1 set"
+          }
+        },
+        "r_girlfriend": {
+          "type": "recipient",
+          "settings": {
+            "image": "shopify://shop_images/geschenkguide-fur-freundin.webp",
+            "link": "#for-henne",
+            "title": "Till flickvän",
+            "meta": "Elegant · Lekfull · Sinnlig",
+            "count": "1 set"
+          }
+        },
+        "r_boyfriend": {
+          "type": "recipient",
+          "settings": {
+            "image": "shopify://shop_images/geschenkguide-fur-freund.webp",
+            "link": "#for-honom",
+            "title": "Till pojkvän",
+            "meta": "Fräsch · Sinnlig · Intensiv",
+            "count": "1 set"
+          }
+        },
+        "r_her": {
+          "type": "recipient",
+          "settings": {
+            "image": "shopify://shop_images/geschenkguide-fur-sie.webp",
+            "link": "#for-henne",
+            "title": "Till henne",
+            "meta": "Doftgarderob · Bästsäljare · Blommig",
+            "count": "3 set"
+          }
+        },
+        "r_him": {
+          "type": "recipient",
+          "settings": {
+            "image": "shopify://shop_images/geschenkguide-fur-ihn.webp",
+            "link": "#for-honom",
+            "title": "Till honom",
+            "meta": "Fräsch · Träig · Intensiv",
+            "count": "3 set"
+          }
+        },
+        "b_sets": {
+          "type": "budget",
+          "settings": {
+            "link": "#for-henne",
+            "price": "Presentset",
+            "text": "Tre dofter, färdigt ihopsatta"
+          }
+        },
+        "b_build": {
+          "type": "budget",
+          "settings": {
+            "link": "#skapa-eget",
+            "price": "Skapa eget",
+            "text": "Du väljer de tre dofterna"
+          }
+        },
+        "b_more": {
+          "type": "budget",
+          "settings": {
+            "link": "#fler-presenter",
+            "price": "Fler presenter",
+            "text": "En enskild doft"
+          }
+        }
+      },
+      "block_order": [
+        "r_mama",
+        "r_papa",
+        "r_sister",
+        "r_brother",
+        "r_girlfriend",
+        "r_boyfriend",
+        "r_her",
+        "r_him",
+        "b_sets",
+        "b_build",
+        "b_more"
+      ]
+    },
+    "for_her": {
+      "type": "gg-gift-sets",
+      "settings": {
+        "anchor": "for-henne",
+        "container": "wide",
+        "columns": "3",
+        "carousel": true,
+        "background": "none",
+        "padding_top": 40,
+        "padding_bottom": 72,
+        "show_swap": true,
+        "eyebrow": "Presentset",
+        "heading": "Till henne",
+        "text": "Tre dofter, utvalda för henne: till mamma, syster eller flickvän.",
+        "badge_text": "Erbjudande",
+        "atc_label": "Lägg i kundvagnen",
+        "soldout_label": "Slutsåld",
+        "added_label": "Tillagd",
+        "error_label": "Det gick inte. Försök igen.",
+        "boxed_line": "Varje flaska i egen förpackning, redo att ges bort",
+        "contents_heading": "Det här ingår",
+        "inspired_word": "Inspirerad av",
+        "details_label": "Läs mer",
+        "swap_label": "Byt doft",
+        "bottle_label": "Flaska",
+        "prev_label": "Föregående",
+        "next_label": "Nästa",
+        "choose_label": "Välj dofter"
+      },
+      "blocks": {
+        "her_mama": {
+          "type": "gift_set",
+          "settings": {
+            "product": "till-mamma-3x-50ml-parfymflaskor"
+          }
+        },
+        "her_sister": {
+          "type": "gift_set",
+          "settings": {
+            "product": "till-syster-3x-50ml-parfymflaskor"
+          }
+        },
+        "her_partner": {
+          "type": "gift_set",
+          "settings": {
+            "product": "till-flickvan-3x-50ml-parfymflaskor"
+          }
+        }
+      },
+      "block_order": [
+        "her_mama",
+        "her_sister",
+        "her_partner"
+      ]
+    },
+    "reviews": {
+      "type": "gg-reviews",
+      "settings": {
+        "eyebrow": "Presenter som uppskattas",
+        "heading": "Det här säger våra kunder",
+        "rating_line": "4,9/5 baserat på 10 000+ recensioner"
+      },
+      "blocks": {
+        "q1": {
+          "type": "quote",
+          "settings": {
+            "stars": 5,
+            "title": "”Jag har köpt parfym till både mig själv och min fru och de luktar riktigt gott.”",
+            "text": "Precis som de dofter de är inspirerade av. Rekommenderas.",
+            "author": "Mattias E.",
+            "source": "Verifierad köpare"
+          }
+        },
+        "q2": {
+          "type": "quote",
+          "settings": {
+            "stars": 5,
+            "title": "”Blev positivt överraskad av kvaliteten på dofterna.”",
+            "text": "De håller mycket längre än jag trodde och flaskorna är snygga också. Jag har redan fått flera komplimanger när jag haft dem på mig.",
+            "author": "Alina M.",
+            "source": "Verifierad köpare"
+          }
+        },
+        "q3": {
+          "type": "quote",
+          "settings": {
+            "stars": 5,
+            "title": "”Doften överraskade mig verkligen, den är helt enastående!”",
+            "text": "Jag älskar den, och förpackningen är också väldigt elegant.",
+            "author": "Silvana R.",
+            "source": "Verifierad köpare"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3"
+      ]
+    },
+    "for_him": {
+      "type": "gg-gift-sets",
+      "settings": {
+        "anchor": "for-honom",
+        "container": "wide",
+        "columns": "3",
+        "carousel": true,
+        "background": "none",
+        "padding_top": 72,
+        "padding_bottom": 72,
+        "show_swap": true,
+        "eyebrow": "Presentset",
+        "heading": "Till honom",
+        "text": "En liten knuff att prova något nytt, eller ett säkert kort.",
+        "badge_text": "Erbjudande",
+        "atc_label": "Lägg i kundvagnen",
+        "soldout_label": "Slutsåld",
+        "added_label": "Tillagd",
+        "error_label": "Det gick inte. Försök igen.",
+        "boxed_line": "Varje flaska i egen förpackning, redo att ges bort",
+        "contents_heading": "Det här ingår",
+        "inspired_word": "Inspirerad av",
+        "details_label": "Läs mer",
+        "swap_label": "Byt doft",
+        "bottle_label": "Flaska",
+        "prev_label": "Föregående",
+        "next_label": "Nästa",
+        "choose_label": "Välj dofter"
+      },
+      "blocks": {
+        "him_dad": {
+          "type": "gift_set",
+          "settings": {
+            "product": "till-pappa-3x-50ml-parfymflaskor"
+          }
+        },
+        "him_brother": {
+          "type": "gift_set",
+          "settings": {
+            "product": "till-bror-3x-50ml-parfymflaskor"
+          }
+        },
+        "him_partner": {
+          "type": "gift_set",
+          "settings": {
+            "product": "till-pojkvan-3x-50ml-parfymflaskor"
+          }
+        },
+        "him_build": {
+          "type": "build_tile",
+          "settings": {
+            "link": "#skapa-eget",
+            "eyebrow": "Skapa eget",
+            "title": "Vet du vilken doft han gillar? Välj tre.",
+            "text": "Samma pris, samma förpackning. Du väljer de tre dofterna själv.",
+            "button_label": "Skapa hans set"
+          }
+        }
+      },
+      "block_order": [
+        "him_dad",
+        "him_brother",
+        "him_partner",
+        "him_build"
+      ]
+    },
+    "builder": {
+      "type": "gg-bundle-builder",
+      "settings": {
+        "anchor": "skapa-eget",
+        "bundle_product": "3-x-50ml-doftgarderob-429",
+        "upgrade_product": "6-x-50ml-doftgarderob-625",
+        "upgrade_product_2": "9-x-50ml-doftgarderob-769",
+        "pool_collection": "best-sellers",
+        "pool_limit": 200,
+        "bottle_size": "50ml",
+        "eyebrow": "Skapa eget",
+        "heading": "Vet du vad de gillar? Välj tre.",
+        "text": "Tre dofter à 50 ml till samma pris som ett presentset, var och en i egen förpackning. Välj alla tre själv eller börja med ett av våra presentset.",
+        "size_label": "[n] dofter",
+        "sizes_label": "Hur många dofter?",
+        "bottle_label": "Flaska",
+        "inspired_word": "Inspirerad av",
+        "presets_label": "Börja med ett presentset",
+        "presets_note": "Vi fyller ditt set med dofterna från det setet. Byt ut vilken du vill.",
+        "search_placeholder": "Nr, namn eller doftnot",
+        "gender_label": "För vem",
+        "gender_all": "Alla",
+        "gender_unisex": "Unisex",
+        "gender_male": "Herr",
+        "gender_female": "Dam",
+        "family_label": "Doftfamilj",
+        "count_label": "[n] dofter",
+        "sort_label": "Bästsäljare först",
+        "add_label": "Lägg till",
+        "new_badge": "Nyhet",
+        "best_badge": "Bästsäljare",
+        "no_results": "Ingen doft hittades.",
+        "set_title": "Ditt set",
+        "of_label": "[x] av [n]",
+        "choose_more": "Välj [n] dofter till",
+        "choose_one": "Välj 1 doft till",
+        "slot_empty": "Välj en doft",
+        "per_bottle": "[amount] per flaska",
+        "was_label": "Ord. pris [amount]",
+        "save_label": "Du sparar [amount]",
+        "cta": "Lägg i kundvagnen · [price]",
+        "error": "Setet kunde inte läggas till. Försök igen.",
+        "fine_print": "Varje flaska i egen förpackning, redo att ges bort"
+      },
+      "blocks": {
+        "p_mama": {
+          "type": "preset",
+          "settings": {
+            "product": "till-mamma-3x-50ml-parfymflaskor"
+          }
+        },
+        "p_sister": {
+          "type": "preset",
+          "settings": {
+            "product": "till-syster-3x-50ml-parfymflaskor"
+          }
+        },
+        "p_girlfriend": {
+          "type": "preset",
+          "settings": {
+            "product": "till-flickvan-3x-50ml-parfymflaskor"
+          }
+        },
+        "p_dad": {
+          "type": "preset",
+          "settings": {
+            "product": "till-pappa-3x-50ml-parfymflaskor"
+          }
+        },
+        "p_brother": {
+          "type": "preset",
+          "settings": {
+            "product": "till-bror-3x-50ml-parfymflaskor"
+          }
+        },
+        "p_boyfriend": {
+          "type": "preset",
+          "settings": {
+            "product": "till-pojkvan-3x-50ml-parfymflaskor"
+          }
+        }
+      },
+      "block_order": [
+        "p_mama",
+        "p_sister",
+        "p_girlfriend",
+        "p_dad",
+        "p_brother",
+        "p_boyfriend"
+      ]
+    },
+    "more_ways": {
+      "type": "gg-more-ways",
+      "settings": {
+        "anchor": "fler-presenter",
+        "heading": "Fler presentidéer",
+        "sub": "En enskild doft till den som redan vet vad den vill ha."
+      },
+      "blocks": {
+        "m1": {
+          "type": "card",
+          "settings": {
+            "link": "/collections/best-sellers",
+            "eyebrow": "Bara en present?",
+            "title": "En enskild doft",
+            "text": "Vet du vilken doft det ska vara? Välj vilken som helst bland våra bästsäljare.",
+            "button_label": "Se bästsäljarna"
+          }
+        }
+      },
+      "block_order": [
+        "m1"
+      ]
+    },
+    "newsletter": {
+      "type": "gg-newsletter",
+      "settings": {
+        "eyebrow": "Inte bestämt dig än?",
+        "heading": "Inte redo än? Få erbjudandena först.",
+        "text": "Våra julerbjudanden kommer snart. Skriv upp dig så får du veta först när de är ute.",
+        "chips_label": "Du letar till",
+        "chip_labels": "Henne,Honom,Båda,Mig själv",
+        "placeholder": "Din e-postadress",
+        "button_label": "Meddela mig",
+        "fine_print": "<p>Ingen spam. Avsluta när du vill.</p>",
+        "success_text": "Tack, nu är du med. Vi hör av oss när erbjudandena är ute."
+      }
+    },
+    "good_to_know": {
+      "type": "gg-good-to-know",
+      "settings": {
+        "heading": "Bra att veta innan du beställer"
+      },
+      "blocks": {
+        "g1": {
+          "type": "item",
+          "settings": {
+            "title": "Redo att ges bort",
+            "text": "<p>Varje flaska ligger i en egen förpackning. Du behöver bara slå in den.</p>"
+          }
+        },
+        "g2": {
+          "type": "item",
+          "settings": {
+            "title": "Direkt till mottagaren?",
+            "text": "<p>Ange mottagarens adress som leveransadress i kassan.</p>"
+          }
+        },
+        "g3": {
+          "type": "item",
+          "settings": {
+            "title": "Osäker på vilken doft?",
+            "text": "<p>Ta ett set med tre dofter, så hittar mottagaren sin favorit själv.</p>"
+          }
+        },
+        "g4": {
+          "type": "item",
+          "settings": {
+            "title": "Passar den inte?",
+            "text": "<p>60 dagars öppet köp. Passar inte doften har du 60 dagar på dig att returnera den.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "g1",
+        "g2",
+        "g3",
+        "g4"
+      ]
+    },
+    "closing": {
+      "type": "gg-closing",
+      "settings": {
+        "button_link": "#for-henne",
+        "heading": "Presenterna klara, med tid över att andas ut.",
+        "sub": "Välj ett set till varje person på din lista. Varje flaska kommer i egen förpackning.",
+        "button_label": "Se presentseten",
+        "guarantee": "60 dagars öppet köp"
+      }
+    },
+    "social_proof": {
+      "type": "fmx-reviews",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "heading": "Älskad av över 10 000 doftälskare",
+        "review_text": "Över 10 000 verifierade doftälskare",
+        "verified_text": "Verifierad köpare",
+        "initial_count": 26,
+        "columns_desktop": "3",
+        "columns_mobile": "1",
+        "button_text": "Visa fler recensioner",
+        "loading_text": "Laddar recensioner...",
+        "padding_top": 72,
+        "padding_bottom": 72,
+        "rating_value": "4.9",
+        "layout": "grid"
+      },
+      "blocks": {
+        "review_sv_01": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Ärligt talat blev jag förvånad över hur bra den här är. Kvaliteten är imponerande, doften sitter i flera timmar och den ligger otroligt nära originalet. Hade ingen sagt något hade jag aldrig märkt skillnad. Det som gör det ännu bättre är priset. Att få så här bra parfym utan att betala för lyxmärket känns helt rimligt. Klart värt det, och jag kommer att beställa igen.\"</p>",
+            "author": "Luciana R.",
+            "date": "för 7 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_02": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Blev positivt överraskad av kvaliteten på dofterna. De håller mycket längre än jag trodde och flaskorna är snygga också. Jag har redan fått flera komplimanger när jag haft dem på mig. Beställningen gick smidigt och jag är jättenöjd med köpet. Jag kommer absolut att testa fler dofter framöver!\"</p>",
+            "author": "Alina M.",
+            "date": "för 4 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_03": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag köpte och testade Jean Paul Gaultier-doften. Jag är otroligt imponerad!! Doften är helt klockren och den håller hela dagen. Jag har 55 olika originaldofter i min samling, men ingen av dem kan mäta sig med den här. Wow.\"</p>",
+            "author": "Steen J.",
+            "date": "för 6 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_04": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag blev förvånad över hur länge parfymerna håller, det hade jag inte väntat mig för det priset. Jag tar på mig den på morgonen och när jag drar av mig skjortan på kvällen känner jag fortfarande doften. Rekommenderas om du letar efter alternativ till lyxparfymer.\"</p>",
+            "author": "Maria F.",
+            "date": "för 5 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_05": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Blev riktigt förvånad över hur bra parfymen är, och den håller bra. Jag har handlat två gånger hittills och kommer tillbaka när förrådet tar slut 😀\"</p>",
+            "author": "Pernille O.",
+            "date": "för 5 månader sedan",
+            "rating": 4,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_06": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Kvaliteten på doften överraskade mig positivt. Den luktar väldigt likt lyxparfymer men kostar mycket mindre. Den håller länge och känns elegant, jag tycker verkligen om att använda den varje dag. Ett riktigt bra alternativ om du älskar exklusiva dofter men inte vill betala de höga priserna.\"</p>",
+            "author": "Tetiana H.",
+            "date": "för 7 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_07": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag har använt Acqua di Giò i flera år och den här fångar exakt samma fräscha havskänsla. Krispig citrus, salta marina toner och en träig botten, ärligt talat kan jag inte känna någon skillnad. Bäst av allt? Priset. Nu kan jag äntligen spraya hur mycket jag vill utan att oroa mig.\"</p>",
+            "author": "Michael D.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_08": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag blev faktiskt riktigt överraskad av hur bra den här parfymen är. Doften är välbalanserad, mjuk och långvarig utan att bli för stark. Den har en ren och elegant känsla som funkar både till vardags och till finare tillfällen. Jag märkte också att den utvecklas fint efter ett tag, vilket gör den ännu roligare att ha på sig. Allt som allt är jag jättenöjd och rekommenderar den gärna till alla som letar efter något unikt och av hög kvalitet.\"</p>",
+            "author": "Zein H.",
+            "date": "för 7 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_09": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Min dejt trodde på allvar att det var Tom Ford. Den håller dessutom kanske en timme eller två längre, vilket är otroligt, särskilt för det här priset.\"</p>",
+            "author": "Nick D.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_10": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Håller längre än jag trodde. Den sitter i stabila 6 till 7 timmar på mig, vilket är bättre än originalet för min del. Den märks lagom mycket, varken för stark eller för svag.\"</p>",
+            "author": "Peter S.",
+            "date": "för 1 år sedan",
+            "rating": 4,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_11": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag älskade verkligen min doft! Jag testade den som är inspirerad av YSL Libre, och jag gillade den faktiskt mycket mer än originalet från YSL!\"</p>",
+            "author": "A'Miracle F.",
+            "date": "för 9 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_12": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Ett riktigt fynd! Har du jämfört med Imagination sida vid sida är det knappt någon skillnad, och alla andra säger bara ”fan vad gott du luktar”. Önskar att jag hade hittat den här tidigare!!!\"</p>",
+            "author": "Eric M.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_13": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag är såååå nöjd med allt, dofterna är fantastiska och väldigt lika originalen. De håller riktigt länge!\"</p>",
+            "author": "Lena A.",
+            "date": "för 4 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_14": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag letade efter en viss parfym och fick hjälp att hitta den. Den var precis vad jag ville ha och sitter i över 12 timmar! Jag får bara komplimanger. Tack!\"</p>",
+            "author": "Rozhin D.",
+            "date": "för 2 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_15": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Lite räcker långt. Första gången sprayade jag alldeles för mycket, den här är stark! Nu kör jag max två sprut och den håller hela dagen. Kanel och amber gör den mysig men ändå vuxen.\"</p>",
+            "author": "Kevin O.",
+            "date": "för 1 år sedan",
+            "rating": 4,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_16": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag har älskat Black Opium i flera år och den här är faktiskt nästan identisk. Älskar de varma tonerna av vanilj och kaffe. Den är mysig men känns ändå sofistikerad.\"</p>",
+            "author": "Emily C.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_17": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag har köpt parfym till både mig själv och min fru och de luktar riktigt gott. Precis som de dofter de är inspirerade av. Rekommenderas.\"</p>",
+            "author": "Mattias E.",
+            "date": "för 2 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_18": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Den luktar exakt som originalet. Rosen känns fräsch och naturlig, och hållbarheten är fantastisk, lätt över 12 timmar.\"</p>",
+            "author": "Kiara B.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_19": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Underbart och ärligt företag. REKOMMENDERAS 10/10, riktigt fina parfymer som luktar precis som originalet, och verkligen ärliga priser. Har beställt två gånger.\"</p>",
+            "author": "Ayham A.",
+            "date": "för 2 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_20": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Ett bra val för oudälskare. Gillar du djupa, träiga dofter med kryddighet och värme så träffar den här rätt. Inte exakt som Alexandria II, men ett riktigt bra alternativ.\"</p>",
+            "author": "Jason C.",
+            "date": "för 1 år sedan",
+            "rating": 4,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_21": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Parfymer av riktigt bra kvalitet till lågt pris!! Jag kommer absolut att beställa mer. Jag sprayade en gång på armen bara för att testa och kunde känna doften i flera timmar!!!! Riktigt bra service. Rekommenderar!!\"</p>",
+            "author": "Julia P.",
+            "date": "för 3 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_22": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Luktar otroligt likt originalet, L'Immensité från Louis Vuitton. Fräsch citrus och ingefära blandas perfekt med diskreta örttoner. Rekommenderas varmt.\"</p>",
+            "author": "John M.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_23": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Inte bara för män. Jag är tjej och var orolig att den skulle vara för maskulin, men den är faktiskt perfekt. Ambern mjukar upp lädret och kanelen gör den intressant.\"</p>",
+            "author": "Priya S.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_24": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag har handlat flera gånger och är supernöjd! Bra kvalitet, tillverkad så att man vet vad den innehåller, och doften håller i många timmar!\"</p>",
+            "author": "René V.",
+            "date": "för 4 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_25": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Det är den jag tar på mig de kvällar jag stannar hemma och bara vill skämma bort mig själv. Värmen och sötman gör den så mysig.\"</p>",
+            "author": "Emily S.",
+            "date": "för 1 år sedan",
+            "rating": 4,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_26": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag beställde två parfymer och är riktigt imponerad. Dofterna är väldigt lika originalen och kvaliteten överträffade mina förväntningar. Dessutom var servicen snabb och proffsig. Jag är jättenöjd med köpet och kan varmt rekommendera er till andra. Tack för en fantastisk upplevelse.\"</p>",
+            "author": "Amran T.",
+            "date": "för 3 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_27": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag har haft L'Eau d'Issey tidigare och den här träffar helt rätt. De träiga tonerna och citrusen sitter perfekt, och den håller lika länge.\"</p>",
+            "author": "Brian O.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_28": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Det här är andra gången jag beställer! Bra parfymer som luktar gott och håller länge. Min favorit är körsbärsparfymen, den luktar supergott!\"</p>",
+            "author": "Tina H.",
+            "date": "för 2 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_29": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Klockrent. Är det här ens lagligt? Så nära originalet man kan komma. Doften håller länge och det svider knappt i plånboken att beställa. Rekommenderas varmt! 👍🏻\"</p>",
+            "author": "Håcan A.",
+            "date": "för 6 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_30": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag jobbar sena kvällar och behövde något att fräscha upp mig med innan jag går ut. Den här gör susen: ren, inte påträngande och den håller.\"</p>",
+            "author": "Malik J.",
+            "date": "för 1 år sedan",
+            "rating": 4,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_31": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Älskar parfymerna, de luktar som originalen och håller länge 😍 Jag har beställt 10 parfymer och älskar alla.\"</p>",
+            "author": "Christina T.",
+            "date": "för 4 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_32": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Blev faktiskt förvånad över hur lyxigt den här luktar. Den håller längre än de flesta designerdofter jag testat, och jag har sparat massor av pengar.\"</p>",
+            "author": "Adam G.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_33": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Parfymerna är riktigt bra! Det är nästan ingen skillnad mot originalen och jag är faktiskt jättenöjd med köpet. Bra pris.\"</p>",
+            "author": "Rimuska B.",
+            "date": "för 2 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_34": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Till skillnad från en del andra alternativ luktar den här inte billigt eller kemiskt. Jag gillar blandningen och den sitter kvar länge i kläderna.\"</p>",
+            "author": "Claire H.",
+            "date": "för 1 år sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_35": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Doften överraskade mig verkligen, den är helt enastående! Jag älskar den, och förpackningen är också väldigt elegant.\"</p>",
+            "author": "Silvana R.",
+            "date": "för 6 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        },
+        "review_sv_36": {
+          "type": "review",
+          "settings": {
+            "content": "<p>\"Jag älskade den här parfymen, doften är otrolig och den sitter i länge. Ärligt talat är det ett smart val till ett lågt pris, jag köper den absolut igen. Jag blev helt förtjust 😍❤️\"</p>",
+            "author": "Daniela B.",
+            "date": "för 7 månader sedan",
+            "rating": 5,
+            "show_verified_badge": true
+          }
+        }
+      },
+      "block_order": [
+        "review_sv_01",
+        "review_sv_02",
+        "review_sv_03",
+        "review_sv_04",
+        "review_sv_05",
+        "review_sv_06",
+        "review_sv_07",
+        "review_sv_08",
+        "review_sv_09",
+        "review_sv_10",
+        "review_sv_11",
+        "review_sv_12",
+        "review_sv_13",
+        "review_sv_14",
+        "review_sv_15",
+        "review_sv_16",
+        "review_sv_17",
+        "review_sv_18",
+        "review_sv_19",
+        "review_sv_20",
+        "review_sv_21",
+        "review_sv_22",
+        "review_sv_23",
+        "review_sv_24",
+        "review_sv_25",
+        "review_sv_26",
+        "review_sv_27",
+        "review_sv_28",
+        "review_sv_29",
+        "review_sv_30",
+        "review_sv_31",
+        "review_sv_32",
+        "review_sv_33",
+        "review_sv_34",
+        "review_sv_35",
+        "review_sv_36"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "trust",
+    "recipients",
+    "for_her",
+    "reviews",
+    "for_him",
+    "builder",
+    "more_ways",
+    "newsletter",
+    "good_to_know",
+    "closing",
+    "social_proof"
+  ]
+}
