@@ -281,7 +281,7 @@
         "custom_liquid_dwyhHW": {
           "type": "custom_liquid",
           "settings": {
-            "custom_liquid": "{% render 'quantity-breaker' %}"
+            "custom_liquid": "{% render 'quantity-breaker', largest_first: true %}"
           }
         },
         "fuel03_pair_1": {
