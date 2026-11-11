@@ -24,8 +24,7 @@
 <span id="reviews" class="pm-anchor"></span>
 <div
   id="{{ section.id }}"
-  class="pm-reviews pm-reviews--{{ section.id }}{% if template.suffix == 'custom-bundle-fm' %} pm-reviews--custom-bundle{% endif %} color-{{ section.settings.color_scheme }} gradient">  <div class="page-width">
-    <div class="pm-reviews__head">
+class="pm-reviews pm-reviews--{{ section.id }}{% if template.suffix == 'custom-bundle-fm' or template.suffix == 'tsr-bundle-fm' %} pm-reviews--bundle-aligned{% endif %} color-{{ section.settings.color_scheme }} gradient">    <div class="pm-reviews__head">
       <h2 class="pm-h2 pm-reviews__heading">{{ section.settings.heading }}</h2>
       {%- if section.settings.review_text != blank -%}
         <div class="pm-reviews__rating">
