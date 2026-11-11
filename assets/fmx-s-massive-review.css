@@ -153,3 +153,11 @@
 .premium .pm-reviews [hidden] {
   display: none;
 }
+/* Custom Bundle FM: align heading with review cards */
+@media screen and (min-width: 990px) {
+  .premium .pm-reviews--custom-bundle .pm-reviews__head {
+    max-width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
