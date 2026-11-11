@@ -16,10 +16,10 @@
     "offer_timebar_xLgmJd": {
       "settings": {
         "top_banner_text": "",
-        "prepend_text": "Black Friday -ennakko",
+        "prepend_text": "🎁 Black Friday:",
         "countdown_date": "",
-        "append_text": "Joka 3. pullo ilmaiseksi",
-        "link": "https://tryscent.co/fi-fi/collections/bestseller-singles",
+        "append_text": "Osta 2, saat 1 ilmaiseksi!",
+        "link": "",
         "fuel04_line": ""
       },
       "blocks": {

@@ -22,10 +22,10 @@
     "offer_timebar_xLgmJd": {
       "settings": {
         "top_banner_text": "",
-        "prepend_text": "Tidlig Black Friday",
+        "prepend_text": "🎁 Black Friday:",
         "countdown_date": "",
-        "append_text": "Køb 4, betal for 3!",
-        "link": "https://tryscent.co/da-dk/collections/bestseller-singles",
+        "append_text": "Køb 2, få 1 gratis!",
+        "link": "",
         "fuel04_line": ""
       },
       "blocks": {
