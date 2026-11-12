@@ -59,25 +59,27 @@
         "collection_bast",
         "collection_nya"
       ],
+      "disabled": true,
       "settings": {
         "aria_label": "Handla efter kategori",
+        "background_color": "#faf9f6",
+        "background_gradient": "",
         "ring_color_1": "#fdf497",
         "ring_color_2": "#fd5949",
         "ring_color_3": "#d6249f",
         "ring_color_4": "#285aeb",
-        "background_color": "#faf9f6",
         "padding_top": 4,
         "padding_bottom": 2
       }
     },
     "collection_hero_P7jePR": {
       "type": "collection-hero",
+      "disabled": true,
       "name": "Collection Hero",
       "settings": {
         "show_rating_badge": false,
         "rating_text": "Verifierat av över 10 000 doftälskare"
-      },
-      "disabled": true
+      }
     },
     "fuel01_byo": {
       "type": "fuel01-byo",
@@ -288,9 +290,26 @@
         "show_vendor": false,
         "show_rating": true,
         "quick_add": "none",
+        "card_atc": true,
         "enable_filtering": true,
         "filter_type": "horizontal",
         "enable_sorting": true,
+        "toolbar_style": "mgx",
+        "filters_clear_label": "Ta bort alla",
+        "filters_apply_label": "Visa",
+        "enable_search": true,
+        "search_placeholder": "Skriv in märke, tillfälle eller doftfamilj",
+        "search_results_text": "[count] träffar för ”[query]”",
+        "search_result_text": "1 träff för ”[query]”",
+        "search_empty_text": "Ingen träff för ”[query]”. Prova med märket eller originalets namn.",
+        "search_loading_text": "Söker bland alla dofter…",
+        "search_clear_label": "Rensa sökningen",
+        "cart_goals": false,
+        "goals_msg_gift": "Bara [x] kvar till en gratis 50 ml Mystery-doft!",
+        "goals_msg_ship": "Bara [x] kvar till gratis frakt!",
+        "goals_msg_done": "Grattis! Gratis frakt och gratis Mystery-dofter upplåsta 🎉",
+        "goals_gift_label": "Gratis 50 ml Mystery-doft",
+        "goals_ship_label": "Gratis frakt",
         "padding_top": 36,
         "padding_bottom": 40,
         "fuel04_cards": true,
@@ -302,13 +321,7 @@
         "fuel04_card_tier_1_text": "Välj en 30 ml doft GRATIS",
         "fuel04_card_tier_2_count": "KÖP 5",
         "fuel04_card_tier_2_text": "Få en 100 ml Mystery Scent GRATIS",
-        "fuel04_card_cta_text": "LÅS UPP DINA GÅVOR",
-        "card_atc": true,
-        "toolbar_style": "mgx",
-        "filters_clear_label": "Ta bort alla",
-        "filters_apply_label": "Visa",
-        "enable_search": true,
-        "search_placeholder": "Skriv in märke, tillfälle eller doftfamilj"
+        "fuel04_card_cta_text": "LÅS UPP DINA GÅVOR"
       }
     },
     "rich_text_fnCgkL": {
@@ -351,6 +364,7 @@
       "block_order": [
         "text_9raUVC"
       ],
+      "disabled": true,
       "name": "t:sections.rich-text.presets.name",
       "settings": {
         "desktop_content_position": "center",
@@ -359,8 +373,7 @@
         "full_width": true,
         "padding_top": 60,
         "padding_bottom": 60
-      },
-      "disabled": true
+      }
     }
   },
   "order": [
