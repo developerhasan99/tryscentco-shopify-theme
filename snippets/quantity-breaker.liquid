@@ -3,6 +3,11 @@
   Optional params:
   - default_size: size preselected, matched against the variant title (default '50')
   - largest_first: true lists sizes 100 ml → 30 ml instead of 30 ml → 100 ml
+  - fmx_trust: true (FM product page, templates/product.tsr-bundle-fm.json) shows under the buy button
+    the FM page's row instead of the grey payment-badge.png + "Levereras till ..." line:
+    the "Inte din doft?" finder link (fuel06-pdp-link), payment icons in colour per market
+    (fmx-payment-icons) and the three tiles delivery / PostNord / 60-day guarantee (fmx-shipping-badges),
+    the same parts snippets/fmx-variant-selector.liquid renders. Other templates keep the old row.
 {% endcomment %}
 {% liquid
   assign product_form_id = 'product-form-' | append: section.id
@@ -924,6 +929,15 @@
 
 {% endunless %}
 
+{%- if fmx_trust -%}
+  {%- render 'fuel06-pdp-link' -%}
+
+  {% render 'fmx-payment-icons' %}
+
+  {% unless product.template_suffix == 'cro-deck' %}
+    {% render 'fmx-shipping-badges', product: product %}
+  {% endunless %}
+{%- else -%}
 <div>
   <img
     class="max-w-full mx-auto mt-8 block [filter:grayscale(1)]"
@@ -943,5 +957,6 @@
     </p>
   </div>
 {% endunless %}
+{%- endif -%}
 
 
