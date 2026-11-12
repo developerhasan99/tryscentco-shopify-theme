@@ -286,7 +286,7 @@
         "custom_liquid_ttThnP": {
           "type": "custom_liquid",
           "settings": {
-            "custom_liquid": "{% render 'quantity-breaker', largest_first: true  %}"
+            "custom_liquid": "{% render 'quantity-breaker', largest_first: true, fmx_trust: true %}"
           }
         },
         "fuel03_pair_1": {
