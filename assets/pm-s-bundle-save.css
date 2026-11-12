@@ -1215,6 +1215,57 @@
   color: var(--pm-muted);
 }
 
+/* Phones (tryscent.eu pattern, 13.11.2026): the long Swedish names ("Doftar som… X - No. 318") and the
+   "Inspirerad av <brand> <perfume>" line get the full width beside the photo; the Add button moves down
+   next to the designer price and occasion chips. Before, all text sat in a 134px column between the photo
+   and the button (title 4 lines, designer line 4 lines). */
+@media (max-width: 749px) {
+  .premium .pm-bs-row {
+    grid-template-areas:
+      "side title title"
+      "side insp insp"
+      "side designer actions"
+      "side tags actions";
+    grid-template-rows: auto auto auto auto;
+    align-content: center;
+    row-gap: 2px;
+  }
+
+  .premium .pm-bs-row__side {
+    grid-area: side;
+    align-self: center;
+  }
+
+  .premium .pm-bs-row__body {
+    display: contents;
+  }
+
+  .premium .pm-bs-row__title {
+    grid-area: title;
+    margin-bottom: 2px;
+  }
+
+  .premium .pm-bs-row__insp {
+    grid-area: insp;
+    align-self: center;
+  }
+
+  .premium .pm-bs-row__designer {
+    grid-area: designer;
+    align-self: end;
+  }
+
+  .premium .pm-bs-row__tags {
+    grid-area: tags;
+    align-self: start;
+  }
+
+  .premium .pm-bs-row__actions {
+    grid-area: actions;
+    align-self: center;
+  }
+}
+
 @media (min-width: 750px) {
   .premium .pm-bs-row {
     grid-template-columns: 72px minmax(0, 1fr) auto;
