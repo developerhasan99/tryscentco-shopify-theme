@@ -5,16 +5,22 @@
   - results: {Object} Collection or Search object
   - enable_filtering: {Boolean} Show filtering when true
   - enable_sorting: {Boolean} Show sorting when true
-  - filter_type: {String} Type of filter
+  - filter_type: {String} Type of filter ('horizontal', 'vertical', 'drawer', or 'pills': the premium
+    collection toolbar, see below)
+  - clear_label: {String} 'pills' only: text of the link that removes every filter (section setting)
   - paginate: {Object}
 
   Usage:
   {% render 'facets', results: collection, enable_filtering: true, enable_sorting: true, filter_type: 'vertical', paginate: paginate %}
-{% endcomment %}
 
-{{ 'component-show-more.css' | asset_url | stylesheet_tag }}
-{{ 'component-swatch-input.css' | asset_url | stylesheet_tag }}
-{{ 'component-swatch.css' | asset_url | stylesheet_tag }}
+  filter_type 'pills' (sections/main-collection-product-grid.liquid, toolbar_style "pills"): one centred
+  row of pill dropdowns, Sort first, then one pill per storefront filter (list, boolean, price_range;
+  Search & Discovery), the active filters as removable pills under it. Styles: assets/pm-collection.css
+  block 10; open/close behaviour: assets/pm-collection-search.js. Filtering and sorting stay with Dawn's
+  facets.js, so the hooks it reads keep their Dawn names: form#FacetFiltersForm, #FacetsWrapperDesktop,
+  .js-filter details with Details-* ids, .facets__summary, .facets-wrap, .active-facets-desktop,
+  facet-remove, price-range.
+{% endcomment %}
 
 {%- liquid
   assign sort_by = results.sort_by | default: results.default_sort_by
@@ -27,6 +33,305 @@
     assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
   endif
 -%}
+
+{%- if filter_type == 'pills' -%}
+  {%- liquid
+    assign pm_active_total = 0
+    if enable_filtering
+      for filter in results.filters
+        if filter.type == 'price_range'
+          if filter.min_value.value != null or filter.max_value.value != null
+            assign pm_active_total = pm_active_total | plus: 1
+          endif
+        else
+          assign pm_active_total = pm_active_total | plus: filter.active_values.size
+        endif
+      endfor
+    endif
+
+    # Template preview (?view=<suffix> on a collection whose own template is another one, e.g. a lander under test):
+    # filters, sort and the remove links keep the view, otherwise the next page load (reload, back, a remove link)
+    # falls back to the collection's own template. Empty on a collection that has this template assigned.
+    assign pm_view = ''
+    if template.name == 'collection' and template.suffix != blank and template.suffix != collection.template_suffix
+      assign pm_view = template.suffix
+    endif
+
+    # "Clear all" keeps the current sort
+    assign pm_clear_url = results_url
+    if results.url
+      assign pm_clear_url = results.url | append: '?sort_by=' | append: sort_by
+    endif
+    if pm_view != blank
+      if pm_clear_url contains '?'
+        assign pm_clear_url = pm_clear_url | append: '&view=' | append: pm_view
+      else
+        assign pm_clear_url = pm_clear_url | append: '?view=' | append: pm_view
+      endif
+    endif
+    if clear_label != blank
+      assign pm_clear_label = clear_label
+    else
+      assign pm_clear_label = 'products.facets.clear_all' | t
+    endif
+  -%}
+  {%- capture pm_chevron -%}
+    {% render 'pm-icon', icon: 'chevron-down', size: 14, stroke: 2, class: 'pm-facets__chev' %}
+  {%- endcapture -%}
+
+  <div class="pm-facets">
+    <facet-filters-form class="pm-facets__form-wrap">
+      <form id="FacetFiltersForm" class="pm-facets__form">
+        {%- if results.terms -%}
+          <input type="hidden" name="q" value="{{ results.terms | escape }}">
+          <input name="options[prefix]" type="hidden" value="last">
+        {%- endif -%}
+        {%- if pm_view != blank -%}
+          <input type="hidden" name="view" value="{{ pm_view | escape }}">
+        {%- endif -%}
+
+        <div id="FacetsWrapperDesktop" class="pm-facets__row">
+          {%- if enable_sorting -%}
+            <details id="Details-SortBy-{{ section.id }}" class="pm-facets__pill js-filter">
+              <summary class="pm-facets__summary facets__summary">
+                <span class="pm-facets__label">{{ 'products.facets.sort_button' | t }}</span>
+                {{- pm_chevron -}}
+              </summary>
+              <div id="Facet-SortBy-{{ section.id }}" class="pm-facets__panel">
+                <fieldset class="pm-facets__wrap facets-wrap">
+                  <legend class="visually-hidden">{{ 'products.facets.sort_by_label' | t }}</legend>
+                  <ul class="pm-facets__list" role="list">
+                    {%- for option in results.sort_options -%}
+                      <li class="pm-facets__item">
+                        <label
+                          for="SortBy-{{ section.id }}-{{ forloop.index }}"
+                          class="pm-facets__option{% if option.value == sort_by %} is-active{% endif %}"
+                        >
+                          <input
+                            class="pm-facets__check pm-facets__check--radio"
+                            type="radio"
+                            name="sort_by"
+                            value="{{ option.value | escape }}"
+                            id="SortBy-{{ section.id }}-{{ forloop.index }}"
+                            {% if option.value == sort_by %}
+                              checked
+                            {% endif %}
+                          >
+                          <span class="pm-facets__option-label">{{ option.name | escape }}</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </fieldset>
+              </div>
+            </details>
+          {%- endif -%}
+
+          {%- if enable_filtering -%}
+            {%- for filter in results.filters -%}
+              {%- liquid
+                assign pm_n = filter.active_values.size
+                if filter.type == 'price_range'
+                  assign pm_n = 0
+                  if filter.min_value.value != null or filter.max_value.value != null
+                    assign pm_n = 1
+                  endif
+                endif
+              -%}
+              {%- case filter.type -%}
+                {%- when 'boolean', 'list' -%}
+                  <details
+                    id="Details-{{ filter.param_name | escape }}-{{ section.id }}"
+                    class="pm-facets__pill js-filter"
+                    data-index="{{ forloop.index }}"
+                  >
+                    <summary
+                      class="pm-facets__summary facets__summary"
+                      aria-label="{{ filter.label | escape }} ({{ 'products.facets.filters_selected.one' | t: count: pm_n }})"
+                    >
+                      <span class="pm-facets__label">{{ filter.label | escape }}</span>
+                      {%- if pm_n > 0 -%}
+                        <span class="pm-facets__badge">({{ pm_n }})</span>
+                      {%- endif -%}
+                      {{- pm_chevron -}}
+                    </summary>
+                    <div id="Facet-{{ forloop.index }}-{{ section.id }}" class="pm-facets__panel">
+                      <fieldset class="pm-facets__wrap facets-wrap">
+                        <legend class="visually-hidden">{{ filter.label | escape }}</legend>
+                        {%- liquid
+                          assign sorted_values = filter.values
+                          # Keep the selected values grouped together when operator is AND
+                          if filter.operator == 'AND'
+                            assign active_filter_values = filter.values | where: 'active', true
+                            assign inactive_filter_values = filter.values | where: 'active', false
+                            assign sorted_values = active_filter_values | concat: inactive_filter_values
+                          endif
+                        -%}
+                        <ul class="pm-facets__list" role="list">
+                          {%- for value in sorted_values -%}
+                            {%- liquid
+                              assign input_id = 'Filter-' | append: filter.param_name | escape | append: '-' | append: forloop.index
+                              assign is_disabled = false
+                              if value.count == 0 and value.active == false
+                                assign is_disabled = true
+                              endif
+                            -%}
+                            <li class="pm-facets__item">
+                              <label
+                                for="{{ input_id }}"
+                                class="pm-facets__option{% if value.active %} is-active{% endif %}{% if is_disabled %} is-disabled{% endif %}"
+                              >
+                                <input
+                                  class="pm-facets__check"
+                                  type="checkbox"
+                                  name="{{ value.param_name }}"
+                                  value="{{ value.value }}"
+                                  id="{{ input_id }}"
+                                  {% if value.active %}
+                                    checked
+                                  {% endif %}
+                                  {% if is_disabled %}
+                                    disabled
+                                  {% endif %}
+                                >
+                                <span class="pm-facets__option-label">{{ value.label | escape }}</span>
+                                <span class="pm-facets__option-count" aria-hidden="true">({{ value.count }})</span>
+                                <span class="visually-hidden">
+                                  {%- if value.count == 1 -%}
+                                    {{- 'products.facets.product_count_simple.one' | t: count: value.count -}}
+                                  {%- else -%}
+                                    {{- 'products.facets.product_count_simple.other' | t: count: value.count -}}
+                                  {%- endif -%}
+                                </span>
+                              </label>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      </fieldset>
+                    </div>
+                  </details>
+                {%- when 'price_range' -%}
+                  {%- assign max_price_amount = filter.range_max | money | strip_html | escape -%}
+                  <details
+                    id="Details-{{ filter.param_name | escape }}-{{ section.id }}"
+                    class="pm-facets__pill js-filter"
+                    data-index="{{ forloop.index }}"
+                  >
+                    <summary class="pm-facets__summary facets__summary">
+                      <span class="pm-facets__label">{{ filter.label | escape }}</span>
+                      {%- if pm_n > 0 -%}
+                        <span class="pm-facets__badge">(1)</span>
+                      {%- endif -%}
+                      {{- pm_chevron -}}
+                    </summary>
+                    <div id="Facet-{{ forloop.index }}-{{ section.id }}" class="pm-facets__panel pm-facets__panel--price">
+                      <p class="pm-facets__note">{{ 'products.facets.max_price' | t: price: max_price_amount }}</p>
+                      <price-range class="pm-facets__price">
+                        <label class="pm-facets__field" for="Filter-{{ filter.param_name | escape }}-GTE">
+                          <span class="pm-facets__field-label">{{ 'products.facets.from' | t }}</span>
+                          <span class="pm-facets__input-wrap">
+                            <span class="pm-facets__cur" aria-hidden="true">{{ cart.currency.symbol }}</span>
+                            <input
+                              class="pm-facets__input"
+                              name="{{ filter.min_value.param_name }}"
+                              id="Filter-{{ filter.param_name | escape }}-GTE"
+                              {%- if filter.min_value.value -%}
+                                value="{{ filter.min_value.value | money_without_currency }}"
+                              {%- endif -%}
+                              type="text"
+                              inputmode="decimal"
+                              autocomplete="off"
+                              placeholder="0"
+                              data-pattern="\d| |,|\."
+                              data-min="0"
+                              data-max="{{ filter.range_max | money_without_currency }}"
+                            >
+                          </span>
+                        </label>
+                        <label class="pm-facets__field" for="Filter-{{ filter.param_name | escape }}-LTE">
+                          <span class="pm-facets__field-label">{{ 'products.facets.to' | t }}</span>
+                          <span class="pm-facets__input-wrap">
+                            <span class="pm-facets__cur" aria-hidden="true">{{ cart.currency.symbol }}</span>
+                            <input
+                              class="pm-facets__input"
+                              name="{{ filter.max_value.param_name }}"
+                              id="Filter-{{ filter.param_name | escape }}-LTE"
+                              {%- if filter.max_value.value -%}
+                                value="{{ filter.max_value.value | money_without_currency }}"
+                              {%- endif -%}
+                              type="text"
+                              inputmode="decimal"
+                              autocomplete="off"
+                              placeholder="{{ filter.range_max | money_without_currency }}"
+                              data-pattern="\d| |,|\."
+                              data-min="0"
+                              data-max="{{ filter.range_max | money_without_currency }}"
+                            >
+                          </span>
+                        </label>
+                      </price-range>
+                    </div>
+                  </details>
+              {%- endcase -%}
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+
+        {%- comment -%}
+          Active filters: facets.js swaps the inner HTML of .active-facets-desktop after every change, so the
+          whole row is server-rendered and empty while nothing is picked.
+        {%- endcomment -%}
+        <div class="pm-facets__active active-facets-desktop">
+          {%- if pm_active_total > 0 -%}
+            {%- for filter in results.filters -%}
+              {%- for value in filter.active_values -%}
+                <facet-remove class="pm-facets__chip-wrap">
+                  <a href="{{ value.url_to_remove }}{% if pm_view != blank %}{% unless value.url_to_remove contains 'view=' %}{% if value.url_to_remove contains '?' %}&{% else %}?{% endif %}view={{ pm_view }}{% endunless %}{% endif %}" class="pm-facets__chip">
+                    <span>{{ filter.label | escape }}: {{ value.label | escape }}</span>
+                    {% render 'pm-icon', icon: 'close', size: 12, stroke: 2, class: 'pm-facets__chip-x' %}
+                    <span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
+                  </a>
+                </facet-remove>
+              {%- endfor -%}
+              {%- if filter.type == 'price_range' -%}
+                {%- assign min = filter.min_value.value -%}
+                {%- assign max = filter.max_value.value -%}
+                {%- if min != null or max != null -%}
+                  <facet-remove class="pm-facets__chip-wrap">
+                    <a href="{{ filter.url_to_remove }}{% if pm_view != blank %}{% unless filter.url_to_remove contains 'view=' %}{% if filter.url_to_remove contains '?' %}&{% else %}?{% endif %}view={{ pm_view }}{% endunless %}{% endif %}" class="pm-facets__chip">
+                      <span>{{ min | default: 0 | money }} - {{ max | default: filter.range_max | money }}</span>
+                      {% render 'pm-icon', icon: 'close', size: 12, stroke: 2, class: 'pm-facets__chip-x' %}
+                      <span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
+                    </a>
+                  </facet-remove>
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+            <facet-remove class="pm-facets__clear-wrap">
+              <a href="{{ pm_clear_url }}" class="pm-facets__clear">{{ pm_clear_label | escape }}</a>
+            </facet-remove>
+          {%- endif -%}
+        </div>
+
+        {% if results.current_vendor or results.current_type %}
+          <input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
+        {% endif %}
+      </form>
+    </facet-filters-form>
+
+    {%- comment -%}
+      facets.js hook, not UI: after every filter or sort it calls
+      document.getElementById('FacetFiltersFormMobile').closest('menu-drawer').bindEvents(), which throws
+      (and the grid is never replaced) when that form is missing. The pill row has no drawer, so an empty
+      form inside an empty menu-drawer answers the call; it renders nothing.
+    {%- endcomment -%}
+    <menu-drawer class="pm-facets__compat"><form id="FacetFiltersFormMobile"></form></menu-drawer>
+  </div>
+{%- else -%}
+{{ 'component-show-more.css' | asset_url | stylesheet_tag }}
+{{ 'component-swatch-input.css' | asset_url | stylesheet_tag }}
+{{ 'component-swatch.css' | asset_url | stylesheet_tag }}
+
 
 <div class="facets-container{% if filter_type == 'drawer' %} facets-container-drawer{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
   {%- if filter_type == 'vertical' or filter_type == 'horizontal' -%}
@@ -935,3 +1240,4 @@
     </facet-filters-form>
   {%- endif -%}
 </div>
+{%- endif -%}

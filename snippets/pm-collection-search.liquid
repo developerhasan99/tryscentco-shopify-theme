@@ -1,0 +1,45 @@
+{% comment %}
+  Search field under the collection pill toolbar (sections/main-collection-product-grid.liquid,
+  setting "Show the search bar"). Port of magyx.co snippets/collection-search.liquid (mgx-* renamed
+  to pm-*). Filters the grid by scent name, number, brand, inspiration, family, season, occasion
+  and tags; logic in assets/pm-collection-search.js, which the section loads once (it also drives
+  the pill dropdowns). No form and no name attribute: nothing reaches the URL or facets.js.
+
+  Accepts:
+  - st: section.settings of the grid section
+  - section_id: section.id
+{% endcomment %}
+{{ 'pm-collection-search.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="pm-csearch"
+  data-pm-csearch
+  data-results-text="{{ st.search_results_text | escape }}"
+  data-result-text="{{ st.search_result_text | escape }}"
+  data-empty-text="{{ st.search_empty_text | escape }}"
+  data-loading-text="{{ st.search_loading_text | escape }}"
+  data-clear-label="{{ st.search_clear_label | escape }}">
+  <div class="pm-csearch__inner" role="search">
+    <label class="visually-hidden" for="PmCollectionSearch-{{ section_id }}">
+      {{- st.search_placeholder | default: 'Sök i kollektionen' | escape -}}
+    </label>
+    <div class="pm-csearch__field">
+      {% render 'pm-icon', icon: 'search', size: 18, stroke: 1.8, class: 'pm-csearch__ico' %}
+      <input
+        id="PmCollectionSearch-{{ section_id }}"
+        class="pm-csearch__input"
+        type="search"
+        placeholder="{{ st.search_placeholder | escape }}"
+        autocomplete="off"
+        autocapitalize="off"
+        autocorrect="off"
+        spellcheck="false"
+        enterkeyhint="search"
+        aria-controls="product-grid">
+      <button class="pm-csearch__clear" type="button" aria-label="{{ st.search_clear_label | escape }}" hidden>
+        {% render 'pm-icon', icon: 'close', size: 16, stroke: 1.8 %}
+      </button>
+    </div>
+    <p class="pm-csearch__status" role="status" aria-live="polite" aria-atomic="true"></p>
+  </div>
+</div>

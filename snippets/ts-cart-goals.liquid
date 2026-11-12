@@ -1,0 +1,64 @@
+{% comment %}
+  Cart goals bar on collection grids (sections/main-collection-product-grid.liquid, setting "Show cart goals bar").
+  Display only: the goals the cart drawer shows (Kite "TryScent Days" progress bar: free gifts + free shipping,
+  per market), filled with the current cart total and refreshed after every add to cart. Same goal reading and
+  look as the Bundle & Save builder bar (sections/pm-bundle-save.liquid); logic in assets/ts-cart-goals.js.
+  Hidden until Kite's goals are there; stays hidden on markets where Kite has none.
+
+  Weglot only translates text that is in the page HTML and joins neighbouring inline tags into one sentence, so
+  every text part is its own block element, the amount is its own element, and the reward labels and icons the
+  script repeats per goal are cloned from the hidden elements below.
+
+  Accepts:
+  - st: section.settings of the grid section
+{% endcomment %}
+{{ 'ts-cart-goals.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'ts-cart-goals.js' | asset_url }}" defer="defer"></script>
+
+<div
+  class="ts-goals page-width"
+  data-ts-goals
+  data-market="{{ localization.market.handle | escape }}"
+  data-money="{{ 0 | money_without_trailing_zeros | escape }}"
+  hidden>
+  <div class="ts-goals__inner">
+    <div class="ts-goals__msg" aria-live="polite">
+      {%- liquid
+        assign ts_msgs = 'gift|ship' | split: '|'
+      -%}
+      {%- for kind in ts_msgs -%}
+        {%- liquid
+          if kind == 'gift'
+            assign ts_text = st.goals_msg_gift | default: ''
+          else
+            assign ts_text = st.goals_msg_ship | default: ''
+          endif
+          assign ts_parts = ts_text | replace: '[x]', '|~x|' | split: '|'
+        -%}
+        <div class="ts-goals__line" data-line="{{ kind }}" hidden>
+          {%- for part in ts_parts -%}
+            {%- if part == '~x' -%}
+              <div class="ts-goals__t ts-goals__t--num" data-left></div>
+            {%- elsif part != '' -%}
+              <div class="ts-goals__t">{{ part | escape }}</div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endfor -%}
+      <div class="ts-goals__line" data-line="done" hidden>
+        <div class="ts-goals__t">{{ st.goals_msg_done | escape }}</div>
+      </div>
+    </div>
+    <div class="ts-goals__track" aria-hidden="true">
+      <span class="ts-goals__fill"></span>
+    </div>
+    <div class="ts-goals__labels" aria-hidden="true"></div>
+  </div>
+
+  <div class="ts-goals__src" hidden>
+    <div data-reward="gift">{{ st.goals_gift_label | escape }}</div>
+    <div data-reward="ship">{{ st.goals_ship_label | escape }}</div>
+    <span data-icon="gift">{%- render 'pm-icon', icon: 'gift', size: 14, stroke: 2 -%}</span>
+    <span data-icon="ship">{%- render 'pm-icon', icon: 'truck', size: 14, stroke: 2 -%}</span>
+  </div>
+</div>

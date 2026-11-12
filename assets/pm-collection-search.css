@@ -1,0 +1,202 @@
+/* pm-collection-search.css: search field under the collection pill toolbar
+   (snippets/pm-collection-search.liquid, assets/pm-collection-search.js). Port of magyx.co
+   assets/collection-search.css in premium tokens: centred 52px pill with a 1px ink border, search
+   icon 20px from the left edge, text centred in spaced capitals, clear button once there is text,
+   one status line under it. Mobile first; every selector starts with .premium. */
+
+.premium .pm-csearch {
+  margin: 16px auto 0;
+}
+
+.premium .pm-csearch__inner {
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+.premium .pm-csearch__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 52px;
+  border: 1px solid var(--pm-ink);
+  border-radius: var(--pm-radius-pill);
+  background: var(--pm-white);
+  color: var(--pm-ink);
+  cursor: text;
+}
+
+.premium .pm-csearch__field:focus-within {
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.premium .pm-csearch__ico {
+  position: absolute;
+  top: 50%;
+  left: 19px;
+  width: 18px;
+  height: 18px;
+  transform: translateY(-50%);
+  color: var(--pm-ink);
+  pointer-events: none;
+}
+
+/* Equal padding on both sides keeps the text centred on the pill, not on the space after the icon;
+   44px clears the icon (20 + 18 + 6), 52px once there is text so it never runs under the clear button.
+   Phones type at 16px so iOS does not zoom the page on focus. */
+.premium .pm-csearch__input.pm-csearch__input {
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 50px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 44px;
+  border: 0;
+  border-radius: var(--pm-radius-pill);
+  background: transparent;
+  box-shadow: none;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--pm-ink);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.premium .pm-csearch__input.pm-csearch__input:not(:placeholder-shown) {
+  padding: 0 52px;
+}
+
+.premium .pm-csearch__input.pm-csearch__input:focus,
+.premium .pm-csearch__input.pm-csearch__input:focus-visible {
+  outline: 0;
+  box-shadow: none;
+}
+
+/* The placeholder steps down on phones so the whole line fits between the icon and the right edge
+   (335px field at 375: 11px / .06em = 229px of the 247px available); 13px / .12em from 430px. */
+.premium .pm-csearch__input.pm-csearch__input::placeholder {
+  color: var(--pm-ink);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+.premium .pm-csearch__input::-webkit-search-cancel-button,
+.premium .pm-csearch__input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.premium .pm-csearch__clear {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--pm-radius-pill);
+  background: transparent;
+  color: var(--pm-ink);
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.premium .pm-csearch__clear:hover {
+  background: var(--pm-surface);
+}
+
+.premium .pm-csearch__clear:focus-visible {
+  outline: 2px solid var(--pm-ink);
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+.premium .pm-csearch__clear[hidden] {
+  display: none;
+}
+
+.premium .pm-csearch__status {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--pm-muted);
+  text-align: center;
+}
+
+.premium .pm-csearch__status:empty {
+  display: none;
+}
+
+/* tryscent.eu: assets/collection-search.js builds the reset button as .mgx-csearch__reset */
+.premium .pm-csearch__reset,
+.premium .pm-csearch .mgx-csearch__reset {
+  display: inline;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 500;
+  color: var(--pm-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* Products the search leaves out (li[hidden]) */
+.premium .product-grid > .grid__item[hidden] {
+  display: none;
+}
+
+/* tryscent.co lander-v3 (live theme): the placeholder there is longer ("Skriv in märke, tillfälle eller doftfamilj",
+   264px at 11px / .04em), so on phones the empty field gives it the right-hand padding too (44px left for the icon,
+   14px right: 270px at a 360px screen) and the 13px / .12em step waits until 500px. Typed text keeps the 52px sides. */
+@media (max-width: 749px) {
+  .premium .pm-csearch__input.pm-csearch__input:placeholder-shown {
+    padding-right: 14px;
+  }
+
+  .premium .pm-csearch__input.pm-csearch__input::placeholder {
+    letter-spacing: 0.04em;
+  }
+}
+
+@media (max-width: 359px) {
+  .premium .pm-csearch__input.pm-csearch__input::placeholder {
+    font-size: 10px;
+    letter-spacing: 0;
+  }
+}
+
+@media (min-width: 500px) {
+  .premium .pm-csearch__input.pm-csearch__input::placeholder {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+  }
+}
+
+@media (min-width: 750px) {
+  .premium .pm-csearch__input.pm-csearch__input {
+    font-size: 13px;
+  }
+}

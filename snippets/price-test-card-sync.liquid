@@ -101,13 +101,15 @@
       guardCompare();
       const data = testPrices();
       if (!data?.prices.size) return;
-      for (const card of document.querySelectorAll('.product-card-wrapper[data-variant-id]')) {
-        const price = data.prices.get(card.dataset.variantId);
+      // [data-ts-variant-id]: collection cards with size chips (snippets/product-card.liquid with atc) print the
+      // price of the chosen size, so they sync like the older variant cards.
+      for (const card of document.querySelectorAll('.product-card-wrapper[data-variant-id], [data-ts-variant-id]')) {
+        const price = data.prices.get(card.dataset.variantId || card.dataset.tsVariantId);
         const label = card.querySelector('.ab-current-price');
         if (price && label) setAmount(label, price);
       }
       for (const label of linkCardLabels()) {
-        if (label.closest('.product-card-wrapper[data-variant-id]')) continue;
+        if (label.closest('.product-card-wrapper[data-variant-id], [data-ts-variant-id]')) continue;
         const handle = handleOf(label);
         const price = handle && data.lowest.get(handle);
         if (price) setAmount(label, price);

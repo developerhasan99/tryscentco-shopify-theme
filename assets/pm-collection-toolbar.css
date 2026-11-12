@@ -1,0 +1,503 @@
+/* pm-collection-toolbar.css: the tryscent.eu collection pill toolbar on the tryscent.co redesign
+   (sections/main-collection-product-grid.liquid toolbar_style "pills": snippets/facets.liquid
+   filter_type 'pills', snippets/pm-collection-search.liquid, assets/pm-collection-search.js,
+   assets/pm-collection-grid-loader.js). Copied 1:1 from tryscent-eu-premium-theme assets/pm-collection.css
+   block 5 (load more + pm-loader) and block 10 (pill toolbar, search, active filters); the grid, card
+   and drawer blocks of that file are not used here (the tryscent.co grid keeps its own cards).
+   Loaded by the grid section. Zero importance overrides. */
+
+/* 5. Load more: the sentinel button stays invisible (the observer needs its box), status line with the pm-loader */
+.premium .pm-loadmore {
+  margin: 40px 0 0;
+  padding: 0;
+  text-align: center;
+}
+
+.premium .pm-loadmore__btn {
+  display: block;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.premium .pm-loadmore__status {
+  display: none;
+  margin: 0;
+  padding: 12px 0;
+  font-size: var(--pm-fs-small);
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--pm-muted);
+}
+
+/* Shown by assets/pm-collection-grid-loader.js while a page is loading */
+.premium .pm-loadmore__status.is-loading {
+  display: block;
+}
+
+.premium .pm-loader {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  margin: 0 12px 0 0;
+  border: 2px solid var(--pm-line);
+  border-top-color: var(--pm-ink);
+  border-radius: 50%;
+  vertical-align: middle;
+  animation: pm-spin 0.8s linear infinite;
+}
+
+@keyframes pm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .premium .pm-loader {
+    animation: none;
+    border-color: var(--pm-ink);
+  }
+
+  .premium .mobile-facets__inner,
+  .premium details.mobile-facets__details > summary.mobile-facets__summary > div::after {
+    transition: none;
+  }
+}
+
+/* 10. Pill toolbar (toolbar_style "pills"): centred row of pill dropdowns (Sort, then one per storefront filter),
+       removable active-filter pills, then the search field (assets/pm-collection-search.css) and the count.
+       375: one horizontally scrollable row edge to edge (20px inner padding, snap, no scrollbar), each panel a
+       full-width sheet under the row. From 750: the row wraps and centres, each panel drops under its own pill.
+       The panels are absolutely positioned against .pm-facets, an ancestor of the scrolling row, so the row's
+       overflow does not clip them. Behaviour: assets/pm-collection-search.js. */
+.premium .pm-ctoolbar {
+  position: relative;
+  z-index: 2;
+  padding-top: 8px;
+  padding-bottom: 24px;
+}
+
+/* An open panel paints over the card badges (z-index 2, later in the page). That also ties the sticky
+   header (z-index 3), so assets/pm-collection-search.js closes the pill as soon as it scrolls under the
+   header; closed, the row stays below the header */
+.premium .pm-ctoolbar:has(.pm-facets__pill[open]) {
+  z-index: 3;
+}
+
+.premium .pm-facets {
+  position: relative;
+}
+
+.premium .pm-facets__form-wrap,
+.premium .pm-facets__form {
+  display: block;
+  margin: 0;
+}
+
+.premium .pm-facets__row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+  margin: -4px calc(-1 * var(--pm-gutter));
+  padding: 4px var(--pm-gutter);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--pm-gutter);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.premium .pm-facets__row::-webkit-scrollbar {
+  display: none;
+}
+
+/* Auto margins centre the pills while they fit and fall to 0 once the row scrolls */
+.premium .pm-facets__pill {
+  flex: none;
+  margin: 0;
+  scroll-snap-align: start;
+}
+
+.premium .pm-facets__pill:first-child {
+  margin-left: auto;
+}
+
+.premium .pm-facets__pill:last-child {
+  margin-right: auto;
+}
+
+.premium .pm-facets__summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-sizing: border-box;
+  height: 36px;
+  margin: 0;
+  padding: 0 16px;
+  border: 1px solid var(--pm-ink);
+  border-radius: var(--pm-radius-pill);
+  background: var(--pm-white);
+  color: var(--pm-ink);
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+  list-style: none;
+  cursor: pointer;
+  transition: background-color var(--pm-dur) var(--pm-ease), color var(--pm-dur) var(--pm-ease);
+}
+
+.premium .pm-facets__summary::-webkit-details-marker {
+  display: none;
+}
+
+.premium .pm-facets__summary:hover {
+  background: var(--pm-surface);
+}
+
+.premium .pm-facets__summary:focus-visible {
+  outline: 2px solid var(--pm-ink);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.premium .pm-facets__pill[open] > .pm-facets__summary {
+  background: var(--pm-ink);
+  color: var(--pm-white);
+}
+
+.premium .pm-facets__badge {
+  font-weight: 600;
+}
+
+.premium .pm-facets__chev {
+  flex: none;
+  display: block;
+  width: 14px;
+  height: 14px;
+  transition: transform var(--pm-dur) var(--pm-ease);
+}
+
+.premium .pm-facets__pill[open] .pm-facets__chev {
+  transform: rotate(180deg);
+}
+
+/* Panel: 375 = full-width sheet under the row (top auto keeps it where the pill ends) */
+.premium .pm-facets__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  box-sizing: border-box;
+  max-height: min(360px, 60vh);
+  margin: 8px 0 0;
+  padding: 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-md);
+  background: var(--pm-white);
+  box-shadow: var(--pm-shadow-float);
+  color: var(--pm-ink);
+  text-align: left;
+}
+
+.premium .pm-facets__wrap {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.premium .pm-facets__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.premium .pm-facets__item {
+  margin: 0;
+  padding: 0;
+}
+
+.premium .pm-facets__option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--pm-ink);
+  cursor: pointer;
+}
+
+.premium .pm-facets__option.is-active {
+  font-weight: 500;
+}
+
+.premium .pm-facets__option.is-disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.premium .pm-facets__option-label {
+  flex: 0 1 auto;
+}
+
+.premium .pm-facets__option-count {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--pm-muted);
+}
+
+/* 16px boxes, 1px ink, radius 2, ink with a white check when checked; the sort radios are round */
+.premium .pm-facets__check {
+  position: static;
+  flex: none;
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--pm-ink);
+  border-radius: 2px;
+  background-color: var(--pm-white);
+  cursor: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.premium .pm-facets__check:checked {
+  background-color: var(--pm-ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23ffffff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 12px 12px;
+}
+
+.premium .pm-facets__check.pm-facets__check--radio {
+  border-radius: 50%;
+}
+
+.premium .pm-facets__check.pm-facets__check--radio:checked {
+  background-image: none;
+  box-shadow: inset 0 0 0 3px var(--pm-white);
+}
+
+.premium .pm-facets__check:focus-visible {
+  outline: 2px solid var(--pm-ink);
+  outline-offset: 2px;
+}
+
+/* Price: highest-price note, then From / To fields (44px, radius 4) with the currency inside */
+.premium .pm-facets__note {
+  margin: 0 0 12px;
+  font-size: var(--pm-fs-small);
+  line-height: var(--pm-lh-small);
+  color: var(--pm-muted);
+}
+
+.premium .pm-facets__price {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.premium .pm-facets__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  margin: 0;
+}
+
+.premium .pm-facets__field-label {
+  font-size: var(--pm-fs-small);
+  line-height: 16px;
+  color: var(--pm-muted);
+}
+
+.premium .pm-facets__input-wrap {
+  position: relative;
+  display: block;
+}
+
+.premium .pm-facets__cur {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--pm-muted);
+  pointer-events: none;
+}
+
+.premium .pm-facets__input.pm-facets__input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 44px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 12px 0 28px;
+  border: 1px solid var(--pm-line);
+  border-radius: var(--pm-radius-sm);
+  background: var(--pm-white);
+  box-shadow: none;
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--pm-ink);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.premium .pm-facets__input.pm-facets__input:focus {
+  border-color: var(--pm-ink);
+  outline: 0;
+  box-shadow: none;
+}
+
+/* Active filters: small removable pills under the row, then "Clear all"; empty while nothing is picked */
+.premium .pm-facets__active {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0;
+}
+
+.premium .pm-facets__active:empty {
+  display: none;
+}
+
+.premium .pm-facets__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-sizing: border-box;
+  height: 28px;
+  padding: 0 10px 0 12px;
+  border: 1px solid var(--pm-ink);
+  border-radius: var(--pm-radius-pill);
+  background: var(--pm-white);
+  color: var(--pm-ink);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.premium .pm-facets__chip:hover {
+  background: var(--pm-surface);
+}
+
+.premium .pm-facets__chip:focus-visible {
+  outline: 2px solid var(--pm-ink);
+  outline-offset: 2px;
+}
+
+.premium .pm-facets__chip-x {
+  flex: none;
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+
+.premium .pm-facets__clear {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 4px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--pm-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.premium .pm-ctoolbar__count {
+  margin: 12px auto 0;
+  font-size: var(--pm-fs-small);
+  line-height: var(--pm-lh-small);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--pm-muted);
+  text-align: center;
+}
+
+/* Classic toolbar + search: the field sits under the toolbar */
+.premium .pm-ctoolbar.pm-ctoolbar--classic {
+  padding-top: 0;
+}
+
+@media (min-width: 750px) {
+  .premium .pm-ctoolbar {
+    padding-top: 16px;
+    padding-bottom: 32px;
+  }
+
+  .premium .pm-facets__row {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .premium .pm-facets__pill {
+    position: relative;
+  }
+
+  .premium .pm-facets__pill:first-child,
+  .premium .pm-facets__pill:last-child {
+    margin: 0;
+  }
+
+  .premium .pm-facets__panel {
+    top: 100%;
+    right: auto;
+    width: max-content;
+    min-width: 240px;
+    max-width: min(320px, calc(100vw - 32px));
+  }
+
+  .premium .pm-facets__panel--price {
+    min-width: 280px;
+  }
+
+  .premium .pm-facets__pill--end .pm-facets__panel {
+    left: auto;
+    right: 0;
+  }
+
+  .premium .pm-facets__option {
+    min-height: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premium .pm-facets__summary,
+  .premium .pm-facets__chev {
+    transition: none;
+  }
+}

@@ -15,6 +15,44 @@
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 
+{%- comment -%} Setting "Add to cart on product cards": size chips + button on each card (snippets/product-card.liquid) {%- endcomment -%}
+{%- if section.settings.card_atc -%}
+  {{ 'ts-card-atc.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'ts-card-atc.js' | asset_url }}" defer="defer"></script>
+  {%- unless section.settings.quick_add == 'standard' -%}
+    <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+  {%- endunless -%}
+{%- endif -%}
+
+{%- liquid
+  # Setting "Toolbar style" = pills: centred pill dropdowns (Sort + every storefront filter from Search &
+  # Discovery) + search field + product count. Port of the tryscent.co redesign (tryscent-co-fm-theme
+  # premium-redesign: snippets/facets.liquid filter_type 'pills', snippets/pm-collection-search.liquid,
+  # assets/pm-collection-search.js, assets/pm-collection-grid-loader.js, assets/pm-collection-toolbar.css).
+  # Default "classic" = the toolbar and infinite scroll this theme always had, unchanged.
+  # "mgx" = the magyx.co collection filter bar instead of the pills (snippets/mgx-filters.liquid,
+  # assets/mgx-filters.{js,css}, copied from the magyx.co theme): sticky pill dropdowns from 990px, one
+  # "Filtrera och sortera" pill + full-screen drawer below. Search field, infinite scroll and the product
+  # <li> data are the same as in "pills" (pm_pills is true for both; pm_mgx only swaps the filter bar).
+  assign pm_pills = false
+  assign pm_mgx = false
+  if section.settings.toolbar_style == 'pills'
+    assign pm_pills = true
+  elsif section.settings.toolbar_style == 'mgx'
+    assign pm_pills = true
+    assign pm_mgx = true
+  endif
+-%}
+{%- if pm_pills -%}
+  {{ 'pm-collection-toolbar.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'pm-collection-grid-loader.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'pm-collection-search.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+{%- if pm_mgx -%}
+  {{ 'mgx-filters.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'mgx-filters.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
 {%- if section.settings.quick_add == 'bulk' -%}
   <script src="{{ 'quick-add-bulk.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
@@ -34,12 +72,129 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  {%- if pm_pills -%}
+    /* The pill toolbar CSS reads the redesign's --pm-* tokens; the live theme has no global token layer, so they
+       are declared here on this section (values of assets/fmx-base.css). */
+    .section-{{ section.id }}-padding.premium {
+      --pm-ink: #232323;
+      --pm-muted: #707070;
+      --pm-line: #e7e7e7;
+      --pm-surface: #f6f6f6;
+      --pm-white: #ffffff;
+      --pm-fs-small: 12px;
+      --pm-lh-small: 18px;
+      /* = this theme's .page-width side padding (base.css: 1.5rem, 5rem from 750px). The pill row bleeds by
+         the gutter to the screen edge; the redesign's 20 / 40 / 60 would push it 5px past the screen. */
+      --pm-gutter: 1.5rem;
+      --pm-radius-sm: 4px;
+      --pm-radius-md: 8px;
+      --pm-radius-pill: 999px;
+      --pm-shadow-float: 0 4px 20px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.07);
+      --pm-dur: 0.3s;
+      --pm-ease: ease;
+    }
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding.premium {
+        --pm-gutter: 5rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .section-{{ section.id }}-padding.premium {
+        --pm-dur: 0s;
+      }
+    }
+  {%- endif -%}
+
+  {%- if pm_mgx -%}
+    /* Search field under the magyx.co filter bar: magyx.co's spacing (4px above, 16px below, 20px from 750px). */
+    .section-{{ section.id }}-padding .pm-mgx-search {
+      padding-top: 4px;
+      padding-bottom: 16px;
+    }
+
+    .section-{{ section.id }}-padding.premium .pm-mgx-search .pm-csearch {
+      margin-top: 0;
+    }
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding .pm-mgx-search {
+        padding-bottom: 20px;
+      }
+    }
+  {%- endif -%}
 {%- endstyle -%}
 
-<div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
+<div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}{% if pm_pills %} premium{% endif %}">
   {%- paginate collection.products by section.settings.products_per_page -%}
+    {%- if pm_mgx -%}
+      {%- comment -%}
+        magyx.co filter bar (no facets.js: assets/mgx-filters.js re-renders this section itself and swaps
+        #ProductGridContainer, #MgxFiltersBar and #MgxFiltersDrawer), then the search field.
+      {%- endcomment -%}
+      {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
+        {% render 'mgx-filters'
+          , results: collection
+          , section_id: section.id
+          , enable_filtering: section.settings.enable_filtering
+          , enable_sorting: section.settings.enable_sorting
+          , apply_label: section.settings.filters_apply_label
+          , clear_label: section.settings.filters_clear_label
+        %}
+      {%- endif -%}
+      {%- if section.settings.enable_search -%}
+        <div class="pm-mgx-search page-width">
+          {% render 'pm-collection-search', st: section.settings, section_id: section.id %}
+        </div>
+      {%- endif -%}
+    {%- elsif pm_pills -%}
+      {%- comment -%}
+        Pill toolbar: Sort + one pill per storefront filter, the search field, then the product count.
+        #ProductCount is required by facets.js (it swaps its HTML after every filter and sort).
+      {%- endcomment -%}
+      {{ 'component-facets.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+      <div class="pm-ctoolbar page-width">
+        {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
+          <aside
+            class="pm-ctoolbar__facets"
+            id="main-collection-filters"
+            data-id="{{ section.id }}"
+            aria-label="{{ 'products.facets.filter_and_sort' | t }}">
+            {% render 'facets'
+              , results: collection
+              , enable_filtering: section.settings.enable_filtering
+              , enable_sorting: section.settings.enable_sorting
+              , filter_type: 'pills'
+              , paginate: paginate
+              , clear_label: section.settings.filters_clear_label
+            %}
+          </aside>
+        {%- endif -%}
+
+        {%- if section.settings.enable_search -%}
+          {% render 'pm-collection-search', st: section.settings, section_id: section.id %}
+        {%- endif -%}
+
+        <p class="pm-ctoolbar__count" role="status">
+          <span id="ProductCount">
+            {%- if collection.results_count -%}
+              {{ 'templates.search.results_with_count' | t: terms: collection.terms, count: collection.results_count }}
+            {%- elsif collection.products_count == collection.all_products_count -%}
+              {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
+            {%- else -%}
+              {{
+                'products.facets.product_count'
+                | t: product_count: collection.products_count, count: collection.all_products_count
+              }}
+            {%- endif -%}
+          </span>
+        </p>
+      </div>
     {% comment %} Sort is the first tabbable element when filter type is vertical {% endcomment %}
-    {%- if section.settings.enable_sorting and section.settings.filter_type == 'vertical' -%}
+    {%- elsif section.settings.enable_sorting and section.settings.filter_type == 'vertical' -%}
       <facet-filters-form class="facets facets-vertical-sort page-width small-hide">
         <form class="facets-vertical-form" id="FacetSortForm">
           <div class="facet-filters sorting caption">
@@ -93,10 +248,17 @@
       </facet-filters-form>
     {%- endif -%}
 
-    <div class="{% if section.settings.filter_type == 'vertical' %} facets-vertical page-width{% endif %}">
-      {{ 'component-facets.css' | asset_url | stylesheet_tag }}
-      <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
-      {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
+    {%- comment -%} Setting "Show cart goals bar": Kite's cart goals, display only (snippets/ts-cart-goals.liquid) {%- endcomment -%}
+    {%- if section.settings.cart_goals -%}
+      {% render 'ts-cart-goals', st: section.settings %}
+    {%- endif -%}
+
+    <div class="{% if section.settings.filter_type == 'vertical' and pm_pills == false %} facets-vertical page-width{% endif %}">
+      {%- unless pm_pills -%}
+        {{ 'component-facets.css' | asset_url | stylesheet_tag }}
+        <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+      {%- endunless -%}
+      {%- if pm_pills == false and section.settings.enable_filtering or pm_pills == false and section.settings.enable_sorting -%}
         <aside
           aria-labelledby="verticalTitle"
           class="facets-wrapper{% unless section.settings.enable_filtering %} facets-wrapper--no-filters{% endunless %}{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}"
@@ -265,14 +427,32 @@
                 {%- if forloop.index > 2 -%}
                   {%- assign lazy_load = true -%}
                 {%- endif -%}
+                {%- if pm_pills -%}
+                  {%- comment -%}
+                    Search haystack (assets/pm-collection-search.js): "title | inspiration | brand | notes | family |
+                    season | occasion"; tags (occasion:, säsong:) and the handle ride along.
+                  {%- endcomment -%}
+                  {%- capture pm_hay -%}
+                    {{- product.title | strip }} | {{ product.metafields.custom.famous_fragrance }} | {{ product.metafields.custom.brand }} | {{ product.metafields.custom.nuta }} | {{ product.metafields.custom.fragrance_family }} | {{ product.metafields.custom.season }} | {{ product.metafields.custom.occasion -}}
+                  {%- endcapture -%}
+                  {%- assign pm_hay = pm_hay | strip_newlines -%}
+                {%- endif -%}
                 <li
-                  class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                  class="grid__item{% if section.settings.card_atc %} ts-atc-item{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                  {% if pm_pills %}
+                  data-pm-pid="{{ product.id }}"
+                  data-pm-hay="{{ pm_hay | escape }}"
+                  data-pm-tags="{{ product.tags | join: '|' | escape }}"
+                  data-pm-ref="{{ product.handle }}"
+                  {% endif %}
                   {% if settings.animations_reveal_on_scroll %}
                   data-cascade
                   style="--animation-order: {{ forloop.index }};"
                   {% endif %}>
                   {% render 'product-card'
                     , product: product
+                    , atc: section.settings.card_atc
+                    , section_id: section.id
                   %}
                 </li>
                 {%- if fuel04_cards_every > 0 -%}
@@ -296,7 +476,31 @@
                 {%- assign skip_card_product_styles = true -%}
               {%- endfor -%}
             </ul>
-            {%- if paginate.pages > 1 -%}
+            {%- if paginate.pages > 1 and pm_pills -%}
+              {%- if paginate.next -%}
+                {%- comment -%}
+                  Infinite scroll sentinel: #load-more-btn[data-next-url] and #loading-indicator are read by
+                  assets/pm-collection-grid-loader.js; keep the ids. data-pm-pages lets it fetch the remaining
+                  pages in parallel for the search; data-section-id is the section instance the pages are rendered
+                  with (not the file name, so page size and settings follow the template).
+                {%- endcomment -%}
+                <div class="load-more-wrapper pm-loadmore">
+                  <button
+                    id="load-more-btn"
+                    class="button pm-loadmore__btn"
+                    data-next-url="{{ paginate.next.url }}"
+                    data-pm-pages="{{ paginate.pages }}"
+                    data-pm-per-page="{{ section.settings.products_per_page }}"
+                    data-section-id="{{ section.id }}"
+                    tabindex="-1"
+                    aria-hidden="true">Visa fler produkter</button>
+                  <div id="loading-indicator" class="pm-loadmore__status" role="status">
+                    <span class="pm-loader" aria-hidden="true"></span>
+                    Laddar fler produkter
+                  </div>
+                </div>
+              {%- endif -%}
+            {%- elsif paginate.pages > 1 -%}
               {%- if paginate.next -%}
                 <div class="load-more-wrapper" style="text-align: center; margin-top: 40px; padding: 20px;">
                   <button
@@ -331,6 +535,8 @@
   {%- endif -%}
 </div>
 
+{%- comment -%} Classic toolbar only: with pills, assets/pm-collection-grid-loader.js does the infinite scroll {%- endcomment -%}
+{%- unless pm_pills -%}
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     console.log("Infinite scroll script loaded");
@@ -417,6 +623,7 @@
     }
   });
 </script>
+{%- endunless -%}
 
 {% schema %}
   {
@@ -568,6 +775,13 @@
         ]
       },
       {
+        "type": "checkbox",
+        "id": "card_atc",
+        "default": false,
+        "label": "Add to cart on product cards",
+        "info": "Replaces the Se doften bar with size chips (100 / 50 / 30 ml, 50 ml first) and an add to cart button. The card still opens the product page; the button adds the chosen size and opens the cart drawer."
+      },
+      {
         "type": "header",
         "content": "t:sections.main-collection-product-grid.settings.header__1.content"
       },
@@ -603,6 +817,131 @@
         "id": "enable_sorting",
         "default": true,
         "label": "t:sections.main-collection-product-grid.settings.enable_sorting.label"
+      },
+      {
+        "type": "select",
+        "id": "toolbar_style",
+        "label": "Toolbar style",
+        "info": "Pills: Sort and every storefront filter as centred dropdowns, search field under them. magyx.co bar: the same dropdowns (sticky) on desktop, one \"Filter and sort\" button with a full-screen panel on phones. Classic: the filter layout above.",
+        "options": [
+          {
+            "value": "classic",
+            "label": "Classic"
+          },
+          {
+            "value": "pills",
+            "label": "Pill dropdowns"
+          },
+          {
+            "value": "mgx",
+            "label": "magyx.co filter bar"
+          }
+        ],
+        "default": "classic"
+      },
+      {
+        "type": "text",
+        "id": "filters_clear_label",
+        "label": "Remove filters link",
+        "default": "Ta bort alla"
+      },
+      {
+        "type": "text",
+        "id": "filters_apply_label",
+        "label": "Phone filter panel button",
+        "info": "magyx.co filter bar only. The product count follows, e.g. \"Visa (23)\".",
+        "default": "Visa"
+      },
+      {
+        "type": "header",
+        "content": "Search (pill toolbar)"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_search",
+        "default": true,
+        "label": "Show the search bar",
+        "info": "Filters this grid by scent name, number, brand, inspiration, family, season, occasion and tags. Loads the whole collection on first use."
+      },
+      {
+        "type": "text",
+        "id": "search_placeholder",
+        "default": "Sök märke, doft eller nr",
+        "label": "Placeholder"
+      },
+      {
+        "type": "text",
+        "id": "search_results_text",
+        "default": "[count] träffar för ”[query]”",
+        "label": "Results text",
+        "info": "[count] and [query] are replaced."
+      },
+      {
+        "type": "text",
+        "id": "search_result_text",
+        "default": "1 träff för ”[query]”",
+        "label": "Single result text"
+      },
+      {
+        "type": "text",
+        "id": "search_empty_text",
+        "default": "Ingen träff för ”[query]”. Prova med märket eller originalets namn.",
+        "label": "No results text"
+      },
+      {
+        "type": "text",
+        "id": "search_loading_text",
+        "default": "Söker bland alla dofter…",
+        "label": "Loading text"
+      },
+      {
+        "type": "text",
+        "id": "search_clear_label",
+        "default": "Rensa sökningen",
+        "label": "Clear button label"
+      },
+      {
+        "type": "header",
+        "content": "Cart goals bar"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_goals",
+        "default": false,
+        "label": "Show cart goals bar",
+        "info": "Display only, above the products. Goals and amounts come from the Kite progress bar (the same goals as the cart, per market): change them in Kite. Fills with the shopper's cart. Hidden where Kite has no goals."
+      },
+      {
+        "type": "text",
+        "id": "goals_msg_gift",
+        "default": "Bara [x] kvar till en gratis 50 ml Mystery-doft!",
+        "label": "Message before a gift goal",
+        "info": "[x] = amount left."
+      },
+      {
+        "type": "text",
+        "id": "goals_msg_ship",
+        "default": "Bara [x] kvar till gratis frakt!",
+        "label": "Message before the shipping goal",
+        "info": "[x] = amount left."
+      },
+      {
+        "type": "text",
+        "id": "goals_msg_done",
+        "default": "Grattis! Gratis frakt och gratis Mystery-dofter upplåsta 🎉",
+        "label": "Message when every goal is reached"
+      },
+      {
+        "type": "text",
+        "id": "goals_gift_label",
+        "default": "Gratis 50 ml Mystery-doft",
+        "label": "Label under a gift goal"
+      },
+      {
+        "type": "text",
+        "id": "goals_ship_label",
+        "default": "Gratis frakt",
+        "label": "Label under the shipping goal"
       },
       {
         "type": "header",

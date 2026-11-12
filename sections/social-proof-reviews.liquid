@@ -220,14 +220,16 @@
 <section id="{{ section.id }}" class="ts-proof-sv">
   <div class="container">
     <div class="proof-head">
-      <div
-        class="stars stars-lg"
-        role="img"
-        aria-label="5 av 5 stjärnor">
-        {%- for i in (1..5) -%}
-          <svg aria-hidden="true"><use href="#ts-star-{{ section.id }}" /></svg>
-        {%- endfor -%}
-      </div>
+      {%- unless section.settings.hide_stars -%}
+        <div
+          class="stars stars-lg"
+          role="img"
+          aria-label="5 av 5 stjärnor">
+          {%- for i in (1..5) -%}
+            <svg aria-hidden="true"><use href="#ts-star-{{ section.id }}" /></svg>
+          {%- endfor -%}
+        </div>
+      {%- endunless -%}
       {% if section.settings.kicker != blank %}
         <div class="kicker">{{ section.settings.kicker }}</div>
       {% endif %}
@@ -352,6 +354,12 @@
         "id": "title",
         "label": "Title",
         "default": "De säger det bättre än vi någonsin skulle kunna."
+      },
+      {
+        "type": "checkbox",
+        "id": "hide_stars",
+        "label": "Hide stars above the heading",
+        "default": false
       },
       {
         "type": "header",

@@ -1,5 +1,25 @@
 {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
 {{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
+{{ 'collection-description.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  # tryscent.co setting "Collection photo behind the text" (collection.default-v2): the collection's photo fills
+  # the banner and the title + description sit on it, in the layout of sections/collection-hero.liquid (text left
+  # over a light fade on desktop, at the bottom on phones). Desktop photo = collection.image, phones =
+  # custom.hero_mobile_image, each falls back to the other. A collection without a photo keeps the plain banner.
+  assign cb_photo_desktop = blank
+  assign cb_photo_mobile = blank
+  if section.settings.show_photo
+    assign cb_photo_desktop = collection.image
+    assign cb_photo_mobile = collection.metafields.custom.hero_mobile_image
+    if cb_photo_mobile == blank
+      assign cb_photo_mobile = cb_photo_desktop
+    endif
+    if cb_photo_desktop == blank
+      assign cb_photo_desktop = cb_photo_mobile
+    endif
+  endif
+-%}
 
 {%- style -%}
   @media screen and (max-width: 749px) {
@@ -7,9 +27,76 @@
       padding-bottom: calc({{ settings.media_shadow_vertical_offset | at_least: 0 }}px + 2rem);
     }
   }
+
+  {%- if cb_photo_desktop != blank %}
+  #shopify-section-{{ section.id }} .collection-hero--photo {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 520px;
+    padding-bottom: 34px;
+    background-color: #eef1f3;
+    background-image: var(--cb-photo-mobile);
+    background-size: cover;
+    background-position: 50% 10%;
+    background-repeat: no-repeat;
+  }
+
+  #shopify-section-{{ section.id }} .collection-hero--photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(246, 247, 248, 0) 38%, rgba(246, 247, 248, 0.82) 58%, rgba(246, 247, 248, 0.97) 74%, #f6f7f8 100%);
+  }
+
+  #shopify-section-{{ section.id }} .collection-hero--photo .collection-hero__inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .collection-hero--photo .collection-hero__title {
+    margin-top: 0;
+    text-align: left;
+  }
+
+  #shopify-section-{{ section.id }} .collection-hero--photo .collection-hero__text-wrapper .collection-hero__description.mgx-cdesc {
+    max-width: 420px;
+    margin: 12px 0 0;
+    text-align: left;
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .collection-hero--photo {
+      align-items: center;
+      min-height: clamp(430px, 33.33vw, 600px);
+      padding-bottom: 0;
+      background-image: var(--cb-photo-desktop);
+      background-position: 50% 3%;
+    }
+
+    #shopify-section-{{ section.id }} .collection-hero--photo::before {
+      background: linear-gradient(90deg, rgba(248, 248, 247, 0.97) 0%, rgba(248, 248, 247, 0.93) 30%, rgba(248, 248, 247, 0.72) 46%, rgba(248, 248, 247, 0) 68%);
+    }
+
+    #shopify-section-{{ section.id }} .collection-hero--photo .collection-hero__text-wrapper {
+      flex-basis: auto;
+      max-width: 460px;
+      padding-block: 40px;
+    }
+
+    #shopify-section-{{ section.id }} .collection-hero--photo .collection-hero__text-wrapper .collection-hero__description.mgx-cdesc {
+      margin-top: 16px;
+    }
+  }
+  {%- endif %}
 {%- endstyle -%}
 
-<div class="collection-hero{% if section.settings.show_collection_image and collection.image %} collection-hero--with-image{% endif %} color-{{ section.settings.color_scheme }} gradient">
+<div
+  class="collection-hero{% if cb_photo_desktop != blank %} collection-hero--photo{% elsif section.settings.show_collection_image and collection.image %} collection-hero--with-image{% endif %} color-{{ section.settings.color_scheme }}{% if cb_photo_desktop == blank %} gradient{% endif %}"
+  {%- if cb_photo_desktop != blank %}
+    style="--cb-photo-mobile: url('{{ cb_photo_mobile | image_url: width: 1080 }}'); --cb-photo-desktop: url('{{ cb_photo_desktop | image_url: width: 1920 }}');"
+  {%- endif %}>
   <div class="collection-hero__inner page-width {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
     <div class="collection-hero__text-wrapper">
       <h1 class="collection-hero__title">
@@ -17,12 +104,143 @@
         {{- collection.title | escape -}}
       </h1>
 
-      {%- if section.settings.show_collection_description -%}
-        <div class="collection-hero__description rte">{{ collection.description }}</div>
+      {%- if section.settings.show_collection_description and collection.description != blank -%}
+        {%- comment -%}
+          Folded to the first two sentences (theessencevault.co.uk pattern): the script below runs as the page is
+          parsed, before the first paint, so the full text never flashes up. Without JavaScript the whole
+          description shows and the toggle stays hidden.
+          tryscent.co: "show more" and "show less" are two buttons with their own server-rendered text (the script
+          only swaps which one shows), so Weglot translates both labels like any other page text.
+        {%- endcomment -%}
+        <div class="collection-hero__description rte mgx-cdesc" data-mgx-cdesc>
+          <div class="mgx-cdesc__text" id="MgxCollectionDescription-{{ section.id }}">{{ collection.description }}</div>
+          <button
+            type="button"
+            class="mgx-cdesc__toggle"
+            aria-expanded="false"
+            aria-controls="MgxCollectionDescription-{{ section.id }}"
+            data-mgx-more
+            hidden>
+            + {{ section.settings.description_more_label | escape }}
+          </button>
+          <button
+            type="button"
+            class="mgx-cdesc__toggle"
+            aria-expanded="true"
+            aria-controls="MgxCollectionDescription-{{ section.id }}"
+            data-mgx-less
+            hidden>
+            - {{ section.settings.description_less_label | escape }}
+          </button>
+        </div>
+        <script>
+          (function () {
+            // Shows the first two sentences of the description; the rest (the remainder of that paragraph and every
+            // block after it) gets [hidden] until the toggle opens it. A sentence ends at . ! or ? followed by a space
+            // and a capital, a quote, a bracket or a digit, or at the end of a paragraph; "No." before a number is not
+            // an end.
+            var SHOWN = 2;
+            var setup = function (root) {
+              if (!root || root.dataset.mgxReady) return;
+              root.dataset.mgxReady = '1';
+              var text = root.querySelector('.mgx-cdesc__text');
+              var more = root.querySelector('[data-mgx-more]');
+              var less = root.querySelector('[data-mgx-less]');
+              if (!text || !more || !less) return;
+              var blocks = [];
+              var loose = false;
+              for (var n = text.firstChild; n; n = n.nextSibling) {
+                if (n.nodeType === 1) blocks.push(n);
+                else if (n.nodeType === 3 && n.nodeValue.trim()) loose = true;
+              }
+              if (loose || !blocks.length) blocks = [text];
+              var ends = function (str) {
+                var out = [];
+                var re = /[.!?]+["'\u201d\u2019)]*(?=\s+["'\u201c\u2018\u201e(]?[A-Z0-9\u00c0-\u017d])/g;
+                var m;
+                while ((m = re.exec(str))) {
+                  if (/\bno\.$/i.test(str.slice(0, m.index + 1)) && /^\s+\d/.test(str.slice(re.lastIndex))) continue;
+                  out.push(re.lastIndex);
+                }
+                var trimmed = str.replace(/\s+$/, '');
+                if (/[.!?]["'\u201d\u2019)]*$/.test(trimmed) && out[out.length - 1] !== trimmed.length) out.push(trimmed.length);
+                return out;
+              };
+              var count = 0;
+              var cutBlock = -1;
+              var cutAt = -1;
+              for (var i = 0; i < blocks.length && cutBlock < 0; i++) {
+                var str = blocks[i].textContent;
+                var e = ends(str);
+                if (count + e.length >= SHOWN) {
+                  cutBlock = i;
+                  cutAt = e[SHOWN - count - 1];
+                }
+                count += e.length;
+              }
+              if (cutBlock < 0) return;
+              var hide = [];
+              var block = blocks[cutBlock];
+              var rest = block.textContent.slice(cutAt);
+              if (rest.trim()) {
+                // The second sentence ends inside a paragraph: move the rest of that paragraph into a hidden span.
+                var walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT);
+                var seen = 0;
+                var node;
+                while ((node = walker.nextNode())) {
+                  if (seen + node.nodeValue.length >= cutAt) break;
+                  seen += node.nodeValue.length;
+                }
+                if (!node) return;
+                var range = document.createRange();
+                range.setStart(node, cutAt - seen);
+                range.setEnd(block, block.childNodes.length);
+                var span = document.createElement('span');
+                span.className = 'mgx-cdesc__rest';
+                span.appendChild(range.extractContents());
+                block.appendChild(span);
+                hide.push(span);
+              }
+              for (var j = cutBlock + 1; j < blocks.length; j++) {
+                if (blocks[j] !== text && blocks[j].textContent.trim()) hide.push(blocks[j]);
+              }
+              if (!hide.length) return;
+              if (block !== text) block.classList.add('mgx-cdesc__cut');
+              hide.forEach(function (el) {
+                el.hidden = true;
+              });
+              more.hidden = false;
+              var set = function (open) {
+                more.hidden = open;
+                less.hidden = !open;
+                root.classList.toggle('is-open', open);
+                hide.forEach(function (el) {
+                  el.hidden = !open;
+                });
+                (open ? less : more).focus({ preventScroll: true });
+              };
+              more.addEventListener('click', function () {
+                set(true);
+              });
+              less.addEventListener('click', function () {
+                set(false);
+              });
+            };
+            var scripts = document.getElementsByTagName('script');
+            var me = document.currentScript || scripts[scripts.length - 1];
+            setup(me && me.previousElementSibling);
+            if (!window.mgxCdescEditor) {
+              window.mgxCdescEditor = true;
+              document.addEventListener('shopify:section:load', function (event) {
+                event.target.querySelectorAll('[data-mgx-cdesc]').forEach(setup);
+              });
+            }
+          })();
+        </script>
       {%- endif -%}
     </div>
 
-    {%- if section.settings.show_collection_image and collection.image -%}
+    {%- if section.settings.show_collection_image and collection.image and cb_photo_desktop == blank -%}
       <div class="collection-hero__image-container media gradient">
         <img
           srcset="
@@ -61,10 +279,30 @@
       "label": "t:sections.main-collection-banner.settings.show_collection_description.label"
     },
     {
+      "type": "text",
+      "id": "description_more_label",
+      "label": "Description: show more",
+      "default": "Läs mer",
+      "info": "The description shows its first two sentences; this opens the rest"
+    },
+    {
+      "type": "text",
+      "id": "description_less_label",
+      "label": "Description: show less",
+      "default": "Läs mindre"
+    },
+    {
       "type": "checkbox",
       "id": "show_collection_image",
       "default": false,
       "label": "t:sections.main-collection-banner.settings.show_collection_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_photo",
+      "default": false,
+      "label": "Collection photo behind the text",
+      "info": "Full-width photo with the title and description on it (desktop: the collection image, phones: the hero_mobile_image metafield). Collections without a photo keep the plain banner."
     },
     {
       "type": "color_scheme",

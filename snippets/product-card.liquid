@@ -1,4 +1,40 @@
-<a href="{{ product.url }}" class="flex flex-col bg-white p-4 rounded-lg border border-solid border-gray-200 relative h-full box-border no-underline text-black">
+{%- comment -%}
+  Product card (collection grid, product sliders).
+  Accepts: product; atc (optional, true from the collection grid when its "Add to cart on product cards" setting is on)
+  and section_id (with atc).
+  With atc the green "Se doften" bar becomes real buttons: size chips (100 / 50 / 30 ml, the product page's order,
+  50 ml selected first; the card price follows the chip) and "Lägg i kundvagnen", which adds the chosen size through
+  product-form (assets/product-form.js) and opens the cart drawer. Chips and button sit OUTSIDE the <a> (a sibling
+  pinned to the bottom of the card frame, assets/ts-card-atc.css + ts-card-atc.js), so the card itself still opens the
+  product page. Products without 30/50/100 ml variants get the button only (first available variant).
+{%- endcomment -%}
+{%- liquid
+  assign ts_atc_variant = nil
+  assign ts_atc_sizes = 0
+  if atc
+    for ts_v in product.variants
+      assign ts_t = ts_v.title | downcase | remove: ' '
+      if ts_t == '30ml' or ts_t == '50ml' or ts_t == '100ml'
+        assign ts_atc_sizes = ts_atc_sizes | plus: 1
+      endif
+      if ts_t == '50ml' and ts_v.available
+        assign ts_atc_variant = ts_v
+      endif
+    endfor
+    if ts_atc_variant == nil
+      for ts_v in product.variants
+        if ts_v.available
+          assign ts_atc_variant = ts_v
+          break
+        endif
+      endfor
+    endif
+    if ts_atc_variant == nil
+      assign ts_atc_variant = product.selected_or_first_available_variant | default: product.variants.first
+    endif
+  endif
+-%}
+<a href="{{ product.url }}" class="flex flex-col bg-white p-4 rounded-lg border border-solid border-gray-200 relative h-full box-border no-underline text-black{% if atc %} ts-atc-card{% if ts_atc_sizes > 1 %} ts-atc-card--sizes{% endif %}{% endif %}"{% if atc %} data-ts-variant-id="{{ ts_atc_variant.id }}"{% endif %}>
   {% if product.tags contains 'bestseller' %}
     <div class="absolute z-10 top-3 left-4 flex gap-4">
         <div class="bg-[#137c44] text-white px-2 py-1 text-xs rounded-full flex items-center gap-1">
@@ -57,12 +93,19 @@
   {% endif %}
 
   <div class="font-bold tracking-normal my-2 {% if collection.template_suffix == 'action-modal' %}text-sm{% else %}text-base{% endif %} flex items-center flex-wrap gap-1">
+    {%- if atc -%}
+      <span class="ab-current-price" data-ts-price>{{ ts_atc_variant.price | money }}</span>
+      <span class="line-through text-[#c8202f] font-normal" data-ts-compare{% unless ts_atc_variant.compare_at_price > ts_atc_variant.price %} hidden{% endunless %}>
+        {%- if ts_atc_variant.compare_at_price > ts_atc_variant.price -%}{{ cart.currency.symbol }}{{ ts_atc_variant.compare_at_price | money_without_currency }}{%- endif -%}
+      </span>
+    {%- else -%}
     <span class="ab-current-price">{{ product.price | money }}</span>
     {% if product.compare_at_price > product.price %}
       <span class="line-through text-[#c8202f] font-normal">
         {{ cart.currency.symbol }}{{ product.compare_at_price | money_without_currency }}
       </span>
     {% endif %}
+    {%- endif -%}
     {% comment %} <span class="inline-block bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded">
         <svg class="size-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 2c.5 3.5-1.5 5.5-3 7.5C7.5 11.4 6 13.3 6 16a6 6 0 0 0 12 0c0-2.6-1.2-4.6-2.6-6.2-.3 1.5-1.1 2.6-2.4 3.2.4-3.8-.2-7.8-1-11z"></path>
@@ -73,9 +116,62 @@
   {% comment %} {% unless product.tags contains 'Bundle_Price_Show' %}
     <p class="mt-0 mb-2 text-[#17803d] font-semibold">Köp mer. Få mer.</p>
   {% endunless %} {% endcomment %}
+  {%- if atc -%}
+    {%- comment -%} Room for the chips and the button, which sit outside the link (below) {%- endcomment -%}
+    <div class="mt-auto ts-atc-spacer" aria-hidden="true"></div>
+  {%- else -%}
   <div class="mt-auto">
     <span class="hover:bg-[#17803d] bg-[#146b32] text-white uppercase text-sm font-semibold tracking-[2px] py-3 px-4 rounded-lg no-underline text-center block">
       Se doften
     </span>
   </div>
+  {%- endif -%}
 </a>
+
+{%- if atc -%}
+  {%- assign ts_atc_form_id = 'ts-card-atc-' | append: section_id | append: '-' | append: product.id -%}
+  <product-form class="ts-card-atc" data-section-id="{{ section_id }}">
+    {%- form 'product', product, id: ts_atc_form_id, class: 'ts-card-atc__form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+      <input type="hidden" name="id" value="{{ ts_atc_variant.id }}">
+      <input type="hidden" name="quantity" value="1">
+      {%- if ts_atc_sizes > 1 -%}
+        <div class="ts-card-atc__sizes" role="radiogroup" aria-label="{{ product.title | escape }}">
+          {%- assign ts_order = '100ml,50ml,30ml' | split: ',' -%}
+          {%- for ts_size in ts_order -%}
+            {%- for ts_v in product.variants -%}
+              {%- assign ts_t = ts_v.title | downcase | remove: ' ' -%}
+              {%- if ts_t == ts_size -%}
+                <button
+                  type="button"
+                  class="ts-card-atc__size{% if ts_v.id == ts_atc_variant.id %} is-active{% endif %}"
+                  role="radio"
+                  aria-checked="{% if ts_v.id == ts_atc_variant.id %}true{% else %}false{% endif %}"
+                  data-variant-id="{{ ts_v.id }}"
+                  data-price="{{ ts_v.price | money | escape }}"
+                  data-compare="{% if ts_v.compare_at_price > ts_v.price %}{{ cart.currency.symbol }}{{ ts_v.compare_at_price | money_without_currency | escape }}{% endif %}"
+                  {% unless ts_v.available %}disabled{% endunless %}>
+                  {{- ts_size | remove: 'ml' }} ml
+                </button>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      <button
+        type="submit"
+        name="add"
+        class="ts-card-atc__btn"
+        data-add-label="{{ 'products.product.add_to_cart' | t | escape }}"
+        {% unless ts_atc_variant.available %}disabled aria-disabled="true"{% endunless %}
+        aria-label="{{ 'products.product.add_to_cart' | t | escape }}: {{ product.title | escape }}">
+        <span>
+          {%- if ts_atc_variant.available -%}{{ 'products.product.add_to_cart' | t }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}
+        </span>
+        {%- render 'loading-spinner' -%}
+      </button>
+      <div class="product-form__error-message-wrapper ts-card-atc__error" role="alert" hidden>
+        <span class="product-form__error-message"></span>
+      </div>
+    {%- endform -%}
+  </product-form>
+{%- endif -%}
