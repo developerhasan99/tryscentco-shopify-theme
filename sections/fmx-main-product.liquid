@@ -441,22 +441,61 @@
                       {%- endif -%}
                     </div>
 
+                    {%- liquid
+                      # Saving + per-bottle price. A fixed bundle carries its bottle count in custom.bundle_size
+                      # (6-x-50ml-parfymflasko = 6): one price, one count. A ladder product without that field
+                      # (bundle-and-save: variants "3 flaskor", "4 flaskor", ...) is read per variant: count = the
+                      # number the variant title starts with; shown = the best per-bottle price and the biggest
+                      # saving over the variants. No count found anywhere: no per-bottle line (never divide by 0).
+                      assign tsr_p = block.settings.product
+                      assign tsr_size = tsr_p.metafields.custom.bundle_size.value | plus: 0
+                      assign tsr_pct = 0
+                      assign tsr_per = 0
+                      assign tsr_has_per = false
+                      if tsr_size > 0
+                        if tsr_p.compare_at_price > tsr_p.price
+                          assign discount = tsr_p.compare_at_price | minus: tsr_p.price
+                          assign tsr_pct = discount | times: 100 | divided_by: tsr_p.compare_at_price | round
+                        endif
+                        assign tsr_per = tsr_p.price | divided_by: tsr_size
+                        assign tsr_has_per = true
+                      else
+                        for tsr_v in tsr_p.variants
+                          assign tsr_n = tsr_v.title | split: ' ' | first | plus: 0
+                          if tsr_n > 0
+                            assign tsr_v_per = tsr_v.price | divided_by: tsr_n
+                            if tsr_has_per == false
+                              assign tsr_per = tsr_v_per
+                              assign tsr_has_per = true
+                            elsif tsr_v_per < tsr_per
+                              assign tsr_per = tsr_v_per
+                            endif
+                          endif
+                          if tsr_v.compare_at_price > tsr_v.price
+                            assign tsr_v_pct = tsr_v.compare_at_price | minus: tsr_v.price | times: 100.0 | divided_by: tsr_v.compare_at_price | round
+                            if tsr_v_pct > tsr_pct
+                              assign tsr_pct = tsr_v_pct
+                            endif
+                          endif
+                        endfor
+                      endif
+                    -%}
                     <div class="fmx-offer__body">
-                      {% if block.settings.product.compare_at_price > block.settings.product.price %}
-                        {% assign discount = block.settings.product.compare_at_price | minus: block.settings.product.price %}
-                        {% assign discount_percent = discount | times: 100 | divided_by: block.settings.product.compare_at_price | round %}
+                      {% if tsr_pct > 0 %}
                         <span class="pm-tier__save fmx-offer__save">
-                          {{ 'bundle.tsr_offer_save' | t: percent: discount_percent }}
+                          {{ 'bundle.tsr_offer_save' | t: percent: tsr_pct }}
                         </span>
                       {% endif %}
                       <h3 class="fmx-offer__title">
                         {{ 'bundle.tsr_offer_heading' | t }}
                       </h3>
-                      <p class="fmx-offer__text">
-                        {{ 'bundle.tsr_offer_price_prefix' | t }}
-                        <strong>{{ block.settings.product.price | divided_by: block.settings.product.metafields.custom.bundle_size | money }}</strong>
-                        {{ 'bundle.tsr_offer_price_suffix' | t }}
-                      </p>
+                      {% if tsr_has_per %}
+                        <p class="fmx-offer__text">
+                          {{ 'bundle.tsr_offer_price_prefix' | t }}
+                          <strong>{{ tsr_per | money }}</strong>
+                          {{ 'bundle.tsr_offer_price_suffix' | t }}
+                        </p>
+                      {% endif %}
                     </div>
                   </a>
                 {% endif %}
