@@ -15,6 +15,7 @@
     "scent_quiz_klaviyo_enabled": true,
     "scent_quiz_klaviyo_public_key": "RhTHcL",
     "scent_quiz_klaviyo_list_id": "ThzFmW",
+    "scent_quiz_show_floating_button": false,
     "logo": "shopify://shop_images/TryScent_Wide_Logo_27e6524c-91f1-4dde-8e9e-67b75c9b195b.svg",
     "logo_width": 140,
     "favicon": "shopify://shop_images/favicon_2.svg",
