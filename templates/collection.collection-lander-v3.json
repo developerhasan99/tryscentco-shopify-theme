@@ -14,7 +14,10 @@
       "disabled": true,
       "settings": {
         "show_collection_description": false,
+        "description_more_label": "Läs mer",
+        "description_less_label": "Läs mindre",
         "show_collection_image": false,
+        "show_photo": false,
         "color_scheme": "scheme-2"
       }
     },
@@ -248,7 +251,7 @@
           "settings": {
             "position": 4,
             "device": "desktop",
-            "video": "shopify://files/videos/05_Emelie-Skoglund_tryscent-co.mp4",
+            "video": "shopify://files/videos/brand_EmelieS_e278788a.mov",
             "video_url": "",
             "product": "bergamot-pepper-ambroxan"
           }
@@ -406,9 +409,21 @@
         "filter_type": "horizontal",
         "enable_sorting": true,
         "toolbar_style": "pills",
-        "cart_goals": true,
+        "filters_clear_label": "Ta bort alla",
+        "filters_apply_label": "Visa",
         "enable_search": true,
         "search_placeholder": "Skriv in märke, tillfälle eller doftfamilj",
+        "search_results_text": "[count] träffar för ”[query]”",
+        "search_result_text": "1 träff för ”[query]”",
+        "search_empty_text": "Ingen träff för ”[query]”. Prova med märket eller originalets namn.",
+        "search_loading_text": "Söker bland alla dofter…",
+        "search_clear_label": "Rensa sökningen",
+        "cart_goals": true,
+        "goals_msg_gift": "Bara [x] kvar till en gratis 50 ml Mystery-doft!",
+        "goals_msg_ship": "Bara [x] kvar till gratis frakt!",
+        "goals_msg_done": "Grattis! Gratis frakt och gratis Mystery-dofter upplåsta 🎉",
+        "goals_gift_label": "Gratis 50 ml Mystery-doft",
+        "goals_ship_label": "Gratis frakt",
         "padding_top": 36,
         "padding_bottom": 40,
         "fuel04_cards": true,
