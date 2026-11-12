@@ -1,16 +1,38 @@
+{%- comment -%}
+  Top bar, magicperfume.co design (port of its offer-timebar, 13.11.2026): the offer on Primary colour,
+  the countdown on Timer background. Phones stack them (offer above, timer below); from 768px they share
+  one row with a slanted join. The countdown is plain JS (no flip library): HH:MM:SS to midnight, or to
+  "End Date and Time" with days.
+
+  tryscent.co additions kept from the previous bar:
+  - Bundle & Save page (product template bundle-save): own texts and colours from the "Bundle & Save page"
+    settings, "UPP TILL [max]%" from the bundle's compare-at prices, countdown to the visitor's midnight,
+    link to the buy box. Shown with the countdown even when the countdown is switched off elsewhere.
+  - Badge blocks (Snabb / EU-frakt / Direkt / Flexibel): inside the bar from 1100px (next to the
+    countdown), as a strip under the bar below that.
+  - FUEL_04 multi-buy row (snippets/fuel04-announcement.liquid): still rendered, hidden unless its
+    A/B class is on.
+  - Countdown labels per Weglot language (sv / da / fi / no), filled by the script below.
+
+  Colours: Primary = bar background, Secondary = bar text and button fill (the old bar used them the
+  other way round).
+{%- endcomment -%}
 {%- liquid
-  comment
-    Bundle & Save page (product template bundle-save, Adrian 07.11): own black/white bar (reversed: white strip, black offer + badge rows, timer styled like magyx.co) that matches the offer timer
-    in the buy box: "Black Month", up to the bundle's best saving (from its compare-at prices), counting to the
-    visitor's local midnight like the buy box timer. Every other page keeps the settings below unchanged.
-  endcomment
-  assign tb_primary = section.settings.primary_color
-  assign tb_secondary = section.settings.secondary_color
+  assign tb_offer_bg = section.settings.primary_color
+  assign tb_text = section.settings.secondary_color
+  assign tb_timer_bg = section.settings.timer_box_color
+  assign tb_label = section.settings.timer_label_color
   assign tb_top = section.settings.top_banner_text
   assign tb_prepend = section.settings.prepend_text
   assign tb_append = section.settings.append_text
   assign tb_link = section.settings.link
   assign tb_date = section.settings.countdown_date
+  assign tb_timer = section.settings.enable_timer
+  assign tb_badges = false
+  if section.settings.enable_badges and section.blocks.size > 0
+    assign tb_badges = true
+  endif
+
   assign tb_bs = false
   if product and product.template_suffix == 'bundle-save'
     assign tb_bs = true
@@ -23,394 +45,448 @@
         endif
       endif
     endfor
-    assign tb_primary = section.settings.bs_primary_color
-    assign tb_secondary = section.settings.bs_secondary_color
+    assign tb_offer_bg = section.settings.bs_secondary_color
+    assign tb_text = section.settings.bs_primary_color
     assign tb_top = section.settings.bs_top_banner_text
     assign tb_prepend = section.settings.bs_prepend_text | replace: '[max]', tb_max
     assign tb_append = section.settings.bs_append_text
     assign tb_link = '#pm-bs-box'
     assign tb_date = ''
+    assign tb_timer = true
   endif
 -%}
-{%- unless tb_bs -%}
-<link rel="stylesheet" href="https://pbutcher.uk/flipdown/css/flipdown/flipdown.css">
-<script defer src="https://pbutcher.uk/flipdown/js/flipdown/flipdown.js"></script>
-{%- endunless %}
-
 <style>
-  /* FlipDown Custom Styles */
-  .flipdown {
-    width: 190px;
-    height: 42px;
-  }
-
-  .flipdown div:empty {
-    display: block;
-  }
-
-  .flipdown .rotor {
-    font-size: 1.32rem;
-    margin-right: 1.8px;
-  }
-
-  .flipdown .rotor,
-  .flipdown .rotor-leaf,
-  .flipdown .rotor-leaf-front,
-  .flipdown .rotor-leaf-rear,
-  .flipdown .rotor-top,
-  .flipdown .rotor-bottom,
-  .flipdown .rotor:after {
-    width: 18px;
-  }
-
-  .flipdown .rotor-group {
-    padding-right: 12px;
-  }
-
-  .flipdown .rotor-group:last-child {
-    padding-right: 0;
-  }
-
-  .flipdown .rotor-group-heading:before {
-    font-size: 0.48rem;
-    height: 12px;
-    line-height: 12px;
-  }
-
-  .flipdown .rotor-group:nth-child(n + 2):nth-child(-n + 3):before,
-  .flipdown .rotor-group:nth-child(n + 2):nth-child(-n + 3):after {
-    left: 41px;
-  }
-
-  .flipdown .rotor-group:nth-child(n + 2):nth-child(-n + 3):before {
-    bottom: 7.8px;
-    height: 4.8px;
-    width: 4.8px;
-  }
-
-  .flipdown .rotor-group:nth-child(n + 2):nth-child(-n + 3):after {
-    bottom: 17.4px;
-    height: 4.8px;
-    width: 4.8px;
-  }
-
-  .flipdown .rotor-leaf-front,
-  .flipdown .rotor-top {
-    line-height: 30px;
-  }
-
-  .flipdown .rotor-leaf,
-  .flipdown .rotor {
-    height: 30px;
-  }
-
-  .flipdown .rotor-leaf-front,
-  .flipdown .rotor-leaf-rear,
-  .flipdown .rotor-top,
-  .flipdown .rotor-bottom,
-  .flipdown .rotor:after {
-    height: 15px;
-  }
-
-  .flipdown.flipdown__theme-dark .rotor-group-heading:before {
-    color: {{ tb_primary }};
-    font-size: 8px;
-    font-weight: 400;
-    text-transform: uppercase;
-  }
-
-  /* Timebar Section Styles */
-  .timebar-section-bg {
-    display: block;
+  #shopify-section-{{ section.id }} .mgx-tb {
+    display: flex;
+    flex-direction: column;
+    background-color: {{ tb_timer_bg }};
+    color: {{ tb_text }};
     text-decoration: none;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    background-color: #f87171;
-    background-repeat: repeat;
   }
-
-  .timebar-container {
-    max-width: 1280px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-
-  .timebar-row {
+  #shopify-section-{{ section.id }} .mgx-tb__offer {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 4px 10px;
+    padding: 9px 16px;
+    background-color: {{ tb_offer_bg }};
+    text-align: center;
   }
-
-  .timebar-sale-text {
-    color: white;
-    font-size: 2rem;
-    line-height: 1;
-  }
-
-  @media (min-width: 768px) {
-    .timebar-row {
-      gap: 16px;
-    }
-  }
-
-  /* Coupon Button Styles */
-  .flipdown.flipdown__theme-dark .rotor-bottom,
-  .flipdown.flipdown__theme-dark .rotor-leaf-rear,
-  .flipdown.flipdown__theme-dark .rotor,
-  .flipdown.flipdown__theme-dark .rotor-top,
-  .flipdown.flipdown__theme-dark .rotor-leaf-front,
-  .flipdown.flipdown__theme-dark .rotor-group:nth-child(n + 2):nth-child(-n + 3):before,
-  .flipdown.flipdown__theme-dark .rotor-group:nth-child(n + 2):nth-child(-n + 3):after {
-    background-color: {{ tb_primary }};
-  }
-
-  .flipdown.flipdown__theme-dark .rotor:after {
-    border-color: {{ tb_primary }};
-  }
-
-  {%- if tb_bs %}
-  /* Plain text countdown (no boxes): "SLUTAR OM 09:11:01" */
-  .tb-bs-timer {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 6px;
-    font-size: 15px;
-    line-height: 20px;
+  #shopify-section-{{ section.id }} .mgx-tb__eyebrow {
+    font-size: 11px;
+    line-height: 16px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
-  .tb-bs-ends {
-    font-weight: 600;
     opacity: 0.85;
   }
-
-  .tb-bs-clock {
-    min-width: 8ch;
-    font-weight: 800;
+  #shopify-section-{{ section.id }} .mgx-tb__rule {
+    display: block;
+    width: 1px;
+    height: 14px;
+    background-color: {{ tb_text | color_modify: 'alpha', 0.35 }};
+  }
+  /* Append text as a solid button: text colour as the fill, bar colour as the label */
+  #shopify-section-{{ section.id }} .mgx-tb__deal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-sizing: border-box;
+    min-height: 28px;
+    padding: 4px 14px;
+    border-radius: 4px;
+    background-color: {{ tb_text }};
+    color: {{ tb_offer_bg }};
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+  }
+  #shopify-section-{{ section.id }} .mgx-tb__arrow {
+    display: inline-block;
+    flex: none;
+    transition: transform 0.3s ease;
+  }
+  #shopify-section-{{ section.id }} a.mgx-tb:hover .mgx-tb__deal {
+    opacity: 0.88;
+  }
+  #shopify-section-{{ section.id }} a.mgx-tb:hover .mgx-tb__arrow {
+    transform: translateX(2px);
+  }
+  #shopify-section-{{ section.id }} .mgx-tb__lead {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+  }
+  #shopify-section-{{ section.id }} .mgx-tb__timer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 7px 16px 8px;
+  }
+  #shopify-section-{{ section.id }} .mgx-tb__ends {
+    font-size: 10px;
+    line-height: 14px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: {{ tb_label | color_modify: 'alpha', 0.7 }};
+  }
+  #shopify-section-{{ section.id }} .mgx-tb__clock {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  #shopify-section-{{ section.id }} .mgx-tb__unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #shopify-section-{{ section.id }} .mgx-tb__num {
+    display: block;
+    min-width: 30px;
+    padding: 3px 4px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 6px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 2px 6px rgba(0, 0, 0, 0.35);
+    color: #ffffff;
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.02em;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .mgx-tb__cap {
+    margin-top: 3px;
+    font-size: 8px;
+    line-height: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: {{ tb_label | color_modify: 'alpha', 0.55 }};
+  }
+  #shopify-section-{{ section.id }} .mgx-tb__sep {
+    font-style: normal;
+    font-size: 16px;
+    line-height: 28px;
+    font-weight: 800;
+    color: {{ tb_offer_bg | color_lighten: 12 }};
+  }
+  /* The days tile shows only while "End Date and Time" lies in the future (the script removes it otherwise). */
+  #shopify-section-{{ section.id }} .mgx-tb__badges {
+    display: none;
+  }
+  #shopify-section-{{ section.id }} .mgx-tb-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+  }
+  #shopify-section-{{ section.id }} .mgx-tb-badge__icon {
+    display: block;
+    width: auto;
+    height: 22px;
+    border-radius: 4px;
+  }
+  #shopify-section-{{ section.id }} .mgx-tb-badge__label {
+    margin-top: 4px;
+    font-size: 12px;
+    line-height: 12px;
+    font-weight: 600;
+    color: {{ tb_text }};
+    white-space: nowrap;
+  }
+  /* Badge strip under the bar (phones and tablets; from 1100px the badges sit inside the bar). */
+  #shopify-section-{{ section.id }} .mgx-tb-strip {
+    padding: 10px 0;
+    border-top: 1px solid {{ tb_text | color_modify: 'alpha', 0.15 }};
+    background-color: {{ tb_offer_bg }};
+  }
+  #shopify-section-{{ section.id }} .mgx-tb-strip__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  #shopify-section-{{ section.id }} .mgx-tb-strip__rule {
+    display: block;
+    flex: none;
+    align-self: stretch;
+    width: 1px;
+    background-color: {{ tb_text | color_modify: 'alpha', 0.25 }};
   }
 
   @media screen and (min-width: 768px) {
-    .tb-bs-timer {
-      font-size: 20px;
-      line-height: 26px;
+    #shopify-section-{{ section.id }} .mgx-tb {
+      flex-direction: row;
+      align-items: stretch;
+    }
+    #shopify-section-{{ section.id }} .mgx-tb__offer {
+      flex: 1 1 50%;
+      justify-content: flex-end;
+      padding: 10px 44px 10px 24px;
+      clip-path: polygon(0 0, 100% 0, calc(100% - 22px) 100%, 0 100%);
+    }
+    #shopify-section-{{ section.id }} .mgx-tb__eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+    }
+    #shopify-section-{{ section.id }} .mgx-tb__lead {
+      font-size: 16px;
+      line-height: 22px;
+    }
+    #shopify-section-{{ section.id }} .mgx-tb__timer {
+      flex: 1 1 50%;
+      justify-content: flex-start;
+      padding: 8px 24px 8px 22px;
+    }
+    #shopify-section-{{ section.id }} .mgx-tb__ends {
+      font-size: 11px;
+    }
+    #shopify-section-{{ section.id }} .mgx-tb__num {
+      min-width: 34px;
+      font-size: 18px;
+      line-height: 22px;
+    }
+    #shopify-section-{{ section.id }} .mgx-tb__sep {
+      font-size: 18px;
+      line-height: 30px;
+    }
+    /* Countdown off: the offer takes the whole bar, centred, no slanted edge. */
+    #shopify-section-{{ section.id }} .mgx-tb--no-timer .mgx-tb__offer {
+      justify-content: center;
+      padding: 10px 24px;
+      clip-path: none;
     }
   }
 
-  .timebar-bs-badges {
-    background-color: {{ tb_secondary }};
-    border-color: {{ tb_secondary }};
-  }
-
-  .timebar-bs-badges .timebar-bs-label,
-  .timebar-bs-label {
-    color: {{ tb_primary }};
-  }
-
-  .timebar-bs-badges .timebar-bs-divider {
-    background-color: rgba(255, 255, 255, 0.25);
-  }
-  {%- endif %}
-
-  {% if tb_date == blank %}
-    .flipdown {
-      width: 140px !important;
+  @media screen and (min-width: 1100px) {
+    #shopify-section-{{ section.id }} .mgx-tb__badges {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-left: 16px;
+      padding-left: 16px;
+      border-left: 1px solid {{ tb_text | color_modify: 'alpha', 0.15 }};
     }
-    .flipdown .rotor-group:first-child {
+    #shopify-section-{{ section.id }} .mgx-tb-strip--with-timer {
       display: none;
     }
-  {% endif %}
+  }
 </style>
 
 {% unless product.template_suffix == 'payday-60' or collection.template_suffix == 'bundle-save' %}
+
   <div id="{{ section.id }}">
-    {%- comment -%} No link set: plain banner (div, no click, no underline). {%- endcomment -%}
-    {%- if tb_link != blank -%}<a href="{{ tb_link }}" class="no-underline block">{%- else -%}<div class="block">{%- endif -%}
-      {% if tb_top != blank %}
-        <div class="py-3" style="background-color: {{ tb_primary }};{% if tb_bs %} color: {{ tb_secondary }};{% endif %}">
-          <div class="page-width">
-            <div class="text-center {% unless tb_bs %}text-white {% endunless %}flex items-center justify-center gap-4 leading-none">-
-              <span>{{ tb_top }}</span>
-              -</div>
-          </div>
-        </div>
-      {% endif %}
-      {%- unless tb_bs -%}{% render 'fuel04-announcement', section: section %}{%- endunless -%}
-      <div class="py-3 md:py-2" style="background-color: {{ tb_secondary }};">
-        <div class="container mx-auto px-4">
-          <div class="flex flex-wrap items-center gap-x-6 gap-y-1 justify-center">
-            <div class="flex flex-wrap gap-x-4 gap-y-1 items-center justify-center">
-              <div style="color: {{ tb_primary }};" class="font-bold text-base md:text-xl">
-                {{ tb_prepend }}
-              </div>
-              <div style="color: {{ tb_primary }};" class="font-semibold text-sm md:text-lg tracking-wider md:order-1{% if tb_link != blank %} underline{% endif %}">
-                {{ tb_append }}
-              </div>
-              {%- if tb_bs -%}
-                <div class="tb-bs-timer" style="color: {{ tb_primary }};">
-                  <div class="tb-bs-ends">Slutar om</div>
-                  <div class="tb-bs-clock" data-tb-clock>00:00:00</div>
-                </div>
-              {%- else -%}
-                <div class="flex items-center gap-2">
-                  <div style="color: {{ tb_primary }};" class="text-sm md:text-base font-bold leading-none md:hidden">
-                    Slutar om
-                  </div>
-                  <div id="flipdown" class="flipdown"></div>
-                </div>
-              {%- endif -%}
-            </div>
-            {% if section.blocks.size > 0 %}
-              <div class="[display:none] md:flex gap-4">
-                {% for block in section.blocks %}
-                  <div class="flex flex-col items-center {% unless forloop.last %}pr-4 border-0 border-r border-solid border-gray-300{% endunless %}">
-                    <img
-                      class="rounded"
-                      src="{{ block.settings.icon |  image_url  }}"
-                      height="25"
-                      width=""
-                      alt="{{ block.settings.label }}">
-                    <div class="leading-none text-xs mt-1 font-semibold {% if tb_bs %}timebar-bs-label{% else %}text-black{% endif %}">
-                      {{ block.settings.label }}
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
-        </div>
+    {%- unless tb_bs -%}{% render 'fuel04-announcement', section: section %}{%- endunless -%}
+    {%- comment -%} No link set: plain banner (div, no click). {%- endcomment -%}
+    {%- if tb_link != blank -%}
+      <a href="{{ tb_link }}" class="mgx-tb{% unless tb_timer %} mgx-tb--no-timer{% endunless %}">
+    {%- else -%}
+      <div class="mgx-tb{% unless tb_timer %} mgx-tb--no-timer{% endunless %}">
+    {%- endif -%}
+
+      <div class="mgx-tb__offer">
+        {%- if tb_top != blank -%}
+          <span class="mgx-tb__eyebrow">{{ tb_top }}</span>
+          {%- if tb_prepend != blank or tb_append != blank -%}
+            <span class="mgx-tb__rule" aria-hidden="true"></span>
+          {%- endif -%}
+        {%- endif -%}
+        {%- if tb_prepend != blank -%}
+          <span class="mgx-tb__lead">{{ tb_prepend }}</span>
+        {%- endif -%}
+        {%- if tb_append != blank -%}
+          <span class="mgx-tb__deal">{{ tb_append }}<svg class="mgx-tb__arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        {%- endif -%}
       </div>
+
+      {%- if tb_timer -%}
+        <div class="mgx-tb__timer">
+          <span class="mgx-tb__ends">Slutar om</span>
+          <span class="mgx-tb__clock" data-mgx-countdown data-deadline="{{ tb_date | escape }}" role="timer" aria-live="off">
+            {%- if tb_date != blank -%}
+              <span class="mgx-tb__unit" data-mgx-days><span class="mgx-tb__num" data-unit="d">00</span><span class="mgx-tb__cap" data-cap="0" data-wg-notranslate>Dag</span></span>
+              <i class="mgx-tb__sep" aria-hidden="true" data-mgx-days>:</i>
+            {%- endif -%}
+            <span class="mgx-tb__unit"><span class="mgx-tb__num" data-unit="h">00</span><span class="mgx-tb__cap" data-cap="1" data-wg-notranslate>Tim</span></span>
+            <i class="mgx-tb__sep" aria-hidden="true">:</i>
+            <span class="mgx-tb__unit"><span class="mgx-tb__num" data-unit="m">00</span><span class="mgx-tb__cap" data-cap="2" data-wg-notranslate>Min</span></span>
+            <i class="mgx-tb__sep" aria-hidden="true">:</i>
+            <span class="mgx-tb__unit"><span class="mgx-tb__num" data-unit="s">00</span><span class="mgx-tb__cap" data-cap="3" data-wg-notranslate>Sek</span></span>
+          </span>
+
+          {%- if tb_badges -%}
+            <span class="mgx-tb__badges">
+              {%- for block in section.blocks -%}
+                <span class="mgx-tb-badge" {{ block.shopify_attributes }}>
+                  {%- if block.settings.use_country_flag -%}
+                    <img class="mgx-tb-badge__icon" src="{{ localization.country | image_url: width: 72 }}" height="22" width="" alt="{{ localization.country.name | escape }}">
+                  {%- elsif block.settings.icon != blank -%}
+                    <img class="mgx-tb-badge__icon" src="{{ block.settings.icon | image_url }}" height="22" width="" alt="{{ block.settings.label | escape }}">
+                  {%- endif -%}
+                  {%- if block.settings.label != blank -%}
+                    <span class="mgx-tb-badge__label">{{ block.settings.label }}</span>
+                  {%- endif -%}
+                </span>
+              {%- endfor -%}
+            </span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
     {%- if tb_link != blank -%}</a>{%- else -%}</div>{%- endif %}
   </div>
+
 {% endunless %}
-{% if section.blocks.size > 0 %}
-  <div class="md:hidden py-3 border-0 border-b border-solid border-gray-200{% if tb_bs %} timebar-bs-badges{% endif %}">
-    <div class="page-width">
-      <div class="flex gap-2 justify-between">
-        {% for block in section.blocks %}
-          <div class="flex flex-col items-center">
-            <img
-              class="rounded"
-              src="{{ block.settings.icon |  image_url  }}"
-              height="25"
-              width=""
-              alt="{{ block.settings.label }}">
-            <div class="leading-none text-xs mt-1 font-semibold {% if tb_bs %}timebar-bs-label{% else %}text-black{% endif %}">
-              {{ block.settings.label }}
-            </div>
-          </div>
-          {% unless forloop.last %}
-            <div class="!block w-[1px] bg-gray-200 self-stretch{% if tb_bs %} timebar-bs-divider{% endif %}"></div>
-          {% endunless %}
-        {% endfor %}
-      </div>
+
+{%- if tb_badges -%}
+  <div class="mgx-tb-strip{% if tb_timer %} mgx-tb-strip--with-timer{% endif %}">
+    <div class="mgx-tb-strip__row">
+      {%- for block in section.blocks -%}
+        <div class="mgx-tb-badge">
+          {%- if block.settings.use_country_flag -%}
+            <img class="mgx-tb-badge__icon" src="{{ localization.country | image_url: width: 72 }}" height="25" width="" alt="{{ localization.country.name | escape }}">
+          {%- elsif block.settings.icon != blank -%}
+            <img class="mgx-tb-badge__icon" src="{{ block.settings.icon | image_url }}" height="25" width="" alt="{{ block.settings.label | escape }}">
+          {%- endif -%}
+          {%- if block.settings.label != blank -%}
+            <div class="mgx-tb-badge__label">{{ block.settings.label }}</div>
+          {%- endif -%}
+        </div>
+        {%- unless forloop.last -%}
+          <span class="mgx-tb-strip__rule" aria-hidden="true"></span>
+        {%- endunless -%}
+      {%- endfor -%}
     </div>
   </div>
-{% endif %}
+{%- endif -%}
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    function getNextMidnightTimestamp() {
-      const nextMidnight = new Date();
+{%- if tb_timer -%}
+  <script>
+    (function () {
+      var root = document.getElementById('shopify-section-{{ section.id }}');
+      var clock = root && root.querySelector('[data-mgx-countdown]');
+      if (!clock) return;
+      var cells = {};
+      clock.querySelectorAll('[data-unit]').forEach(function (el) { cells[el.dataset.unit] = el; });
 
-      nextMidnight.setHours(24, 0, 0, 0); // next day 00:00:00
-
-      return Math.floor(nextMidnight.getTime() / 1000);
-    }
-
-    function getCountdownDeadline() {
-      const configuredDate = {{ tb_date | json }};
-
-      if (!configuredDate) {
-        return getNextMidnightTimestamp();
+      // "End Date and Time" when it parses and lies ahead, else the next local midnight (rolls over every day)
+      var set = Date.parse((clock.dataset.deadline || '').replace(/\//g, '-').replace(' ', 'T'));
+      if (isNaN(set)) set = Date.parse(clock.dataset.deadline || '');
+      var fixed = !isNaN(set) && set > Date.now();
+      if (!fixed) {
+        clock.querySelectorAll('[data-mgx-days]').forEach(function (el) { el.remove(); });
+        delete cells.d;
       }
-
-      const configuredTimestamp = Math.floor(new Date(configuredDate).getTime() / 1000);
-
-      return Number.isNaN(configuredTimestamp) ? getNextMidnightTimestamp() : configuredTimestamp;
-    }
-
-    const deadline = getCountdownDeadline();
-
-    {%- if tb_bs %}
-    // Bundle & Save page: plain HH:MM:SS text clock instead of FlipDown
-    const tbClocks = document.querySelectorAll('[data-tb-clock]');
-    const tbPad = (n) => String(n).padStart(2, '0');
-    const tbTick = () => {
-      const left = Math.max(0, deadline - Math.floor(Date.now() / 1000));
-      const text = tbPad(Math.floor(left / 3600)) + ':' + tbPad(Math.floor((left % 3600) / 60)) + ':' + tbPad(left % 60);
-      tbClocks.forEach((el) => { el.textContent = text; });
-    };
-    tbTick();
-    setInterval(tbTick, 1000);
-    return;
-    {%- endif %}
-
-    // Countdown headings per Weglot language (falls back to "sv")
-    const countdownHeadings = {
-      sv: ["Dag", "Tim", "Min", "Sek"],
-      da: ["Dag", "Timer", "Min", "Sek"],
-      fi: ["Päivä", "Tunti", "Min", "Sek"],
-      no: ["Dag", "Time", "Min", "Sek"],
-    };
-
-    const flipdownEl = document.getElementById('flipdown');
-
-    function buildFlipdown(lang) {
-      const headings = countdownHeadings[lang] || countdownHeadings.sv;
-
-      // Clear any previously rendered rotors before re-instantiating
-      if (flipdownEl) {
-        flipdownEl.innerHTML = '';
+      function deadline() {
+        if (fixed) return set;
+        var midnight = new Date();
+        midnight.setHours(24, 0, 0, 0);
+        return midnight.getTime();
       }
+      var end = deadline();
+      function pad(n) { return (n < 10 ? '0' : '') + n; }
+      function tick() {
+        var left = Math.max(0, Math.floor((end - Date.now()) / 1000));
+        if (left === 0 && !fixed) { end = deadline(); left = Math.floor((end - Date.now()) / 1000); }
+        var d = Math.floor(left / 86400);
+        var h = Math.floor(left / 3600) - (cells.d ? d * 24 : 0);
+        var values = { d: d, h: h, m: Math.floor(left / 60) % 60, s: left % 60 };
+        for (var k in cells) {
+          var text = pad(values[k]);
+          if (cells[k].textContent !== text) cells[k].textContent = text;
+        }
+      }
+      tick();
+      setInterval(tick, 1000);
 
-      new FlipDown(deadline, {
-        headings: headings,
-      })
-        .start()
-        .ifEnded(() => {
-          console.log('Countdown ended');
-        });
-    }
-
-    const currentLang = (window.Weglot && typeof Weglot.getCurrentLang === 'function' && Weglot.getCurrentLang()) || 'sv';
-    buildFlipdown(currentLang);
-
-    if (window.Weglot && typeof Weglot.on === 'function') {
-      Weglot.on('languageChanged', function (newLang) {
-        buildFlipdown(newLang);
-      });
-    }
-  });
-</script>
+      // Labels under the numbers per Weglot language (as the old flip clock); falls back to Swedish
+      var caps = {
+        sv: ['Dag', 'Tim', 'Min', 'Sek'],
+        da: ['Dag', 'Timer', 'Min', 'Sek'],
+        fi: ['Päivä', 'Tunti', 'Min', 'Sek'],
+        no: ['Dag', 'Time', 'Min', 'Sek']
+      };
+      function label(lang) {
+        var set = caps[lang] || caps.sv;
+        clock.querySelectorAll('[data-cap]').forEach(function (el) { el.textContent = set[+el.dataset.cap]; });
+      }
+      function weglotLang() {
+        return (window.Weglot && typeof Weglot.getCurrentLang === 'function' && Weglot.getCurrentLang()) || (document.documentElement.lang || 'sv').slice(0, 2);
+      }
+      label(weglotLang());
+      function hook() {
+        if (window.Weglot && typeof Weglot.on === 'function') {
+          label(weglotLang());
+          Weglot.on('languageChanged', label);
+          return true;
+        }
+        return false;
+      }
+      if (!hook()) document.addEventListener('DOMContentLoaded', hook);
+    })();
+  </script>
+{%- endif -%}
 
 {% schema %}
   {
     "name": "Offer Timebar",
     "settings": [
       {
+        "type": "checkbox",
+        "id": "enable_timer",
+        "label": "Show countdown",
+        "info": "Off: no timer and no \"Slutar om\", the offer sits on its own, centred. The Bundle & Save page always shows its countdown.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_badges",
+        "label": "Show badges",
+        "info": "The icon blocks below. Inside the bar from 1100px wide, as a strip under the bar on smaller screens.",
+        "default": true
+      },
+      {
         "type": "color",
         "id": "primary_color",
         "label": "Primary Color",
-        "default": "#173E34"
+        "info": "Background of the offer half (on phones: the top line) and of the badge strip.",
+        "default": "#000000"
       },
       {
         "type": "color",
         "id": "secondary_color",
         "label": "Secondary Color",
-        "default": "#DCE9DE"
+        "info": "Text in the top bar and the button fill.",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "timer_box_color",
+        "label": "Timer background (the countdown half)",
+        "default": "#0B0B0B"
+      },
+      {
+        "type": "color",
+        "id": "timer_label_color",
+        "label": "Timer label color",
+        "default": "#FFFFFF"
       },
       {
         "type": "text",
         "id": "top_banner_text",
         "label": "Top Banner Text",
-        "info": "Leaving this field will disable the banner."
+        "info": "Small uppercase label before the offer. Leave empty to hide it."
       },
       {
         "type": "text",
@@ -422,13 +498,14 @@
         "type": "text",
         "id": "countdown_date",
         "label": "End Date and Time",
-        "info": "Format: YYYY/MM/DD HH:MM:SS (e.g., 2026/12/25 23:59:59)"
+        "info": "Format: YYYY/MM/DD HH:MM:SS (e.g., 2026/12/25 23:59:59). Empty or passed: counts to the visitor's midnight."
       },
       {
         "type": "text",
         "id": "append_text",
         "label": "Append Text",
-        "default": "Shop Now 👉"
+        "info": "Shown as the button.",
+        "default": "Shop Now"
       },
       {
         "type": "url",
@@ -467,14 +544,14 @@
         "type": "color",
         "id": "bs_primary_color",
         "label": "Primary color",
-        "info": "Top strip and text",
+        "info": "Text and button fill",
         "default": "#FFFFFF"
       },
       {
         "type": "color",
         "id": "bs_secondary_color",
         "label": "Secondary color",
-        "info": "Offer row and badge row",
+        "info": "Bar background",
         "default": "#000000"
       },
       {
@@ -502,6 +579,13 @@
         "type": "payment_icon",
         "name": "Payment Icon",
         "settings": [
+          {
+            "type": "checkbox",
+            "id": "use_country_flag",
+            "label": "Show the visitor's country flag",
+            "info": "Uses the flag of the country the shopper browses in, instead of the icon below.",
+            "default": false
+          },
           {
             "type": "image_picker",
             "id": "icon",
