@@ -16,7 +16,7 @@
         "image_desktop": "shopify://shop_images/geschenkguide-hero-desktop.webp",
         "image_mobile": "shopify://shop_images/geschenkguide-hero-mobile.webp",
         "button_1_link": "#for-henne",
-        "button_2_link": "/collections/all",
+        "button_2_link": "#skapa-eget",
         "text_color": "light",
         "height_desktop": 572,
         "height_mobile": 460,
@@ -25,7 +25,7 @@
         "heading": "Doftpresenter som faktiskt används",
         "text": "Presentset till alla på din lista, från det säkra kortet till personen som redan har allt.",
         "button_1_label": "Se presentseten",
-        "button_2_label": "Alla dofter",
+        "button_2_label": "Skapa ditt set och spara 40%",
         "rating_text": "[rating]/5 baserat på [count] recensioner"
       }
     },
