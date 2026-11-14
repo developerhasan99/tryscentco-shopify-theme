@@ -178,6 +178,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  /* a label that wraps (long German CTA on phones) stays centred like the single-line buttons */
+  text-align: center;
   gap: 8px;
   min-height: 48px;
   padding: 12px 24px;
