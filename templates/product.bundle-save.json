@@ -215,17 +215,6 @@
     },
     "pm_bs_benefits": {
       "type": "pm-bs-benefits",
-      "settings": {
-        "color_scheme": "scheme-2",
-        "heading": "En doft som <em>stannar hos dig</em> hela dagen",
-        "cta_label": "Sätt ihop ditt paket",
-        "ticker_color_scheme": "scheme-3",
-        "ticker_separator": "•",
-        "ticker_speed": 30,
-        "ticker_label": "Därför väljer kunderna oss",
-        "padding_top": 80,
-        "padding_bottom": 80
-      },
       "blocks": {
         "g1": {
           "type": "benefit",
@@ -328,24 +317,21 @@
         "g7",
         "g8",
         "g9"
-      ]
+      ],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "heading": "En doft som <em>stannar hos dig</em> hela dagen",
+        "cta_label": "Sätt ihop ditt paket",
+        "ticker_color_scheme": "scheme-3",
+        "ticker_separator": "•",
+        "ticker_speed": 30,
+        "ticker_label": "Därför väljer kunderna oss",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "pm_bs_strength_tabs": {
       "type": "pm-bs-strength-tabs",
-      "settings": {
-        "color_scheme": "scheme-1",
-        "kicker": "Koncentration",
-        "title": "Därför spelar koncentrationen roll",
-        "subtitle": "Eau de Toilette innehåller mycket mindre doftolja än Eau de Parfum. Våra dofter har 20%.",
-        "default_tab": 2,
-        "row_strength_label": "Styrka",
-        "row_longevity_label": "Hållbarhet",
-        "row_oil_label": "Doftolja",
-        "row_summary_label": "Det här får du",
-        "footnote": "Typiska koncentrationer per parfymtyp. Hur länge doften sitter beror på din hud.",
-        "padding_top": 80,
-        "padding_bottom": 80
-      },
       "blocks": {
         "t1": {
           "type": "tab",
@@ -353,10 +339,10 @@
             "label": "Eau de Toilette",
             "sublabel": "De flesta märken",
             "is_ours": false,
-            "oil": "5-15% doftolja",
-            "summary": "Betydligt mindre doftolja än en Eau de Parfum.",
             "strength": "Lätt",
-            "longevity": "Oftast 4-6 timmar"
+            "longevity": "Oftast 4-6 timmar",
+            "oil": "5-15% doftolja",
+            "summary": "Betydligt mindre doftolja än en Eau de Parfum."
           }
         },
         "t2": {
@@ -375,22 +361,24 @@
       "block_order": [
         "t1",
         "t2"
-      ]
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "kicker": "Koncentration",
+        "title": "Därför spelar koncentrationen roll",
+        "subtitle": "Eau de Toilette innehåller mycket mindre doftolja än Eau de Parfum. Våra dofter har 20%.",
+        "default_tab": 2,
+        "row_strength_label": "Styrka",
+        "row_longevity_label": "Hållbarhet",
+        "row_oil_label": "Doftolja",
+        "row_summary_label": "Det här får du",
+        "footnote": "Typiska koncentrationer per parfymtyp. Hur länge doften sitter beror på din hud.",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "pm_bs_vs_split": {
       "type": "pm-bs-vs-split",
-      "settings": {
-        "image": "shopify://shop_images/Magyx_Website_01.webp",
-        "color_scheme": "scheme-2",
-        "title": "Mer än <em>en vanlig dupe</em>",
-        "subtitle": "Jämför med andra märken som säljer inspirerade dofter.",
-        "brand": "MagyX",
-        "dupe_title": "Andra märken",
-        "their_title": "Designerparfymer",
-        "btn_text": "Sätt ihop ditt paket",
-        "padding_top": 80,
-        "padding_bottom": 80
-      },
       "blocks": {
         "v1": {
           "type": "our_point",
@@ -477,78 +465,81 @@
         "v9",
         "v10",
         "v11"
-      ]
+      ],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "title": "Mer än <em>en vanlig dupe</em>",
+        "subtitle": "Jämför med andra märken som säljer inspirerade dofter.",
+        "brand": "MagyX",
+        "image": "shopify://shop_images/Magyx_Website_01.webp",
+        "dupe_title": "Andra märken",
+        "their_title": "Designerparfymer",
+        "btn_text": "Sätt ihop ditt paket",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "pm_bs_review_carousel": {
       "type": "pm-bs-review-carousel",
-      "settings": {
-        "color_scheme": "scheme-1",
-        "heading": "Doften som blir märkt",
-        "subheading": "Kunderna om vad som hände efter första sprayen",
-        "rating_text": "Över 10 000 verifierade doftälskare",
-        "verified_text": "Verifierat köp",
-        "padding_top": 80,
-        "padding_bottom": 80
-      },
       "blocks": {
         "r_1": {
           "type": "review",
           "settings": {
+            "image": "shopify://shop_images/mgx_real_461_raised.jpg",
             "quote": "Parfymer av riktigt bra kvalitet till lågt pris!! Jag kommer absolut att beställa mer. Jag sprayade en gång på armen bara för att testa och kunde känna doften i flera timmar!!!! Riktigt bra service. Rekommenderar!!",
             "author": "Julia P.",
             "rating": 5,
-            "verified": true,
-            "image": "shopify://shop_images/mgx_real_461_raised.jpg"
+            "verified": true
           }
         },
         "r_2": {
           "type": "review",
           "settings": {
+            "image": "shopify://shop_images/mgx_real_067_flatlay.jpg",
             "quote": "Ärligt talat blev jag förvånad över hur bra den här är. Kvaliteten är imponerande, doften sitter i flera timmar och den ligger otroligt nära originalet. Hade ingen sagt något hade jag aldrig märkt skillnad. Det som gör det ännu bättre är priset. Att få så här bra parfym utan att betala för lyxmärket känns helt rimligt. Klart värt det, och jag kommer att beställa igen.",
             "author": "Luciana R.",
             "rating": 5,
-            "verified": true,
-            "image": "shopify://shop_images/mgx_real_067_flatlay.jpg"
+            "verified": true
           }
         },
         "r_3": {
           "type": "review",
           "settings": {
+            "image": "shopify://shop_images/mgx_real_211_pair.jpg",
             "quote": "Jag beställde två parfymer och är riktigt imponerad. Dofterna är väldigt lika originalen och kvaliteten överträffade mina förväntningar. Dessutom var servicen snabb och proffsig. Jag är jättenöjd med köpet och kan varmt rekommendera er till andra. Tack för en fantastisk upplevelse.",
             "author": "Amran T.",
             "rating": 5,
-            "verified": true,
-            "image": "shopify://shop_images/mgx_real_211_pair.jpg"
+            "verified": true
           }
         },
         "r_4": {
           "type": "review",
           "settings": {
+            "image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.37_AM.jpg",
             "quote": "Min dejt trodde på allvar att det var Tom Ford. Den håller dessutom kanske en timme eller två längre, vilket är otroligt, särskilt för det här priset.",
             "author": "Nick D.",
             "rating": 5,
-            "verified": true,
-            "image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.35.37_AM.jpg"
+            "verified": true
           }
         },
         "r_5": {
           "type": "review",
           "settings": {
+            "image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.33.40_AM.jpg",
             "quote": "Jag har använt Acqua di Giò i flera år och den här fångar exakt samma fräscha havskänsla. Krispig citrus, salta marina toner och en träig botten, ärligt talat kan jag inte känna någon skillnad. Bäst av allt? Priset. Nu kan jag äntligen spraya hur mycket jag vill utan att oroa mig.",
             "author": "Michael D.",
             "rating": 5,
-            "verified": true,
-            "image": "shopify://shop_images/WhatsApp_Image_2026-09-09_at_8.33.40_AM.jpg"
+            "verified": true
           }
         },
         "r_6": {
           "type": "review",
           "settings": {
+            "image": "shopify://shop_images/mgx_real_260_presenting.jpg",
             "quote": "Det här är andra gången jag beställer! Bra parfymer som luktar gott och håller länge. Min favorit är körsbärsparfymen, den luktar supergott!",
             "author": "Tina H.",
             "rating": 5,
-            "verified": true,
-            "image": "shopify://shop_images/mgx_real_260_presenting.jpg"
+            "verified": true
           }
         }
       },
@@ -559,22 +550,19 @@
         "r_4",
         "r_5",
         "r_6"
-      ]
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "heading": "Doften som blir märkt",
+        "subheading": "Kunderna om vad som hände efter första sprayen",
+        "rating_text": "Över 10 000 verifierade doftälskare",
+        "verified_text": "Verifierat köp",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "pm_bs_compare_table": {
       "type": "pm-bs-compare-table",
-      "settings": {
-        "ours_image": "shopify://shop_images/Magyx_Website_07.webp",
-        "color_scheme": "scheme-1",
-        "kicker": "Jämförelse",
-        "title": "Därför väljer folk <em>MagyX</em>",
-        "ours_sub": "MagyX",
-        "theirs_label": "Designerparfymer",
-        "btn_text": "Sätt ihop ditt paket",
-        "guarantee": "60 dagars pengarna-tillbaka-garanti",
-        "padding_top": 80,
-        "padding_bottom": 80
-      },
       "blocks": {
         "c1": {
           "type": "row",
@@ -614,17 +602,22 @@
         "c5",
         "c6",
         "c1"
-      ]
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "kicker": "Jämförelse",
+        "title": "Därför väljer folk <em>MagyX</em>",
+        "ours_image": "shopify://shop_images/Magyx_Website_07.webp",
+        "ours_sub": "MagyX",
+        "theirs_label": "Designerparfymer",
+        "btn_text": "Sätt ihop ditt paket",
+        "guarantee": "60 dagars pengarna-tillbaka-garanti",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "pm_bs_faq": {
       "type": "pm-bs-faq",
-      "settings": {
-        "color_scheme": "scheme-2",
-        "title": "Vanliga frågor",
-        "closing_text": "<p>Har du en annan fråga? <a href=\"/policies/contact-information\">Skriv till oss</a>.</p>",
-        "padding_top": 80,
-        "padding_bottom": 80
-      },
       "blocks": {
         "q1": {
           "type": "question",
@@ -700,7 +693,14 @@
         "q7",
         "q8",
         "q9"
-      ]
+      ],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "title": "Vanliga frågor",
+        "closing_text": "<p>Har du en annan fråga? <a href=\"/policies/contact-information\">Skriv till oss</a>.</p>",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "pm_bs_ugc_grid": {
       "type": "pm-bs-ugc-grid",
@@ -726,7 +726,7 @@
           "settings": {
             "video_url": "https://cdn.shopify.com/videos/c/vp/5a878e22b12744d19421b651e8d4a241/5a878e22b12744d19421b651e8d4a241.SD-480p-1.5Mbps-93044584.mp4?v=0",
             "poster_url": "https://tryscent.co/cdn/shop/files/preview_images/5a878e22b12744d19421b651e8d4a241.thumbnail.0000000000.jpg?v=1788153261&width=600",
-            "product": "034w-yves-saint-laurent-libre-ersatz"
+            "product": "magyx-no-034"
           }
         },
         "video_4": {
@@ -764,20 +764,6 @@
     },
     "massive_review_section": {
       "type": "pm-bs-massive-review",
-      "settings": {
-        "color_scheme": "scheme-1",
-        "background_color": "#ffffff",
-        "heading": "Älskad av över 10 000 doftälskare",
-        "review_text": "Över 10 000 verifierade doftälskare",
-        "verified_text": "Verifierad köpare",
-        "initial_count": 26,
-        "columns_desktop": "3",
-        "columns_mobile": "1",
-        "button_text": "Visa fler recensioner",
-        "loading_text": "Laddar recensioner...",
-        "padding_top": 72,
-        "padding_bottom": 72
-      },
       "blocks": {
         "review_sv_01": {
           "type": "review",
@@ -1177,7 +1163,21 @@
         "review_sv_34",
         "review_sv_35",
         "review_sv_36"
-      ]
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "background_color": "#ffffff",
+        "heading": "Älskad av över 10 000 doftälskare",
+        "review_text": "Över 10 000 verifierade doftälskare",
+        "verified_text": "Verifierad köpare",
+        "initial_count": 26,
+        "columns_desktop": "3",
+        "columns_mobile": "1",
+        "button_text": "Visa fler recensioner",
+        "loading_text": "Laddar recensioner...",
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
     }
   },
   "order": [
